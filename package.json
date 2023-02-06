@@ -1,7 +1,8 @@
 {
   "name": "v2ex_plus",
   "version": "0.1.0",
-  "description": "",
+  "description": "Extensions for V2EX to make it better.",
+  "private": "true",
   "scripts": {
     "lint:style": "stylelint \"**/*.{css,less,scss}\""
   },
@@ -17,9 +18,6 @@
   ],
   "author": "LeoKu",
   "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/coolpace/V2EX_Plus/issues"
-  },
   "homepage": "https://github.com/coolpace/V2EX_Plus#readme",
   "dependencies": {
     "prefer-code-style": "^1.0.2",
