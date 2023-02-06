@@ -1,0 +1,28 @@
+{
+  "name": "v2ex_plus",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "lint:style": "stylelint \"**/*.{css,less,scss}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolpace/V2EX_Plus.git"
+  },
+  "keywords": [
+    "v2ex",
+    "theme",
+    "v2ex",
+    "extension"
+  ],
+  "author": "LeoKu",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/coolpace/V2EX_Plus/issues"
+  },
+  "homepage": "https://github.com/coolpace/V2EX_Plus#readme",
+  "dependencies": {
+    "prefer-code-style": "^1.0.2",
+    "stylelint": "^14.16.1"
+  }
+}

@@ -1,0 +1,272 @@
+:root {
+  /* stylelint-disable-next-line value-keyword-case */
+  --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', sans-serif;
+  --v2p-color-main-100: #f1f5f9;
+  --v2p-color-main-200: #e2e8f0;
+  --v2p-color-main-300: #cbd5e1;
+  --v2p-color-main-400: #94a3b8;
+  --v2p-color-main-500: #64748b;
+  --v2p-color-main-600: #475569;
+  --v2p-color-main-700: #334155;
+  --v2p-color-main-800: #1e293b;
+  --v2p-color-main-900: #0f172a;
+  --v2p-color-accent: #1e293b;
+  --v2p-color-border: rgb(238 238 238);
+  --v2p-color-wrapper-bg: rgb(249 250 252);
+  --v2p-color-content-bg: rgb(255 255 255);
+  --color-fade: #94a3b8;
+  --link-color: #1e293b;
+}
+
+body {
+  color: var(--v2p-color-main-800);
+  font-family: var(--v2p-font-noto-sans);
+  background-color: var(--v2p-color-wrapper-bg);
+}
+
+body .box {
+  overflow: hidden;
+  background-color: var(--v2p-color-content-bg);
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+body .box .header .gray {
+  color: var(--v2p-color-main-400);
+}
+
+body .box > .cell:first-of-type .gray {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* ====== 帖子标签 ====== */
+
+body .box > .cell:first-of-type .fr .tag {
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
+}
+
+body .box > .cell:first-of-type .fr .tag:hover {
+  color: currentcolor;
+  background-color: var(--v2p-color-main-200);
+}
+
+/* ------ 帖子标签 ------ */
+
+body #Top {
+  border: none;
+}
+
+body #Top > .content {
+  height: 100%;
+}
+
+body #Top > .content > .site-nav {
+  height: 100%;
+  padding: 0;
+}
+
+/* ================================================================ */
+
+body #Wrapper {
+  background-color: inherit;
+  background-image: unset;
+}
+
+body #Wrapper > .content > #Main > .box {
+  padding: 0 12px;
+}
+
+body #Wrapper > .content > #Main .cell.item .count_livid {
+  display: inline-block;
+  padding: 5px 10px;
+  color: var(--v2p-color-main-400);
+  font-weight: 400;
+  background-color: var(--v2p-color-main-200);
+  border-radius: 5px;
+  opacity: 0.55;
+}
+
+body #Wrapper > .content > #Main .cell.item:hover .count_livid {
+  opacity: 0.9;
+}
+
+body #Wrapper > .content > #Main > .box #Tabs .tab_current {
+  background-color: var(--v2p-color-accent);
+}
+
+body #Wrapper > .content > #Main > .box .cell {
+  padding: 20px 10px;
+}
+
+body #Wrapper > .content > #Main > .box .cell .cell {
+  border: none;
+}
+
+body #Wrapper > .content > #Main > .box .cell.item {
+  border-bottom: 1px solid var(--v2p-color-border);
+}
+
+body #Wrapper > .content > #Main > .box .cell.item .item_title {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+body #Wrapper > .content > #Main > .box .cell.item .item_title:hover {
+  opacity: 1;
+}
+
+body #Wrapper > .content > #Main > .box .cell.item .topic_info {
+  position: relative;
+}
+
+body #Wrapper > .content > #Main > .box .cell.item .topic_info a.node {
+  padding: 5px 6px;
+  color: var(--v2p-color-main-400);
+  font-size: 13px;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 4px;
+}
+
+body #Wrapper > .content > #Main > .box .cell.item .topic_info .votes,
+body #Wrapper > .content > #Main > .box .cell.item .topic_info .node,
+body #Wrapper > .content > #Main > .box .cell.item .topic_info strong:first-of-type,
+body #Wrapper > .content > #Main > .box .cell.item .topic_info span:first-of-type {
+  position: relative;
+  z-index: 99;
+}
+
+body #Wrapper > .content > #Main > .box .cell.item .topic_info::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: var(--v2p-color-content-bg);
+  content: '';
+}
+
+body #Wrapper > .content > #Main > .box .cell.item .item_title .topic-link {
+  color: var(--v2p-color-main-800);
+  text-decoration: none;
+}
+
+body #Wrapper > .content > #Main > .box .cell.item tr > td:nth-child(2) {
+  width: 30px;
+}
+
+/* ======= 评论区 ====== */
+
+/* ======= 评论区_头像 ====== */
+
+body #Wrapper > .content > #Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type {
+  width: 40px;
+}
+
+body
+  #Wrapper
+  > .content
+  > #Main
+  > .box
+  .cell[id^='r']
+  > table:first-of-type
+  tr
+  td:first-of-type
+  img {
+  width: 40px !important;
+}
+
+body #Wrapper > .content > #Main > .box .cell[id^='r'] > table + .cell tr td:first-of-type {
+  width: 30px;
+}
+
+body #Wrapper > .content > #Main > .box .cell[id^='r'] > table + .cell tr td:first-of-type img {
+  width: 30px !important;
+}
+
+body #Wrapper > .content > #Main > .box .cell[id^='r'] table td:nth-of-type(2) {
+  width: 15px;
+}
+
+body #Wrapper > .content > #Main > .box .reply_content {
+  font-size: 15px;
+}
+
+/* ------ 评论区_头像 ------ */
+
+body #Wrapper > .content > #Main > .box .cell > table td:last-of-type a.dark:active,
+a.dark:link,
+a.dark:visited {
+  color: var(--v2p-color-main-600);
+  text-decoration: none;
+}
+
+body #Wrapper > .content > #Main > .box .cell > table td:last-of-type .fr a {
+  opacity: 0;
+}
+
+body #Wrapper > .content > #Main > .box .cell:hover > table td:last-of-type .fr a {
+  opacity: 1;
+}
+
+body #Wrapper > .content > #Main > .box .cell > table td:last-of-type .fr .no {
+  padding: 5px 10px;
+  color: var(--v2p-color-main-300);
+  font-size: 12px;
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+body #Wrapper > .content > #Main > .box .cell:hover > table td:last-of-type .fr .no {
+  background-color: var(--v2p-color-main-100);
+}
+
+body #Wrapper > .content > #Main > .box .cell > table + .cell {
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+/* ------ 评论区 ------ */
+
+body #Wrapper > .content > #Main > .box .topic_content {
+  font-size: 16px;
+}
+
+/* ================================================================ */
+
+body #Rightbar .box {
+  opacity: 0.5;
+  transition: opacity 0.25s;
+}
+
+body #Rightbar .box:hover {
+  opacity: 1;
+}
+
+body #Rightbar .balance_area {
+  display: flex;
+  align-items: center;
+}
+
+.topic_buttons > *:nth-child(2)::before {
+  margin-right: 0.5em;
+  content: '🌟';
+}
+
+.topic_buttons > *:nth-child(3)::before {
+  margin-right: 0.5em;
+  content: '🪶';
+}
+
+.topic_buttons > *:nth-child(4)::before {
+  margin-right: 0.5em;
+  content: '🥱';
+}
+
+.topic_buttons #topic_thank a::before {
+  margin-right: 0.5em;
+  content: '🙏';
+}
