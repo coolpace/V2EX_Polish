@@ -41,9 +41,19 @@ body .box .header .gray {
   color: var(--v2p-color-main-400);
 }
 
-body .box > .cell:first-of-type .gray {
-  font-weight: 600;
-  font-size: 16px;
+body .box .topic_buttons {
+  background: none;
+}
+
+body .box .topic_buttons .tb {
+  padding: 6px 12px;
+  border-radius: 4px;
+  filter: grayscale(1);
+}
+
+body .box .topic_buttons .tb:hover {
+  background-color: var(--v2p-color-main-100);
+  filter: none;
 }
 
 /* ====== 帖子标签 ====== */
@@ -274,4 +284,14 @@ body #Rightbar .balance_area {
 .topic_buttons #topic_thank a::before {
   margin-right: 0.5em;
   content: '🙏';
+}
+
+/* ================================================================ */
+
+body #Bottom {
+  border: none;
+}
+
+body #Bottom .content .inner .small.fade {
+  display: none;
 }
