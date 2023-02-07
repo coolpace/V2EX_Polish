@@ -1,5 +1,5 @@
 /**
- * 作者：LeoKu <czc12580520@gmail.com>
+ * 作者：LeoKu (https://github.com/Codennnn)
  * GitHub: https://github.com/coolpace/V2EX_Plus
  */
 
@@ -29,7 +29,9 @@
   --v2p-color-wrapper-bg: rgb(249 250 252);
   --v2p-color-content-bg: rgb(255 255 255);
   --color-fade: #94a3b8;
+  --color-gray: #94a3b8;
   --link-color: #1e293b;
+  --box-border-color: #f1f5f9;
 }
 
 body {
@@ -51,7 +53,17 @@ body .box .header .gray {
 }
 
 body .box .topic_buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding: 8px 0;
   background: none;
+}
+
+body .box .topic_buttons .topic_stats {
+  margin-left: auto;
+  padding: 0 !important;
+  font-size: 12px;
 }
 
 body .box .topic_buttons .tb {
@@ -98,6 +110,24 @@ body #Top {
 #Top > .content > .site-nav {
   height: 100%;
   padding: 0;
+}
+
+#Top > .content > .site-nav .tools {
+  display: flex;
+  gap: 5px 16px;
+  align-items: center;
+  justify-content: flex-end;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+#Top > .content > .site-nav .tools > .top {
+  margin-left: 0;
+  color: var(--v2p-color-main-400);
+}
+
+#Top > .content > .site-nav .tools > .top:hover {
+  color: var(--v2p-color-main-800);
 }
 
 /* ================================================================ */
@@ -228,24 +258,24 @@ body #Wrapper {
 
 /* ====== 帖子内容 ====== */
 
-.topic_buttons > *:nth-child(2)::before {
-  margin-right: 0.5em;
-  content: '🌟';
-}
-
-.topic_buttons > *:nth-child(3)::before {
-  margin-right: 0.5em;
-  content: '🪶';
-}
-
-.topic_buttons > *:nth-child(4)::before {
-  margin-right: 0.5em;
-  content: '🥱';
-}
-
 .topic_buttons #topic_thank a::before {
   margin-right: 0.5em;
   content: '🙏';
+}
+
+.topic_buttons > a:nth-child(2)::before {
+  margin-right: 0.5em;
+  content: '⭐';
+}
+
+.topic_buttons > a:nth-child(3)::before {
+  margin-right: 0.5em;
+  content: '🐦';
+}
+
+.topic_buttons > a:nth-child(4)::before {
+  margin-right: 0.5em;
+  content: '🙈';
 }
 
 /* ------ 帖子内容 ------ */
