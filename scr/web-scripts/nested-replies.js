@@ -2,9 +2,9 @@ void (function NestedReplies() {
   'use strict'
 
   const commentCells = $('.cell[id^="r_"]')
-  const cellTableRow = commentCells.find('table > tbody > tr')
+  const cellTableRows = commentCells.find('table > tbody > tr')
 
-  const commentData = cellTableRow
+  const commentData = cellTableRows
     .map((idx, tr) => {
       const id = commentCells[idx].id
       const td = $(tr).find('> td:nth-child(3)')
@@ -15,22 +15,24 @@ void (function NestedReplies() {
     })
     .get()
 
+  /** 发帖人的昵称 */
   const ownerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
 
-  const selfName = $('#Top .tools > a[href^="/member"]').text()
+  /** 登录人的昵称 */
+  const loginName = $('#Top .tools > a[href^="/member"]').text()
 
   let i = 1
 
   // 遍历所有楼层
   while (i < commentCells.length) {
     const cellDom = commentCells[i]
-    const { id, name, content } = commentData[i]
+    const { name, content } = commentData[i]
 
     if (name === ownerName) {
       cellDom.classList.add('owner')
     }
 
-    if (name === selfName) {
+    if (name === loginName) {
       cellDom.classList.add('self')
     }
 
