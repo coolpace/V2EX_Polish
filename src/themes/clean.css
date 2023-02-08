@@ -182,7 +182,7 @@ body #Wrapper {
 
 #Wrapper #Main > .box #Tabs {
   display: flex;
-  gap: 8px 6px;
+  gap: 6px 8px;
   align-items: center;
 }
 
