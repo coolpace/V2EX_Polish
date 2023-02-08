@@ -10,19 +10,38 @@ void (function NestedComments() {
       const td = $(tr).find('> td:nth-child(3)')
       const name = td.find('> strong > a').text()
       const content = td.find('> .reply_content').text()
-      const likes = td.find('span.small').text() || 0
+      const likes = Number(td.find('span.small').text())
       const floor = td.find('span.no').text()
 
       return { id, name, content, likes, floor, index: idx }
     })
     .get()
 
-  const popularCommentData = commentData.filter(({ likes }) => likes > 0).map(({ id }) => id)
-  commentCells.each((_, cell) => {
-    if (popularCommentData.includes(cell.id)) {
-      console.log('bingo')
-    }
+  const popularCommentData = commentData
+    .filter(({ likes }) => likes > 0)
+    .sort((a, b) => b.likes - a.likes)
+
+  const commentBox = $('#Main > .box:has(.cell[id^="r_"])')
+
+  const commentContainer = $(
+    '<div id="b" style="position:fixed;inset:50px 100px;z-index:999;background-color:#fff;overflow-y:auto;visibility:hidden"><div><button id="close">关闭</button></div></div>'
+  )
+
+  commentContainer.find('#close').click(() => {
+    $('#b').css({ visibility: 'hidden' })
   })
+
+  commentBox.find('.cell:first-of-type').append('<button id="popular">本页热门评论</button>')
+
+  $('#popular').click(() => {
+    $('#b').css({ visibility: 'visible' })
+  })
+
+  popularCommentData.forEach(({ index }) => {
+    commentContainer.append(commentCells.eq(index).clone())
+  })
+
+  commentBox.append(commentContainer)
 
   /** 发帖人的昵称 */
   const ownerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
