@@ -327,7 +327,6 @@ body #Wrapper {
   padding: 8px 5px;
   background: none;
   border-radius: 4px;
-  opacity: 0.6;
 }
 
 .topic_buttons .tb::after {
