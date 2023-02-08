@@ -1,4 +1,4 @@
-void (function NestedReplies() {
+void (function NestedComments() {
   'use strict'
 
   const commentCells = $('.cell[id^="r_"]')
@@ -10,10 +10,19 @@ void (function NestedReplies() {
       const td = $(tr).find('> td:nth-child(3)')
       const name = td.find('> strong > a').text()
       const content = td.find('> .reply_content').text()
+      const likes = td.find('span.small').text() || 0
+      const floor = td.find('span.no').text()
 
-      return { id, name, content }
+      return { id, name, content, likes, floor, index: idx }
     })
     .get()
+
+  const popularCommentData = commentData.filter(({ likes }) => likes > 0).map(({ id }) => id)
+  commentCells.each((_, cell) => {
+    if (popularCommentData.includes(cell.id)) {
+      console.log('bingo')
+    }
+  })
 
   /** 发帖人的昵称 */
   const ownerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
@@ -21,7 +30,6 @@ void (function NestedReplies() {
   /** 登录人的昵称 */
   const loginName = $('#Top .tools > a[href^="/member"]').text()
 
-  // 遍历所有楼层
   let i = 1
   while (i < commentCells.length) {
     const cellDom = commentCells[i]
@@ -36,9 +44,7 @@ void (function NestedReplies() {
     }
 
     if (content.includes('@')) {
-      // 向上遍历
       for (let j = i - 1; j >= 0; j--) {
-        // 回复内容包含别人的 ID
         if (content.match(`@${commentData[j].name}`)) {
           cellDom.classList.add('responder')
           commentCells[j].append(commentCells[i])
