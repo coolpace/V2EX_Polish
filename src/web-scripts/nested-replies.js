@@ -21,9 +21,8 @@ void (function NestedReplies() {
   /** 登录人的昵称 */
   const loginName = $('#Top .tools > a[href^="/member"]').text()
 
-  let i = 1
-
   // 遍历所有楼层
+  let i = 1
   while (i < commentCells.length) {
     const cellDom = commentCells[i]
     const { name, content } = commentData[i]

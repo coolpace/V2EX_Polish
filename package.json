@@ -4,7 +4,8 @@
   "description": "Extensions for V2EX to make it better.",
   "private": "true",
   "scripts": {
-    "lint:style": "stylelint \"**/*.{css,less,scss}\""
+    "cssminify": "css-minify --dir src/themes --output src/themes",
+    "lint:style": "stylelint **/*.css"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,8 @@
   "author": "LeoKu",
   "license": "UNLICENSED",
   "homepage": "https://github.com/coolpace/V2EX_Plus#readme",
-  "dependencies": {
+  "devDependencies": {
+    "css-minify": "^2.0.0",
     "prefer-code-style": "^1.0.2",
     "stylelint": "^14.16.1"
   }

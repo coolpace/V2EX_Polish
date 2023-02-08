@@ -5,5 +5,5 @@ module.exports = {
     'selector-class-pattern': null,
     'no-descending-specificity': null,
   },
-  ignoreFiles: ['node_modules/**/*.css'],
+  ignoreFiles: ['node_modules/**/*.css', '**/*.min.css'],
 }
