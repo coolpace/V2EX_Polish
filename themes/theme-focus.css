@@ -88,6 +88,7 @@ body .box .topic_buttons .tb:hover {
 /* ====== 帖子标签 ====== */
 
 body .box > .cell:first-of-type .fr .tag {
+  font-size: 13px;
   background-color: var(--v2p-color-main-100);
   border-radius: 5px;
 }
@@ -232,11 +233,16 @@ body #Wrapper {
   width: 40px !important;
 }
 
-#Wrapper > .content > #Main > .box .cell[id^='r'] > table + .cell tr td:first-of-type {
+#Wrapper > .content > #Main > .box .cell > table ~ .cell {
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+#Wrapper > .content > #Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type {
   width: 30px;
 }
 
-#Wrapper > .content > #Main > .box .cell[id^='r'] > table + .cell tr td:first-of-type img {
+#Wrapper > .content > #Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type img {
   width: 30px !important;
 }
 
@@ -307,11 +313,6 @@ a.dark:visited {
 
 #Wrapper > .content > #Main > .box .cell:hover > table td:last-of-type .fr .no {
   background-color: var(--v2p-color-main-100);
-}
-
-#Wrapper > .content > #Main > .box .cell > table + .cell {
-  padding-right: 0;
-  padding-bottom: 0;
 }
 
 /* ------ 评论区 ------ */
