@@ -259,6 +259,10 @@ body #Wrapper {
   text-decoration: none;
 }
 
+#Wrapper #Main > .box .cell.item .item_title .topic-link:visited {
+  color: var(--v2p-color-main-400);
+}
+
 #Wrapper #Main > .box .cell.item tr > td:nth-child(2) {
   width: 30px;
 }
