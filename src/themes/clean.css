@@ -69,7 +69,6 @@ body .box .topic_buttons .topic_stats {
 body .box .topic_buttons .tb {
   padding: 6px 12px;
   border-radius: 4px;
-  filter: grayscale(1);
 }
 
 body .box .topic_buttons .tb:hover {
@@ -82,6 +81,29 @@ body .box .topic_buttons .tb:hover {
   overflow: hidden;
   border: none;
   border-radius: 10px;
+  box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
+}
+
+#search-container {
+  height: 30px;
+  background-color: var(--v2p-color-main-100);
+  border: none;
+  border-radius: 6px;
+}
+
+#search-container::before {
+  top: 0;
+  left: 4px;
+  opacity: 0.6;
+  filter: none;
+}
+
+#search-container.active {
+  background-color: var(--v2p-color-main-100);
+}
+
+#search-container > #search-result {
+  top: 42px;
   box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
 }
 
@@ -156,23 +178,60 @@ body #Wrapper {
   opacity: 0.9;
 }
 
-#Wrapper > .content > #Main > .box #Tabs .tab_current {
+/* ====== 话题 ====== */
+
+#Wrapper #Main > .box #Tabs {
+  display: flex;
+  gap: 8px 6px;
+  align-items: center;
+}
+
+#Wrapper #Main > .box #Tabs .tab {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  background-color: transparent;
+}
+
+#Wrapper #Main > .box #Tabs .tab::before {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  left: -5px;
+  z-index: -1;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
+  transform: scale(0.6);
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s;
+  content: '';
+}
+
+#Wrapper #Main > .box #Tabs .tab:hover::before {
+  transform: scale(1);
+  opacity: 1;
+}
+
+#Wrapper #Main > .box #Tabs .tab_current {
   background-color: var(--v2p-color-main-700);
 }
 
-#Wrapper > .content > #Main > .box .cell {
+/* ------ 话题 ------ */
+
+#Wrapper #Main > .box .cell {
   padding: 20px 10px;
 }
 
-#Wrapper > .content > #Main > .box .cell .cell {
+#Wrapper #Main > .box .cell .cell {
   border: none;
 }
 
-#Wrapper > .content > #Main > .box .cell.item {
+#Wrapper #Main > .box .cell.item {
   border-bottom: 1px solid var(--v2p-color-border);
 }
 
-#Wrapper > .content > #Main > .box .cell.item .item_title {
+#Wrapper #Main > .box .cell.item .item_title {
   font-weight: 600;
   opacity: 0.8;
 }
