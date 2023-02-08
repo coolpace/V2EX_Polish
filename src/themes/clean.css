@@ -52,30 +52,6 @@ body .box .header .gray {
   color: var(--v2p-color-main-400);
 }
 
-body .box .topic_buttons {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  padding: 8px 0;
-  background: none;
-}
-
-body .box .topic_buttons .topic_stats {
-  margin-left: auto;
-  padding: 0 !important;
-  font-size: 12px;
-}
-
-body .box .topic_buttons .tb {
-  padding: 6px 12px;
-  border-radius: 4px;
-}
-
-body .box .topic_buttons .tb:hover {
-  background-color: var(--v2p-color-main-100);
-  filter: none;
-}
-
 #reply-box.reply-box-sticky {
   bottom: 20px;
   overflow: hidden;
@@ -107,15 +83,22 @@ body .box .topic_buttons .tb:hover {
   box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
 }
 
+#no-comments-yet {
+  color: var(--v2p-color-main-400);
+  border-color: var(--v2p-color-main-400);
+}
+
 /* ====== 帖子标签 ====== */
 
-body .box > .cell:first-of-type .fr .tag {
+.box .tag,
+.box > .cell:first-of-type .fr .tag {
   font-size: 13px;
   background-color: var(--v2p-color-main-100);
   border-radius: 5px;
 }
 
-body .box > .cell:first-of-type .fr .tag:hover {
+.box .tag:hover,
+.box > .cell:first-of-type .fr .tag:hover {
   color: currentcolor;
   background-color: var(--v2p-color-main-200);
 }
@@ -178,7 +161,7 @@ body #Wrapper {
   opacity: 0.9;
 }
 
-/* ====== 话题 ====== */
+/* ====== 节点列表 ====== */
 
 #Wrapper #Main > .box #Tabs {
   display: flex;
@@ -217,7 +200,7 @@ body #Wrapper {
   background-color: var(--v2p-color-main-700);
 }
 
-/* ------ 话题 ------ */
+/* ------ 节点列表 ------ */
 
 #Wrapper #Main > .box .cell {
   padding: 20px 10px;
@@ -322,6 +305,56 @@ body #Wrapper {
 }
 
 /* ====== 帖子内容 ====== */
+
+.topic_buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding: 8px 0;
+  column-gap: 5px;
+  background: none;
+}
+
+.topic_buttons .topic_stats {
+  margin-left: auto;
+  padding: 0 !important;
+  font-size: 12px;
+}
+
+.topic_buttons a.tb {
+  position: relative;
+  z-index: 1;
+  padding: 8px 5px;
+  background: none;
+  border-radius: 4px;
+  opacity: 0.6;
+}
+
+.topic_buttons .tb::after {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  left: -5px;
+  z-index: -1;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
+  transform: scale(0.6);
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s;
+  content: '';
+}
+
+.topic_buttons .tb:hover::after {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.topic_buttons .tb:hover {
+  /* background-color: var(--v2p-color-main-100); */
+  background: none;
+  filter: none;
+}
 
 .topic_buttons #topic_thank a::before {
   margin-right: 0.5em;
