@@ -39,7 +39,7 @@ void (function NestedReplies() {
     // 向上遍历
     for (let j = i - 1; j >= 0; j--) {
       // 回复内容包含别人的 ID
-      if (content.match(commentData[j].name)) {
+      if (content.match(`@${commentData[j].name}`)) {
         cellDom.classList.add('responder')
         commentCells[j].append(commentCells[i])
         break
