@@ -22,34 +22,36 @@ void (function NestedComments() {
       .filter(({ likes }) => likes > 0)
       .sort((a, b) => b.likes - a.likes)
 
-    const commentBox = $('#Main .box:has(.cell[id^="r_"])')
+    if (popularCommentData.length > 0) {
+      const commentBox = $('#Main .box:has(.cell[id^="r_"])')
 
-    const commentContainer = $('<div><div><button id="close">关闭</button></div></div>').css({
-      visibility: 'hidden',
-      position: 'fixed',
-      inset: '0',
-      'z-index': '999',
-      'overflow-y': 'auto',
-      'background-color': 'white',
-    })
+      const commentContainer = $('<div><div><button id="close">关闭</button></div></div>').css({
+        visibility: 'hidden',
+        position: 'fixed',
+        inset: '0',
+        'z-index': '999',
+        'overflow-y': 'auto',
+        'background-color': 'white',
+      })
 
-    commentContainer.find('#close').click(() => {
-      commentContainer.css({ visibility: 'hidden' })
-    })
+      commentContainer.find('#close').click(() => {
+        commentContainer.css({ visibility: 'hidden' })
+      })
 
-    const button = $('<div>本页热门评论</div>')
+      const button = $('<div>本页热门评论</div>')
 
-    button.click(() => {
-      commentContainer.css({ visibility: 'visible' })
-    })
+      button.click(() => {
+        commentContainer.css({ visibility: 'visible' })
+      })
 
-    commentBox.find('.cell:first-of-type').append(button)
+      commentBox.find('.cell:first-of-type').append(button)
 
-    popularCommentData.forEach(({ index }) => {
-      commentContainer.append(commentCells.eq(index).clone())
-    })
+      popularCommentData.forEach(({ index }) => {
+        commentContainer.append(commentCells.eq(index).clone())
+      })
 
-    commentBox.append(commentContainer)
+      commentBox.append(commentContainer)
+    }
   }
 
   /** 发帖人的昵称 */

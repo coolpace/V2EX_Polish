@@ -200,6 +200,7 @@ body #Wrapper {
 }
 
 #Main #SecondaryTabs {
+  padding: 10px;
   background-color: var(--v2p-color-main-100);
   border-radius: 5px;
 }
@@ -300,8 +301,9 @@ body #Wrapper {
   width: 15px;
 }
 
-/* OP - 帖主标签 */
-#Main > .box .cell[id^='r'] .badge.op {
+/* 帖主徽章 & 管理员徽章 */
+#Main > .box .cell[id^='r'] .badge.op,
+#Main > .box .cell[id^='r'] .badge.mod {
   padding: 4px 8px;
   color: var(--v2p-color-accent-500);
   background-color: var(--v2p-color-accent-100);
