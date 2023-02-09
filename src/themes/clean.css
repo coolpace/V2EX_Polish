@@ -3,7 +3,7 @@
  * 项目: https://github.com/coolpace/V2EX_Plus
  */
 
-:root {
+body {
   /* stylelint-disable-next-line value-keyword-case */
   --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', sans-serif;
   --v2p-color-main-100: #f1f5f9;
@@ -32,9 +32,7 @@
   --color-gray: #94a3b8;
   --link-color: #1e293b;
   --box-border-color: #f1f5f9;
-}
 
-body {
   color: var(--v2p-color-main-800);
   font-family: var(--v2p-font-noto-sans);
   background-color: var(--v2p-color-wrapper-bg);
@@ -106,6 +104,7 @@ body .box .header .gray {
 /* ------ 帖子标签 ------ */
 
 body #Top {
+  background-color: var(--v2p-color-content-bg);
   border: none;
 }
 
@@ -143,11 +142,11 @@ body #Wrapper {
   background-image: none;
 }
 
-#Wrapper #Main > .box {
+#Main > .box {
   padding: 0 12px;
 }
 
-#Wrapper #Main .cell.item .count_livid {
+#Main .cell.item .count_livid {
   display: inline-block;
   padding: 5px 10px;
   color: var(--v2p-color-main-400);
@@ -157,26 +156,26 @@ body #Wrapper {
   opacity: 0.55;
 }
 
-#Wrapper #Main .cell.item:hover .count_livid {
+#Main .cell.item:hover .count_livid {
   opacity: 0.9;
 }
 
 /* ====== 节点列表 ====== */
 
-#Wrapper #Main > .box #Tabs {
+#Main #Tabs {
   display: flex;
   gap: 6px 8px;
   align-items: center;
 }
 
-#Wrapper #Main > .box #Tabs .tab {
+#Main #Tabs .tab {
   position: relative;
   z-index: 1;
   margin: 0;
   background-color: transparent;
 }
 
-#Wrapper #Main > .box #Tabs .tab::before {
+#Main #Tabs .tab::before {
   position: absolute;
   top: 0;
   right: -5px;
@@ -191,43 +190,48 @@ body #Wrapper {
   content: '';
 }
 
-#Wrapper #Main > .box #Tabs .tab:hover::before {
+#Main #Tabs .tab:hover::before {
   transform: scale(1);
   opacity: 1;
 }
 
-#Wrapper #Main > .box #Tabs .tab_current {
+#Main #Tabs .tab_current {
   background-color: var(--v2p-color-main-700);
+}
+
+#Main #SecondaryTabs {
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
 }
 
 /* ------ 节点列表 ------ */
 
-#Wrapper #Main > .box .cell {
+#Main > .box .cell {
   padding: 20px 10px;
 }
 
-#Wrapper #Main > .box .cell .cell {
+#Main > .box .cell .cell {
   border: none;
 }
 
-#Wrapper #Main > .box .cell.item {
+#Main > .box .cell.item {
   border-bottom: 1px solid var(--v2p-color-border);
 }
 
-#Wrapper #Main > .box .cell.item .item_title {
+#Main > .box .cell.item .item_title {
   font-weight: 600;
   opacity: 0.8;
 }
 
-#Wrapper #Main > .box .cell.item .item_title:hover {
+#Main > .box .cell.item .item_title:hover {
   opacity: 1;
 }
 
-#Wrapper #Main > .box .cell.item .topic_info {
+#Main > .box .cell.item .topic_info {
   position: relative;
 }
 
-#Wrapper #Main > .box .cell.item .topic_info a.node {
+#Main > .box .cell.item .topic_info a.node {
   padding: 5px 6px;
   color: var(--v2p-color-main-400);
   font-size: 13px;
@@ -235,15 +239,15 @@ body #Wrapper {
   border-radius: 4px;
 }
 
-#Wrapper #Main > .box .cell.item .topic_info .votes,
-#Wrapper #Main > .box .cell.item .topic_info .node,
-#Wrapper #Main > .box .cell.item .topic_info strong:first-of-type,
-#Wrapper #Main > .box .cell.item .topic_info span:first-of-type {
+#Main > .box .cell.item .topic_info .votes,
+#Main > .box .cell.item .topic_info .node,
+#Main > .box .cell.item .topic_info strong:first-of-type,
+#Main > .box .cell.item .topic_info span:first-of-type {
   position: relative;
   z-index: 99;
 }
 
-#Wrapper #Main > .box .cell.item .topic_info::after {
+#Main > .box .cell.item .topic_info::after {
   position: absolute;
   top: 0;
   left: 0;
@@ -254,16 +258,16 @@ body #Wrapper {
   content: '';
 }
 
-#Wrapper #Main > .box .cell.item .item_title .topic-link {
+#Main > .box .cell.item .item_title .topic-link {
   color: var(--v2p-color-main-800);
   text-decoration: none;
 }
 
-#Wrapper #Main > .box .cell.item .item_title .topic-link:visited {
+#Main > .box .cell.item .item_title .topic-link:visited {
   color: var(--v2p-color-main-400);
 }
 
-#Wrapper #Main > .box .cell.item tr > td:nth-child(2) {
+#Main > .box .cell.item tr > td:nth-child(2) {
   width: 30px;
 }
 
@@ -271,40 +275,40 @@ body #Wrapper {
 
 /* ======= 评论区_头像 ====== */
 
-#Wrapper #Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type {
+#Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type {
   width: 40px;
 }
 
-#Wrapper #Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type img {
+#Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type img {
   width: 40px !important;
 }
 
-#Wrapper #Main > .box .cell > table ~ .cell {
+#Main > .box .cell > table ~ .cell {
   padding-right: 0;
   padding-bottom: 0;
 }
 
-#Wrapper #Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type {
+#Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type {
   width: 30px;
 }
 
-#Wrapper #Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type img {
+#Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type img {
   width: 30px !important;
 }
 
-#Wrapper #Main > .box .cell[id^='r'] table td:nth-of-type(2) {
+#Main > .box .cell[id^='r'] table td:nth-of-type(2) {
   width: 15px;
 }
 
 /* OP - 帖主标签 */
-#Wrapper #Main > .box .cell[id^='r'] .badge.op {
+#Main > .box .cell[id^='r'] .badge.op {
   padding: 4px 8px;
   color: var(--v2p-color-accent-500);
   background-color: var(--v2p-color-accent-100);
   border: none;
 }
 
-#Wrapper #Main > .box .reply_content {
+#Main .reply_content {
   font-size: 15px;
 }
 
@@ -383,22 +387,22 @@ body #Wrapper {
 
 /* ------ 评论区_头像 ------ */
 
-#Wrapper #Main > .box .cell > table td:last-of-type a.dark:active,
+#Main > .box .cell > table td:last-of-type a.dark:active,
 a.dark:link,
 a.dark:visited {
   color: var(--v2p-color-main-600);
   text-decoration: none;
 }
 
-#Wrapper #Main > .box .cell > table td:last-of-type .fr a {
+#Main > .box .cell > table td:last-of-type .fr a {
   opacity: 0;
 }
 
-#Wrapper #Main > .box .cell:hover > table td:last-of-type .fr a {
+#Main > .box .cell:hover > table td:last-of-type .fr a {
   opacity: 1;
 }
 
-#Wrapper #Main > .box .cell > table td:last-of-type .fr .no {
+#Main > .box .cell > table td:last-of-type .fr .no {
   padding: 5px 10px;
   color: var(--v2p-color-main-300);
   font-size: 12px;
@@ -406,13 +410,13 @@ a.dark:visited {
   border-radius: 5px;
 }
 
-#Wrapper #Main > .box .cell:hover > table td:last-of-type .fr .no {
+#Main > .box .cell:hover > table td:last-of-type .fr .no {
   background-color: var(--v2p-color-main-100);
 }
 
 /* ------ 评论区 ------ */
 
-#Wrapper #Main > .box .topic_content {
+#Main > .box .topic_content {
   font-size: 16px;
 }
 
