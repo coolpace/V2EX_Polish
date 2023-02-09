@@ -1,7 +1,7 @@
 void (function NestedComments() {
   'use strict'
 
-  const commentCells = $('.cell[id^="r_"]')
+  const commentCells = $('#Main .cell[id^="r_"]')
   const cellTableRows = commentCells.find('table > tbody > tr')
 
   const commentData = cellTableRows
@@ -17,31 +17,40 @@ void (function NestedComments() {
     })
     .get()
 
-  const popularCommentData = commentData
-    .filter(({ likes }) => likes > 0)
-    .sort((a, b) => b.likes - a.likes)
+  {
+    const popularCommentData = commentData
+      .filter(({ likes }) => likes > 0)
+      .sort((a, b) => b.likes - a.likes)
 
-  const commentBox = $('#Main > .box:has(.cell[id^="r_"])')
+    const commentBox = $('#Main .box:has(.cell[id^="r_"])')
 
-  const commentContainer = $(
-    '<div id="b" style="position:fixed;inset:50px 100px;z-index:999;background-color:#fff;overflow-y:auto;visibility:hidden"><div><button id="close">关闭</button></div></div>'
-  )
+    const commentContainer = $('<div><div><button id="close">关闭</button></div></div>').css({
+      visibility: 'hidden',
+      position: 'fixed',
+      inset: '0',
+      'z-index': '999',
+      'overflow-y': 'auto',
+      'background-color': 'white',
+    })
 
-  commentContainer.find('#close').click(() => {
-    $('#b').css({ visibility: 'hidden' })
-  })
+    commentContainer.find('#close').click(() => {
+      commentContainer.css({ visibility: 'hidden' })
+    })
 
-  commentBox.find('.cell:first-of-type').append('<button id="popular">本页热门评论</button>')
+    const button = $('<div>本页热门评论</div>')
 
-  $('#popular').click(() => {
-    $('#b').css({ visibility: 'visible' })
-  })
+    button.click(() => {
+      commentContainer.css({ visibility: 'visible' })
+    })
 
-  popularCommentData.forEach(({ index }) => {
-    commentContainer.append(commentCells.eq(index).clone())
-  })
+    commentBox.find('.cell:first-of-type').append(button)
 
-  commentBox.append(commentContainer)
+    popularCommentData.forEach(({ index }) => {
+      commentContainer.append(commentCells.eq(index).clone())
+    })
+
+    commentBox.append(commentContainer)
+  }
 
   /** 发帖人的昵称 */
   const ownerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
