@@ -275,17 +275,17 @@ body #Wrapper {
 
 /* ======= 评论区_头像 ====== */
 
+#Main > .box .cell > table ~ .cell {
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
 #Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type {
   width: 40px;
 }
 
 #Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type img {
   width: 40px !important;
-}
-
-#Main > .box .cell > table ~ .cell {
-  padding-right: 0;
-  padding-bottom: 0;
 }
 
 #Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type {
@@ -310,6 +310,16 @@ body #Wrapper {
 
 #Main .reply_content {
   font-size: 15px;
+}
+
+#Main .reply_content a[href^='/member'] {
+  color: var(--v2p-color-main-400);
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+#Main .thank_area {
+  font-size: 12px;
 }
 
 /* ====== 帖子内容 ====== */
