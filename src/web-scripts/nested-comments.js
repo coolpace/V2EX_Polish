@@ -1,6 +1,10 @@
 void (function NestedComments() {
   'use strict'
 
+  {
+    $('#Main .topic-link').attr('target', '_blank')
+  }
+
   const commentCells = $('#Main .cell[id^="r_"]')
   const cellTableRows = commentCells.find('table > tbody > tr')
 
