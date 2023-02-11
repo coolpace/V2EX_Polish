@@ -15,16 +15,13 @@ body {
   --v2p-color-main-700: #334155;
   --v2p-color-main-800: #1e293b;
   --v2p-color-main-900: #0f172a;
-  --v2p-color-accent-50: #fff1f2;
-  --v2p-color-accent-100: #ffe4e6;
-  --v2p-color-accent-200: #fecdd3;
-  --v2p-color-accent-300: #fda4af;
-  --v2p-color-accent-400: #fb7185;
-  --v2p-color-accent-500: #f43f5e;
-  --v2p-color-accent-600: #e11d48;
-  --v2p-color-accent-700: #be123c;
-  --v2p-color-accent-800: #9f1239;
-  --v2p-color-accent-900: #881337;
+  --v2p-color-accent-50: #ecfdf5;
+  --v2p-color-accent-100: #d1fae5;
+  --v2p-color-accent-200: #a7f3d0;
+  --v2p-color-accent-300: #6ee7b7;
+  --v2p-color-accent-400: #34d399;
+  --v2p-color-accent-500: #10b981;
+  --v2p-color-accent-600: #059669;
   --v2p-color-border: rgb(238 238 238);
   --v2p-color-wrapper-bg: rgb(249 250 252);
   --v2p-color-content-bg: rgb(255 255 255);
@@ -32,6 +29,7 @@ body {
   --color-gray: #94a3b8;
   --link-color: #1e293b;
   --box-border-color: #f1f5f9;
+  --box-foreground-color: #1e293b;
 
   color: var(--v2p-color-main-800);
   font-family: var(--v2p-font-noto-sans);
@@ -58,8 +56,13 @@ body .box .header .gray {
   box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
 }
 
+#reply-box #reply_content {
+  border-color: var(--v2p-color-main-300);
+}
+
 #search-container {
   height: 30px;
+  margin: 0 30px;
   background-color: var(--v2p-color-main-100);
   border: none;
   border-radius: 6px;
@@ -68,6 +71,7 @@ body .box .header .gray {
 #search-container::before {
   top: 0;
   left: 4px;
+  background-size: 14px 14px;
   opacity: 0.6;
   filter: none;
 }
@@ -104,6 +108,7 @@ body .box .header .gray {
 /* ------ 帖子标签 ------ */
 
 body #Top {
+  height: 55px;
   background-color: var(--v2p-color-content-bg);
   border: none;
 }
@@ -117,22 +122,32 @@ body #Top {
   padding: 0;
 }
 
-#Top .site-nav .tools {
+#Top .tools {
   display: flex;
-  gap: 5px 16px;
+  gap: 8px 15px;
   align-items: center;
   justify-content: flex-end;
   font-weight: 400;
   font-size: 14px;
 }
 
-#Top .site-nav .tools > .top {
+#Top .tools .top {
   margin-left: 0;
+  padding: 3px 5px;
   color: var(--v2p-color-main-400);
+  border-radius: 4px;
 }
 
-#Top .site-nav .tools > .top:hover {
+#Top .tools .top.effect-btn {
+  transition: color 0.3s;
+}
+
+#Top .tools .top:hover {
   color: var(--v2p-color-main-800);
+}
+
+#Top .tools .top:not(.effect-btn):hover {
+  background-color: var(--v2p-color-main-100);
 }
 
 /* ================================================================ */
@@ -142,8 +157,30 @@ body #Wrapper {
   background-image: none;
 }
 
+#Wrapper .content {
+  display: flex;
+  gap: 15px;
+}
+
+body #Leftbar {
+  order: 1;
+  float: none;
+}
+
+/* ================================================================ */
+
+body #Main {
+  flex: 1;
+  order: 2;
+  margin: 0;
+}
+
 #Main > .box {
   padding: 0 12px;
+}
+
+#Main .cell_tab_current {
+  border-color: var(--v2p-color-main-800);
 }
 
 #Main .cell.item .count_livid {
@@ -151,6 +188,7 @@ body #Wrapper {
   padding: 5px 10px;
   color: var(--v2p-color-main-400);
   font-weight: 400;
+  white-space: nowrap;
   background-color: var(--v2p-color-main-200);
   border-radius: 5px;
   opacity: 0.8;
@@ -169,30 +207,12 @@ body #Wrapper {
 }
 
 #Main #Tabs .tab {
-  position: relative;
-  z-index: 1;
   margin: 0;
   background-color: transparent;
 }
 
-#Main #Tabs .tab::before {
-  position: absolute;
-  top: 0;
-  right: -5px;
-  bottom: 0;
-  left: -5px;
-  z-index: -1;
+#Main #Tabs .tab:not(.effect-btn):hover {
   background-color: var(--v2p-color-main-100);
-  border-radius: 5px;
-  transform: scale(0.6);
-  opacity: 0;
-  transition: transform 0.3s, opacity 0.3s;
-  content: '';
-}
-
-#Main #Tabs .tab:hover::before {
-  transform: scale(1);
-  opacity: 1;
 }
 
 #Main #Tabs .tab_current {
@@ -215,24 +235,24 @@ body #Wrapper {
   border: none;
 }
 
-#Main > .box .cell.item {
+#Main .cell.item {
   border-bottom: 1px solid var(--v2p-color-border);
 }
 
-#Main > .box .cell.item .item_title {
+#Main .cell.item .item_title {
   font-weight: 600;
   opacity: 0.8;
 }
 
-#Main > .box .cell.item .item_title:hover {
+#Main .cell.item .item_title:hover {
   opacity: 1;
 }
 
-#Main > .box .cell.item .topic_info {
+#Main .cell.item .topic_info {
   position: relative;
 }
 
-#Main > .box .cell.item .topic_info a.node {
+#Main .cell.item .topic_info a.node {
   padding: 5px 6px;
   color: var(--v2p-color-main-400);
   font-size: 13px;
@@ -240,15 +260,15 @@ body #Wrapper {
   border-radius: 4px;
 }
 
-#Main > .box .cell.item .topic_info .votes,
-#Main > .box .cell.item .topic_info .node,
-#Main > .box .cell.item .topic_info strong:first-of-type,
-#Main > .box .cell.item .topic_info span:first-of-type {
+#Main .cell.item .topic_info .votes,
+#Main .cell.item .topic_info .node,
+#Main .cell.item .topic_info strong:first-of-type,
+#Main .cell.item .topic_info span:first-of-type {
   position: relative;
   z-index: 99;
 }
 
-#Main > .box .cell.item .topic_info::after {
+#Main .cell.item .topic_info::after {
   position: absolute;
   top: 0;
   left: 0;
@@ -259,16 +279,16 @@ body #Wrapper {
   content: '';
 }
 
-#Main > .box .cell.item .item_title .topic-link {
+#Main .cell.item .item_title .topic-link {
   color: var(--v2p-color-main-800);
   text-decoration: none;
 }
 
-#Main > .box .cell.item .item_title .topic-link:visited {
+#Main .cell.item .item_title .topic-link:visited {
   color: var(--v2p-color-main-400);
 }
 
-#Main > .box .cell.item tr > td:nth-child(2) {
+#Main .cell.item tr > td:nth-child(2) {
   width: 30px;
 }
 
@@ -282,33 +302,36 @@ body #Wrapper {
 }
 
 /* 头像与右侧的距离 */
-#Main > .box .cell[id^='r'] table td:nth-of-type(2) {
+#Main .cell[id^='r'] table td:nth-of-type(2) {
   width: 15px;
 }
 
-#Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type {
+#Main .cell[id^='r'] > table:first-of-type tr td:first-of-type {
   width: 40px;
 }
 
-#Main > .box .cell[id^='r'] > table:first-of-type tr td:first-of-type img {
+#Main .cell[id^='r'] > table:first-of-type tr td:first-of-type .avatar {
   width: 40px !important;
+  border-radius: 5px;
 }
 
-#Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type {
+#Main .cell[id^='r'] > table ~ .cell tr td:first-of-type {
   width: 25px;
 }
 
-#Main > .box .cell[id^='r'] > table ~ .cell tr td:first-of-type img {
+#Main .cell[id^='r'] > table ~ .cell tr td:first-of-type .avatar {
   width: 25px !important;
+  border-radius: 4px;
 }
 
 /* 回复人的昵称 */
-#Main > .box .cell[id^='r'] > table ~ .cell tr td:nth-child(3) strong a {
+#Main .cell[id^='r'] > table ~ .cell tr td:nth-child(3) strong a {
   font-size: 13px;
   opacity: 0.75;
 }
 
-#Main > .box .cell[id^='r'] > table ~ .cell .reply_content {
+/* 回复的内容 */
+#Main .cell[id^='r'] > table ~ .cell .reply_content {
   font-size: 14px;
 }
 
@@ -316,19 +339,28 @@ body #Wrapper {
   font-size: 15px;
 }
 
+#Main .reply_content a[href]:hover {
+  color: var(--v2p-color-accent-500);
+  text-decoration: none;
+  background-color: var(--v2p-color-accent-50);
+}
+
 #Main .reply_content a[href^='/member'] {
   color: var(--v2p-color-main-400);
   font-size: 14px;
-  text-decoration: dotted;
+  text-decoration: underline;
+  background-color: var(--v2p-color-main-100);
 }
 
 /* 帖主徽章 & 管理员徽章 */
-#Main > .box .cell[id^='r'] .badge.op,
-#Main > .box .cell[id^='r'] .badge.mod {
-  padding: 4px 8px;
+#Main .cell[id^='r'] .badge.op,
+#Main .cell[id^='r'] .badge.mod {
+  padding: 2px 5px;
   color: var(--v2p-color-accent-500);
-  background-color: var(--v2p-color-accent-100);
-  border: none;
+  font-weight: 600;
+  background-color: var(--v2p-color-accent-50);
+  border: 1px solid var(--v2p-color-accent-400);
+  border-radius: 4px;
 }
 
 #Main .thank_area {
@@ -352,56 +384,34 @@ body #Wrapper {
   font-size: 12px;
 }
 
-.topic_buttons a.tb {
-  position: relative;
-  z-index: 1;
+.topic_buttons a.tb:link {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
   padding: 8px 5px;
+  column-gap: 5px;
   background: none;
   border-radius: 4px;
 }
 
-.topic_buttons .tb::after {
-  position: absolute;
-  top: 0;
-  right: -5px;
-  bottom: 0;
-  left: -5px;
-  z-index: -1;
-  background-color: var(--v2p-color-main-100);
-  border-radius: 5px;
-  transform: scale(0.6);
-  opacity: 0;
-  transition: transform 0.3s, opacity 0.3s;
-  content: '';
-}
-
-.topic_buttons .tb:hover::after {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.topic_buttons .tb:hover {
-  background: none;
+.topic_buttons .tb:hover:not(.effect-btn) {
+  background: var(--v2p-color-main-100);
   filter: none;
 }
 
-.topic_buttons #topic_thank a::before {
-  margin-right: 0.5em;
+.topic_buttons #topic_thank .tb::after {
   content: '🙏';
 }
 
-.topic_buttons > a:nth-child(2)::before {
-  margin-right: 0.5em;
+.topic_buttons .tb:nth-child(2)::after {
   content: '⭐';
 }
 
-.topic_buttons > a:nth-child(3)::before {
-  margin-right: 0.5em;
+.topic_buttons .tb:nth-child(3)::after {
   content: '🐦';
 }
 
-.topic_buttons > a:nth-child(4)::before {
-  margin-right: 0.5em;
+.topic_buttons .tb:nth-child(4)::after {
   content: '🙈';
 }
 
@@ -444,6 +454,11 @@ a.dark:visited {
 
 /* ================================================================ */
 
+body #Rightbar {
+  order: 3;
+  float: none;
+}
+
 #Rightbar .box {
   opacity: 0.5;
   transition: opacity 0.25s;
@@ -466,4 +481,87 @@ body #Bottom {
 
 #Bottom .inner .small.fade {
   display: none;
+}
+
+/* ============================
+以下样式需要搭配 JS 脚本使用
+=============================== */
+
+.effect-btn {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  background: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.effect-btn::before {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  left: -5px;
+  z-index: -1;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
+  transform: scale(0.6);
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s;
+  content: '';
+}
+
+.effect-btn:hover::before {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.popular-btn {
+  padding: 5px;
+}
+
+.dot {
+  margin: 0 8px;
+  font-weight: 800;
+  font-size: 20px;
+  font-size: 15px;
+}
+
+.extra-comments-mask {
+  --bar-height: 50px;
+
+  padding: 60px;
+  overflow: hidden;
+  background-color: rgb(0 0 0 / 25%);
+}
+
+.extra-comments-content.box {
+  position: relative;
+  box-sizing: border-box;
+  width: 800px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.extra-comments-bar {
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  background-color: var(--v2p-color-content-bg);
+}
+
+.extra-comments-close-btn {
+  margin-left: auto;
+}
+
+body.modal-open {
+  overflow: hidden;
 }

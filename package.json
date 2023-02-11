@@ -5,6 +5,7 @@
   "private": "true",
   "scripts": {
     "cssminify": "css-minify --dir src/themes --output src/themes",
+    "lint:es": "eslint **/*.js",
     "lint:style": "stylelint **/*.css"
   },
   "repository": {
