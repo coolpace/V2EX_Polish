@@ -2,9 +2,17 @@
   "name": "v2ex_plus",
   "version": "0.1.0",
   "description": "Extensions for V2EX to make it better.",
+  "author": "LeoKu",
+  "license": "UNLICENSED",
   "private": "true",
+  "keywords": [
+    "v2ex",
+    "theme",
+    "v2ex",
+    "extension"
+  ],
   "scripts": {
-    "cssminify": "css-minify --dir src/themes --output src/themes",
+    "build:themes": "sass src/themes/clean.scss dist/themes/v2ex-theme-clean.css --no-source-map && css-minify --dir dist/themes --output asset/",
     "lint:es": "eslint **/*.js",
     "lint:style": "stylelint **/*.css"
   },
@@ -12,18 +20,11 @@
     "type": "git",
     "url": "git+https://github.com/coolpace/V2EX_Plus.git"
   },
-  "keywords": [
-    "v2ex",
-    "theme",
-    "v2ex",
-    "extension"
-  ],
-  "author": "LeoKu",
-  "license": "UNLICENSED",
   "homepage": "https://github.com/coolpace/V2EX_Plus#readme",
   "devDependencies": {
     "css-minify": "^2.0.0",
     "prefer-code-style": "^1.0.2",
+    "sass": "^1.58.0",
     "stylelint": "^14.16.1"
   }
 }

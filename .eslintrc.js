@@ -5,4 +5,4 @@ module.exports = {
     require.resolve('prefer-code-style/eslint/browser'),
     require.resolve('prefer-code-style/eslint/node'),
   ],
-}
+};
