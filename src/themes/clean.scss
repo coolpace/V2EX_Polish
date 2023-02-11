@@ -99,6 +99,7 @@ body {
 
   #reply_content {
     border-color: var(--v2p-color-main-300);
+    border-radius: 6px;
   }
 }
 
@@ -137,7 +138,7 @@ body {
 .box {
   .tag,
   > .cell:first-of-type .fr .tag {
-    font-size: 13px;
+    font-size: 12px;
     background-color: var(--v2p-color-main-100);
     border-radius: 5px;
 
@@ -200,8 +201,7 @@ body {
 
       > table {
         ~ .cell {
-          padding-right: 0;
-          padding-bottom: 0;
+          padding: 20px 0 0 15px;
         }
 
         td:last-of-type {
@@ -537,7 +537,7 @@ body {
   padding: 5px;
 }
 
-.dot {
+.split-dot {
   margin: 0 8px;
   font-weight: 800;
   font-size: 20px;

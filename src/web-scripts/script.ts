@@ -1,16 +1,12 @@
-void (function NestedComments() {
-  'use strict';
+import { cellTableRows, commentBox, commentCells } from './dom';
 
+function Script() {
   {
     $('#Top .site-nav .tools > .top').addClass('effect-btn');
     $('#Main #Tabs .tab').addClass('effect-btn');
     $('#Main .topic_buttons a.tb').addClass('effect-btn');
     $('#Main .topic-link').attr('target', '_blank');
   }
-
-  const commentBox = $('#Main .box:has(.cell[id^="r_"])');
-  const commentCells = $('#Main .cell[id^="r_"]');
-  const cellTableRows = commentCells.find('table > tbody > tr');
 
   const commentData = cellTableRows
     .map((idx, tr) => {
@@ -32,15 +28,15 @@ void (function NestedComments() {
 
     if (popularCommentData.length > 0) {
       const commentContainer = $(`
-      <div class="extra-comments-mask">
-        <div class="extra-comments-content box">
-          <div class="extra-comments-bar">
-            <span>本页共有 ${popularCommentData.length} 条热门回复</span>
-            <button class="extra-comments-close-btn">关闭</button>
+        <div class="extra-comments-mask">
+          <div class="extra-comments-content box">
+            <div class="extra-comments-bar">
+              <span>本页共有 ${popularCommentData.length} 条热门回复</span>
+              <button class="extra-comments-close-btn">关闭</button>
+            </div>
           </div>
         </div>
-      </div>
-      `).css({
+        `).css({
         visibility: 'hidden',
         position: 'fixed',
         inset: '0',
@@ -52,10 +48,10 @@ void (function NestedComments() {
         const commentBoxCount = commentBox.find('.cell:first-of-type > span.gray');
         const countText = commentBoxCount.text();
         const newCountText = countText.substring(0, countText.indexOf('回复') + 2);
-        const countTextSpan = `<span class="count-text">${newCountText}</span><span class="dot">·</span>`;
+        const countTextSpan = `<span class="count-text">${newCountText}</span><span class="split-dot">·</span>`;
 
         const popularBtn = $('<span class="popular-btn effect-btn">🔥 查看热门回复</span>');
-        popularBtn.click(() => {
+        popularBtn.on('click', () => {
           commentContainer.css({ visibility: 'visible' });
           document.body.classList.add('modal-open');
         });
@@ -69,7 +65,8 @@ void (function NestedComments() {
         templete.append(commentCells.eq(index).clone());
       });
 
-      commentContainer.find('.extra-comments-close-btn').click(() => {
+      const closeBtn = commentContainer.find('.extra-comments-close-btn');
+      closeBtn.on('click', () => {
         commentContainer.css({ visibility: 'hidden' });
         document.body.classList.remove('modal-open');
       });
@@ -111,4 +108,6 @@ void (function NestedComments() {
 
     i++;
   }
-})();
+}
+
+Script();
