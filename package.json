@@ -12,6 +12,7 @@
     "extension"
   ],
   "scripts": {
+    "build": "pnpm run build:themes && pnpm run build:scripts",
     "build:themes": "sass src/themes/clean.scss dist/themes/v2ex-theme-clean.css --no-source-map && css-minify --dir dist/themes --output asset/",
     "build:scripts": "tsup src/web-scripts/script.ts",
     "lint:es": "eslint **/*.{js,ts}",
