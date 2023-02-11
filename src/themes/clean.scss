@@ -1,0 +1,580 @@
+/**
+ * 作者：LeoKu (https://github.com/Codennnn)
+ * 项目: https://github.com/coolpace/V2EX_Plus
+ */
+
+body {
+  /* stylelint-disable-next-line value-keyword-case */
+  --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', sans-serif;
+  --v2p-color-main-100: #f1f5f9;
+  --v2p-color-main-200: #e2e8f0;
+  --v2p-color-main-300: #cbd5e1;
+  --v2p-color-main-400: #94a3b8;
+  --v2p-color-main-500: #64748b;
+  --v2p-color-main-600: #475569;
+  --v2p-color-main-700: #334155;
+  --v2p-color-main-800: #1e293b;
+  --v2p-color-main-900: #0f172a;
+  --v2p-color-accent-50: #ecfdf5;
+  --v2p-color-accent-100: #d1fae5;
+  --v2p-color-accent-200: #a7f3d0;
+  --v2p-color-accent-300: #6ee7b7;
+  --v2p-color-accent-400: #34d399;
+  --v2p-color-accent-500: #10b981;
+  --v2p-color-accent-600: #059669;
+  --v2p-color-border: rgb(238 238 238);
+  --v2p-color-wrapper-bg: rgb(249 250 252);
+  --v2p-color-content-bg: rgb(255 255 255);
+  --color-fade: #94a3b8;
+  --color-gray: #94a3b8;
+  --link-color: #1e293b;
+  --box-border-color: #f1f5f9;
+  --box-foreground-color: #1e293b;
+
+  color: var(--v2p-color-main-800);
+  font-family: var(--v2p-font-noto-sans);
+  background-color: var(--v2p-color-wrapper-bg);
+
+  #Top {
+    height: 55px;
+    background-color: var(--v2p-color-content-bg);
+    border: none;
+  }
+
+  #Bottom {
+    border: none;
+  }
+
+  #Wrapper {
+    background-color: inherit;
+    background-image: none;
+
+    .content {
+      display: flex;
+      gap: 15px;
+    }
+  }
+
+  #Leftbar {
+    order: 1;
+    float: none;
+  }
+
+  #Main {
+    flex: 1;
+    order: 2;
+    margin: 0;
+  }
+
+  #Rightbar {
+    order: 3;
+    float: none;
+  }
+
+  .box {
+    overflow: hidden;
+    background-color: var(--v2p-color-content-bg);
+    border: none;
+    border-radius: 8px;
+    box-shadow: none;
+
+    .header .gray {
+      color: var(--v2p-color-main-400);
+    }
+  }
+
+  &.modal-open {
+    overflow: hidden;
+  }
+}
+
+#reply-box {
+  &.reply-box-sticky {
+    bottom: 20px;
+    overflow: hidden;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
+  }
+
+  #reply_content {
+    border-color: var(--v2p-color-main-300);
+  }
+}
+
+#search-container {
+  height: 30px;
+  margin: 0 30px;
+  background-color: var(--v2p-color-main-100);
+  border: none;
+  border-radius: 6px;
+
+  &::before {
+    top: 0;
+    left: 4px;
+    background-size: 14px 14px;
+    opacity: 0.6;
+    filter: none;
+  }
+
+  &.active {
+    background-color: var(--v2p-color-main-100);
+  }
+
+  #search-result {
+    top: 42px;
+    box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
+  }
+}
+
+#no-comments-yet {
+  color: var(--v2p-color-main-400);
+  border-color: var(--v2p-color-main-400);
+}
+
+/* ====== 帖子标签 ====== */
+
+.box {
+  .tag,
+  > .cell:first-of-type .fr .tag {
+    font-size: 13px;
+    background-color: var(--v2p-color-main-100);
+    border-radius: 5px;
+
+    &:hover {
+      color: currentcolor;
+      background-color: var(--v2p-color-main-200);
+    }
+  }
+}
+
+/* ------ 帖子标签 ------ */
+
+#Top {
+  .content {
+    height: 100%;
+  }
+
+  .site-nav {
+    height: 100%;
+    padding: 0;
+  }
+
+  .tools {
+    display: flex;
+    gap: 8px 15px;
+    align-items: center;
+    justify-content: flex-end;
+    font-weight: 400;
+    font-size: 14px;
+
+    .top {
+      margin-left: 0;
+      padding: 3px 5px;
+      color: var(--v2p-color-main-400);
+      border-radius: 4px;
+
+      &:hover {
+        color: var(--v2p-color-main-800);
+      }
+
+      &:not(.effect-btn):hover {
+        background-color: var(--v2p-color-main-100);
+      }
+
+      &.effect-btn {
+        transition: color 0.3s;
+      }
+    }
+  }
+}
+
+/* ================================================================ */
+
+#Main {
+  > .box {
+    padding: 0 12px;
+
+    .cell {
+      padding: 20px 10px;
+
+      > table {
+        ~ .cell {
+          padding-right: 0;
+          padding-bottom: 0;
+        }
+
+        td:last-of-type {
+          a.dark {
+            color: var(--v2p-color-main-600);
+            text-decoration: none;
+          }
+
+          .fr {
+            a {
+              opacity: 0;
+            }
+
+            .no {
+              padding: 5px 10px;
+              color: var(--v2p-color-main-300);
+              font-size: 12px;
+              background-color: transparent;
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+
+      .cell {
+        border: none;
+      }
+
+      &:hover > table td:last-of-type .fr {
+        a {
+          opacity: 1;
+        }
+
+        .no {
+          background-color: var(--v2p-color-main-100);
+        }
+      }
+    }
+
+    .topic_content {
+      font-size: 16px;
+    }
+  }
+
+  .cell_tab_current {
+    border-color: var(--v2p-color-main-800);
+  }
+
+  .cell.item {
+    /* ======= 评论区 ====== */
+
+    border-bottom: 1px solid var(--v2p-color-border);
+
+    .item_title {
+      font-weight: 600;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      .topic-link {
+        color: var(--v2p-color-main-800);
+        text-decoration: none;
+
+        &:visited {
+          color: var(--v2p-color-main-400);
+        }
+      }
+    }
+
+    .topic_info {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-color: var(--v2p-color-content-bg);
+        content: '';
+      }
+
+      .node {
+        padding: 5px 6px;
+        color: var(--v2p-color-main-400);
+        font-size: 13px;
+        background-color: var(--v2p-color-main-100);
+        border-radius: 4px;
+      }
+
+      .votes,
+      .node,
+      strong:first-of-type,
+      span:first-of-type {
+        position: relative;
+        z-index: 99;
+      }
+    }
+
+    &:hover .count_livid {
+      opacity: 1;
+    }
+
+    .count_livid {
+      display: inline-block;
+      padding: 5px 10px;
+      color: var(--v2p-color-main-400);
+      font-weight: 400;
+      white-space: nowrap;
+      background-color: var(--v2p-color-main-200);
+      border-radius: 5px;
+      opacity: 0.8;
+    }
+
+    tr > td:nth-child(2) {
+      width: 30px;
+    }
+  }
+
+  #Tabs {
+    /* ====== 节点列表 ====== */
+
+    display: flex;
+    gap: 6px 8px;
+    align-items: center;
+
+    .tab {
+      margin: 0;
+      background-color: transparent;
+
+      &:not(.effect-btn):hover {
+        background-color: var(--v2p-color-main-100);
+      }
+    }
+
+    .tab_current {
+      background-color: var(--v2p-color-main-700);
+    }
+  }
+
+  #SecondaryTabs {
+    padding: 10px;
+    background-color: var(--v2p-color-main-100);
+    border-radius: 5px;
+  }
+
+  .cell[id^='r'] {
+    /* ======= 评论区_头像 ====== */
+
+    table td:nth-of-type(2) {
+      /* 头像与右侧的距离 */
+      width: 15px;
+    }
+
+    > table:first-of-type tr td:first-of-type {
+      width: 40px;
+
+      .avatar {
+        width: 40px !important;
+        border-radius: 5px;
+      }
+    }
+
+    > table ~ .cell {
+      tr td {
+        &:first-of-type {
+          width: 25px;
+
+          .avatar {
+            width: 25px !important;
+            border-radius: 4px;
+          }
+        }
+
+        /* 回复人的昵称 */
+        &:nth-child(3) strong a {
+          font-size: 13px;
+          opacity: 0.75;
+        }
+      }
+
+      /* 回复的内容 */
+      .reply_content {
+        font-size: 14px;
+      }
+    }
+
+    /* 帖主徽章 & 管理员徽章 */
+    .badge.op,
+    .badge.mod {
+      padding: 2px 5px;
+      color: var(--v2p-color-accent-500);
+      font-weight: 600;
+      background-color: var(--v2p-color-accent-50);
+      border: 1px solid var(--v2p-color-accent-400);
+      border-radius: 4px;
+    }
+  }
+
+  .reply_content {
+    font-size: 15px;
+
+    a[href]:hover {
+      color: var(--v2p-color-accent-500);
+      text-decoration: none;
+      background-color: var(--v2p-color-accent-50);
+    }
+
+    a[href^='/member'] {
+      color: var(--v2p-color-main-400);
+      font-size: 14px;
+      text-decoration: underline;
+      background-color: var(--v2p-color-main-100);
+    }
+  }
+
+  .thank_area {
+    font-size: 12px;
+  }
+}
+
+.topic_buttons {
+  /* ====== 帖子操作按钮 ====== */
+
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding: 8px 0;
+  column-gap: 5px;
+  background: none;
+
+  .topic_stats {
+    margin-left: auto;
+    padding: 0 !important;
+    font-size: 12px;
+  }
+
+  a.tb:link {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 8px 5px;
+    column-gap: 5px;
+    background: none;
+    border-radius: 4px;
+  }
+
+  .tb:hover:not(.effect-btn) {
+    background: var(--v2p-color-main-100);
+    filter: none;
+  }
+
+  #topic_thank .tb::after {
+    content: '🙏';
+  }
+
+  .tb {
+    &:nth-child(2)::after {
+      content: '⭐';
+    }
+
+    &:nth-child(3)::after {
+      content: '🐦';
+    }
+
+    &:nth-child(4)::after {
+      content: '🙈';
+    }
+  }
+}
+
+/* ================================================================ */
+
+#Rightbar {
+  .box {
+    opacity: 0.5;
+    transition: opacity 0.25s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .balance_area {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ================================================================ */
+
+#Bottom .inner .small.fade {
+  display: none;
+}
+
+/* ============================
+以下样式需要搭配 JS 脚本使用
+=============================== */
+
+.effect-btn {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  background: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    right: -5px;
+    bottom: 0;
+    left: -5px;
+    z-index: -1;
+    background-color: var(--v2p-color-main-100);
+    border-radius: 5px;
+    transform: scale(0.6);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    content: '';
+  }
+
+  &:hover::before {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.popular-btn {
+  padding: 5px;
+}
+
+.dot {
+  margin: 0 8px;
+  font-weight: 800;
+  font-size: 20px;
+  font-size: 15px;
+}
+
+.extra-comments-mask {
+  --bar-height: 50px;
+
+  padding: 60px;
+  overflow: hidden;
+  background-color: rgb(0 0 0 / 25%);
+}
+
+.extra-comments-content.box {
+  position: relative;
+  box-sizing: border-box;
+  width: 800px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.extra-comments-bar {
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  background-color: var(--v2p-color-content-bg);
+}
+
+.extra-comments-close-btn {
+  margin-left: auto;
+}
