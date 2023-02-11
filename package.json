@@ -13,8 +13,9 @@
   ],
   "scripts": {
     "build:themes": "sass src/themes/clean.scss dist/themes/v2ex-theme-clean.css --no-source-map && css-minify --dir dist/themes --output asset/",
-    "lint:es": "eslint **/*.js",
-    "lint:style": "stylelint **/*.css"
+    "build:scripts": "tsup src/web-scripts/script.ts",
+    "lint:es": "eslint **/*.{js,ts}",
+    "lint:style": "stylelint **/*.{css,scss}"
   },
   "repository": {
     "type": "git",
@@ -22,9 +23,12 @@
   },
   "homepage": "https://github.com/coolpace/V2EX_Plus#readme",
   "devDependencies": {
+    "@types/jquery": "^3.5.16",
     "css-minify": "^2.0.0",
     "prefer-code-style": "^1.0.2",
     "sass": "^1.58.0",
-    "stylelint": "^14.16.1"
+    "stylelint": "^14.16.1",
+    "tsup": "^6.6.0",
+    "typescript": "^4.9.5"
   }
 }
