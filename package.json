@@ -6,15 +6,14 @@
   "license": "UNLICENSED",
   "private": "true",
   "keywords": [
-    "v2ex",
-    "theme",
-    "v2ex",
-    "extension"
+    "v2ex theme",
+    "v2ex extension"
   ],
   "scripts": {
+    "dev": "tsup src/web-scripts/index.ts --watch",
     "build": "pnpm run build:themes && pnpm run build:scripts",
     "build:themes": "sass src/themes/clean.scss dist/themes/v2ex-theme-clean.css --no-source-map && css-minify --dir dist/themes --output asset/",
-    "build:scripts": "tsup src/web-scripts/script.ts",
+    "build:scripts": "tsup src/web-scripts/index.ts",
     "lint:es": "eslint **/*.{js,ts}",
     "lint:style": "stylelint **/*.{css,scss}"
   },

@@ -1,6 +1,6 @@
-const { resolve } = require('path');
+const { resolve } = require('path')
 
-const { TYPESCRIPT_FILES } = require('prefer-code-style/constants');
+const { TYPESCRIPT_FILES } = require('prefer-code-style/constants')
 
 module.exports = {
   root: true,
@@ -19,4 +19,4 @@ module.exports = {
       },
     },
   ],
-};
+}

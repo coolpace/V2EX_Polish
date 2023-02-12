@@ -86,6 +86,61 @@ body {
   &.modal-open {
     overflow: hidden;
   }
+
+  .normal.button {
+    position: relative;
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    color: var(--v2p-color-main-500);
+    font-weight: 500;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 28px;
+    background: none;
+    background-color: var(--v2p-color-main-100);
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    box-shadow: 0 1.8px 0 var(--v2p-color-main-200), 0 1.8px 0 var(--v2p-color-main-100);
+    cursor: pointer;
+    user-select: none;
+
+    &:hover:enabled {
+      color: var(--v2p-color-main-500);
+      font-weight: 500;
+      text-shadow: none;
+      background-color: var(--v2p-color-main-100);
+      border: none;
+      box-shadow: 0 1.8px 0 var(--v2p-color-main-200), 0 1.8px 0 var(--v2p-color-main-100);
+    }
+
+    &.super {
+      color: var(--v2p-color-accent-500);
+      background-color: var(--v2p-color-accent-100);
+      box-shadow: 0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
+
+      &:hover:enabled {
+        color: var(--v2p-color-accent-500);
+        font-weight: 500;
+        text-shadow: none;
+        background-color: var(--v2p-color-accent-100);
+        border: none;
+        box-shadow: 0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
+      }
+    }
+
+    kbd {
+      position: relative;
+      right: -4px;
+      padding: 0 3px;
+      line-height: initial;
+      border: 1px solid var(--v2p-color-main-200);
+      border-radius: 4px;
+    }
+  }
 }
 
 #reply-box {
@@ -198,30 +253,17 @@ body {
 
     .cell {
       padding: 20px 10px;
+    }
 
+    > .cell[id^='r'] {
       > table {
         ~ .cell {
+          /* 嵌套回复 */
           padding: 20px 0 0 15px;
-        }
 
-        td:last-of-type {
-          a.dark {
-            color: var(--v2p-color-main-600);
-            text-decoration: none;
-          }
-
-          .fr {
-            a {
-              opacity: 0;
-            }
-
-            .no {
-              padding: 5px 10px;
-              color: var(--v2p-color-main-300);
-              font-size: 12px;
-              background-color: transparent;
-              border-radius: 5px;
-            }
+          .cell {
+            /* 多层嵌套取消缩进 */
+            padding: 20px 0 0;
           }
         }
       }
@@ -234,16 +276,12 @@ body {
         a {
           opacity: 1;
         }
-
-        .no {
-          background-color: var(--v2p-color-main-100);
-        }
       }
     }
+  }
 
-    .topic_content {
-      font-size: 16px;
-    }
+  .topic_content {
+    font-size: 16px;
   }
 
   .cell_tab_current {
@@ -262,14 +300,14 @@ body {
       &:hover {
         opacity: 1;
       }
+    }
 
-      .topic-link {
-        color: var(--v2p-color-main-800);
-        text-decoration: none;
+    .topic-link {
+      color: var(--v2p-color-main-800);
+      text-decoration: none;
 
-        &:visited {
-          color: var(--v2p-color-main-400);
-        }
+      &:visited {
+        color: var(--v2p-color-main-400);
       }
     }
 
@@ -330,19 +368,6 @@ body {
     display: flex;
     gap: 6px 8px;
     align-items: center;
-
-    .tab {
-      margin: 0;
-      background-color: transparent;
-
-      &:not(.effect-btn):hover {
-        background-color: var(--v2p-color-main-100);
-      }
-    }
-
-    .tab_current {
-      background-color: var(--v2p-color-main-700);
-    }
   }
 
   #SecondaryTabs {
@@ -354,9 +379,33 @@ body {
   .cell[id^='r'] {
     /* ======= 评论区_头像 ====== */
 
-    table td:nth-of-type(2) {
-      /* 头像与右侧的距离 */
-      width: 15px;
+    table td {
+      &:nth-of-type(2) {
+        /* 头像与右侧的距离 */
+        width: 15px;
+      }
+
+      &:last-of-type {
+        a.dark {
+          color: var(--v2p-color-main-600);
+          text-decoration: none;
+        }
+
+        .fr {
+          a {
+            text-decoration: none;
+            opacity: 0;
+          }
+
+          .no {
+            padding: 5px 10px;
+            color: var(--v2p-color-main-300);
+            font-size: 12px;
+            background-color: transparent;
+            border-radius: 5px;
+          }
+        }
+      }
     }
 
     > table:first-of-type tr td:first-of-type {
@@ -407,10 +456,15 @@ body {
   .reply_content {
     font-size: 15px;
 
-    a[href]:hover {
-      color: var(--v2p-color-accent-500);
+    a[href^='http'] {
+      color: var(--v2p-color-main-500);
       text-decoration: none;
-      background-color: var(--v2p-color-accent-50);
+      background-color: var(--v2p-color-main-100);
+
+      &:hover {
+        color: var(--v2p-color-accent-500);
+        background-color: var(--v2p-color-accent-50);
+      }
     }
 
     a[href^='/member'] {
@@ -423,6 +477,19 @@ body {
 
   .thank_area {
     font-size: 12px;
+  }
+
+  .tab {
+    margin: 0;
+    background-color: transparent;
+
+    &:not(.effect-btn):hover {
+      background-color: var(--v2p-color-main-100);
+    }
+  }
+
+  .tab_current {
+    background-color: var(--v2p-color-main-700);
   }
 }
 
@@ -511,6 +578,7 @@ body {
   background: none;
   background-color: transparent;
   cursor: pointer;
+  user-select: none;
 
   &::before {
     position: absolute;
@@ -534,7 +602,7 @@ body {
 }
 
 .popular-btn {
-  padding: 5px;
+  padding: 5px 0;
 }
 
 .split-dot {
@@ -545,8 +613,6 @@ body {
 }
 
 .extra-comments-mask {
-  --bar-height: 50px;
-
   padding: 60px;
   overflow: hidden;
   background-color: rgb(0 0 0 / 25%);
@@ -558,7 +624,7 @@ body {
   width: 800px;
   height: 100%;
   margin: 0 auto;
-  padding: 0 20px 20px;
+  padding: 0 20px;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -577,4 +643,29 @@ body {
 
 .extra-comments-close-btn {
   margin-left: auto;
+}
+
+.heart-box {
+  position: relative;
+  top: 2px;
+  display: inline-flex;
+  align-items: center;
+  column-gap: 5px;
+}
+
+.icon-heart {
+  display: inline-flex;
+  color: #f43f5e;
+
+  svg {
+    fill: #ffe4e6;
+  }
+}
+
+.icon-reply {
+  position: relative;
+  top: 4px;
+  display: inline-flex;
+  width: 20px;
+  color: var(--v2p-color-main-300);
 }

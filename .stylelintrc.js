@@ -7,4 +7,4 @@ module.exports = {
     'no-descending-specificity': null,
   },
   ignoreFiles: ['node_modules/**/*', '**/*.min.css', 'dist/**/*', 'asset/**/*'],
-};
+}
