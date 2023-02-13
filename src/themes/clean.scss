@@ -143,6 +143,15 @@ body {
   }
 }
 
+::selection {
+  color: currentcolor;
+  background-color: var(--v2p-color-main-100);
+}
+
+img::selection {
+  background-color: var(--v2p-color-main-100);
+}
+
 #reply-box {
   &.reply-box-sticky {
     bottom: 20px;
