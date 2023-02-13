@@ -1,6 +1,6 @@
 import { nestedComments } from './nested-comments'
 import { popular } from './popular'
-import { replaceHeart, replaceReply } from './replace-element'
+import { replaceHeart, setControls } from './replace-element'
 import { addStyle } from './style'
 
 {
@@ -13,7 +13,7 @@ import { addStyle } from './style'
 addStyle()
 
 replaceHeart()
-replaceReply()
+setControls()
 
 popular()
 nestedComments()

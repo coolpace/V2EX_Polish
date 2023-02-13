@@ -145,11 +145,11 @@ body {
 
 ::selection {
   color: currentcolor;
-  background-color: var(--v2p-color-main-100);
+  background-color: var(--v2p-color-main-200);
 }
 
 img::selection {
-  background-color: var(--v2p-color-main-100);
+  background-color: var(--v2p-color-main-400);
 }
 
 #reply-box {
@@ -386,6 +386,7 @@ img::selection {
         /* 嵌套回复 */
 
         padding: 20px 0 0 15px;
+        border: none;
 
         .cell {
           padding: 20px 0 0; /* 多层嵌套取消缩进 */
@@ -458,6 +459,7 @@ img::selection {
       background-color: var(--v2p-color-accent-50);
       border: 1px solid var(--v2p-color-accent-400);
       border-radius: 4px;
+      user-select: none;
     }
   }
 
@@ -655,7 +657,7 @@ img::selection {
 
 .heart-box {
   position: relative;
-  top: 2px;
+  top: 3px;
   display: inline-flex;
   align-items: center;
   column-gap: 5px;
@@ -663,6 +665,8 @@ img::selection {
 
 .icon-heart {
   display: inline-flex;
+  width: 16px;
+  height: 16px;
   color: #f43f5e;
 
   svg {
@@ -697,10 +701,10 @@ img::selection {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     padding: 4px 0;
-    color: var(--v2p-color-main-300);
+    color: var(--v2p-color-main-400);
   }
 
   > a {
