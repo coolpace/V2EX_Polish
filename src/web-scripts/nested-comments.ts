@@ -18,7 +18,7 @@ export function nestedComments() {
       for (let j = i - 1; j >= 0; j--) {
         if (content.match(`@${commentData[j].name}`)) {
           cellDom.classList.add('responder')
-          commentCells[j].append(commentCells[i])
+          commentCells[j].append(cellDom)
           break
         }
       }

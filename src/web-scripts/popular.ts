@@ -52,7 +52,7 @@ export function popular() {
         $(document).off('keydown', keyupHandler)
         boundEvent = false
 
-        commentContainer.hide()
+        commentContainer.fadeOut('fast')
         document.body.classList.remove('modal-open')
       }
 
@@ -63,7 +63,7 @@ export function popular() {
           boundEvent = true
         }
 
-        commentContainer.show()
+        commentContainer.fadeIn('fast')
         document.body.classList.add('modal-open')
       }
 

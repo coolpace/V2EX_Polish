@@ -192,15 +192,11 @@ body {
 
 .box {
   .tag,
-  > .cell:first-of-type .fr .tag {
+  > .cell:first-of-type .tag {
+    color: currentcolor;
     font-size: 12px;
     background-color: var(--v2p-color-main-100);
     border-radius: 5px;
-
-    &:hover {
-      color: currentcolor;
-      background-color: var(--v2p-color-main-200);
-    }
   }
 }
 
@@ -253,30 +249,6 @@ body {
 
     .cell {
       padding: 20px 10px;
-    }
-
-    > .cell[id^='r'] {
-      > table {
-        ~ .cell {
-          /* 嵌套回复 */
-          padding: 20px 0 0 15px;
-
-          .cell {
-            /* 多层嵌套取消缩进 */
-            padding: 20px 0 0;
-          }
-        }
-      }
-
-      .cell {
-        border: none;
-      }
-
-      &:hover > table td:last-of-type .fr {
-        a {
-          opacity: 1;
-        }
-      }
     }
   }
 
@@ -377,68 +349,95 @@ body {
   }
 
   .cell[id^='r'] {
-    /* ======= 评论区_头像 ====== */
-
-    table td {
-      &:nth-of-type(2) {
-        /* 头像与右侧的距离 */
-        width: 15px;
-      }
-
-      &:last-of-type {
-        a.dark {
-          color: var(--v2p-color-main-600);
-          text-decoration: none;
-        }
-
-        .fr {
-          a {
-            text-decoration: none;
-            opacity: 0;
+    &:hover {
+      > table {
+        td:last-of-type {
+          .fr {
+            a {
+              opacity: 1;
+            }
           }
+        }
+      }
+    }
 
-          .no {
-            padding: 5px 10px;
-            color: var(--v2p-color-main-300);
-            font-size: 12px;
-            background-color: transparent;
+    > table {
+      &:first-of-type td {
+        &:first-of-type {
+          width: 40px;
+
+          .avatar {
+            width: 40px !important;
             border-radius: 5px;
           }
         }
       }
-    }
 
-    > table:first-of-type tr td:first-of-type {
-      width: 40px;
+      ~ .cell {
+        /* 嵌套回复 */
 
-      .avatar {
-        width: 40px !important;
-        border-radius: 5px;
-      }
-    }
+        padding: 20px 0 0 15px;
 
-    > table ~ .cell {
-      tr td {
-        &:first-of-type {
-          width: 25px;
+        .cell {
+          padding: 20px 0 0; /* 多层嵌套取消缩进 */
+          border: none;
+        }
 
-          .avatar {
-            width: 25px !important;
-            border-radius: 4px;
+        tr td {
+          &:first-of-type {
+            width: 25px;
+
+            .avatar {
+              width: 25px !important;
+              border-radius: 4px;
+            }
+          }
+
+          /* 回复人的昵称 */
+          &:nth-child(3) strong a {
+            font-size: 13px;
+            opacity: 0.75;
           }
         }
 
-        /* 回复人的昵称 */
-        &:nth-child(3) strong a {
-          font-size: 13px;
-          opacity: 0.75;
+        /* 回复的内容 */
+        .reply_content {
+          font-size: 14px;
         }
       }
 
-      /* 回复的内容 */
-      .reply_content {
-        font-size: 14px;
+      td {
+        &:nth-of-type(2) {
+          /* 头像与右侧的距离 */
+          width: 15px;
+        }
+
+        &:last-of-type {
+          a.dark {
+            color: var(--v2p-color-main-600);
+            text-decoration: none;
+          }
+
+          .fr {
+            position: relative;
+            top: -3px;
+
+            a {
+              opacity: 0;
+            }
+          }
+        }
       }
+    }
+
+    .no {
+      position: relative;
+      top: -4px;
+      padding: 5px 10px;
+      color: var(--v2p-color-main-300);
+      font-size: 12px;
+      background-color: transparent;
+      border-radius: 5px;
     }
 
     /* 帖主徽章 & 管理员徽章 */
@@ -469,7 +468,7 @@ body {
 
     a[href^='/member'] {
       color: var(--v2p-color-main-400);
-      font-size: 14px;
+      font-size: 13px;
       text-decoration: underline;
       background-color: var(--v2p-color-main-100);
     }
@@ -662,10 +661,41 @@ body {
   }
 }
 
-.icon-reply {
-  position: relative;
-  top: 4px;
+@supports selector(:has(*)) {
+  #Main .cell[id^='r'] > table:hover {
+    .control-area {
+      opacity: 1;
+    }
+  }
+}
+
+@supports selector(:has(*)) {
+  #Main .cell[id^='r']:not(:has(.cell:hover)) > table:hover {
+    .control-area {
+      opacity: 1;
+    }
+  }
+}
+
+.control-area {
   display: inline-flex;
-  width: 20px;
-  color: var(--v2p-color-main-300);
+  align-items: center;
+  font-size: 12px;
+  column-gap: 15px;
+  opacity: 0;
+
+  .control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 4px 0;
+    color: var(--v2p-color-main-300);
+  }
+
+  > a {
+    text-decoration: none;
+    opacity: 1;
+  }
 }
