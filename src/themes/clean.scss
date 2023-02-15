@@ -611,24 +611,28 @@ img::selection {
   }
 }
 
-.popular-btn {
+.v2p-popular-btn {
   padding: 5px 0;
 }
 
-.split-dot {
+.v2p-dot {
   margin: 0 8px;
   font-weight: 800;
   font-size: 20px;
   font-size: 15px;
 }
 
-.extra-comments-mask {
+.v2p-cm-mask {
+  position: fixed;
+  z-index: 999;
   padding: 60px;
   overflow: hidden;
+  overflow-y: auto;
   background-color: rgb(0 0 0 / 25%);
+  inset: 0;
 }
 
-.extra-comments-content.box {
+.v2p-cm-content.box {
   position: relative;
   box-sizing: border-box;
   width: 800px;
@@ -639,7 +643,7 @@ img::selection {
   overflow-y: auto;
 }
 
-.extra-comments-bar {
+.v2p-cm-bar {
   position: sticky;
   top: 0;
   right: 0;
@@ -651,7 +655,7 @@ img::selection {
   background-color: var(--v2p-color-content-bg);
 }
 
-.extra-comments-close-btn {
+.v2p-cm-close-btn {
   margin-left: auto;
 }
 
@@ -676,7 +680,7 @@ img::selection {
 
 @supports selector(:has(*)) {
   #Main .cell[id^='r'] > table:hover {
-    .control-area {
+    .v2p-controls {
       opacity: 1;
     }
   }
@@ -684,31 +688,31 @@ img::selection {
 
 @supports selector(:has(*)) {
   #Main .cell[id^='r']:not(:has(.cell:hover)) > table:hover {
-    .control-area {
+    .v2p-controls {
       opacity: 1;
     }
   }
 }
 
-.control-area {
+.v2p-controls {
   display: inline-flex;
   align-items: center;
   font-size: 12px;
   column-gap: 15px;
   opacity: 0;
 
-  .control {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    padding: 4px 0;
-    color: var(--v2p-color-main-400);
-  }
-
   > a {
     text-decoration: none;
     opacity: 1;
   }
+}
+
+.v2p-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 4px 0;
+  color: var(--v2p-color-main-400);
 }
