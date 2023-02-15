@@ -32,23 +32,23 @@ export function setControls() {
     const thankArea = $(el)
     const thanked = thankArea.hasClass('thanked')
 
-    const control = $('<span class="control-area">')
+    const controls = $('<span class="v2p-controls">')
 
     const thankIcon = $(`
-      <span class="control">
+      <span class="v2p-control">
         ${iconHeart}
       </span>
     `)
 
     if (thanked) {
       thankIcon.attr('title', '已感谢').css({ color: '#f43f5e', cursor: 'default' })
-      control.append($('<a>').append(thankIcon))
+      controls.append($('<a>').append(thankIcon))
     } else {
       const hide = thankArea.find('> a').eq(0).removeClass('thank')
       const thank = thankArea.find('> a').eq(1).removeClass('thank')
 
       hide.html(`
-        <span class="control effect-btn" title="隐藏">
+        <span class="v2p-control effect-btn" title="隐藏">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -68,13 +68,13 @@ export function setControls() {
       thankIcon.attr('title', '感谢').addClass('effect-btn')
       thank.empty().append(thankIcon)
 
-      control.append(hide).append(thank)
+      controls.append(hide).append(thank)
     }
 
     const reply = thankArea.find('+ a')
 
     reply.find('> img[alt="Reply"]').replaceWith(`
-      <span class="control effect-btn" title="回复">
+      <span class="v2p-control effect-btn" title="回复">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -91,8 +91,8 @@ export function setControls() {
       </span>
     `)
 
-    control.append(reply)
+    controls.append(reply)
 
-    control.replaceAll(thankArea)
+    controls.replaceAll(thankArea)
   })
 }

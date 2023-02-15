@@ -6,35 +6,27 @@ export function popular() {
     .sort((a, b) => b.likes - a.likes)
 
   if (popularCommentData.length > 0) {
-    const commentContainer = $(`
-        <div class="extra-comments-mask">
-          <div class="extra-comments-content box">
-            <div class="extra-comments-bar">
-              <span>本页共有 ${popularCommentData.length} 条热门回复</span>
-              <button class="extra-comments-close-btn normal button">关闭<kbd>Esc</kbd></button>
-            </div>
-          </div>
+    const cmMask = $('<div class="v2p-cm-mask">')
+    const cmContent = $(`
+      <div class="v2p-cm-content box">
+        <div class="v2p-cm-bar">
+          <span>本页共有 ${popularCommentData.length} 条热门回复</span>
+          <button class="v2p-cm-close-btn normal button">关闭<kbd>Esc</kbd></button>
         </div>
-        `)
-      .css({
-        position: 'fixed',
-        inset: '0',
-        'z-index': '999',
-        'overflow-y': 'auto',
-      })
-      .hide()
+      </div>
+    `)
+    const cmContainer = cmMask.append(cmContent).hide()
 
     {
       const commentBoxCount = commentBox.find('.cell:first-of-type > span.gray')
       const countText = commentBoxCount.text()
       const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
-      const countTextSpan = `<span class="count-text">${newCountText}</span><span class="split-dot">·</span>`
+      const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>`
 
       let boundEvent = false
 
       const clickHandler = (e: JQuery.ClickEvent) => {
-        const content = $('.extra-comments-content')
-        if ($(e.target).closest(content).length === 0) {
+        if ($(e.target).closest(cmContent).length === 0) {
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
           handleModalClose()
         }
@@ -52,7 +44,7 @@ export function popular() {
         $(document).off('keydown', keyupHandler)
         boundEvent = false
 
-        commentContainer.fadeOut('fast')
+        cmContainer.fadeOut('fast')
         document.body.classList.remove('modal-open')
       }
 
@@ -63,14 +55,14 @@ export function popular() {
           boundEvent = true
         }
 
-        commentContainer.fadeIn('fast')
+        cmContainer.fadeIn('fast')
         document.body.classList.add('modal-open')
       }
 
-      const closeBtn = commentContainer.find('.extra-comments-close-btn')
+      const closeBtn = cmContainer.find('.v2p-cm-close-btn')
       closeBtn.on('click', handleModalClose)
 
-      const popularBtn = $('<span class="popular-btn effect-btn">🔥 查看热门回复</span>')
+      const popularBtn = $('<span class="v2p-popular-btn effect-btn">🔥 查看热门回复</span>')
       popularBtn.on('click', (e) => {
         e.stopPropagation()
         handleModalOpen()
@@ -85,8 +77,8 @@ export function popular() {
       templete.append(commentCells.eq(index).clone())
     })
 
-    commentContainer.find('.extra-comments-content').append(templete.html())
+    cmContent.append(templete.html())
 
-    commentBox.append(commentContainer)
+    commentBox.append(cmContainer)
   }
 }
