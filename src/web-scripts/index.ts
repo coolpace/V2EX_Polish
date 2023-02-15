@@ -1,4 +1,5 @@
 import { nestedComments } from './nested-comments'
+import { paging } from './paging'
 import { popular } from './popular'
 import { replaceHeart, setControls } from './replace-element'
 import { addStyle } from './style'
@@ -17,3 +18,4 @@ setControls()
 
 popular()
 nestedComments()
+paging()

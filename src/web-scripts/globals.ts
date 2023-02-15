@@ -17,10 +17,10 @@ export const commentData = cellTableRows
   .map((idx, tr) => {
     const id = commentCells[idx].id
     const td = $(tr).find('> td:nth-child(3)')
-    const name = td.find('> strong > a').text()
-    const content = td.find('> .reply_content').text()
-    const likes = Number(td.find('span.small').text())
-    const floor = td.find('span.no').text()
+    const name = td.find('> strong > a').text() //回复者昵称
+    const content = td.find('> .reply_content').text() //回复内容
+    const likes = Number(td.find('span.small').text()) //感谢数
+    const floor = td.find('span.no').text() //层数
 
     return { id, name, content, likes, floor, index: idx }
   })
