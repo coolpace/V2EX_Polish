@@ -74,7 +74,7 @@ export function setControls() {
     const reply = thankArea.find('+ a')
 
     reply.find('> img[alt="Reply"]').replaceWith(`
-      <span class="v2p-control effect-btn" title="回复">
+      <span class="v2p-control v2p-ac-reply effect-btn" title="回复">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
