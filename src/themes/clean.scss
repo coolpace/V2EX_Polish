@@ -485,6 +485,7 @@ img::selection {
           .fr {
             position: relative;
             top: -3px;
+            user-select: none;
 
             a {
               opacity: 0;
@@ -515,6 +516,20 @@ img::selection {
       border: 1px solid var(--v2p-color-accent-400);
       border-radius: 4px;
       user-select: none;
+    }
+  }
+
+  .topic_content,
+  .reply_content {
+    a[href^='http'] {
+      color: var(--v2p-color-main-500);
+      text-decoration: none;
+      background-color: var(--v2p-color-main-100);
+
+      &:hover {
+        color: var(--v2p-color-accent-500);
+        background-color: var(--v2p-color-accent-50);
+      }
     }
   }
 
