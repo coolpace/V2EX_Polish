@@ -71,6 +71,10 @@ body {
     float: none;
   }
 
+  h1 {
+    text-shadow: 2px 2px var(--v2p-color-content-bg);
+  }
+
   .box {
     overflow: hidden;
     background-color: var(--v2p-color-content-bg);
@@ -127,21 +131,6 @@ body {
         opacity: 0.5;
         pointer-events: none;
       }
-
-      // &.v2p-primary-btn {
-      //   color: var(--v2p-color-accent-500);
-      //   background-color: var(--v2p-color-accent-100);
-      //   box-shadow: 0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
-
-      //   &:hover:enabled {
-      //     color: var(--v2p-color-accent-500);
-      //     font-weight: 500;
-      //     text-shadow: none;
-      //     background-color: var(--v2p-color-accent-100);
-      //     border: none;
-      //     box-shadow: 0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
-      //   }
-      // }
 
       kbd {
         position: relative;
@@ -317,6 +306,16 @@ img::selection {
 
   .topic_content {
     font-size: 16px;
+  }
+
+  .vote:link {
+    color: var(--v2p-color-main-500);
+    border-color: var(--v2p-color-main-300);
+    border-radius: 5px;
+
+    &:hover {
+      box-shadow: 0 2px 2px var(--v2p-color-main-200);
+    }
   }
 
   .cell_tab_current {
@@ -587,6 +586,7 @@ img::selection {
     margin-left: auto;
     padding: 0 !important;
     font-size: 12px;
+    text-shadow: none;
   }
 
   a.tb:link {
