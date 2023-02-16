@@ -767,7 +767,7 @@ body {
   }
 }
 
-@supports selector(:has(*)) {
+@supports not selector(:has(*)) {
   #Main .cell[id^='r'] > table:hover {
     .v2p-controls {
       opacity: 1;
