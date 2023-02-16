@@ -4,6 +4,6 @@ const style = `body{--v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, "No
 /**
  * 通过 JS 注入主题样式。
  */
-export function addStyle() {
+export function addGlobalStyle() {
   $(`<style type='text/css'>${style}</style>`).appendTo('head')
 }

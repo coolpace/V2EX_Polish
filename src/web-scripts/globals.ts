@@ -2,7 +2,7 @@
 export const loginName = $('#Top .tools > a[href^="/member"]').text()
 
 /** 发帖人的昵称 */
-export const ownerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
+export const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
 
 /** 主题内容区 */
 export const topicContentBox = $('#Main .box:has(.topic_content)')
