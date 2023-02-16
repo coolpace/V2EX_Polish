@@ -1,3 +1,4 @@
+import { topicContentBox } from './globals'
 import { nestedComments } from './nested-comments'
 import { paging } from './paging'
 import { popular } from './popular'
@@ -9,6 +10,7 @@ import { addStyle } from './style'
   $('#Main .tab').addClass('effect-btn')
   $('#Main .topic_buttons a.tb').addClass('effect-btn')
   $('#Main .topic-link, .item_hot_topic_title > a, .item_node').attr('target', '_blank')
+  topicContentBox.find('a[href]').attr('target', '_blank')
 }
 
 addStyle()
