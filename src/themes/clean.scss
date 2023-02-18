@@ -243,12 +243,15 @@ img::selection {
 /* ====== 帖子标签 ====== */
 
 .box {
-  .tag,
-  > .cell:first-of-type .tag {
-    color: currentcolor;
+  .tag {
+    color: var(--v2p-color-main-400);
     font-size: 12px;
     background-color: var(--v2p-color-main-100);
     border-radius: 5px;
+
+    &::before {
+      color: var(--v2p-color-main-500);
+    }
   }
 }
 
@@ -622,11 +625,11 @@ img::selection {
     filter: none;
   }
 
-  #topic_thank .tb::after {
-    content: '🙏';
-  }
-
   .tb {
+    &:nth-child(1)::after {
+      content: '🙏';
+    }
+
     &:nth-child(2)::after {
       content: '⭐';
     }
@@ -822,4 +825,22 @@ body {
   height: 16px;
   padding: 4px 0;
   color: var(--v2p-color-main-400);
+}
+
+.topic_buttons .v2p-tb.effect-btn {
+  color: var(--v2p-color-main-400);
+  transition: color 0.3s;
+
+  &:hover {
+    color: currentcolor;
+  }
+
+  &::after {
+    display: none;
+  }
+}
+
+.v2p-tb-icon {
+  width: 15px;
+  height: 15px;
 }
