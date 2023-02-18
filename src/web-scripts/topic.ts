@@ -167,7 +167,6 @@ export function setControls() {
     }
 
     const reply = ctrlArea.find('a:last-of-type')
-    console.log(_ + 1, reply.html())
 
     reply.find('> img[alt="Reply"]').replaceWith(`
       <span class="v2p-control v2p-ac-reply effect-btn" title="回复">
