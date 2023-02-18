@@ -191,6 +191,79 @@ export function setControls() {
     thankArea.remove()
     crtlContainer.prependTo(ctrlArea)
   })
+
+  $('#reply-box input[type="submit"]').attr('value', '发表回复')
+
+  const topicBtn = $('.topic_buttons .tb').addClass('v2p-tb')
+  topicBtn.eq(0).append(`
+    <span class="v2p-tb-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polygon
+          points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+        ></polygon>
+      </svg>
+    </span>
+  `)
+  topicBtn.eq(1).append(`
+    <span class="v2p-tb-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
+        ></path>
+      </svg>
+    </span>
+  `)
+  topicBtn.eq(2).append(`
+    <span class="v2p-tb-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M8 15h8"></path>
+        <path d="M8 9h2"></path>
+        <path d="M14 9h2"></path>
+      </svg>
+    </span>
+  `)
+  topicBtn.eq(3).append(`
+    <span class="v2p-tb-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"
+        ></path>
+      </svg>
+    </span>
+  `)
 }
 
 export function nestedComments() {
