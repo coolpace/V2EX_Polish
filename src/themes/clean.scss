@@ -489,6 +489,10 @@ img::selection {
             a {
               opacity: 0;
             }
+
+            & + .sep3 {
+              height: 0;
+            }
           }
         }
       }
@@ -506,15 +510,29 @@ img::selection {
     }
 
     /* 帖主徽章 & 管理员徽章 */
-    .badge.op,
-    .badge.mod {
+    .badge {
       padding: 2px 5px;
-      color: var(--v2p-color-accent-500);
       font-weight: 600;
-      background-color: var(--v2p-color-accent-50);
       border: 1px solid var(--v2p-color-accent-400);
-      border-radius: 4px;
       user-select: none;
+
+      &:first-child {
+        border-radius: 4px 0 0 4px;
+      }
+
+      &:last-child {
+        border-radius: 0 4px 4px 0;
+      }
+
+      &.op {
+        color: var(--v2p-color-accent-500);
+        background-color: var(--v2p-color-accent-50);
+      }
+
+      &.mod {
+        color: var(--v2p-color-content-bg);
+        background-color: var(--v2p-color-accent-400);
+      }
     }
   }
 

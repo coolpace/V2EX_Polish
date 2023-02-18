@@ -13,7 +13,7 @@ export const commentBox = $('#Main .box:has(.cell[id^="r_"])')
 /** 评论区的回复 */
 export const commentCells = commentBox.find('.cell[id^="r_"]')
 
-export const cellTableRows = commentCells.find('table > tbody > tr')
+export const cellTableRows = commentCells.find('> table > tbody > tr')
 
 /** 评论数据 */
 export const commentData = cellTableRows

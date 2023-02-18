@@ -1,4 +1,5 @@
 import {
+  cellTableRows,
   commentBox,
   commentCells,
   commentData,
@@ -117,13 +118,12 @@ export function replaceHeart() {
 }
 
 export function setControls() {
-  const thankAreas = commentCells.find('.thank_area')
+  const crtlAreas = cellTableRows.find('> td:last-of-type > .fr')
 
-  thankAreas.each((_, el) => {
-    const thankArea = $(el)
-    const thanked = thankArea.hasClass('thanked')
+  crtlAreas.each((_, el) => {
+    const ctrlArea = $(el)
 
-    const controls = $('<span class="v2p-controls">')
+    const crtlContainer = $('<span class="v2p-controls">')
 
     const thankIcon = $(`
       <span class="v2p-control">
@@ -131,12 +131,16 @@ export function setControls() {
       </span>
     `)
 
+    const thankArea = ctrlArea.find('> .thank_area')
+    const thanked = thankArea.hasClass('thanked')
+
     if (thanked) {
       thankIcon.attr('title', '已感谢').css({ color: '#f43f5e', cursor: 'default' })
-      controls.append($('<a>').append(thankIcon))
+      crtlContainer.append($('<a>').append(thankIcon))
     } else {
-      const hide = thankArea.find('> a').eq(0).removeClass('thank')
-      const thank = thankArea.find('> a').eq(1).removeClass('thank')
+      const thankEle = thankArea.find('> .thank')
+      const hide = thankEle.eq(0).removeClass('thank')
+      const thank = thankEle.eq(1).removeClass('thank')
 
       hide.html(`
         <span class="v2p-control effect-btn" title="隐藏">
@@ -159,10 +163,11 @@ export function setControls() {
       thankIcon.attr('title', '感谢').addClass('effect-btn')
       thank.empty().append(thankIcon)
 
-      controls.append(hide).append(thank)
+      crtlContainer.append(hide).append(thank)
     }
 
-    const reply = thankArea.find('+ a')
+    const reply = ctrlArea.find('a:last-of-type')
+    console.log(_ + 1, reply.html())
 
     reply.find('> img[alt="Reply"]').replaceWith(`
       <span class="v2p-control v2p-ac-reply effect-btn" title="回复">
@@ -182,9 +187,10 @@ export function setControls() {
       </span>
     `)
 
-    controls.append(reply)
+    crtlContainer.append(reply)
 
-    controls.replaceAll(thankArea)
+    thankArea.remove()
+    crtlContainer.prependTo(ctrlArea)
   })
 }
 
