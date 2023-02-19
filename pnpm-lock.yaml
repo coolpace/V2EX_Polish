@@ -2,12 +2,16 @@ lockfileVersion: 5.4
 
 specifiers:
   '@codennnn/tsconfig': ^1.1.1
+  '@floating-ui/dom': ^1.2.1
   '@types/jquery': ^3.5.16
   prefer-code-style: ^1.0.2
   sass: ^1.58.0
   stylelint: ^14.16.1
   tsup: ^6.6.0
   typescript: ^4.9.5
+
+dependencies:
+  '@floating-ui/dom': 1.2.1
 
 devDependencies:
   '@codennnn/tsconfig': 1.1.1
@@ -466,6 +470,16 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@floating-ui/core/1.2.1:
+    resolution: {integrity: sha512-LSqwPZkK3rYfD7GKoIeExXOyYx6Q1O4iqZWwIehDNuv3Dv425FIAE8PRwtAx1imEolFTHgBEcoFHm9MDnYgPCg==}
+    dev: false
+
+  /@floating-ui/dom/1.2.1:
+    resolution: {integrity: sha512-Rt45SmRiV8eU+xXSB9t0uMYiQ/ZWGE/jumse2o3i5RGlyvcbqOF4q+1qBnzLE2kZ5JGhq0iMkcGXUKbFe7MpTA==}
+    dependencies:
+      '@floating-ui/core': 1.2.1
+    dev: false
 
   /@humanwhocodes/config-array/0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
