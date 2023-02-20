@@ -1,4 +1,4 @@
-import { arrow, computePosition } from '@floating-ui/dom'
+import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
 import {
   cellTableRows,
@@ -120,16 +120,53 @@ export function replaceHeart() {
 }
 
 export function setControls() {
-  const blockContent = $('<p></p>')
-  const action1 = $('<button class="normal button">取消</button>')
-  const action2 = $('<button class="normal button">确定隐藏</button>')
-  const tooltip = $('<div id="v2p-tooltip" role="tooltip"><div id="v2p-tooltip-arrow"></div></div>')
-    .append(blockContent, action1, action2)
-    .appendTo($('body'))
-  action1.on('click', () => {
-    tooltip.get(0)!.style.visibility = 'hidden'
-    action2.off('click')
+  const emoticons = ['😀', '🤡', '💩', '🤩', '😂', '😅', '🥳']
+  const emoticonsContent = $(`
+    <div class="v2p-emoticons">
+      ${emoticons.map((emoji) => `<span>${emoji}</span>`).join('')}
+    </div>
+  `)
+  const emojiBtn = $(`
+    <button type="button" class="normal button">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        style="width:18px; height:18px;"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
+        />
+      </svg>
+    </button>
+  `).insertAfter('#reply_content + .flex-one-row > input[type="submit"]')
+  const closeBtn = $('<button type="button" class="normal button">隐藏</button>')
+  const tooltip = $('<div id="v2p-tooltip" role="tooltip"></div>')
+    .append(emoticonsContent, closeBtn)
+    .appendTo($('#reply-box'))
+  const tooltipEle = tooltip.get(0)!
+
+  closeBtn.on('click', () => {
+    tooltipEle.style.visibility = 'hidden'
   })
+
+  const handler = () => {
+    computePosition(emojiBtn.get(0)!, tooltipEle, {
+      placement: 'bottom',
+      middleware: [offset(6), flip(), shift({ padding: 8 })],
+    }).then(({ x, y }) => {
+      Object.assign(tooltipEle.style, {
+        left: `${x}px`,
+        top: `${y}px`,
+      })
+      tooltipEle.style.visibility = 'visible'
+    })
+  }
+  emojiBtn.on('click', handler)
 
   const crtlAreas = cellTableRows.find('> td:last-of-type > .fr')
 
@@ -172,28 +209,7 @@ export function setControls() {
           </svg>
         </span>
       `)
-      const handler = () => {
-        computePosition(hide.get(0)!, tooltip.get(0)!, {
-          placement: 'bottom',
-          middleware: [arrow({ element: document.querySelector('#v2p-tooltip-arrow')! })],
-        }).then(({ x, y }) => {
-          Object.assign(tooltip.get(0)!.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-          })
-          tooltip.get(0)!.style.visibility = 'visible'
-        })
-      }
-      const onclickStr = hide.attr('onclick')
-      const [, param1, param2] = Array.from(onclickStr!.match(/ignoreReply\((.*?),(.*?)\)/)!)
-      blockContent.html(`确定隐藏 ${param1}, ${param2}？`)
-      action2.on('click', () => {
-        console.log({ param1 })
-        tooltip.get(0)!.style.visibility = 'hidden'
-        // eval(`ignoreReply(${param1}, ${param2})`)
-      })
-      hide.prop('onclick', null).off('click')
-      hide.on('click', handler)
+      // const [, param1, param2] = Array.from(onclickStr!.match(/ignoreReply\((.*?),(.*?)\)/)!)
 
       thankIcon.attr('title', '感谢').addClass('effect-btn')
       thank.empty().append(thankIcon)
