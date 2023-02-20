@@ -5,7 +5,7 @@ import { nestedComments, paging, popular, replaceHeart, setControls } from './to
   $('#Top .site-nav .tools > .top').addClass('effect-btn')
   $('#Main .tab').addClass('effect-btn')
   $('#Main .topic_buttons a.tb').addClass('effect-btn')
-  $('#Main .topic-link, .item_hot_topic_title > a, .item_node').attr('target', '_blank')
+  $('#Main .topic-link, .item_hot_topic_title > a, .item_node').prop('target', '_blank')
 }
 
 addGlobalStyle()
