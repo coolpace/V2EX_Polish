@@ -263,6 +263,15 @@ img::selection {
   #reply_content {
     border-color: var(--v2p-color-main-300);
     border-radius: 6px;
+
+    & + .flex-one-row {
+      gap: 10px;
+      justify-content: flex-start;
+
+      .gray {
+        margin-left: auto;
+      }
+    }
   }
 }
 
@@ -384,6 +393,11 @@ img::selection {
 
   .topic_content {
     font-size: 16px;
+  }
+
+  .subtle {
+    background-color: var(--v2p-color-accent-50);
+    border-left: 3px solid var(--v2p-color-accent-200);
   }
 
   .vote:link {
@@ -846,7 +860,7 @@ body {
   z-index: 10;
   display: flex;
   align-items: center;
-  padding: 20px 0;
+  padding: 15px 0 20px;
   background-color: var(--v2p-color-content-bg);
 }
 
@@ -937,7 +951,7 @@ body {
   left: 0;
   z-index: 999;
   width: max-content;
-  padding: 5px;
+  padding: 12px;
   color: var(--v2p-color-main-600);
   font-weight: bold;
   font-size: 14px;
@@ -953,4 +967,10 @@ body {
   height: 8px;
   background: inherit;
   transform: rotate(45deg);
+}
+
+.v2p-emoticons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
 }
