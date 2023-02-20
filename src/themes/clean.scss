@@ -621,6 +621,7 @@ img::selection {
   .reply_content {
     a[href^='http'] {
       color: var(--v2p-color-main-500);
+      font-size: 12px;
       text-decoration: none;
       background-color: var(--v2p-color-main-100);
 
@@ -929,12 +930,21 @@ body {
   top: 0;
   left: 0;
   z-index: 999;
-  display: none;
   width: max-content;
   padding: 5px;
-  color: white;
+  color: var(--v2p-color-main-600);
   font-weight: bold;
+  font-size: 14px;
   background: var(--v2p-color-content-bg);
   border-radius: 5px;
   box-shadow: var(--v2p-box-shadow);
+  visibility: hidden;
+}
+
+#v2p-tooltip-arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  transform: rotate(45deg);
 }

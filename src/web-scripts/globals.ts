@@ -25,6 +25,14 @@ export const commentData = cellTableRows
     const likes = Number(td.find('span.small').text()) //感谢数
     const floor = td.find('span.no').text() //层数
 
-    return { id, name, content, likes, floor, index: idx }
+    const matchArr = Array.from(content.matchAll(/@(\S+)\s/g))
+    const refNames =
+      matchArr.length > 0
+        ? matchArr.map(([, name]) => {
+            return name
+          })
+        : undefined
+
+    return { id, name, content, likes, floor, index: idx, refNames }
   })
   .get()

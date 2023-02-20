@@ -1,4 +1,4 @@
-import { computePosition } from '@floating-ui/dom'
+import { arrow, computePosition } from '@floating-ui/dom'
 
 import {
   cellTableRows,
@@ -120,16 +120,16 @@ export function replaceHeart() {
 }
 
 export function setControls() {
-  // const blockContent = $('<p></p>')
-  // const action1 = $('<button class="effect-btn">取消</button>')
-  // const action2 = $('<button class="effect-btn">确定隐藏</button>')
-  // const tooltip = $('<div id="v2p-tooltip" role="tooltip">')
-  //   .append(blockContent, action1, action2)
-  //   .appendTo($('body'))
-  // action1.on('click', () => {
-  //   tooltip.get(0)!.style.display = 'none'
-  //   action2.off('click')
-  // })
+  const blockContent = $('<p></p>')
+  const action1 = $('<button class="normal button">取消</button>')
+  const action2 = $('<button class="normal button">确定隐藏</button>')
+  const tooltip = $('<div id="v2p-tooltip" role="tooltip"><div id="v2p-tooltip-arrow"></div></div>')
+    .append(blockContent, action1, action2)
+    .appendTo($('body'))
+  action1.on('click', () => {
+    tooltip.get(0)!.style.visibility = 'hidden'
+    action2.off('click')
+  })
 
   const crtlAreas = cellTableRows.find('> td:last-of-type > .fr')
 
@@ -172,23 +172,28 @@ export function setControls() {
           </svg>
         </span>
       `)
-      // const handler = () => {
-      //   computePosition(hide.get(0)!, tooltip.get(0)!, { placement: 'top' }).then(({ x, y }) => {
-      //     Object.assign(tooltip.get(0)!.style, {
-      //       left: `${x}px`,
-      //       top: `${y}px`,
-      //     })
-      //     tooltip.get(0)!.style.display = 'block'
-      //   })
-      // }
-      // const onclickStr = hide.attr('onclick')
-      // const [, p1, p2] = Array.from(onclickStr!.match(/ignoreReply\((.*?),(.*?)\)/)!)
-      // blockContent.html(`确定隐藏 ${p1}, ${p2}？`)
-      // action2.on('click', () => {
-      //   //
-      // })
-      // hide.prop('onclick', null).off('click')
-      // hide.on('click', handler)
+      const handler = () => {
+        computePosition(hide.get(0)!, tooltip.get(0)!, {
+          placement: 'bottom',
+          middleware: [arrow({ element: document.querySelector('#v2p-tooltip-arrow')! })],
+        }).then(({ x, y }) => {
+          Object.assign(tooltip.get(0)!.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+          })
+          tooltip.get(0)!.style.visibility = 'visible'
+        })
+      }
+      const onclickStr = hide.attr('onclick')
+      const [, param1, param2] = Array.from(onclickStr!.match(/ignoreReply\((.*?),(.*?)\)/)!)
+      blockContent.html(`确定隐藏 ${param1}, ${param2}？`)
+      action2.on('click', () => {
+        console.log({ param1 })
+        tooltip.get(0)!.style.visibility = 'hidden'
+        // eval(`ignoreReply(${param1}, ${param2})`)
+      })
+      hide.prop('onclick', null).off('click')
+      hide.on('click', handler)
 
       thankIcon.attr('title', '感谢').addClass('effect-btn')
       thank.empty().append(thankIcon)
