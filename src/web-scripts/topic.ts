@@ -11,7 +11,7 @@ import {
 } from './globals'
 
 export function popular() {
-  topicContentBox.find('a[href]').attr('target', '_blank')
+  topicContentBox.find('.topic_content a[href]').prop('target', '_blank')
 
   const popularCommentData = commentData
     .filter(({ likes }) => likes > 0)

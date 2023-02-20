@@ -743,8 +743,14 @@ img::selection {
 
 /* ================================================================ */
 
-#Bottom .inner .small.fade {
-  display: none;
+#Bottom {
+  .inner .small.fade {
+    display: none;
+  }
+
+  a.dark:link {
+    color: var(--v2p-color-main-600);
+  }
 }
 
 /* ============================
