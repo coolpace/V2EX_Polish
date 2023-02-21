@@ -80,6 +80,9 @@ body:has(.Night) {
 
 /* stylelint-disable-next-line no-duplicate-selectors */
 body {
+  overflow: overlay;
+  scrollbar-gutter: stable;
+
   #Top {
     height: 55px;
     background-color: var(--v2p-color-content-bg);
@@ -186,6 +189,7 @@ body {
         position: relative;
         right: -4px;
         padding: 0 3px;
+        font-size: 90%;
         line-height: initial;
         border: 1px solid var(--v2p-color-main-200);
         border-radius: 4px;
