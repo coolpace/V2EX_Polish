@@ -5,6 +5,7 @@ import {
   commentBox,
   commentCells,
   commentData,
+  getOS,
   loginName,
   topicContentBox,
   topicOwnerName,
@@ -27,7 +28,7 @@ export function popular() {
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
 
-  if (popularCommentData.length > 0) {
+  if (popularCommentData.length > 4 || popularCommentData.every(({ likes }) => likes >= 4)) {
     const cmMask = $('<div class="v2p-cm-mask">')
     const cmContent = $(`
       <div class="v2p-cm-content box">
@@ -114,11 +115,12 @@ export function replaceHeart() {
 }
 
 export function setControls() {
-  const replyBtn = $('<button class="normal button">回复<kbd>Cmd+Enter</kbd></button>').replaceAll(
-    $('#reply-box input[type="submit"]')
-  )
+  const os = getOS()
+  const replyBtn = $(
+    `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
+  ).replaceAll($('#reply-box input[type="submit"]'))
 
-  const emoticons = ['😀', '🤡', '💩', '🤩', '😂', '😅', '🥳']
+  const emoticons = ['🤩', '😂', '😅', '🥳', '😀', '🐶', '🐔', '🤡', '💩']
   const emoticonsContent = $(`
     <div class="v2p-emoticons">
       ${emoticons.map((emoji) => `<span>${emoji}</span>`).join('')}
