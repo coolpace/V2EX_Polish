@@ -164,7 +164,7 @@ export function setControls() {
     const thanked = thankArea.hasClass('thanked')
 
     if (thanked) {
-      thankIcon.attr('title', '已感谢').css({ color: '#f43f5e', cursor: 'default' })
+      thankIcon.prop('title', '已感谢').css({ color: '#f43f5e', cursor: 'default' })
       crtlContainer.append($('<a>').append(thankIcon))
     } else {
       const thankEle = thankArea.find('> .thank')
@@ -174,7 +174,7 @@ export function setControls() {
       hide.html(`<span class="v2p-control effect-btn" title="隐藏">${iconHide}</span>`)
       // const [, param1, param2] = Array.from(onclickStr!.match(/ignoreReply\((.*?),(.*?)\)/)!)
 
-      thankIcon.attr('title', '感谢').addClass('effect-btn')
+      thankIcon.prop('title', '感谢').addClass('effect-btn')
       thank.empty().append(thankIcon)
 
       crtlContainer.append(hide).append(thank)
