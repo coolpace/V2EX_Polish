@@ -28,7 +28,10 @@ export function popular() {
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
 
-  if (popularCommentData.length > 4 || popularCommentData.every(({ likes }) => likes >= 4)) {
+  if (
+    popularCommentData.length > 4 ||
+    (popularCommentData.length > 0 && popularCommentData.every(({ likes }) => likes >= 4))
+  ) {
     const cmMask = $('<div class="v2p-cm-mask">')
     const cmContent = $(`
       <div class="v2p-cm-content box">
