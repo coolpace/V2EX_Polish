@@ -196,6 +196,18 @@ body {
       }
     }
 
+    &.special {
+      color: var(--v2p-color-accent-500);
+      background-color: var(--v2p-color-accent-100);
+      box-shadow: 0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
+
+      &:hover:enabled {
+        color: var(--v2p-color-accent-500);
+        background-color: var(--v2p-color-accent-100);
+        box-shadow: 0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
+      }
+    }
+
     &.v2p-prev-btn,
     &.v2p-next-btn {
       padding: 0 15px;
