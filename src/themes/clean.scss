@@ -270,6 +270,7 @@ img::selection {
 #reply-box {
   &.reply-box-sticky {
     bottom: 20px;
+    z-index: 10;
     overflow: hidden;
     border: none;
     border-radius: 10px;
@@ -859,8 +860,8 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 
-  .v2p-ac-reply {
-    display: none;
+  .v2p-controls > a:has(.v2p-ac-reply) {
+    display: none; // 热门回复中隐藏回复操作按钮。
   }
 
   .no {
