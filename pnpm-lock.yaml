@@ -4,7 +4,7 @@ specifiers:
   '@codennnn/tsconfig': ^1.1.1
   '@floating-ui/dom': ^1.2.1
   '@types/jquery': ^3.5.16
-  prefer-code-style: ^1.0.2
+  prefer-code-style: ^1.1.2
   sass: ^1.58.0
   stylelint: ^14.16.1
   tsup: ^6.6.0
@@ -16,7 +16,7 @@ dependencies:
 devDependencies:
   '@codennnn/tsconfig': 1.1.1
   '@types/jquery': 3.5.16
-  prefer-code-style: 1.0.2_typescript@4.9.5
+  prefer-code-style: 1.1.2_typescript@4.9.5
   sass: 1.58.0
   stylelint: 14.16.1
   tsup: 6.6.0_typescript@4.9.5
@@ -1803,6 +1803,14 @@ packages:
       resolve: 2.0.0-next.4
       semver: 6.3.0
       string.prototype.matchall: 4.0.8
+    dev: true
+
+  /eslint-plugin-simple-import-sort/10.0.0_eslint@8.33.0:
+    resolution: {integrity: sha512-AeTvO9UCMSNzIHRkg8S6c3RPy5YEwKWSQPx3DYghLedo2ZQxowPFLGDN1AZ2evfg6r6mjBSZSLxLFsWSu3acsw==}
+    peerDependencies:
+      eslint: '>=5.0.0'
+    dependencies:
+      eslint: 8.33.0
     dev: true
 
   /eslint-plugin-tailwindcss/3.8.3:
@@ -3907,8 +3915,8 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /prefer-code-style/1.0.2_typescript@4.9.5:
-    resolution: {integrity: sha512-qaM/Qodkoc/DJ6Gi2TsictpDaAao6U8QxT0yC5k9yKW7ghWBjvKPOLzjnDesvnQzht8/h/aDw7zWmeXwy4Vt0g==}
+  /prefer-code-style/1.1.2_typescript@4.9.5:
+    resolution: {integrity: sha512-RJ45uBBihHE/QFvmVjqUpdCXtoEZ80Gbp7td6n5QQ9jeRXN/4m8NMAZEnodBpK9ak7vrYlO9mRlafP/WxRjQgg==}
     engines: {node: '>=14'}
     dependencies:
       '@babel/core': 7.20.12
@@ -3923,6 +3931,7 @@ packages:
       eslint-plugin-prettier: 4.2.1_qa2thblfovmfepmgrc7z2owbo4
       eslint-plugin-react: 7.32.2_eslint@8.33.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.33.0
+      eslint-plugin-simple-import-sort: 10.0.0_eslint@8.33.0
       eslint-plugin-tailwindcss: 3.8.3
       prettier: 2.8.4
       prettier-plugin-packagejson: 2.4.2_prettier@2.8.4
