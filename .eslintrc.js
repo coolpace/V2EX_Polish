@@ -17,6 +17,10 @@ module.exports = {
       parserOptions: {
         project: resolve(__dirname, 'tsconfig.json'),
       },
+      extends: [require.resolve('prefer-code-style/eslint/rules/typescript-prefer-strict')],
+      rules: {
+        '@typescript-eslint/prefer-readonly-parameter-types': 0,
+      },
     },
   ],
 }

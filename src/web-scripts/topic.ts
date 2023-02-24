@@ -143,7 +143,7 @@ export function setControls() {
   })
 
   const handler = () => {
-    computePosition(emojiBtn.get(0)!, tooltipEle, {
+    void computePosition(emojiBtn.get(0)!, tooltipEle, {
       placement: 'bottom',
       middleware: [offset(6), flip(), shift({ padding: 8 })],
     }).then(({ x, y }) => {
