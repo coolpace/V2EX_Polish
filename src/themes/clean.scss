@@ -478,6 +478,7 @@ img::selection {
 
       a[href^='/member'] {
         color: var(--v2p-color-main-500);
+        font-weight: 500;
       }
     }
 
@@ -861,7 +862,8 @@ body {
   overflow-y: auto;
 
   .v2p-controls > a:has(.v2p-ac-reply) {
-    display: none; // 热门回复中隐藏回复操作按钮。
+    cursor: not-allowed;
+    pointer-events: none;
   }
 
   .no {
