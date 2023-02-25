@@ -4,13 +4,17 @@ const { TYPESCRIPT_FILES } = require('prefer-code-style/constants')
 
 module.exports = {
   root: true,
+
   globals: { $: true },
+
   extends: [
     require.resolve('prefer-code-style/eslint/browser'),
     require.resolve('prefer-code-style/eslint/node'),
     require.resolve('prefer-code-style/eslint/typescript'),
   ],
-  ignorePatterns: ['dist/**/*'],
+
+  ignorePatterns: ['dist/**/*', 'src/extension/scripts/**/*.js'],
+
   overrides: [
     {
       files: TYPESCRIPT_FILES,

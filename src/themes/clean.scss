@@ -1,11 +1,4 @@
-/**
- * 作者：LeoKu (https://github.com/Codennnn)
- * 项目: https://github.com/coolpace/V2EX_Plus
- */
-
 body {
-  /* stylelint-disable-next-line value-keyword-case */
-  --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', sans-serif;
   --v2p-color-main-100: #f1f5f9;
   --v2p-color-main-200: #e2e8f0;
   --v2p-color-main-300: #cbd5e1;
@@ -14,7 +7,6 @@ body {
   --v2p-color-main-600: #475569;
   --v2p-color-main-700: #334155;
   --v2p-color-main-800: #1e293b;
-  --v2p-color-main-900: #0f172a;
   --v2p-color-accent-50: #ecfdf5;
   --v2p-color-accent-100: #d1fae5;
   --v2p-color-accent-200: #a7f3d0;
@@ -24,20 +16,26 @@ body {
   --v2p-color-accent-600: #059669;
   --v2p-color-border: rgb(238 238 238);
   --v2p-color-wrapper-bg: rgb(249 250 252);
-  --v2p-color-content-bg: rgb(255 255 255);
+  --v2p-color-content-bg: #fff;
+  --v2p-color-heart: #f43f5e;
+  --v2p-color-heart-fill: #ffe4e6;
+  --v2p-box-shadow: 0 2px 2px var(--v2p-color-main-200);
+  /* stylelint-disable-next-line value-keyword-case */
+  --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', sans-serif;
+
+  /** V2EX Colors */
   --color-fade: var(--v2p-color-main-400);
   --color-gray: var(--v2p-color-main-400);
   --link-color: var(--v2p-color-main-800);
   --link-caution-color: #f59e0b;
   --box-border-color: var(--v2p-color-main-100);
   --box-foreground-color: var(--v2p-color-main-800);
-  --box-background-color: #fff;
+  --box-background-color: var(--v2p-color-content-bg);
   --box-background-alt-color: var(--v2p-color-main-100);
   --box-background-hover-color: var(--v2p-color-main-200);
   --button-background-color: var(--v2p-color-main-200);
   --button-foreground-color: var(--v2p-color-main-500);
   --button-border-color: var(--v2p-color-main-300);
-  --v2p-box-shadow: 0 2px 2px var(--v2p-color-main-200);
 
   color: var(--v2p-color-main-800);
   font-family: var(--v2p-font-noto-sans);
@@ -45,37 +43,24 @@ body {
 }
 
 body:has(.Night) {
-  // --v2p-color-main-900: #f1f5f9;
-  // --v2p-color-main-800: #e2e8f0;
-  // --v2p-color-main-700: #cbd5e1;
-  // --v2p-color-main-600: #94a3b8;
-  // --v2p-color-main-500: #64748b;
-  // --v2p-color-main-400: #475569;
-  // --v2p-color-main-300: #334155;
-  // --v2p-color-main-200: #1e293b;
-  // --v2p-color-main-100: #0f172a;
-  // --v2p-color-accent-50: #ecfdf5;
-  // --v2p-color-accent-100: #d1fae5;
-  // --v2p-color-accent-200: #a7f3d0;
-  // --v2p-color-accent-300: #6ee7b7;
-  // --v2p-color-accent-400: #34d399;
-  // --v2p-color-accent-500: #10b981;
-  // --v2p-color-accent-600: #059669;
-  // --v2p-color-border: rgb(238 238 238);
-  // --v2p-color-wrapper-bg: #334155;
-  // --v2p-color-content-bg: #475569;
-  // --color-fade: #94a3b8;
-  // --color-gray: #94a3b8;
-  // --link-color: #1e293b;
-  // --link-caution-color: #f59e0b;
-  // --box-border-color: #f1f5f9;
-  // --box-foreground-color: #1e293b;
-  // --box-background-color: #e2e8f0;
-  // --box-background-alt-color: #e2e8f0;
-
-  // color: var(--v2p-color-main-800);
-  // font-family: var(--v2p-font-noto-sans);
-  // background-color: var(--v2p-color-wrapper-bg);
+  --v2p-color-main-100: #222;
+  --v2p-color-main-200: #393939;
+  --v2p-color-main-300: #4c4c4c;
+  --v2p-color-main-400: #6a6a6a;
+  --v2p-color-main-500: #999;
+  --v2p-color-main-600: #cbcbcb;
+  --v2p-color-main-700: #e0e0e0;
+  --v2p-color-main-800: #f1f1f1;
+  --v2p-color-accent-50: #ecfdf5;
+  --v2p-color-accent-100: #d1fae5;
+  --v2p-color-accent-200: #a7f3d0;
+  --v2p-color-accent-300: #6ee7b7;
+  --v2p-color-accent-400: #34d399;
+  --v2p-color-accent-500: #10b981;
+  --v2p-color-accent-600: #059669;
+  --v2p-color-border: rgb(238 238 238);
+  --v2p-color-wrapper-bg: #181818;
+  --v2p-color-content-bg: #222;
 }
 
 /* stylelint-disable-next-line no-duplicate-selectors */
@@ -255,6 +240,10 @@ body {
 
   .page_input {
     display: none;
+  }
+
+  .dock_area {
+    background-image: none;
   }
 }
 
@@ -503,6 +492,7 @@ img::selection {
 
   #Tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px 8px;
     align-items: center;
 
@@ -807,7 +797,7 @@ body {
     border-radius: 5px;
     transform: scale(0.6);
     opacity: 0;
-    transition: transform 0.3s, opacity 0.3s;
+    transition: background-color 0.3s, transform 0.3s, opacity 0.3s;
     content: '';
   }
 
@@ -817,8 +807,41 @@ body {
   }
 }
 
+.v2p-icon-heart {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  color: var(--v2p-color-heart);
+
+  svg {
+    fill: var(--v2p-color-heart-fill);
+  }
+}
+
 .v2p-popular-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 5px 0;
+  transition: color 0.3s;
+
+  &:hover {
+    color: var(--v2p-color-heart);
+    opacity: 0.85;
+
+    &::before {
+      background-color: var(--v2p-color-heart-fill);
+    }
+  }
+
+  .v2p-icon-heart {
+    margin-right: 5px;
+    color: currentcolor;
+
+    svg {
+      fill: none;
+    }
+  }
 }
 
 .v2p-dot {
@@ -884,17 +907,6 @@ body {
   display: inline-flex;
   align-items: center;
   column-gap: 5px;
-}
-
-.icon-heart {
-  display: inline-flex;
-  width: 16px;
-  height: 16px;
-  color: #f43f5e;
-
-  svg {
-    fill: #ffe4e6;
-  }
 }
 
 @supports not selector(:has(*)) {
