@@ -5,7 +5,7 @@ const { TYPESCRIPT_FILES } = require('prefer-code-style/constants')
 module.exports = {
   root: true,
 
-  globals: { $: true },
+  globals: { $: true, chrome: true },
 
   extends: [
     require.resolve('prefer-code-style/eslint/browser'),
@@ -13,7 +13,12 @@ module.exports = {
     require.resolve('prefer-code-style/eslint/typescript'),
   ],
 
-  ignorePatterns: ['dist/**/*', 'src/extension/scripts/**/*.js'],
+  ignorePatterns: [
+    'dist/**/*',
+    'src/extension/scripts/**/*.js',
+    '!src/extension/scripts/toggle-icon.js',
+    '!src/extension/scripts/background.js',
+  ],
 
   overrides: [
     {

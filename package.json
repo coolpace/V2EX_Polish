@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.1.1",
+    "@types/chrome": "^0.0.217",
     "@types/jquery": "^3.5.16",
     "prefer-code-style": "^1.1.2",
     "sass": "^1.58.0",
