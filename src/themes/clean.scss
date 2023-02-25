@@ -818,6 +818,11 @@ body {
   }
 }
 
+#Main > .box > .cell > .gray:has(.v2p-popular-btn) {
+  display: inline-flex;
+  align-items: center;
+}
+
 .v2p-popular-btn {
   display: inline-flex;
   align-items: center;

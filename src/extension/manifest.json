@@ -16,8 +16,18 @@
 
   "content_scripts": [
     {
+      "matches": ["<all_urls>"],
+      "js": ["./scripts/toggle-icon.js"]
+    },
+    {
       "matches": ["https://www.v2ex.com/*", "https://v2ex.com/*"],
       "js": ["./scripts/jquery-3.5.1.min.js", "./scripts/userscripts.js"]
     }
-  ]
+  ],
+
+  "background": {
+    "service_worker": "./scripts/background.js"
+  },
+
+  "action": {}
 }

@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@codennnn/tsconfig': ^1.1.1
   '@floating-ui/dom': ^1.2.1
+  '@types/chrome': ^0.0.217
   '@types/jquery': ^3.5.16
   prefer-code-style: ^1.1.2
   sass: ^1.58.0
@@ -15,6 +16,7 @@ dependencies:
 
 devDependencies:
   '@codennnn/tsconfig': 1.1.1
+  '@types/chrome': 0.0.217
   '@types/jquery': 3.5.16
   prefer-code-style: 1.1.2_typescript@4.9.5
   sass: 1.58.0
@@ -597,11 +599,32 @@ packages:
       tslib: 2.5.0
     dev: true
 
+  /@types/chrome/0.0.217:
+    resolution: {integrity: sha512-q8fLzCCoHiR9gYRoqvrx12+HaJjRTqUom5Ks/wLSR8Ac83qAqWaA4NgUBUcDjM1O1ACczygxIHCEENXs1zmbqQ==}
+    dependencies:
+      '@types/filesystem': 0.0.32
+      '@types/har-format': 1.2.10
+    dev: true
+
+  /@types/filesystem/0.0.32:
+    resolution: {integrity: sha512-Yuf4jR5YYMR2DVgwuCiP11s0xuVRyPKmz8vo6HBY3CGdeMj8af93CFZX+T82+VD1+UqHOxTq31lO7MI7lepBtQ==}
+    dependencies:
+      '@types/filewriter': 0.0.29
+    dev: true
+
+  /@types/filewriter/0.0.29:
+    resolution: {integrity: sha512-BsPXH/irW0ht0Ji6iw/jJaK8Lj3FJemon2gvEqHKpCdDCeemHa+rI3WBGq5z7cDMZgoLjY40oninGxqk+8NzNQ==}
+    dev: true
+
   /@types/glob/7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
       '@types/node': 18.13.0
+    dev: true
+
+  /@types/har-format/1.2.10:
+    resolution: {integrity: sha512-o0J30wqycjF5miWDKYKKzzOU1ZTLuA42HZ4HE7/zqTOc/jTLdQ5NhYWvsRQo45Nfi1KHoRdNhteSI4BAxTF1Pg==}
     dev: true
 
   /@types/jquery/3.5.16:
