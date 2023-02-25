@@ -1,15 +1,14 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
 import {
-  cellTableRows,
-  commentBox,
-  commentCells,
+  $commentBox,
+  $commentCells,
+  $commentTableRows,
+  $topicContentBox,
   commentData,
   getOS,
   loginName,
-  topicContentBox,
-  topicOwnerName,
-} from './globals'
+} from '../globals'
 import {
   iconEmoji,
   iconHeart,
@@ -19,10 +18,10 @@ import {
   iconReply,
   iconStar,
   iconTwitter,
-} from './icons'
+} from '../icons'
 
 export function popular() {
-  topicContentBox.find('.topic_content a[href]').prop('target', '_blank')
+  $topicContentBox.find('.topic_content a[href]').prop('target', '_blank')
 
   const popularCommentData = commentData
     .filter(({ likes }) => likes > 0)
@@ -44,7 +43,7 @@ export function popular() {
     const cmContainer = cmMask.append(cmContent).hide()
 
     {
-      const commentBoxCount = commentBox.find('.cell:first-of-type > span.gray')
+      const commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
       const countText = commentBoxCount.text()
       const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
       const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>`
@@ -88,7 +87,9 @@ export function popular() {
       const closeBtn = cmContainer.find('.v2p-cm-close-btn')
       closeBtn.on('click', handleModalClose)
 
-      const popularBtn = $('<span class="v2p-popular-btn effect-btn">🔥 查看热门回复</span>')
+      const popularBtn = $(
+        `<span class="v2p-popular-btn effect-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
+      )
       popularBtn.on('click', (e) => {
         e.stopPropagation()
         handleModalOpen()
@@ -100,21 +101,21 @@ export function popular() {
     const templete = $('<templete></templete>')
 
     popularCommentData.forEach(({ index }) => {
-      templete.append(commentCells.eq(index).clone())
+      templete.append($commentCells.eq(index).clone())
     })
 
     cmContent.append(templete.html())
 
-    commentBox.append(cmContainer)
+    $commentBox.append(cmContainer)
   }
 }
 
 export function replaceHeart() {
-  commentCells
+  $commentCells
     .find('.small.fade')
     .addClass('heart-box')
     .find('img[alt="❤️"]')
-    .replaceWith(`<span class="icon-heart">${iconHeart}</span>`)
+    .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
 }
 
 export function setControls() {
@@ -156,7 +157,7 @@ export function setControls() {
   }
   emojiBtn.on('click', handler)
 
-  const crtlAreas = cellTableRows.find('> td:last-of-type > .fr')
+  const crtlAreas = $commentTableRows.find('> td:last-of-type > .fr')
 
   crtlAreas.each((_, el) => {
     const ctrlArea = $(el)
@@ -177,7 +178,6 @@ export function setControls() {
       const thank = thankEle.eq(1).removeClass('thank')
 
       hide.html(`<span class="v2p-control effect-btn" title="隐藏">${iconHide}</span>`)
-      // const [, param1, param2] = Array.from(onclickStr!.match(/ignoreReply\((.*?),(.*?)\)/)!)
 
       thankIcon.prop('title', '感谢').addClass('effect-btn')
       thank.empty().append(thankIcon)
@@ -208,9 +208,12 @@ export function setControls() {
 }
 
 export function nestedComments() {
+  /** 发帖人的昵称 */
+  const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
+
   let i = 1
-  while (i < commentCells.length) {
-    const cellDom = commentCells[i]
+  while (i < $commentCells.length) {
+    const cellDom = $commentCells[i]
     const { memberName, content } = commentData[i]
 
     if (memberName === topicOwnerName) {
@@ -225,7 +228,7 @@ export function nestedComments() {
       for (let j = i - 1; j >= 0; j--) {
         if (content.match(`@${commentData[j].memberName}`)) {
           cellDom.classList.add('responder')
-          commentCells[j].append(cellDom)
+          $commentCells[j].append(cellDom)
           break
         }
       }
@@ -233,17 +236,4 @@ export function nestedComments() {
 
     i++
   }
-}
-
-export function paging() {
-  const notCommentCells = commentBox.find('> .cell:not([id^="r_"])')
-
-  if (notCommentCells.length <= 1) {
-    return
-  }
-
-  const pagingCells = notCommentCells.slice(1).addClass('v2p-paging')
-  const pageBtns = pagingCells.find('.super.button')
-  pageBtns.eq(0).addClass('v2p-prev-btn')
-  pageBtns.eq(1).addClass('v2p-next-btn')
 }

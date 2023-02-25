@@ -1,24 +1,21 @@
 /** 登录人的昵称 */
 export const loginName = $('#Top .tools > a[href^="/member"]').text()
 
-/** 发帖人的昵称 */
-export const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
-
 /** 主题内容区 */
-export const topicContentBox = $('#Main .box:has(.topic_content)')
+export const $topicContentBox = $('#Main .box:has(.topic_content)')
 
 /** 评论区 */
-export const commentBox = $('#Main .box:has(.cell[id^="r_"])')
+export const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
 
 /** 评论区的回复 */
-export const commentCells = commentBox.find('.cell[id^="r_"]')
+export const $commentCells = $commentBox.find('.cell[id^="r_"]')
 
-export const cellTableRows = commentCells.find('> table > tbody > tr')
+export const $commentTableRows = $commentCells.find('> table > tbody > tr')
 
 /** 评论数据 */
-export const commentData = cellTableRows
+export const commentData = $commentTableRows
   .map((idx, tr) => {
-    const id = commentCells[idx].id
+    const id = $commentCells[idx].id
     const td = $(tr).find('> td:nth-child(3)')
     const member = td.find('> strong > a')
     const memberName = member.text() // 回复者昵称
