@@ -431,20 +431,7 @@ img::selection {
     border-color: var(--v2p-color-main-800);
   }
 
-  .cell.item {
-    /* ======= 评论区 ====== */
-
-    border-bottom: 1px solid var(--v2p-color-border);
-
-    .item_title {
-      font-weight: 600;
-      opacity: 0.8;
-
-      &:hover {
-        opacity: 1;
-      }
-    }
-
+  .cell {
     .topic-link {
       color: var(--v2p-color-main-800);
       text-decoration: none;
@@ -498,17 +485,30 @@ img::selection {
       opacity: 0.8;
     }
 
+    .item_title {
+      font-weight: 600;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  .cell.item {
     tr > td:nth-child(2) {
       width: 30px;
     }
   }
 
   #Tabs {
-    /* ====== 节点列表 ====== */
-
     display: flex;
     gap: 6px 8px;
     align-items: center;
+
+    .tab {
+      margin: 0;
+    }
   }
 
   #SecondaryTabs {
@@ -653,7 +653,6 @@ img::selection {
   .reply_content {
     a[href^='http'] {
       color: var(--v2p-color-main-500);
-      font-size: 12px;
       text-decoration: none;
       background-color: var(--v2p-color-main-100);
 
@@ -668,14 +667,7 @@ img::selection {
     font-size: 15px;
 
     a[href^='http'] {
-      color: var(--v2p-color-main-500);
-      text-decoration: none;
-      background-color: var(--v2p-color-main-100);
-
-      &:hover {
-        color: var(--v2p-color-accent-500);
-        background-color: var(--v2p-color-accent-50);
-      }
+      font-size: 12px;
     }
 
     a[href^='/member'] {
@@ -691,7 +683,6 @@ img::selection {
   }
 
   .tab {
-    margin: 0;
     background-color: transparent;
 
     &:not(.effect-btn):hover {

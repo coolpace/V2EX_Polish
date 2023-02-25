@@ -1,3 +1,4 @@
+import { cellTableRows } from './globals'
 import { addGlobalStyle } from './style'
 import { nestedComments, paging, popular, replaceHeart, setControls } from './topic'
 
@@ -6,6 +7,8 @@ import { nestedComments, paging, popular, replaceHeart, setControls } from './to
   $('#Main .tab').addClass('effect-btn')
   $('#Main .topic_buttons a.tb').addClass('effect-btn')
   $('#Main .topic-link, .item_hot_topic_title > a, .item_node').prop('target', '_blank')
+
+  cellTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
 }
 
 addGlobalStyle()
