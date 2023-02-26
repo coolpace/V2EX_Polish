@@ -245,6 +245,14 @@ body {
   .dock_area {
     background-image: none;
   }
+
+  .member-activity-bar {
+    background-color: var(--v2p-color-main-200);
+
+    .member-activity-fourth {
+      background-color: var(--v2p-color-accent-400);
+    }
+  }
 }
 
 ::selection {
@@ -375,11 +383,11 @@ img::selection {
         color: var(--v2p-color-main-800);
       }
 
-      &:not(.effect-btn):hover {
+      &:not(.v2p-hover-btn):hover {
         background-color: var(--v2p-color-main-100);
       }
 
-      &.effect-btn {
+      &.v2p-hover-btn {
         transition: color 0.3s;
       }
     }
@@ -432,6 +440,7 @@ img::selection {
 
     .topic_info {
       position: relative;
+      user-select: none;
 
       &::after {
         position: absolute;
@@ -675,7 +684,7 @@ img::selection {
   .tab {
     background-color: transparent;
 
-    &:not(.effect-btn):hover {
+    &:not(.v2p-hover-btn):hover {
       background-color: var(--v2p-color-main-100);
     }
   }
@@ -712,7 +721,7 @@ img::selection {
     border-radius: 4px;
   }
 
-  .tb:hover:not(.effect-btn) {
+  .tb:hover:not(.v2p-hover-btn) {
     background: var(--v2p-color-main-100);
     filter: none;
   }
@@ -777,7 +786,7 @@ body {
   }
 }
 
-.effect-btn {
+.v2p-hover-btn {
   position: relative;
   z-index: 1;
   margin: 0;
@@ -951,7 +960,7 @@ body {
   color: var(--v2p-color-main-400);
 }
 
-.topic_buttons .v2p-tb.effect-btn {
+.topic_buttons .v2p-tb.v2p-hover-btn {
   color: var(--v2p-color-main-400);
   transition: color 0.3s;
 
