@@ -828,14 +828,11 @@ body {
   align-items: center;
   justify-content: center;
   padding: 5px 0;
-  transition: color 0.3s;
 
   &:hover {
-    color: var(--v2p-color-heart);
-    opacity: 0.85;
-
-    &::before {
-      background-color: var(--v2p-color-heart-fill);
+    .v2p-icon-heart {
+      color: var(--v2p-color-heart);
+      transition: color 0.3s, fill 0.3s;
     }
   }
 
