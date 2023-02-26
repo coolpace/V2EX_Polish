@@ -1,0 +1,6 @@
+{
+  "search.exclude": {
+    "asset": true,
+    "extension/scripts/{*.min.js}": true
+  }
+}

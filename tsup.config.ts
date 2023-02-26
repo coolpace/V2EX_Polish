@@ -2,8 +2,12 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: {
-    userscripts: 'src/userscripts/index.ts',
+    'userscripts.min': 'src/userscripts/index.ts',
   },
+
+  outDir: './extension/scripts',
+
+  minify: true,
 
   define: {
     'process.env.NODE_ENV': '"production"',

@@ -11,6 +11,7 @@
   "author": "LeoKu (https://github.com/Codennnn)",
   "scripts": {
     "build": "pnpm run build:themes && pnpm run build:scripts",
+    "build:ext": "tsup",
     "build:scripts": "tsup",
     "build:themes": "sass src/themes/clean.scss asset/v2ex-theme-clean.min.css --no-source-map --style=compressed",
     "dev": "pnpm run build:themes && pnpm run build:scripts --watch & pnpm run build:themes --watch",

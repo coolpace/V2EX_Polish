@@ -1,4 +1,3 @@
 dist
 asset
-*.min.js
-userscripts.js
+**/*.min.js

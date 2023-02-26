@@ -21,7 +21,7 @@
     },
     {
       "matches": ["https://www.v2ex.com/*", "https://v2ex.com/*"],
-      "js": ["./scripts/jquery-3.5.1.min.js", "./scripts/userscripts.js"]
+      "js": ["./scripts/jquery-3.5.1.min.js", "./scripts/userscripts.min.js"]
     }
   ],
 
