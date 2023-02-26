@@ -88,7 +88,7 @@ export function popular() {
       closeBtn.on('click', handleModalClose)
 
       const popularBtn = $(
-        `<span class="v2p-popular-btn effect-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
+        `<span class="v2p-popular-btn v2p-hover-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
       )
       popularBtn.on('click', (e) => {
         e.stopPropagation()
@@ -177,9 +177,9 @@ export function setControls() {
       const hide = thankEle.eq(0).removeClass('thank')
       const thank = thankEle.eq(1).removeClass('thank')
 
-      hide.html(`<span class="v2p-control effect-btn" title="隐藏">${iconHide}</span>`)
+      hide.html(`<span class="v2p-control v2p-hover-btn" title="隐藏">${iconHide}</span>`)
 
-      thankIcon.prop('title', '感谢').addClass('effect-btn')
+      thankIcon.prop('title', '感谢').addClass('v2p-hover-btn')
       thank.empty().append(thankIcon)
 
       crtlContainer.append(hide).append(thank)
@@ -190,7 +190,7 @@ export function setControls() {
     reply
       .find('> img[alt="Reply"]')
       .replaceWith(
-        `<span class="v2p-control v2p-ac-reply effect-btn" title="回复">${iconReply}</span>`
+        `<span class="v2p-control v2p-ac-reply v2p-hover-btn" title="回复">${iconReply}</span>`
       )
 
     crtlContainer.append(reply)
