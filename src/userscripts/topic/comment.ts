@@ -5,9 +5,8 @@ import {
   $commentCells,
   $commentTableRows,
   $topicContentBox,
-  commentData,
+  commentDataList,
   getOS,
-  loginName,
 } from '../globals'
 import {
   iconEmoji,
@@ -20,10 +19,13 @@ import {
   iconTwitter,
 } from '../icons'
 
-export function popular() {
+/**
+ * 设置热门回复。
+ */
+function handlingPopularComments() {
   $topicContentBox.find('.topic_content a[href]').prop('target', '_blank')
 
-  const popularCommentData = commentData
+  const popularCommentData = commentDataList
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
 
@@ -50,7 +52,7 @@ export function popular() {
 
       let boundEvent = false
 
-      const clickHandler = (e: JQuery.ClickEvent) => {
+      const docClickHandler = (e: JQuery.ClickEvent) => {
         if ($(e.target).closest(cmContent).length === 0) {
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
           handleModalClose()
@@ -65,7 +67,7 @@ export function popular() {
       }
 
       const handleModalClose = () => {
-        $(document).off('click', clickHandler)
+        $(document).off('click', docClickHandler)
         $(document).off('keydown', keyupHandler)
         boundEvent = false
 
@@ -75,7 +77,7 @@ export function popular() {
 
       const handleModalOpen = () => {
         if (!boundEvent) {
-          $(document).on('click', clickHandler)
+          $(document).on('click', docClickHandler)
           $(document).on('keydown', keyupHandler)
           boundEvent = true
         }
@@ -110,53 +112,10 @@ export function popular() {
   }
 }
 
-export function replaceHeart() {
-  $commentCells
-    .find('.small.fade')
-    .addClass('heart-box')
-    .find('img[alt="❤️"]')
-    .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
-}
-
-export function setControls() {
-  const os = getOS()
-  const replyBtn = $(
-    `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
-  ).replaceAll($('#reply-box input[type="submit"]'))
-
-  const emoticons = ['🤩', '😂', '😅', '🥳', '😀', '🐶', '🐔', '🤡', '💩']
-  const emoticonsContent = $(`
-    <div class="v2p-emoticons">
-      ${emoticons.map((emoji) => `<span>${emoji}</span>`).join('')}
-    </div>
-  `)
-  const emojiBtn = $(
-    `<button type="button" class="normal button">${iconEmoji}</button>`
-  ).insertAfter(replyBtn)
-  const closeBtn = $('<button type="button" class="normal button">隐藏</button>')
-  const tooltip = $('<div id="v2p-tooltip" role="tooltip"></div>')
-    .append(emoticonsContent, closeBtn)
-    .appendTo($('#reply-box'))
-  const tooltipEle = tooltip.get(0)!
-
-  closeBtn.on('click', () => {
-    tooltipEle.style.visibility = 'hidden'
-  })
-
-  const handler = () => {
-    void computePosition(emojiBtn.get(0)!, tooltipEle, {
-      placement: 'bottom',
-      middleware: [offset(6), flip(), shift({ padding: 8 })],
-    }).then(({ x, y }) => {
-      Object.assign(tooltipEle.style, {
-        left: `${x}px`,
-        top: `${y}px`,
-      })
-      tooltipEle.style.visibility = 'visible'
-    })
-  }
-  emojiBtn.on('click', handler)
-
+/**
+ * 设置回复的操作。
+ */
+function handlingControls() {
   const crtlAreas = $commentTableRows.find('> td:last-of-type > .fr')
 
   crtlAreas.each((_, el) => {
@@ -207,33 +166,117 @@ export function setControls() {
   topicBtn.eq(3).append(`<span class="v2p-tb-icon">${iconLove}</span>`)
 }
 
-export function nestedComments() {
-  /** 发帖人的昵称 */
-  const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
+function insertEmojiBox() {
+  const os = getOS()
 
-  let i = 1
-  while (i < $commentCells.length) {
-    const cellDom = $commentCells[i]
-    const { memberName, content } = commentData[i]
+  const replyBtn = $(
+    `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
+  ).replaceAll($('#reply-box input[type="submit"]'))
 
-    if (memberName === topicOwnerName) {
-      cellDom.classList.add('owner')
+  const emoticons = ['🤩', '😂', '😅', '🥳', '😀', '🐶', '🐔', '🤡', '💩']
+
+  const emoticonsContent = $(`
+  <div class="v2p-emoticons">
+    ${emoticons.map((emoji) => `<span>${emoji}</span>`).join('')}
+  </div>
+`)
+
+  const emojiBtn = $(
+    `<button type="button" class="normal button">${iconEmoji}</button>`
+  ).insertAfter(replyBtn)
+
+  const emojiBox = $('<div id="v2p-tooltip" role="tooltip"></div>')
+    .append(emoticonsContent)
+    .appendTo($('#reply-box'))
+    .get(0)!
+
+  const docClickHandler = (e: JQuery.ClickEvent) => {
+    if ($(e.target).closest(emojiBox).length === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handleClose()
     }
+  }
 
-    if (memberName === loginName) {
-      cellDom.classList.add('self')
-    }
+  const handleClose = () => {
+    $(document).off('click', docClickHandler)
+    emojiBox.style.visibility = 'hidden'
+  }
 
-    if (content.includes('@')) {
-      for (let j = i - 1; j >= 0; j--) {
-        if (content.match(`@${commentData[j].memberName}`)) {
-          cellDom.classList.add('responder')
-          $commentCells[j].append(cellDom)
-          break
+  const handleEmojiOpen = () => {
+    $(document).on('click', docClickHandler)
+
+    void computePosition(emojiBtn.get(0)!, emojiBox, {
+      placement: 'right-start',
+      middleware: [offset(6), flip(), shift({ padding: 8 })],
+    }).then(({ x, y }) => {
+      Object.assign(emojiBox.style, {
+        left: `${x}px`,
+        top: `${y}px`,
+      })
+      emojiBox.style.visibility = 'visible'
+    })
+  }
+
+  emojiBtn.on('click', (e) => {
+    e.stopPropagation()
+    handleEmojiOpen()
+  })
+}
+
+export function handlingComments() {
+  {
+    /**
+     * 替换感谢的爱心。
+     */
+    $commentCells
+      .find('.small.fade')
+      .addClass('v2p-heart-box')
+      .find('img[alt="❤️"]')
+      .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
+  }
+
+  handlingControls()
+  handlingPopularComments()
+
+  {
+    let i = 1
+    while (i < $commentCells.length) {
+      const cellDom = $commentCells.get(i)
+      const currentComment = commentDataList.find((data) => data.id === cellDom?.id)
+
+      if (cellDom && currentComment) {
+        const { refMemberNames, refFloors } = currentComment
+
+        const firstRefMemberName = refMemberNames?.at(0)
+        const firstRefFloor = refFloors?.at(0)
+
+        if (firstRefMemberName) {
+          for (let j = i - 1; j >= 0; j--) {
+            const { memberName: eachMemberName, floor: eachFloor } = commentDataList.at(j) || {}
+
+            if (eachMemberName === firstRefMemberName) {
+              // 首先以用户手动指定的楼层为准。
+              if (firstRefFloor && firstRefFloor !== eachFloor) {
+                const targetIdx = commentDataList
+                  .slice(0, j)
+                  .findIndex((data) => data.floor === firstRefFloor)
+
+                if (targetIdx >= 0) {
+                  $commentCells.eq(targetIdx).append(cellDom)
+                  break
+                }
+              }
+
+              $commentCells.eq(j).append(cellDom)
+              break
+            }
+          }
         }
+
+        i++
       }
     }
-
-    i++
   }
+
+  insertEmojiBox()
 }
