@@ -109,6 +109,31 @@ body {
     float: none;
   }
 
+  #search-container {
+    height: 30px;
+    margin: 0 30px;
+    background-color: var(--v2p-color-main-100);
+    border: none;
+    border-radius: 6px;
+
+    &::before {
+      top: 0;
+      left: 4px;
+      background-size: 14px 14px;
+      opacity: 0.6;
+      filter: none;
+    }
+
+    &.active {
+      background-color: var(--v2p-color-main-100);
+    }
+
+    #search-result {
+      top: 42px;
+      box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
+    }
+  }
+
   h1 {
     text-shadow: 2px 2px var(--v2p-color-content-bg);
   }
@@ -264,71 +289,6 @@ img::selection {
   background-color: var(--v2p-color-main-400);
 }
 
-#reply-box {
-  &.reply-box-sticky {
-    bottom: 20px;
-    z-index: 10;
-    overflow: hidden;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
-  }
-
-  #reply_content {
-    border-color: var(--v2p-color-main-300);
-    border-radius: 6px;
-
-    & + .flex-one-row {
-      gap: 10px;
-      justify-content: flex-start;
-
-      .gray {
-        margin-left: auto;
-      }
-    }
-  }
-}
-
-#Main #reply-box {
-  > .cell {
-    &.flex-one-row,
-    &.flex-row-end {
-      padding: 12px 10px;
-      font-size: 12px;
-    }
-  }
-
-  .flex-one-row {
-    padding: 0;
-    font-size: 12px;
-  }
-}
-
-#search-container {
-  height: 30px;
-  margin: 0 30px;
-  background-color: var(--v2p-color-main-100);
-  border: none;
-  border-radius: 6px;
-
-  &::before {
-    top: 0;
-    left: 4px;
-    background-size: 14px 14px;
-    opacity: 0.6;
-    filter: none;
-  }
-
-  &.active {
-    background-color: var(--v2p-color-main-100);
-  }
-
-  #search-result {
-    top: 42px;
-    box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
-  }
-}
-
 #no-comments-yet {
   color: var(--v2p-color-main-400);
   border-color: var(--v2p-color-main-400);
@@ -338,10 +298,13 @@ img::selection {
 
 .box {
   .tag {
-    color: var(--v2p-color-main-400);
-    font-size: 12px;
-    background-color: var(--v2p-color-main-100);
-    border-radius: 5px;
+    &:link,
+    &:visited {
+      color: var(--v2p-color-main-400);
+      font-size: 12px;
+      background-color: var(--v2p-color-main-100);
+      border-radius: 5px;
+    }
 
     &::before {
       color: var(--v2p-color-main-500);
@@ -402,6 +365,57 @@ img::selection {
 
     .cell {
       padding: 20px 10px;
+    }
+  }
+
+  .topic_buttons {
+    /* ====== 帖子操作按钮 ====== */
+
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 8px 0;
+    column-gap: 5px;
+    background: none;
+
+    .topic_stats {
+      margin-left: auto;
+      padding: 0 !important;
+      font-size: 12px;
+      text-shadow: none;
+    }
+
+    a.tb:link {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      padding: 5px;
+      column-gap: 5px;
+      background: none;
+      border-radius: 4px;
+    }
+
+    .tb:hover:not(.v2p-hover-btn) {
+      background: var(--v2p-color-main-100);
+      filter: none;
+    }
+
+    .tb {
+      &:nth-child(1)::after {
+        content: '🙏';
+      }
+
+      &:nth-child(2)::after {
+        content: '⭐';
+      }
+
+      &:nth-child(3)::after {
+        content: '🐦';
+      }
+
+      &:nth-child(4)::after {
+        content: '🙈';
+      }
     }
   }
 
@@ -497,23 +511,6 @@ img::selection {
     tr > td:nth-child(2) {
       width: 30px;
     }
-  }
-
-  #Tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 8px;
-    align-items: center;
-
-    .tab {
-      margin: 0;
-    }
-  }
-
-  #SecondaryTabs {
-    padding: 10px;
-    background-color: var(--v2p-color-main-100);
-    border-radius: 5px;
   }
 
   .cell[id^='r'] {
@@ -648,6 +645,23 @@ img::selection {
     }
   }
 
+  #Tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    align-items: center;
+
+    .tab {
+      margin: 0;
+    }
+  }
+
+  #SecondaryTabs {
+    padding: 10px;
+    background-color: var(--v2p-color-main-100);
+    border-radius: 5px;
+  }
+
   .topic_content,
   .reply_content {
     a[href^='http'] {
@@ -692,55 +706,42 @@ img::selection {
   .tab_current {
     background-color: var(--v2p-color-main-700);
   }
-}
 
-.topic_buttons {
-  /* ====== 帖子操作按钮 ====== */
-
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  padding: 8px 0;
-  column-gap: 5px;
-  background: none;
-
-  .topic_stats {
-    margin-left: auto;
-    padding: 0 !important;
-    font-size: 12px;
-    text-shadow: none;
-  }
-
-  a.tb:link {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    padding: 5px;
-    column-gap: 5px;
-    background: none;
-    border-radius: 4px;
-  }
-
-  .tb:hover:not(.v2p-hover-btn) {
-    background: var(--v2p-color-main-100);
-    filter: none;
-  }
-
-  .tb {
-    &:nth-child(1)::after {
-      content: '🙏';
+  #reply-box {
+    &.reply-box-sticky {
+      bottom: 20px;
+      z-index: 10;
+      overflow: hidden;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
     }
 
-    &:nth-child(2)::after {
-      content: '⭐';
+    .flex-one-row {
+      padding: 0;
+      font-size: 12px;
     }
 
-    &:nth-child(3)::after {
-      content: '🐦';
+    #reply_content {
+      border-color: var(--v2p-color-main-300);
+      border-radius: 6px;
+
+      & + .flex-one-row {
+        gap: 10px;
+        justify-content: flex-start;
+
+        .gray {
+          margin-left: auto;
+        }
+      }
     }
 
-    &:nth-child(4)::after {
-      content: '🙈';
+    > .cell {
+      &.flex-one-row,
+      &.flex-row-end {
+        padding: 12px 10px;
+        font-size: 12px;
+      }
     }
   }
 }
