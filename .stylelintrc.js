@@ -7,5 +7,5 @@ module.exports = {
     'no-descending-specificity': null,
     'at-rule-no-unknown': [true, { ignoreAtRules: ['support'] }],
   },
-  ignoreFiles: ['node_modules', 'dist', 'asset', '**/*.min.css'],
+  ignoreFiles: ['node_modules/**', 'dist/**', 'asset/**', '**/*.min.css'],
 }

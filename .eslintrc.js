@@ -5,7 +5,11 @@ const { TYPESCRIPT_FILES } = require('prefer-code-style/constants')
 module.exports = {
   root: true,
 
-  globals: { $: true, chrome: true },
+  env: {
+    browser: true,
+    webextensions: true,
+    jquery: true,
+  },
 
   extends: [
     require.resolve('prefer-code-style/eslint/browser'),
