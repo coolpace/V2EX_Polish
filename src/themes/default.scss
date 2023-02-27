@@ -828,9 +828,17 @@ body {
   }
 }
 
-#Main > .box > .cell > .gray:has(.v2p-popular-btn) {
-  display: inline-flex;
-  align-items: center;
+#Main > .box > .cell:has(.v2p-popular-btn) {
+  > .fr {
+    position: relative;
+    top: 4px;
+    margin: 0 !important;
+  }
+
+  > .gray {
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 .v2p-popular-btn {
@@ -913,7 +921,7 @@ body {
   margin-left: auto;
 }
 
-.heart-box {
+.v2p-heart-box {
   position: relative;
   top: 3px;
   display: inline-flex;

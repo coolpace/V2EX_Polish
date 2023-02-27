@@ -1,6 +1,9 @@
 /** 登录人的昵称 */
 export const loginName = $('#Top .tools > a[href^="/member"]').text()
 
+/** 发帖人的昵称 */
+export const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
+
 /** 主题内容区 */
 export const $topicContentBox = $('#Main .box:has(.topic_content)')
 
@@ -12,27 +15,52 @@ export const $commentCells = $commentBox.find('.cell[id^="r_"]')
 
 export const $commentTableRows = $commentCells.find('> table > tbody > tr')
 
-/** 评论数据 */
-export const commentData = $commentTableRows
+/** 每一页的回复列表数据 */
+export const commentDataList = $commentTableRows
   .map((idx, tr) => {
     const id = $commentCells[idx].id
     const td = $(tr).find('> td:nth-child(3)')
     const member = td.find('> strong > a')
-    const memberName = member.text() // 回复者昵称
-    const memberLink = member.prop('href') // 回复者主页链接
-    const content = td.find('> .reply_content').text() // 回复内容
-    const likes = Number(td.find('span.small').text()) // 感谢数
-    const floor = td.find('span.no').text() // 层数
+    const memberName = member.text()
+    const memberLink = member.prop('href')
+    const content = td.find('> .reply_content').text()
+    const likes = Number(td.find('span.small').text())
+    const floor = td.find('span.no').text()
 
-    const matchArr = Array.from(content.matchAll(/@(\S+)\s/g))
-    const refNames =
-      matchArr.length > 0
-        ? matchArr.map(([, name]) => {
+    const memberNameMatches = Array.from(content.matchAll(/@(\S+)\s/g))
+    const refMemberNames =
+      memberNameMatches.length > 0
+        ? memberNameMatches.map(([, name]) => {
             return name
           })
         : undefined
 
-    return { id, memberName, memberLink, content, likes, floor, index: idx, refNames }
+    const floorNumberMatches = Array.from(content.matchAll(/#(\d+)/g))
+    const refFloors =
+      floorNumberMatches.length > 0
+        ? floorNumberMatches.map(([, floor]) => {
+            return floor
+          })
+        : undefined
+
+    return {
+      id,
+      /** 回复者昵称 */
+      memberName,
+      /** 回复者主页链接 */
+      memberLink,
+      /** 回复内容 */
+      content,
+      /** 该回复被感谢的次数 */
+      likes,
+      /** 楼层数 */
+      floor,
+      index: idx,
+      /** 回复中 @ 别人 */
+      refMemberNames,
+      /** 回复中 # 楼层 */
+      refFloors,
+    }
   })
   .get()
 
