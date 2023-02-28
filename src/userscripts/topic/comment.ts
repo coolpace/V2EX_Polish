@@ -1,30 +1,12 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
-import {
-  $commentBox,
-  $commentCells,
-  $commentTableRows,
-  $topicContentBox,
-  commentDataList,
-  getOS,
-} from '../globals'
-import {
-  iconEmoji,
-  iconHeart,
-  iconHide,
-  iconIgnore,
-  iconLove,
-  iconReply,
-  iconStar,
-  iconTwitter,
-} from '../icons'
+import { $commentBox, $commentCells, $commentTableRows, commentDataList, getOS } from '../globals'
+import { iconEmoji, iconHeart, iconHide, iconReply } from '../icons'
 
 /**
  * 设置热门回复。
  */
 function handlingPopularComments() {
-  $topicContentBox.find('.topic_content a[href]').prop('target', '_blank')
-
   const popularCommentData = commentDataList
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
@@ -158,12 +140,6 @@ function handlingControls() {
     const floorNum = ctrlArea.find('.no').clone()
     ctrlArea.empty().append(crtlContainer, floorNum)
   })
-
-  const topicBtn = $('.topic_buttons .tb').addClass('v2p-tb')
-  topicBtn.eq(0).append(`<span class="v2p-tb-icon">${iconStar}</span>`)
-  topicBtn.eq(1).append(`<span class="v2p-tb-icon">${iconTwitter}</span>`)
-  topicBtn.eq(2).append(`<span class="v2p-tb-icon">${iconIgnore}</span>`)
-  topicBtn.eq(3).append(`<span class="v2p-tb-icon">${iconLove}</span>`)
 }
 
 function insertEmojiBox() {
@@ -175,23 +151,31 @@ function insertEmojiBox() {
 
   const emoticons = ['🤩', '😂', '😅', '🥳', '😀', '🐶', '🐔', '🤡', '💩']
 
-  const emoticonsContent = $(`
-  <div class="v2p-emoticons">
-    ${emoticons.map((emoji) => `<span>${emoji}</span>`).join('')}
-  </div>
-`)
+  const emoticonSpan = $('<span class="v2p-emoji">')
+
+  const emoticonsBox = $('<div class="v2p-emoticons">').append(
+    ...emoticons.map((emoji) => {
+      const emoticon = emoticonSpan
+        .clone()
+        .text(emoji)
+        .on('click', () => {
+          // TODO 插入表情
+        })
+      return emoticon
+    })
+  )
 
   const emojiBtn = $(
     `<button type="button" class="normal button">${iconEmoji}</button>`
   ).insertAfter(replyBtn)
 
-  const emojiBox = $('<div id="v2p-tooltip" role="tooltip"></div>')
-    .append(emoticonsContent)
+  const emojiPopup = $('<div id="v2p-tooltip" role="tooltip"></div>')
+    .append(emoticonsBox)
     .appendTo($('#reply-box'))
     .get(0)!
 
   const docClickHandler = (e: JQuery.ClickEvent) => {
-    if ($(e.target).closest(emojiBox).length === 0) {
+    if ($(e.target).closest(emojiPopup).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleClose()
     }
@@ -199,27 +183,27 @@ function insertEmojiBox() {
 
   const handleClose = () => {
     $(document).off('click', docClickHandler)
-    emojiBox.style.visibility = 'hidden'
+    emojiPopup.style.visibility = 'hidden'
   }
 
-  const handleEmojiOpen = () => {
+  const handlePopupOpen = () => {
     $(document).on('click', docClickHandler)
 
-    void computePosition(emojiBtn.get(0)!, emojiBox, {
+    void computePosition(emojiBtn.get(0)!, emojiPopup, {
       placement: 'right-start',
       middleware: [offset(6), flip(), shift({ padding: 8 })],
     }).then(({ x, y }) => {
-      Object.assign(emojiBox.style, {
+      Object.assign(emojiPopup.style, {
         left: `${x}px`,
         top: `${y}px`,
       })
-      emojiBox.style.visibility = 'visible'
+      emojiPopup.style.visibility = 'visible'
     })
   }
 
   emojiBtn.on('click', (e) => {
     e.stopPropagation()
-    handleEmojiOpen()
+    handlePopupOpen()
   })
 }
 
@@ -239,12 +223,10 @@ export function handlingComments() {
   handlingPopularComments()
 
   {
-    let i = 1
-    while (i < $commentCells.length) {
-      const cellDom = $commentCells.get(i)
-      const currentComment = commentDataList.find((data) => data.id === cellDom?.id)
+    $commentCells.each((i, cellDom) => {
+      const currentComment = commentDataList.find((data) => data.id === cellDom.id)
 
-      if (cellDom && currentComment) {
+      if (currentComment) {
         const { refMemberNames, refFloors } = currentComment
 
         const firstRefMemberName = refMemberNames?.at(0)
@@ -272,10 +254,8 @@ export function handlingComments() {
             }
           }
         }
-
-        i++
       }
-    }
+    })
   }
 
   insertEmojiBox()

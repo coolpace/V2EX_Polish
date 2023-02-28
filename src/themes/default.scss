@@ -134,10 +134,6 @@ body {
     }
   }
 
-  h1 {
-    text-shadow: 2px 2px var(--v2p-color-content-bg);
-  }
-
   .box {
     overflow: hidden;
     background-color: var(--v2p-color-content-bg);
@@ -145,8 +141,14 @@ body {
     border-radius: 8px;
     box-shadow: none;
 
-    .header .gray {
-      color: var(--v2p-color-main-400);
+    .header {
+      > h1 {
+        text-shadow: 2px 2px var(--v2p-color-content-bg);
+      }
+
+      .gray {
+        color: var(--v2p-color-main-400);
+      }
     }
   }
 
@@ -426,6 +428,10 @@ img::selection {
   .subtle {
     background-color: var(--v2p-color-accent-50);
     border-left: 3px solid var(--v2p-color-accent-200);
+
+    .topic_content {
+      font-size: 15px;
+    }
   }
 
   .vote:link {
@@ -1015,4 +1021,13 @@ body {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 8px;
+}
+
+.v2p-emoji {
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--box-background-hover-color);
+  }
 }
