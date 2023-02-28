@@ -7,7 +7,7 @@ export const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a
 /** 主题内容区 */
 export const $topicContentBox = $('#Main .box:has(.topic_content)')
 
-/** 评论区 */
+/** 主题下的评论区 */
 export const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
 
 /** 评论区的回复 */
@@ -44,6 +44,7 @@ export const commentDataList = $commentTableRows
         : undefined
 
     return {
+      /** HTML 元素上的 id */
       id,
       /** 回复者昵称 */
       memberName,
@@ -55,6 +56,7 @@ export const commentDataList = $commentTableRows
       likes,
       /** 楼层数 */
       floor,
+      /** 遍历索引值 */
       index: idx,
       /** 回复中 @ 别人 */
       refMemberNames,

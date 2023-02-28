@@ -1,6 +1,6 @@
 import { $commentBox } from '../globals'
 
-export function paging() {
+export function handlingPaging() {
   const notCommentCells = $commentBox.find('> .cell:not([id^="r_"])')
 
   if (notCommentCells.length <= 1) {
