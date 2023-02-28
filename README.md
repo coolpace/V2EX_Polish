@@ -1,7 +1,10 @@
-# V2EX Polish 🚧
+# V2EX Polish
 
-引入主题样式：
+扩展了 V2EX 的许多功能，让你拥有更好的浏览体验。
 
-```css
-@import 'https://cdn.jsdelivr.net/gh/coolpace/V2EX_Polish/asset/v2ex-theme-clean.min.css';
-```
+- 美化页面，使页面更具现代感
+- 优化主题下的评论回复：楼层嵌套展示
+- 增加热门回复的展示
+- 评论的输入框支持选择表情并插入
+
+一起来探索更好的 V2EX 吧！
