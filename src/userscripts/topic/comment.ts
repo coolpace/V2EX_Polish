@@ -1,7 +1,35 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
 import { $commentBox, $commentCells, $commentTableRows, commentDataList, getOS } from '../globals'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../icons'
+
+$.fn.extend({
+  insertAtCaret: function (this: any, myValue: string) {
+    this.each(() => {
+      if (this.selectionStart || this.selectionStart == '0') {
+        const startPos = this.selectionStart
+        const endPos = this.selectionEnd
+        const scrollTop = this.scrollTop
+        this.value =
+          this.value.substring(0, startPos) +
+          myValue +
+          this.value.substring(endPos, this.value.length)
+        this.focus()
+        this.selectionStart = startPos + myValue.length
+        this.selectionEnd = startPos + myValue.length
+        this.scrollTop = scrollTop
+      } else {
+        this.value += myValue
+        this.focus()
+      }
+    })
+    return this
+  },
+})
 
 /**
  * 设置热门回复。
@@ -145,11 +173,50 @@ function handlingControls() {
 function insertEmojiBox() {
   const os = getOS()
 
+  const replyTextArea = window.document.querySelector('#reply_content')
+
   const replyBtn = $(
     `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
   ).replaceAll($('#reply-box input[type="submit"]'))
 
-  const emoticons = ['🤩', '😂', '😅', '🥳', '😀', '🐶', '🐔', '🤡', '💩']
+  // TODO 需要支持表情分组：
+  const emoticons = [
+    '😀',
+    '😃',
+    '😄',
+    '😁',
+    '😆',
+    '😅',
+    '🤣',
+    '😂',
+    '🙂',
+    '🙃,',
+    '😉',
+    '😮',
+    '😲',
+    '😳',
+    '😱',
+    '😭',
+    '😞',
+    '😓',
+    '😩',
+    '😡,',
+    '💩',
+    '🤡',
+    '👻',
+    '😚',
+    '🤭',
+    '😏',
+    '😒',
+    '👋,',
+    '🤚',
+    '🖐',
+    '🖖,',
+    '🐶',
+    '🐔',
+    '🤡',
+    '💩',
+  ]
 
   const emoticonSpan = $('<span class="v2p-emoji">')
 
@@ -159,7 +226,19 @@ function insertEmojiBox() {
         .clone()
         .text(emoji)
         .on('click', () => {
-          // TODO 插入表情
+          if (replyTextArea instanceof HTMLTextAreaElement) {
+            const startPos = replyTextArea.selectionStart
+            const endPos = replyTextArea.selectionEnd
+
+            const valueToStart = replyTextArea.value.substring(0, startPos)
+            const valueFromEnd = replyTextArea.value.substring(endPos, replyTextArea.value.length)
+            replyTextArea.value = `${valueToStart}${emoji}${valueFromEnd}`
+
+            replyTextArea.focus()
+
+            replyTextArea.selectionStart = startPos + emoji.length
+            replyTextArea.selectionEnd = startPos + emoji.length
+          }
         })
       return emoticon
     })
@@ -203,7 +282,12 @@ function insertEmojiBox() {
 
   emojiBtn.on('click', (e) => {
     e.stopPropagation()
+
     handlePopupOpen()
+
+    if (replyTextArea instanceof HTMLTextAreaElement) {
+      replyTextArea.focus()
+    }
   })
 }
 

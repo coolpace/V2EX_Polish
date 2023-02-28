@@ -729,6 +729,7 @@ img::selection {
     }
 
     #reply_content {
+      font-size: 15px;
       border-color: var(--v2p-color-main-300);
       border-radius: 6px;
 
@@ -1020,10 +1021,12 @@ body {
 .v2p-emoticons {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
+  gap: 6px;
+  font-size: 15px;
 }
 
 .v2p-emoji {
+  padding: 2px;
   border-radius: 4px;
   cursor: pointer;
 
