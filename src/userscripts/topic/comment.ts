@@ -211,8 +211,7 @@ function insertEmojiBox() {
 
             replyTextArea.focus()
 
-            replyTextArea.selectionStart = startPos + emoji.length
-            replyTextArea.selectionEnd = startPos + emoji.length
+            replyTextArea.selectionStart = replyTextArea.selectionEnd = startPos + emoji.length
           }
         })
       return emoticon
