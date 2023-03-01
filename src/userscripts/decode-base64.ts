@@ -1,7 +1,8 @@
-const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
+import { $commentCells } from './globals'
 
-const $commentCells = $commentBox.find('.cell[id^="r_"]')
-
+/**
+ * 代码参考自：https://github.com/bjzhou/v2ex-base64-decoder/blob/master/index.js
+ */
 const base64regex = /[A-z0-9+/=]+/g
 
 // 已知以下字符串不能作为 base64 字符串，排除掉。
