@@ -20,6 +20,7 @@
     --v2p-color-content-bg: #fff;
     --v2p-color-heart: #f43f5e;
     --v2p-color-heart-fill: #ffe4e6;
+    --v2p-color-mask: rgb(0 0 0 / 25%);
     --v2p-box-shadow: 0 2px 2px var(--v2p-color-main-200);
     --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Microsoft Yahei', sans-serif;
 
@@ -898,7 +899,7 @@ body {
   padding: 60px;
   overflow: hidden;
   overflow-y: auto;
-  background-color: rgb(0 0 0 / 25%);
+  background-color: var(--v2p-color-mask);
   inset: 0;
 }
 
