@@ -6,6 +6,7 @@ module.exports = {
     'selector-class-pattern': null,
     'no-descending-specificity': null,
     'at-rule-no-unknown': [true, { ignoreAtRules: ['support'] }],
+    'value-keyword-case': null,
   },
   ignoreFiles: ['node_modules/**', 'dist/**', 'asset/**', '**/*.min.css'],
 }

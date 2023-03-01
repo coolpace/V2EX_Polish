@@ -1,35 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
 import { $commentBox, $commentCells, $commentTableRows, commentDataList, getOS } from '../globals'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../icons'
-
-$.fn.extend({
-  insertAtCaret: function (this: any, myValue: string) {
-    this.each(() => {
-      if (this.selectionStart || this.selectionStart == '0') {
-        const startPos = this.selectionStart
-        const endPos = this.selectionEnd
-        const scrollTop = this.scrollTop
-        this.value =
-          this.value.substring(0, startPos) +
-          myValue +
-          this.value.substring(endPos, this.value.length)
-        this.focus()
-        this.selectionStart = startPos + myValue.length
-        this.selectionEnd = startPos + myValue.length
-        this.scrollTop = scrollTop
-      } else {
-        this.value += myValue
-        this.focus()
-      }
-    })
-    return this
-  },
-})
 
 /**
  * 设置热门回复。
@@ -40,7 +12,7 @@ function handlingPopularComments() {
     .sort((a, b) => b.likes - a.likes)
 
   if (
-    popularCommentData.length > 4 ||
+    popularCommentData.length >= 4 ||
     (popularCommentData.length > 0 && popularCommentData.every(({ likes }) => likes >= 4))
   ) {
     const cmMask = $('<div class="v2p-cm-mask">')
@@ -170,6 +142,9 @@ function handlingControls() {
   })
 }
 
+/**
+ * 插入表情到回复框。
+ */
 function insertEmojiBox() {
   const os = getOS()
 
@@ -268,16 +243,20 @@ function insertEmojiBox() {
   const handlePopupOpen = () => {
     $(document).on('click', docClickHandler)
 
-    void computePosition(emojiBtn.get(0)!, emojiPopup, {
+    computePosition(emojiBtn.get(0)!, emojiPopup, {
       placement: 'right-start',
       middleware: [offset(6), flip(), shift({ padding: 8 })],
-    }).then(({ x, y }) => {
-      Object.assign(emojiPopup.style, {
-        left: `${x}px`,
-        top: `${y}px`,
-      })
-      emojiPopup.style.visibility = 'visible'
     })
+      .then(({ x, y }) => {
+        Object.assign(emojiPopup.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+        })
+        emojiPopup.style.visibility = 'visible'
+      })
+      .catch(() => {
+        handleClose()
+      })
   }
 
   emojiBtn.on('click', (e) => {

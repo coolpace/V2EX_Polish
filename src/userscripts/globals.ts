@@ -66,6 +66,9 @@ export const commentDataList = $commentTableRows
   })
   .get()
 
+/**
+ * 获取用户的操作系统
+ */
 export function getOS() {
   const userAgent = window.navigator.userAgent.toLowerCase()
   const macosPlatforms = /(macintosh|macintel|macppc|mac68k|macos)/i
