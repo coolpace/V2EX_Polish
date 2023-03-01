@@ -1,66 +1,69 @@
-body {
-  --v2p-color-main-100: #f1f5f9;
-  --v2p-color-main-200: #e2e8f0;
-  --v2p-color-main-300: #cbd5e1;
-  --v2p-color-main-400: #94a3b8;
-  --v2p-color-main-500: #64748b;
-  --v2p-color-main-600: #475569;
-  --v2p-color-main-700: #334155;
-  --v2p-color-main-800: #1e293b;
-  --v2p-color-accent-50: #ecfdf5;
-  --v2p-color-accent-100: #d1fae5;
-  --v2p-color-accent-200: #a7f3d0;
-  --v2p-color-accent-300: #6ee7b7;
-  --v2p-color-accent-400: #34d399;
-  --v2p-color-accent-500: #10b981;
-  --v2p-color-accent-600: #059669;
-  --v2p-color-border: rgb(238 238 238);
-  --v2p-color-wrapper-bg: rgb(249 250 252);
-  --v2p-color-content-bg: #fff;
-  --v2p-color-heart: #f43f5e;
-  --v2p-color-heart-fill: #ffe4e6;
-  --v2p-box-shadow: 0 2px 2px var(--v2p-color-main-200);
-  /* stylelint-disable-next-line value-keyword-case */
-  --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', sans-serif;
+:root {
+  body {
+    --v2p-color-main-100: #f1f5f9;
+    --v2p-color-main-200: #e2e8f0;
+    --v2p-color-main-300: #cbd5e1;
+    --v2p-color-main-400: #94a3b8;
+    --v2p-color-main-500: #64748b;
+    --v2p-color-main-600: #475569;
+    --v2p-color-main-700: #334155;
+    --v2p-color-main-800: #1e293b;
+    --v2p-color-accent-50: #ecfdf5;
+    --v2p-color-accent-100: #d1fae5;
+    --v2p-color-accent-200: #a7f3d0;
+    --v2p-color-accent-300: #6ee7b7;
+    --v2p-color-accent-400: #34d399;
+    --v2p-color-accent-500: #10b981;
+    --v2p-color-accent-600: #059669;
+    --v2p-color-border: rgb(238 238 238);
+    --v2p-color-wrapper-bg: rgb(249 250 252);
+    --v2p-color-content-bg: #fff;
+    --v2p-color-heart: #f43f5e;
+    --v2p-color-heart-fill: #ffe4e6;
+    --v2p-box-shadow: 0 2px 2px var(--v2p-color-main-200);
+    --v2p-font-noto-sans: -apple-system, BlinkMacSystemFont, 'Microsoft Yahei', sans-serif;
 
-  /** V2EX Colors */
-  --color-fade: var(--v2p-color-main-400);
-  --color-gray: var(--v2p-color-main-400);
-  --link-color: var(--v2p-color-main-800);
-  --link-caution-color: #f59e0b;
-  --box-border-color: var(--v2p-color-main-100);
-  --box-foreground-color: var(--v2p-color-main-800);
-  --box-background-color: var(--v2p-color-content-bg);
-  --box-background-alt-color: var(--v2p-color-main-100);
-  --box-background-hover-color: var(--v2p-color-main-200);
-  --button-background-color: var(--v2p-color-main-200);
-  --button-foreground-color: var(--v2p-color-main-500);
-  --button-border-color: var(--v2p-color-main-300);
+    // V2EX 原有的 CSS 变量：
+    --color-fade: var(--v2p-color-main-400);
+    --color-gray: var(--v2p-color-main-400);
+    --link-color: var(--v2p-color-main-800);
+    --link-hover-color: var(--v2p-color-main-800);
+    --link-caution-color: #f59e0b;
+    --box-border-color: var(--v2p-color-main-100);
+    --box-foreground-color: var(--v2p-color-main-800);
+    --box-background-color: var(--v2p-color-content-bg);
+    --box-background-alt-color: var(--v2p-color-main-100);
+    --box-background-hover-color: var(--v2p-color-main-200);
+    --button-background-color: var(--v2p-color-main-100);
+    --button-foreground-color: var(--v2p-color-main-500);
+    --button-hover-color: var(--v2p-color-main-200);
+    --button-border-color: var(--v2p-color-main-300);
 
-  color: var(--v2p-color-main-800);
-  font-family: var(--v2p-font-noto-sans);
-  background-color: var(--v2p-color-wrapper-bg);
-}
+    color: var(--v2p-color-main-800);
+    font-family: var(--v2p-font-noto-sans);
+    background-color: var(--v2p-color-wrapper-bg);
+  }
 
-body:has(.Night) {
-  --v2p-color-main-100: #222;
-  --v2p-color-main-200: #393939;
-  --v2p-color-main-300: #4c4c4c;
-  --v2p-color-main-400: #6a6a6a;
-  --v2p-color-main-500: #999;
-  --v2p-color-main-600: #cbcbcb;
-  --v2p-color-main-700: #e0e0e0;
-  --v2p-color-main-800: #f1f1f1;
-  --v2p-color-accent-50: #ecfdf5;
-  --v2p-color-accent-100: #d1fae5;
-  --v2p-color-accent-200: #a7f3d0;
-  --v2p-color-accent-300: #6ee7b7;
-  --v2p-color-accent-400: #34d399;
-  --v2p-color-accent-500: #10b981;
-  --v2p-color-accent-600: #059669;
-  --v2p-color-border: rgb(238 238 238);
-  --v2p-color-wrapper-bg: #181818;
-  --v2p-color-content-bg: #222;
+  body:has(.Night) {
+    --v2p-color-main-100: #222;
+    --v2p-color-main-200: #393939;
+    --v2p-color-main-300: #4c4c4c;
+    --v2p-color-main-400: #6a6a6a;
+    --v2p-color-main-500: #999;
+    --v2p-color-main-600: #cbcbcb;
+    --v2p-color-main-700: #e0e0e0;
+    --v2p-color-main-800: #f1f1f1;
+    --v2p-color-accent-50: #064e3b;
+    --v2p-color-accent-100: #065f46;
+    --v2p-color-accent-200: #047857;
+    --v2p-color-accent-300: #059669;
+    --v2p-color-accent-400: #10b981;
+    --v2p-color-accent-500: #34d399;
+    --v2p-color-accent-600: #6ee7b7;
+    --v2p-color-border: rgb(238 238 238);
+    --v2p-color-wrapper-bg: #181818;
+    --v2p-color-content-bg: #222;
+  }
 }
 
 /* stylelint-disable-next-line no-duplicate-selectors */
@@ -130,7 +133,7 @@ body {
 
     #search-result {
       top: 42px;
-      box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
+      box-shadow: 0 0 15px 5px var(--box-background-hover-color);
     }
   }
 
@@ -161,27 +164,29 @@ body {
       align-items: center;
       height: 28px;
       padding: 0 12px;
-      color: var(--v2p-color-main-500);
+      color: var(--button-foreground-color);
       font-weight: 500;
       font-size: 14px;
       font-family: inherit;
       line-height: 28px;
-      background: none;
-      background-color: var(--v2p-color-main-100);
+      text-shadow: none;
+      background: var(--button-background-color);
       border: none;
       border-radius: 6px;
       outline: none;
-      box-shadow: 0 1.8px 0 var(--v2p-color-main-200), 0 1.8px 0 var(--v2p-color-main-100);
+      box-shadow: 0 1.8px 0 var(--box-background-hover-color),
+        0 1.8px 0 var(--button-background-color);
       cursor: pointer;
+      transition: background-color 0.25s;
       user-select: none;
 
       &:hover:enabled {
-        color: var(--v2p-color-main-500);
+        color: var(--button-foreground-color);
         font-weight: 500;
         text-shadow: none;
-        background-color: var(--v2p-color-main-100);
+        background: var(--button-hover-color);
         border: none;
-        box-shadow: 0 1.8px 0 var(--v2p-color-main-200), 0 1.8px 0 var(--v2p-color-main-100);
+        box-shadow: 0 1.8px 0 var(--button-border-color), 0 1.8px 0 var(--button-background-color);
       }
 
       &.hover_now,
@@ -203,7 +208,7 @@ body {
         padding: 0 3px;
         font-size: 90%;
         line-height: initial;
-        border: 1px solid var(--v2p-color-main-200);
+        border: 1px solid var(--button-border-color);
         border-radius: 4px;
       }
     }
@@ -252,7 +257,7 @@ body {
     &:link,
     &:visited {
       background-color: var(--v2p-color-content-bg);
-      box-shadow: 0 2px 2px var(--v2p-color-main-200);
+      box-shadow: 0 2px 2px var(--box-background-hover-color);
     }
   }
 
@@ -260,7 +265,7 @@ body {
     &:link,
     &:visited {
       font-weight: 500;
-      background-color: var(--v2p-color-main-200);
+      background-color: var(--box-background-hover-color);
       box-shadow: none;
     }
   }
@@ -283,7 +288,7 @@ body {
 }
 
 ::selection {
-  color: currentcolor;
+  color: currentColor;
   background-color: var(--v2p-color-main-200);
 }
 
@@ -711,7 +716,7 @@ img::selection {
   }
 
   .tab_current {
-    background-color: var(--v2p-color-main-700);
+    background-color: var(--button-background-color);
   }
 
   #reply-box {
@@ -721,7 +726,7 @@ img::selection {
       overflow: hidden;
       border: none;
       border-radius: 10px;
-      box-shadow: 0 0 15px 5px var(--v2p-color-main-200);
+      box-shadow: 0 0 15px 5px var(--box-background-hover-color);
     }
 
     .flex-one-row {
@@ -864,7 +869,7 @@ body {
 
   .v2p-icon-heart {
     margin-right: 5px;
-    color: currentcolor;
+    color: currentColor;
 
     svg {
       fill: none;
@@ -982,7 +987,7 @@ body {
   transition: color 0.3s;
 
   &:hover {
-    color: currentcolor;
+    color: currentColor;
   }
 
   &::after {
