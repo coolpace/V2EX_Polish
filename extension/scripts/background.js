@@ -36,7 +36,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     console.log(info, tab)
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      files: ['./scripts/decode.js'],
+      files: ['./scripts/decode-base64.min.js'],
     })
   }
 })
