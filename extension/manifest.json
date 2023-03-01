@@ -7,6 +7,10 @@
 
   "description": "Make v2ex.com easier to explore with better interaction.",
 
+  "permissions": ["scripting", "contextMenus"],
+
+  "host_permissions": ["https://www.v2ex.com/*", "https://v2ex.com/*"],
+
   "icons": {
     "16": "./images/icon-16.png",
     "32": "./images/icon-32.png",

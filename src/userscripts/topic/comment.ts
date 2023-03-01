@@ -222,7 +222,7 @@ function insertEmojiBox() {
     `<button type="button" class="normal button">${iconEmoji}</button>`
   ).insertAfter(replyBtn)
 
-  const emojiPopup = $('<div id="v2p-tooltip" role="tooltip"></div>')
+  const emojiPopup = $('<div id="v2p-emoji-popup">')
     .append(emoticonsBox)
     .appendTo($('#reply-box'))
     .get(0)!

@@ -64,6 +64,7 @@
     --v2p-color-border: rgb(238 238 238);
     --v2p-color-wrapper-bg: #181818;
     --v2p-color-content-bg: #222;
+    --link-hover-color: var(--v2p-color-main-100);
   }
 }
 
@@ -135,6 +136,10 @@ body {
     #search-result {
       top: 42px;
       box-shadow: 0 0 15px 5px var(--box-background-hover-color);
+
+      .search-item {
+        color: var(--color-gray);
+      }
     }
   }
 
@@ -178,7 +183,7 @@ body {
       box-shadow: 0 1.8px 0 var(--box-background-hover-color),
         0 1.8px 0 var(--button-background-color);
       cursor: pointer;
-      transition: background-color 0.25s;
+      transition: background-color 0.25s, box-shadow 0.25s;
       user-select: none;
 
       &:hover:enabled {
@@ -284,6 +289,10 @@ body {
 
     .member-activity-fourth {
       background-color: var(--v2p-color-accent-400);
+    }
+
+    .member-activity-half {
+      background-color: var(--v2p-color-accent-500);
     }
   }
 }
@@ -721,7 +730,7 @@ img::selection {
   }
 
   .tab_current {
-    background-color: var(--button-background-color);
+    background-color: var(--box-foreground-color);
   }
 
   #reply-box {
@@ -1005,7 +1014,7 @@ body {
   height: 15px;
 }
 
-#v2p-tooltip {
+#v2p-emoji-popup {
   position: absolute;
   top: 0;
   left: 0;
@@ -1019,14 +1028,6 @@ body {
   border-radius: 5px;
   box-shadow: var(--v2p-box-shadow);
   visibility: hidden;
-}
-
-#v2p-tooltip-arrow {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: inherit;
-  transform: rotate(45deg);
 }
 
 .v2p-emoticons {

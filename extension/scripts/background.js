@@ -16,3 +16,27 @@ chrome.runtime.onMessage.addListener((message) => {
           },
   })
 })
+
+chrome.contextMenus.create({
+  contexts: ['all'],
+  title: 'V2EX Polish',
+  visible: true,
+  id: 'v2p-ctx',
+})
+
+chrome.contextMenus.create({
+  contexts: ['all'],
+  title: 'Base64 解码',
+  id: 'v2p-ctx-decode',
+  parentId: 'v2p-ctx',
+})
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'v2p-ctx-decode') {
+    console.log(info, tab)
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ['./scripts/decode.js'],
+    })
+  }
+})
