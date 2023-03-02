@@ -1,6 +1,14 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
-import { $commentBox, $commentCells, $commentTableRows, commentDataList, getOS } from '../globals'
+import {
+  $commentBox,
+  $commentCells,
+  $commentTableRows,
+  commentDataList,
+  getOS,
+  loginName,
+  topicOwnerName,
+} from '../globals'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../icons'
 
 /**
@@ -11,12 +19,8 @@ function handlingPopularComments() {
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
 
-  if (
-    popularCommentData.length >= 4 ||
-    (popularCommentData.length > 0 && popularCommentData.every(({ likes }) => likes >= 4))
-  ) {
-    const cmMask = $('<div class="v2p-cm-mask">')
-    const cmContent = $(`
+  const cmMask = $('<div class="v2p-cm-mask">')
+  const cmContent = $(`
       <div class="v2p-cm-content box">
         <div class="v2p-cm-bar">
           <span>本页共有 ${popularCommentData.length} 条热门回复</span>
@@ -24,74 +28,73 @@ function handlingPopularComments() {
         </div>
       </div>
     `)
-    const cmContainer = cmMask.append(cmContent).hide()
+  const cmContainer = cmMask.append(cmContent).hide()
 
-    {
-      const commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
-      const countText = commentBoxCount.text()
-      const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
-      const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>`
+  {
+    const commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
+    const countText = commentBoxCount.text()
+    const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
+    const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>`
 
-      let boundEvent = false
+    let boundEvent = false
 
-      const docClickHandler = (e: JQuery.ClickEvent) => {
-        if ($(e.target).closest(cmContent).length === 0) {
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          handleModalClose()
-        }
+    const docClickHandler = (e: JQuery.ClickEvent) => {
+      if ($(e.target).closest(cmContent).length === 0) {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        handleModalClose()
       }
-
-      const keyupHandler = (e: JQuery.KeyDownEvent) => {
-        if (e.key === 'Escape') {
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          handleModalClose()
-        }
-      }
-
-      const handleModalClose = () => {
-        $(document).off('click', docClickHandler)
-        $(document).off('keydown', keyupHandler)
-        boundEvent = false
-
-        cmContainer.fadeOut('fast')
-        document.body.classList.remove('modal-open')
-      }
-
-      const handleModalOpen = () => {
-        if (!boundEvent) {
-          $(document).on('click', docClickHandler)
-          $(document).on('keydown', keyupHandler)
-          boundEvent = true
-        }
-
-        cmContainer.fadeIn('fast')
-        document.body.classList.add('modal-open')
-      }
-
-      const closeBtn = cmContainer.find('.v2p-cm-close-btn')
-      closeBtn.on('click', handleModalClose)
-
-      const popularBtn = $(
-        `<span class="v2p-popular-btn v2p-hover-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
-      )
-      popularBtn.on('click', (e) => {
-        e.stopPropagation()
-        handleModalOpen()
-      })
-
-      commentBoxCount.empty().append(countTextSpan).append(popularBtn)
     }
 
-    const templete = $('<templete></templete>')
+    const keyupHandler = (e: JQuery.KeyDownEvent) => {
+      if (e.key === 'Escape') {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        handleModalClose()
+      }
+    }
 
-    popularCommentData.forEach(({ index }) => {
-      templete.append($commentCells.eq(index).clone())
+    const handleModalClose = () => {
+      $(document).off('click', docClickHandler)
+      $(document).off('keydown', keyupHandler)
+      boundEvent = false
+
+      cmContainer.fadeOut('fast')
+      document.body.classList.remove('modal-open')
+    }
+
+    const handleModalOpen = () => {
+      if (!boundEvent) {
+        $(document).on('click', docClickHandler)
+        $(document).on('keydown', keyupHandler)
+        boundEvent = true
+      }
+
+      cmContainer.fadeIn('fast')
+      document.body.classList.add('modal-open')
+    }
+
+    const closeBtn = cmContainer.find('.v2p-cm-close-btn')
+    closeBtn.on('click', handleModalClose)
+
+    const popularBtn = $(
+      `<span class="v2p-popular-btn v2p-hover-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
+    )
+    popularBtn.on('click', (e) => {
+      e.stopPropagation()
+      handleModalOpen()
     })
 
-    cmContent.append(templete.html())
-
-    $commentBox.append(cmContainer)
+    commentBoxCount.empty().append(countTextSpan).append(popularBtn)
   }
+
+  const templete = $('<templete></templete>')
+
+  popularCommentData.forEach(({ index }) => {
+    templete.append($commentCells.eq(index).clone())
+  })
+
+  cmContent.append(templete.html())
+
+  $commentBox.append(cmContainer)
 }
 
 /**
@@ -269,48 +272,6 @@ function insertEmojiBox() {
   })
 }
 
-/**
- * 代码参考自：https://github.com/bjzhou/v2ex-base64-decoder/blob/master/index.js
- */
-function parseBase64() {
-  const base64regex = /[A-z0-9+/=]+/g
-
-  // 已知以下字符串不能作为 base64 字符串，排除掉。
-  const excludeList = [
-    'bilibili',
-    'Bilibili',
-    'MyTomato',
-    'InDesign',
-    'Encrypto',
-    'encrypto',
-    'Window10',
-    'USERNAME',
-    'airpords',
-    'Windows7',
-  ]
-
-  $commentCells.find('.reply_content').each((_, cellDom) => {
-    cellDom.innerHTML = cellDom.innerHTML.replace(base64regex, (str) => {
-      // 先从格式规则上简单排除掉非 base64 字符串。
-      if (str.length < 8 || str.length % 4 !== 0) {
-        return str
-      }
-
-      // 再从排除列表中排除掉非 base64 字符串。
-      if (excludeList.includes(str)) {
-        return str
-      }
-
-      try {
-        const decodedStr = window.atob(str)
-        return `${str}(${decodedStr})`
-      } catch {
-        return str
-      }
-    })
-  })
-}
-
 export function handlingComments() {
   {
     /**
@@ -337,7 +298,11 @@ export function handlingComments() {
           : commentDataList.find((data) => data.id === cellDom.id)
 
       if (currentComment) {
-        const { refMemberNames, refFloors } = currentComment
+        const { memberName, refMemberNames, refFloors } = currentComment
+
+        if (memberName === loginName && memberName !== topicOwnerName) {
+          $(cellDom).find('.badges').append('<div class="badge you">YOU</div>')
+        }
 
         const firstRefMemberName = refMemberNames?.at(0)
         const firstRefFloor = refFloors?.at(0)

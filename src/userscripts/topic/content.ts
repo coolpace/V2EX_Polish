@@ -7,16 +7,18 @@ export function handlingContent() {
   }
 
   {
-    $topicContentBox.find('.subtle > .topic_content').each((_, topicContent) => {
-      const text = topicContent.textContent
-      if (text) {
-        if (text.length >= 300) {
+    const $topicContents = $topicContentBox.find('.subtle > .topic_content')
+
+    const textLength = $topicContents.text().length
+
+    if (textLength >= 200) {
+      $topicContents.each((_, topicContent) => {
+        if (textLength >= 400) {
           topicContent.style.fontSize = '13px'
-        } else if (text.length >= 120) {
-          topicContent.style.fontSize = '14px'
         }
-      }
-    })
+        topicContent.style.fontSize = '14px'
+      })
+    }
   }
 
   {

@@ -5,7 +5,7 @@ import { $commentCells } from './globals'
  */
 const base64regex = /[A-z0-9+/=]+/g
 
-// 已知以下字符串不能作为 base64 字符串，排除掉。
+// 已知以下字符串不能作为 base64 字符串识别，排除掉。
 const excludeList = [
   'bilibili',
   'Bilibili',
@@ -33,9 +33,15 @@ $commentCells.find('.reply_content').each((_, cellDom) => {
 
     try {
       const decodedStr = window.atob(str)
-      return `${str}(${decodedStr})`
+      return `${str}(<span class="v2p-decode" title="复制${decodedStr}">${decodedStr}</span>)`
     } catch {
       return str
     }
   })
+})
+
+$('.v2p-decode').on('click', (ev) => {
+  const text = ev.target.innerText
+  void navigator.clipboard.writeText(text)
+  console.log('click', text)
 })
