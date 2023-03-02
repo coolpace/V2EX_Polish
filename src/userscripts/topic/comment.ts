@@ -245,6 +245,13 @@ function insertEmojiBox() {
     .appendTo($('#reply-box'))
     .get(0)!
 
+  const keyupHandler = (e: JQuery.KeyDownEvent) => {
+    if (e.key === 'Escape') {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handlePopupClose()
+    }
+  }
+
   const docClickHandler = (e: JQuery.ClickEvent) => {
     if ($(e.target).closest(emojiPopup).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -253,12 +260,14 @@ function insertEmojiBox() {
   }
 
   const handlePopupClose = () => {
-    $(document).off('click', docClickHandler)
     emojiPopup.style.visibility = 'hidden'
+    $(document).off('click', docClickHandler)
+    $(document).off('keydown', keyupHandler)
   }
 
   const handlePopupOpen = () => {
     $(document).on('click', docClickHandler)
+    $(document).on('keydown', keyupHandler)
 
     computePosition(emojiBtn.get(0)!, emojiPopup, {
       placement: 'right-end',
