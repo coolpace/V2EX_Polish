@@ -8,55 +8,70 @@
  * 如果以上三个条件都满足，则可以认为这段字符是base64编码。
  */
 
-import { $commentCells } from './globals'
+import { $commentCells, $topicContentBox } from './globals'
 
-const base64regex = /[A-z0-9+/=]+/g
-
-// 已知以下字符串不能作为 base64 字符串识别，排除掉。
+// 已知以下高频字符串不能作为 base64 字符串识别，排除掉。
 const excludeList = [
+  'boss',
   'bilibili',
   'Bilibili',
-  'MyTomato',
-  'InDesign',
   'Encrypto',
   'encrypto',
   'Window10',
-  'USERNAME',
   'airpords',
   'Windows7',
 ]
 
-$commentCells.find('.reply_content').each((_, cellDom) => {
-  cellDom.innerHTML = cellDom.innerHTML.replace(base64regex, (str) => {
-    // 检查长度是否为4的倍数
-    if (str.length % 4 !== 0) {
-      return str
-    }
+const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
+  // 检查长度是否为4的倍数。
+  if (text.length % 4 !== 0) {
+    return text
+  }
 
-    // 从排除列表中排除掉非 base64 字符串。
-    if (excludeList.includes(str)) {
-      return str
-    }
+  // 从排除列表中排除掉非 base64 字符串。
+  if (excludeList.includes(text)) {
+    return text
+  }
 
-    // 检查填充字符 "=" 的位置是否正确
-    if (str.includes('=')) {
-      const paddingIndex = str.indexOf('=')
-      if (paddingIndex !== str.length - 1 && paddingIndex !== str.length - 2) {
-        return str
-      }
+  // 检查填充字符 "=" 的位置是否正确。
+  if (text.includes('=')) {
+    const paddingIndex = text.indexOf('=')
+    if (paddingIndex !== text.length - 1 && paddingIndex !== text.length - 2) {
+      return text
     }
+  }
 
-    try {
-      const decodedStr = window.atob(str)
-      return `${str}(<span class="v2p-decode" title="复制${decodedStr}">${decodedStr}</span>)`
-    } catch {
-      return str
-    }
-  })
-})
+  // 排除特定标签中的 base64 字符串。
+  if (excludeTextList?.some((excludeText) => excludeText.includes(text))) {
+    return text
+  }
+
+  try {
+    const decodedStr = window.atob(text)
+    return `${text}(<span class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</span>)`
+  } catch {
+    return text
+  }
+}
+
+const base64regex = /[A-z0-9+/=]+/g
+
+const contentHandler = (_: number, content: HTMLElement) => {
+  const excludeTextList = [
+    ...content.getElementsByTagName('a'),
+    ...content.getElementsByClassName('img'),
+  ].map((ele) => ele.outerHTML)
+
+  content.innerHTML = content.innerHTML.replace(base64regex, (htmlText) =>
+    convertHTMLText(htmlText, excludeTextList)
+  )
+}
+
+$commentCells.find('.reply_content').each(contentHandler)
+
+$topicContentBox.find('.topic_content').each(contentHandler)
 
 $('.v2p-decode').on('click', (ev) => {
   const text = ev.target.innerText
   void navigator.clipboard.writeText(text)
-  console.log('click', text)
 })
