@@ -68,6 +68,7 @@
     --v2p-color-wrapper-bg: #181818;
     --v2p-color-content-bg: #222;
     --link-hover-color: var(--v2p-color-main-100);
+    --button-background-color: var(--v2p-color-main-200);
   }
 }
 
@@ -746,7 +747,7 @@ img::selection {
     &.reply-box-sticky {
       bottom: 20px;
       z-index: 10;
-      overflow: hidden;
+      overflow: visible;
       border: none;
       border-radius: 10px;
       box-shadow: 0 0 15px 5px var(--box-background-hover-color);
@@ -763,11 +764,12 @@ img::selection {
       border-radius: 6px;
 
       & + .flex-one-row {
+        flex-direction: row-reverse;
         gap: 10px;
         justify-content: flex-start;
 
         .gray {
-          margin-left: auto;
+          margin-right: auto;
         }
       }
     }
@@ -1029,19 +1031,38 @@ body {
   left: 0;
   z-index: 999;
   width: max-content;
+  max-height: 285px;
   padding: 12px;
+  overflow-y: auto;
   color: var(--v2p-color-main-600);
   font-weight: bold;
   font-size: 14px;
   background: var(--v2p-color-content-bg);
-  border-radius: 5px;
-  box-shadow: var(--v2p-box-shadow);
+  border-radius: 8px;
+  box-shadow: 0 9px 24px -3px var(--button-border-color), 0 4px 8px -1px var(--button-hover-color);
   visibility: hidden;
 }
 
-.v2p-emoticons {
+.v2p-emoticons-box {
+  font-size: 15px;
+}
+
+.v2p-emoji-group {
+  font-size: 15px;
+
+  & ~ & {
+    margin-top: 10px;
+  }
+}
+
+.v2p-emoji-name {
+  margin: 0 0 10px;
+  text-align: left;
+}
+
+.v2p-emoji-list {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   gap: 6px;
   font-size: 15px;
 }

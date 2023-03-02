@@ -19,6 +19,10 @@ function handlingPopularComments() {
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
 
+  if (popularCommentData.length <= 0) {
+    return
+  }
+
   const cmMask = $('<div class="v2p-cm-mask">')
   const cmContent = $(`
       <div class="v2p-cm-content box">
@@ -157,69 +161,80 @@ function insertEmojiBox() {
     `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
   ).replaceAll($('#reply-box input[type="submit"]'))
 
-  // TODO 需要支持表情分组：
   const emoticons = [
-    '😀',
-    '😃',
-    '😄',
-    '😁',
-    '😆',
-    '😅',
-    '🤣',
-    '😂',
-    '🙂',
-    '🙃',
-    '😉',
-    '😮',
-    '😲',
-    '😳',
-    '😱',
-    '😭',
-    '😞',
-    '😓',
-    '😩',
-    '😡',
-    '💩',
-    '🤡',
-    '👻',
-    '😚',
-    '🤭',
-    '😏',
-    '😒',
-    '👋',
-    '🤚',
-    '🖐',
-    '🖖',
-    '🐶',
-    '🐔',
-    '🤡',
-    '💩',
+    {
+      title: 'Smileys',
+      list: [
+        '😀',
+        '😃',
+        '😄',
+        '😁',
+        '😆',
+        '😅',
+        '🤣',
+        '😂',
+        '🙂',
+        '🙃',
+        '😉',
+        '😮',
+        '😲',
+        '😳',
+        '😱',
+        '😭',
+        '😞',
+        '😓',
+        '😩',
+        '😚',
+        '🤭',
+        '😏',
+        '😒',
+        '😡',
+        '😤',
+      ],
+    },
+    {
+      title: 'Others',
+      list: ['👻', '👋', '🤚', '🖐', '🖖', '🐶', '🐔', '🤡', '💩'],
+    },
   ]
 
+  const emoticonGroup = $('<div class="v2p-emoji-group">')
+  const emoticonList = $('<div class="v2p-emoji-list">')
   const emoticonSpan = $('<span class="v2p-emoji">')
 
-  const emoticonsBox = $('<div class="v2p-emoticons">').append(
-    ...emoticons.map((emoji) => {
-      const emoticon = emoticonSpan
-        .clone()
-        .text(emoji)
-        .on('click', () => {
-          if (replyTextArea instanceof HTMLTextAreaElement) {
-            const startPos = replyTextArea.selectionStart
-            const endPos = replyTextArea.selectionEnd
+  const groups = emoticons.map((emojiGroup) => {
+    const group = emoticonGroup.clone()
 
-            const valueToStart = replyTextArea.value.substring(0, startPos)
-            const valueFromEnd = replyTextArea.value.substring(endPos, replyTextArea.value.length)
-            replyTextArea.value = `${valueToStart}${emoji}${valueFromEnd}`
+    group.append(`<div class="v2p-emoji-name">${emojiGroup.title}</div>`)
 
-            replyTextArea.focus()
+    const list = emoticonList.clone().append(
+      emojiGroup.list.map((emoji) => {
+        const emoticon = emoticonSpan
+          .clone()
+          .text(emoji)
+          .on('click', () => {
+            if (replyTextArea instanceof HTMLTextAreaElement) {
+              const startPos = replyTextArea.selectionStart
+              const endPos = replyTextArea.selectionEnd
 
-            replyTextArea.selectionStart = replyTextArea.selectionEnd = startPos + emoji.length
-          }
-        })
-      return emoticon
-    })
-  )
+              const valueToStart = replyTextArea.value.substring(0, startPos)
+              const valueFromEnd = replyTextArea.value.substring(endPos, replyTextArea.value.length)
+              replyTextArea.value = `${valueToStart}${emoji}${valueFromEnd}`
+
+              replyTextArea.focus()
+
+              replyTextArea.selectionStart = replyTextArea.selectionEnd = startPos + emoji.length
+            }
+          })
+        return emoticon
+      })
+    )
+
+    group.append(list)
+
+    return group
+  })
+  const emoticonsBox = $('<div class="v2p-emoticons-box">').append(groups)
 
   const emojiBtn = $(
     `<button type="button" class="normal button">${iconEmoji}</button>`
@@ -233,11 +248,11 @@ function insertEmojiBox() {
   const docClickHandler = (e: JQuery.ClickEvent) => {
     if ($(e.target).closest(emojiPopup).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      handleClose()
+      handlePopupClose()
     }
   }
 
-  const handleClose = () => {
+  const handlePopupClose = () => {
     $(document).off('click', docClickHandler)
     emojiPopup.style.visibility = 'hidden'
   }
@@ -246,8 +261,8 @@ function insertEmojiBox() {
     $(document).on('click', docClickHandler)
 
     computePosition(emojiBtn.get(0)!, emojiPopup, {
-      placement: 'right-start',
-      middleware: [offset(6), flip(), shift({ padding: 8 })],
+      placement: 'right-end',
+      middleware: [offset({ mainAxis: 10, crossAxis: 8 }), flip(), shift({ padding: 8 })],
     })
       .then(({ x, y }) => {
         Object.assign(emojiPopup.style, {
@@ -257,14 +272,18 @@ function insertEmojiBox() {
         emojiPopup.style.visibility = 'visible'
       })
       .catch(() => {
-        handleClose()
+        handlePopupClose()
       })
   }
 
   emojiBtn.on('click', (e) => {
     e.stopPropagation()
 
-    handlePopupOpen()
+    if (emojiPopup.style.visibility === 'visible') {
+      handlePopupClose()
+    } else {
+      handlePopupOpen()
+    }
 
     if (replyTextArea instanceof HTMLTextAreaElement) {
       replyTextArea.focus()
