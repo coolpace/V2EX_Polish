@@ -15,6 +15,9 @@
     --v2p-color-accent-400: #34d399;
     --v2p-color-accent-500: #10b981;
     --v2p-color-accent-600: #059669;
+    --v2p-color-orange-50: #fff7ed;
+    --v2p-color-orange-100: #ffedd5;
+    --v2p-color-orange-400: #fb923c;
     --v2p-color-border: rgb(238 238 238);
     --v2p-color-wrapper-bg: rgb(249 250 252);
     --v2p-color-content-bg: #fff;
@@ -667,6 +670,12 @@ img::selection {
         color: var(--v2p-color-content-bg);
         background-color: var(--v2p-color-accent-400);
       }
+
+      &.you {
+        color: var(--v2p-color-orange-400);
+        background-color: var(--v2p-color-orange-50);
+        border: 1px solid var(--v2p-color-orange-400);
+      }
     }
   }
 
@@ -1045,4 +1054,12 @@ body {
   &:hover {
     background-color: var(--box-background-hover-color);
   }
+}
+
+.v2p-decode {
+  padding: 2px 4px;
+  color: var(--v2p-color-orange-400);
+  font-size: 13px;
+  background-color: var(--v2p-color-orange-50);
+  cursor: copy;
 }

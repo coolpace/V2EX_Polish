@@ -4,6 +4,8 @@ export default defineConfig({
   entry: {
     'userscripts.min': 'src/userscripts/index.ts',
     'decode-base64.min': 'src/userscripts/decode-base64.ts',
+    'background.min': 'src/service-worker/background.ts',
+    'toggle-icon.min': 'src/toggle-icon.ts',
   },
 
   outDir: './extension/scripts',
