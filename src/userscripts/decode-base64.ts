@@ -59,7 +59,7 @@ const base64regex = /[A-z0-9+/=]+/g
 const contentHandler = (_: number, content: HTMLElement) => {
   const excludeTextList = [
     ...content.getElementsByTagName('a'),
-    ...content.getElementsByClassName('img'),
+    ...content.getElementsByTagName('img'),
   ].map((ele) => ele.outerHTML)
 
   content.innerHTML = content.innerHTML.replace(base64regex, (htmlText) =>
