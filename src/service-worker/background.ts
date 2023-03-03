@@ -1,3 +1,5 @@
+import { Menu } from '../constants'
+
 interface Message {
   colorScheme: 'dark' | 'light'
 }
@@ -22,11 +24,6 @@ chrome.runtime.onMessage.addListener((message: Message) => {
 })
 
 chrome.contextMenus.removeAll(() => {
-  const enum Menu {
-    Root = 'v2p-ctx',
-    ItemDecode = 'v2p-ctx-decode',
-  }
-
   chrome.contextMenus.create({
     documentUrlPatterns: ['https://*.v2ex.com/*'],
     contexts: ['page'],

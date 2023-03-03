@@ -1,13 +1,9 @@
 import { StorageKey, V2EX } from '../../constants'
-import type { Options } from '../../types'
+import type { StorageData } from '../../types'
 import { $topicList } from '../globals'
 
-interface Result {
-  options?: Options
-}
-
 export function handlingTopicList() {
-  chrome.storage.sync.get(StorageKey.Options, (result: Result) => {
+  chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
     const PAT = result.options?.[StorageKey.OptPAT]
 
     if (!PAT) {
