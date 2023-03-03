@@ -4,6 +4,8 @@ export const loginName = $('#Top .tools > a[href^="/member"]').text()
 /** 发帖人的昵称 */
 export const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
 
+export const $topicList = $('#Main #Tabs ~ .cell.item')
+
 /** 主题内容区 */
 export const $topicContentBox = $('#Main .box:has(.topic_content)')
 
@@ -90,4 +92,8 @@ export function getOS() {
   }
 
   return os
+}
+
+export const enum V2EX {
+  API = 'https://www.v2ex.com/api/v2',
 }

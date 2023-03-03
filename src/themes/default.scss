@@ -110,6 +110,7 @@ body {
   #Main {
     flex: 1;
     order: 2;
+    max-width: 85vw;
     margin: 0;
   }
 
@@ -425,23 +426,23 @@ img::selection {
       filter: none;
     }
 
-    .tb {
-      &:nth-child(1)::after {
-        content: '🙏';
-      }
+    // .tb {
+    //   &:nth-child(1)::after {
+    //     content: '🙏';
+    //   }
 
-      &:nth-child(2)::after {
-        content: '⭐';
-      }
+    //   &:nth-child(2)::after {
+    //     content: '⭐';
+    //   }
 
-      &:nth-child(3)::after {
-        content: '🐦';
-      }
+    //   &:nth-child(3)::after {
+    //     content: '🐦';
+    //   }
 
-      &:nth-child(4)::after {
-        content: '🙈';
-      }
-    }
+    //   &:nth-child(4)::after {
+    //     content: '🙈';
+    //   }
+    // }
   }
 
   .topic_content {
@@ -1083,4 +1084,8 @@ body {
   font-size: 13px;
   background-color: var(--v2p-color-orange-50);
   cursor: copy;
+
+  &:active {
+    opacity: 0.6;
+  }
 }

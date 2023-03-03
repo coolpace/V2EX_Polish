@@ -22,7 +22,7 @@ export function handlingContent() {
   }
 
   {
-    const topicBtn = $('.topic_buttons .tb').addClass('v2p-tb')
+    const topicBtn = $('.topic_buttons .tb').addClass('v2p-tb v2p-hover-btn')
     topicBtn.eq(0).append(`<span class="v2p-tb-icon">${iconStar}</span>`)
     topicBtn.eq(1).append(`<span class="v2p-tb-icon">${iconTwitter}</span>`)
     topicBtn.eq(2).append(`<span class="v2p-tb-icon">${iconIgnore}</span>`)
