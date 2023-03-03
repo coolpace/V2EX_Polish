@@ -1,37 +1,43 @@
-import { $topicList, V2EX } from '../globals'
+import { StorageKey, V2EX } from '../../constants'
+import type { Options } from '../../types'
+import { $topicList } from '../globals'
+
+interface Result {
+  options?: Options
+}
 
 export function handlingTopicList() {
-  const PAT = localStorage.getItem('v2p_pat')
+  chrome.storage.sync.get(StorageKey.Options, (result: Result) => {
+    const PAT = result.options?.[StorageKey.OptPAT]
 
-  if (!PAT) {
-    // TODO 提示用户设置 PAT
-    return
-  }
+    if (!PAT) {
+      return
+    }
 
-  $topicList.each((_, topicItem) => {
-    const $topicItem = $(topicItem)
+    $topicList.each((_, topicItem) => {
+      const $topicItem = $(topicItem)
 
-    const $topicPreview = $(`<div class="v2p-topic-index">预览</div>`)
-      .on('click', () => {
-        const linkPath = $topicItem.find('.topic-link').attr('href')
-        const match = linkPath?.match(/\/(\d+)#/)
+      const $topicPreview = $(`<div class="v2p-topic-index">预览</div>`)
+        .on('click', () => {
+          const linkPath = $topicItem.find('.topic-link').attr('href')
+          const match = linkPath?.match(/\/(\d+)#/)
 
-        if (match) {
-          const topicId = match[1]
-          const PAT = localStorage.getItem('v2p_pat')
+          if (match) {
+            const topicId = match[1]
 
-          fetch(`${V2EX.API}/topics/${topicId}`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${PAT!}` },
-          })
-            .then((res) => {
-              console.log(res)
+            fetch(`${V2EX.API}/topics/${topicId}`, {
+              method: 'GET',
+              headers: { Authorization: `Bearer ${PAT}` },
             })
-            .catch((err) => {
-              console.error(err)
-            })
-        }
-      })
-      .insertAfter($topicItem.find('.count_livid'))
+              .then((res) => {
+                console.log(res)
+              })
+              .catch((err) => {
+                console.error(err)
+              })
+          }
+        })
+        .insertAfter($topicItem.find('.count_livid'))
+    })
   })
 }

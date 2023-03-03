@@ -1085,6 +1085,11 @@ body {
   background-color: var(--v2p-color-orange-50);
   cursor: copy;
 
+  &:hover {
+    color: var(--v2p-color-orange-400);
+    background-color: var(--v2p-color-orange-50);
+  }
+
   &:active {
     opacity: 0.6;
   }

@@ -6,8 +6,11 @@ export default defineConfig({
     'v2ex-home.min': 'src/userscripts/home/index.ts',
     'v2ex-topic.min': 'src/userscripts/topic/index.ts',
     'decode-base64.min': 'src/userscripts/decode-base64.ts',
-    'background.min': 'src/service-worker/background.ts',
+
     'toggle-icon.min': 'src/toggle-icon.ts',
+
+    'background.min': 'src/service-worker/background.ts',
+    'options.min': 'src/service-worker/options.ts',
   },
 
   outDir: './extension/scripts',

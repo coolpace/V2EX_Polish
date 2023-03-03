@@ -93,7 +93,3 @@ export function getOS() {
 
   return os
 }
-
-export const enum V2EX {
-  API = 'https://www.v2ex.com/api/v2',
-}
