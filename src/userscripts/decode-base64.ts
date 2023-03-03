@@ -23,8 +23,8 @@ const excludeList = [
 ]
 
 const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
-  // 检查长度是否为4的倍数。
-  if (text.length % 4 !== 0) {
+  // 检查长度是否为 4 的倍数，字符长度小的也排除掉。
+  if (text.length % 4 !== 0 || text.length <= 8) {
     return text
   }
 
@@ -48,7 +48,7 @@ const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
 
   try {
     const decodedStr = window.atob(text)
-    return `${text}(<span class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</span>)`
+    return `${text}(<label class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</label>)`
   } catch {
     return text
   }
