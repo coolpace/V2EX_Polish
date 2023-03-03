@@ -5,7 +5,7 @@
 
   "version": "0.2.0",
 
-  "description": "Make v2ex.com easier to explore with better interaction.",
+  "description": "专门为 V2EX 用户设计的 Chrome 扩展，为你提供更加出色的浏览体验。",
 
   "permissions": ["scripting", "contextMenus"],
 
