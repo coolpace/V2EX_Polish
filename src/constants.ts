@@ -6,3 +6,8 @@ export const enum StorageKey {
 export const enum V2EX {
   API = 'https://www.v2ex.com/api/v2',
 }
+
+export const enum Menu {
+  Root = 'menu',
+  ItemDecode = 'menu/decode',
+}

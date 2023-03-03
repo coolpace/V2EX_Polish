@@ -292,6 +292,10 @@ body {
   .member-activity-bar {
     background-color: var(--v2p-color-main-200);
 
+    .member-activity-start {
+      background-color: var(--v2p-color-accent-200);
+    }
+
     .member-activity-fourth {
       background-color: var(--v2p-color-accent-400);
     }
