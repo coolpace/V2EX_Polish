@@ -155,7 +155,7 @@ function handlingControls() {
 function insertEmojiBox() {
   const os = getOS()
 
-  const replyTextArea = window.document.querySelector('#reply_content')
+  const replyTextArea = document.querySelector('#reply_content')
 
   const replyBtn = $(
     `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
@@ -247,6 +247,8 @@ function insertEmojiBox() {
 
   const keyupHandler = (e: JQuery.KeyDownEvent) => {
     if (e.key === 'Escape') {
+      e.stopPropagation() // 需要比关闭评论框的快捷键先执行，否则会先关闭评论框。
+
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handlePopupClose()
     }
@@ -262,12 +264,12 @@ function insertEmojiBox() {
   const handlePopupClose = () => {
     emojiPopup.style.visibility = 'hidden'
     $(document).off('click', docClickHandler)
-    $(document).off('keydown', keyupHandler)
+    $('body').off('keydown', keyupHandler)
   }
 
   const handlePopupOpen = () => {
     $(document).on('click', docClickHandler)
-    $(document).on('keydown', keyupHandler)
+    $('body').on('keydown', keyupHandler)
 
     computePosition(emojiBtn.get(0)!, emojiPopup, {
       placement: 'right-end',

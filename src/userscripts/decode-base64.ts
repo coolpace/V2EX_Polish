@@ -10,6 +10,8 @@
 
 import { $commentCells, $topicContentBox } from './globals'
 
+let count = 0
+
 // 已知以下高频字符串不能作为 base64 字符串识别，排除掉。
 const excludeList = [
   'boss',
@@ -48,7 +50,8 @@ const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
 
   try {
     const decodedStr = window.atob(text)
-    return `${text}(<label class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</label>)`
+    count += 1
+    return `${text}(<a class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</a>)`
   } catch {
     return text
   }
@@ -71,7 +74,14 @@ $commentCells.find('.reply_content').each(contentHandler)
 
 $topicContentBox.find('.topic_content').each(contentHandler)
 
+if (count === 0) {
+  alert('没有发现 base64 字符串')
+} else {
+  count = 0
+}
+
 $('.v2p-decode').on('click', (ev) => {
   const text = ev.target.innerText
   void navigator.clipboard.writeText(text)
+  // TODO 提示复制成功
 })
