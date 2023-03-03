@@ -54,3 +54,7 @@ chrome.contextMenus.removeAll(() => {
     }
   })
 })
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  console.log(changes, `Storage namespace "${namespace}" changed.`)
+})

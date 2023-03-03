@@ -5,9 +5,9 @@
 
   "version": "0.2.0",
 
-  "description": "专门为 V2EX 用户设计的 Chrome 扩展，为你提供更加出色的浏览体验。",
+  "description": "专门为 V2EX 用户设计浏览器扩展，提供出色的浏览体验。",
 
-  "permissions": ["scripting", "contextMenus"],
+  "permissions": ["scripting", "contextMenus", "storage"],
 
   "host_permissions": ["https://*.v2ex.com/*"],
 
@@ -45,6 +45,8 @@
   "background": {
     "service_worker": "scripts/background.min.js"
   },
+
+  "options_page": "pages/options.html",
 
   "action": {}
 }
