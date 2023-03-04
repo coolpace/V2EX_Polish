@@ -33,15 +33,15 @@ chrome.contextMenus.removeAll(() => {
   })
 
   chrome.contextMenus.create({
-    documentUrlPatterns: ['https://*.v2ex.com/*'],
+    documentUrlPatterns: ['https://*.v2ex.com/t*'],
     contexts: ['page'],
-    title: 'Base64 解码',
-    id: Menu.ItemDecode,
+    title: '解析 Base64',
+    id: Menu.Decode,
     parentId: Menu.Root,
   })
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === Menu.ItemDecode) {
+    if (info.menuItemId === Menu.Decode) {
       if (tab?.id) {
         void chrome.scripting.executeScript({
           target: { tabId: tab.id },

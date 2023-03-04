@@ -5,7 +5,7 @@
 
   "version": "0.2.0",
 
-  "description": "专门为 V2EX 用户设计浏览器扩展，提供出色的浏览体验。",
+  "description": "专门为 V2EX 用户设计，提供卓越的浏览体验。",
 
   "permissions": ["scripting", "contextMenus", "storage"],
 
@@ -26,11 +26,7 @@
     },
     {
       "matches": ["https://*.v2ex.com/*"],
-      "js": ["scripts/jquery-3.5.1.min.js", "scripts/common.min.js"]
-    },
-    {
-      "matches": ["https://*.v2ex.com/", "https://*.v2ex.com/?*", "https://*.v2ex.com/#*"],
-      "js": ["scripts/v2ex-home.min.js"]
+      "js": ["scripts/jquery-3.5.1.min.js", "scripts/common.min.js", "scripts/v2ex-home.min.js"]
     },
     {
       "matches": ["https://*.v2ex.com/t/*"],
@@ -48,5 +44,8 @@
 
   "options_page": "pages/options.html",
 
-  "action": {}
+  "action": {
+    "default_title": "V2EX Polish 用户面板",
+    "default_popup": "pages/popup.html"
+  }
 }

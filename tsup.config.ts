@@ -10,6 +10,7 @@ export default defineConfig({
     'toggle-icon.min': 'src/toggle-icon.ts',
 
     'background.min': 'src/service-worker/background.ts',
+    'popup.min': 'src/service-worker/popup.ts',
     'options.min': 'src/service-worker/options.ts',
   },
 

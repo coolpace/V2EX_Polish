@@ -161,7 +161,7 @@ body {
       }
 
       .gray {
-        color: var(--v2p-color-main-400);
+        color: var(--color-gray);
       }
     }
   }
@@ -313,11 +313,6 @@ body {
 
 img::selection {
   background-color: var(--v2p-color-main-400);
-}
-
-#no-comments-yet {
-  color: var(--v2p-color-main-400);
-  border-color: var(--v2p-color-main-400);
 }
 
 /* ====== 帖子标签 ====== */
@@ -488,6 +483,8 @@ img::selection {
 
     .topic_info {
       position: relative;
+      display: flex;
+      align-items: center;
       user-select: none;
 
       &::after {
@@ -504,9 +501,10 @@ img::selection {
       .votes,
       .node,
       strong:first-of-type,
-      span:first-of-type {
+      span:first-of-type,
+      .v2p-topic-preview-btn {
         position: relative;
-        z-index: 99;
+        z-index: 2;
       }
 
       a[href^='/member'] {
@@ -787,6 +785,11 @@ img::selection {
       }
     }
   }
+
+  #no-comments-yet {
+    color: var(--color-gray);
+    border-color: var(--color-gray);
+  }
 }
 
 /* ================================================================ */
@@ -1030,7 +1033,8 @@ body {
   height: 15px;
 }
 
-#v2p-emoji-popup {
+#v2p-emoji-popup,
+#v2p-member-popup {
   position: absolute;
   top: 0;
   left: 0;
