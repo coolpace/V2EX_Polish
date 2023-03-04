@@ -9,5 +9,5 @@ export const enum V2EX {
 
 export const enum Menu {
   Root = 'menu',
-  ItemDecode = 'menu/decode',
+  Decode = 'menu/decode',
 }

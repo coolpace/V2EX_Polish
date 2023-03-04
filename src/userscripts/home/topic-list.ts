@@ -1,6 +1,22 @@
 import { StorageKey, V2EX } from '../../constants'
-import type { StorageData } from '../../types'
+import type { DataWrapper, StorageData, Topic } from '../../types'
 import { $topicList } from '../globals'
+
+async function fetchTopic(topicId: string, PAT: string) {
+  const res = await fetch(`${V2EX.API}/topics/${topicId}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${PAT}` },
+  })
+
+  // const limit = res.headers.get('X-Rate-Limit-Limit')
+  // const reset = res.headers.get('X-Rate-Limit-Reset')
+  // const remaining = res.headers.get('X-Rate-Limit-Remaining')
+
+  const data = (await res.json()) as DataWrapper<Topic>
+  console.log(data)
+
+  return data
+}
 
 export function handlingTopicList() {
   chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
@@ -13,7 +29,7 @@ export function handlingTopicList() {
     $topicList.each((_, topicItem) => {
       const $topicItem = $(topicItem)
 
-      const $topicPreview = $(`<div class="v2p-topic-index">预览</div>`)
+      $(`<button class="v2p-topic-preview-btn">预览</button>`)
         .on('click', () => {
           const linkPath = $topicItem.find('.topic-link').attr('href')
           const match = linkPath?.match(/\/(\d+)#/)
@@ -21,19 +37,23 @@ export function handlingTopicList() {
           if (match) {
             const topicId = match[1]
 
-            fetch(`${V2EX.API}/topics/${topicId}`, {
-              method: 'GET',
-              headers: { Authorization: `Bearer ${PAT}` },
-            })
-              .then((res) => {
-                console.log(res)
+            fetchTopic(topicId, PAT)
+              .then((data) => {
+                const topic = data.result
+                const $topicPreview = $(`
+                <div class="v2p-topic-preview">
+                <div class="v2p-topic-preview__title">${topic.title}</div>
+                <div class="v2p-topic-preview__content">${topic.content_rendered}</div>
+                </div>
+                `)
+                $topicPreview.appendTo($topicItem)
               })
               .catch((err) => {
-                console.error(err)
+                console.log(err)
               })
           }
         })
-        .insertAfter($topicItem.find('.count_livid'))
+        .prependTo($topicItem.find('.topic_info'))
     })
   })
 }

@@ -1,11 +1,13 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
+import { StorageKey, V2EX } from '../../constants'
+import { type DataWrapper, type Member, type StorageData } from '../../types'
+import { getOS } from '../../utils'
 import {
   $commentBox,
   $commentCells,
   $commentTableRows,
   commentDataList,
-  getOS,
   loginName,
   topicOwnerName,
 } from '../globals'
@@ -302,6 +304,17 @@ function insertEmojiBox() {
   })
 }
 
+async function fetchMemberInfo(PAT: string) {
+  const res = await fetch(`${V2EX.API}/member`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${PAT}` },
+  })
+
+  const data = (await res.json()) as DataWrapper<Member>
+  console.log('fetchMemberInfo', data)
+  return data
+}
+
 export function handlingComments() {
   {
     /**
@@ -318,13 +331,71 @@ export function handlingComments() {
   handlingPopularComments()
 
   {
+    const memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox).get(0)!
+
+    const docClickHandler = (e: JQuery.ClickEvent) => {
+      if ($(e.target).closest(memberPopup).length === 0) {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        handlePopupClose()
+      }
+    }
+
+    const handlePopupClose = () => {
+      memberPopup.style.visibility = 'hidden'
+      $(document).off('click', docClickHandler)
+    }
+
     $commentCells.each((i, cellDom) => {
-      const commentFromIndex = commentDataList.at(i)
+      const dataFromIndex = commentDataList.at(i)
+
+      const avatar = cellDom.querySelector('.avatar')
+      avatar?.addEventListener('click', (e) => {
+        if (memberPopup.style.visibility === 'visible') {
+          handlePopupClose()
+        } else {
+          e.stopPropagation()
+          $(document).on('click', docClickHandler)
+
+          const userComments = commentDataList.filter(
+            (data) => data.memberName === dataFromIndex?.memberName
+          )
+          const userCommentIds = userComments.map((data) => `#${data.id}`).join(', ')
+
+          memberPopup.innerHTML = ''
+          memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
+
+          computePosition(avatar, memberPopup, {
+            placement: 'right-start',
+            middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
+          })
+            .then(({ x, y }) => {
+              Object.assign(memberPopup.style, {
+                left: `${x}px`,
+                top: `${y}px`,
+              })
+              memberPopup.style.visibility = 'visible'
+            })
+            .catch(() => {
+              handlePopupClose()
+            })
+
+          chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
+            const PAT = result.options?.[StorageKey.OptPAT]
+
+            if (PAT) {
+              void fetchMemberInfo(PAT).then((data) => {
+                const memberInfo = data.result
+                // console.log('fetchMemberInfo', data)
+              })
+            }
+          })
+        }
+      })
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
       const currentComment =
-        commentFromIndex?.id === cellDom.id
-          ? commentFromIndex
+        dataFromIndex?.id === cellDom.id
+          ? dataFromIndex
           : commentDataList.find((data) => data.id === cellDom.id)
 
       if (currentComment) {
@@ -338,6 +409,7 @@ export function handlingComments() {
         const firstRefFloor = refFloors?.at(0)
 
         if (firstRefMemberName) {
+          // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
           for (let j = i - 1; j >= 0; j--) {
             const { memberName: eachMemberName, floor: eachFloor } = commentDataList.at(j) || {}
 
