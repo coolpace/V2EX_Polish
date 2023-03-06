@@ -348,49 +348,47 @@ export function handlingComments() {
     $commentCells.each((i, cellDom) => {
       const dataFromIndex = commentDataList.at(i)
 
-      const avatar = cellDom.querySelector('.avatar')
-      avatar?.addEventListener('click', (e) => {
-        if (memberPopup.style.visibility === 'visible') {
-          handlePopupClose()
-        } else {
-          e.stopPropagation()
-          $(document).on('click', docClickHandler)
-
-          const userComments = commentDataList.filter(
-            (data) => data.memberName === dataFromIndex?.memberName
-          )
-          const userCommentIds = userComments.map((data) => `#${data.id}`).join(', ')
-
-          memberPopup.innerHTML = ''
-          memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
-
-          computePosition(avatar, memberPopup, {
-            placement: 'right-start',
-            middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
-          })
-            .then(({ x, y }) => {
-              Object.assign(memberPopup.style, {
-                left: `${x}px`,
-                top: `${y}px`,
-              })
-              memberPopup.style.visibility = 'visible'
-            })
-            .catch(() => {
-              handlePopupClose()
-            })
-
-          chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
-            const PAT = result.options?.[StorageKey.OptPAT]
-
-            if (PAT) {
-              void fetchMemberInfo(PAT).then((data) => {
-                const memberInfo = data.result
-                // console.log('fetchMemberInfo', data)
-              })
-            }
-          })
-        }
-      })
+      {
+        // 处理头像点击事件。
+        // const avatar = cellDom.querySelector('.avatar')
+        // avatar?.addEventListener('click', (e) => {
+        //   if (memberPopup.style.visibility === 'visible') {
+        //     handlePopupClose()
+        //   } else {
+        //     e.stopPropagation()
+        //     $(document).on('click', docClickHandler)
+        //     const userComments = commentDataList.filter(
+        //       (data) => data.memberName === dataFromIndex?.memberName
+        //     )
+        //     const userCommentIds = userComments.map((data) => `#${data.id}`).join(', ')
+        //     memberPopup.innerHTML = ''
+        //     memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
+        //     computePosition(avatar, memberPopup, {
+        //       placement: 'right-start',
+        //       middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
+        //     })
+        //       .then(({ x, y }) => {
+        //         Object.assign(memberPopup.style, {
+        //           left: `${x}px`,
+        //           top: `${y}px`,
+        //         })
+        //         memberPopup.style.visibility = 'visible'
+        //       })
+        //       .catch(() => {
+        //         handlePopupClose()
+        //       })
+        //     chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
+        //       const PAT = result.options?.[StorageKey.OptPAT]
+        //       if (PAT) {
+        //         void fetchMemberInfo(PAT).then((data) => {
+        //           const memberInfo = data.result
+        //           // console.log('fetchMemberInfo', data)
+        //         })
+        //       }
+        //     })
+        //   }
+        // })
+      }
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
       const currentComment =
@@ -405,16 +403,19 @@ export function handlingComments() {
           $(cellDom).find('.badges').append('<div class="badge you">YOU</div>')
         }
 
-        const firstRefMemberName = refMemberNames?.at(0)
-        const firstRefFloor = refFloors?.at(0)
+        if (!refMemberNames || refMemberNames.length === 0) {
+          return
+        }
 
-        if (firstRefMemberName) {
+        for (const refName of refMemberNames) {
           // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
           for (let j = i - 1; j >= 0; j--) {
-            const { memberName: eachMemberName, floor: eachFloor } = commentDataList.at(j) || {}
+            const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
 
-            if (eachMemberName === firstRefMemberName) {
-              // 首先以用户手动指定的楼层为准。
+            if (compareName === refName) {
+              const firstRefFloor = refFloors?.at(0)
+
+              // 如果手动指定了楼层，那么就以指定的楼层为准，否则就以第一个引用的用户的评论的楼层为准。
               if (firstRefFloor && firstRefFloor !== eachFloor) {
                 const targetIdx = commentDataList
                   .slice(0, j)
@@ -422,12 +423,12 @@ export function handlingComments() {
 
                 if (targetIdx >= 0) {
                   $commentCells.eq(targetIdx).append(cellDom)
-                  break
+                  return
                 }
               }
 
               $commentCells.eq(j).append(cellDom)
-              break
+              return
             }
           }
         }
