@@ -706,6 +706,7 @@ img::selection {
   .reply_content {
     a[href^='http'] {
       color: var(--v2p-color-main-500);
+      font-size: 12px;
       text-decoration: none;
       background-color: var(--v2p-color-main-100);
 
@@ -714,14 +715,16 @@ img::selection {
         background-color: var(--v2p-color-accent-50);
       }
     }
+
+    a[href^='/t'] {
+      color: var(--v2p-color-orange-400);
+      text-decoration: none;
+      background-color: var(--v2p-color-orange-100);
+    }
   }
 
   .reply_content {
     font-size: 15px;
-
-    a[href^='http'] {
-      font-size: 12px;
-    }
 
     a[href^='/member'] {
       color: var(--v2p-color-main-400);
@@ -814,10 +817,6 @@ img::selection {
 /* ================================================================ */
 
 #Bottom {
-  .inner .small.fade {
-    display: none;
-  }
-
   a.dark:link {
     color: var(--v2p-color-main-600);
   }

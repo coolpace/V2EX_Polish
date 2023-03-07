@@ -304,17 +304,6 @@ function insertEmojiBox() {
   })
 }
 
-async function fetchMemberInfo(PAT: string) {
-  const res = await fetch(`${V2EX.API}/member`, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${PAT}` },
-  })
-
-  const data = (await res.json()) as DataWrapper<Member>
-  console.log('fetchMemberInfo', data)
-  return data
-}
-
 export function handlingComments() {
   {
     /**
@@ -342,6 +331,7 @@ export function handlingComments() {
 
     const handlePopupClose = () => {
       memberPopup.style.visibility = 'hidden'
+      memberPopup.innerHTML = ''
       $(document).off('click', docClickHandler)
     }
 
@@ -350,44 +340,39 @@ export function handlingComments() {
 
       {
         // 处理头像点击事件。
-        // const avatar = cellDom.querySelector('.avatar')
-        // avatar?.addEventListener('click', (e) => {
-        //   if (memberPopup.style.visibility === 'visible') {
-        //     handlePopupClose()
-        //   } else {
-        //     e.stopPropagation()
-        //     $(document).on('click', docClickHandler)
-        //     const userComments = commentDataList.filter(
-        //       (data) => data.memberName === dataFromIndex?.memberName
-        //     )
-        //     const userCommentIds = userComments.map((data) => `#${data.id}`).join(', ')
-        //     memberPopup.innerHTML = ''
-        //     memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
-        //     computePosition(avatar, memberPopup, {
-        //       placement: 'right-start',
-        //       middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
-        //     })
-        //       .then(({ x, y }) => {
-        //         Object.assign(memberPopup.style, {
-        //           left: `${x}px`,
-        //           top: `${y}px`,
-        //         })
-        //         memberPopup.style.visibility = 'visible'
-        //       })
-        //       .catch(() => {
-        //         handlePopupClose()
-        //       })
-        //     chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
-        //       const PAT = result.options?.[StorageKey.OptPAT]
-        //       if (PAT) {
-        //         void fetchMemberInfo(PAT).then((data) => {
-        //           const memberInfo = data.result
-        //           // console.log('fetchMemberInfo', data)
-        //         })
-        //       }
-        //     })
-        //   }
-        // })
+        const avatar = cellDom.querySelector('.avatar')
+
+        avatar?.addEventListener('click', (e) => {
+          if (memberPopup.style.visibility === 'visible') {
+            handlePopupClose()
+          } else {
+            e.stopPropagation()
+
+            $(document).on('click', docClickHandler)
+
+            const userComments = commentDataList.filter(
+              (data) => data.memberName === dataFromIndex?.memberName
+            )
+            const userCommentIds = userComments.map((data) => `#${data.id}`).join(', ')
+
+            memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
+
+            computePosition(avatar, memberPopup, {
+              placement: 'right-start',
+              middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
+            })
+              .then(({ x, y }) => {
+                Object.assign(memberPopup.style, {
+                  left: `${x}px`,
+                  top: `${y}px`,
+                })
+                memberPopup.style.visibility = 'visible'
+              })
+              .catch(() => {
+                handlePopupClose()
+              })
+          }
+        })
       }
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
