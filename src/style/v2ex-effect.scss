@@ -234,12 +234,65 @@ body {
 }
 
 #v2p-member-popup {
-  .v2p-content {
-    .v2p-avatar,
-    .v2p-username,
-    .v2p-no,
-    .v2p-created-date {
-      //
+  max-width: 600px;
+  text-align: left;
+
+  .v2p-ctn {
+    display: flex;
+    gap: 15px;
+    font-size: 13px;
+  }
+
+  .v2p-ctn-right {
+    padding: 2px 0;
+  }
+
+  .v2p-avatar-box {
+    width: 73px;
+    height: 73px;
+    overflow: hidden;
+    background-color: var(--button-background-color);
+    border-radius: 10px;
+  }
+
+  .v2p-username {
+    font-weight: 500;
+    font-size: 16px;
+
+    &.v2p-loading {
+      width: 65px;
+      height: 20px;
+    }
+  }
+
+  .v2p-no {
+    margin: 5px 0;
+  }
+
+  .v2p-no,
+  .v2p-created-date {
+    width: 160px;
+    height: 16px;
+  }
+
+  .v2p-loading {
+    background-color: var(--button-background-color);
+    border-radius: 6px;
+  }
+}
+
+.v2p-reply-list-box {
+  margin-top: 10px;
+}
+
+.v2p-reply-list {
+  li {
+    padding: 3px 4px;
+    background-color: var(--button-background-color);
+    border-radius: 6px;
+
+    & ~ li {
+      margin-top: 10px;
     }
   }
 }

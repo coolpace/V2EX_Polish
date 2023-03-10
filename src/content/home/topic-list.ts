@@ -42,8 +42,8 @@ export function handlingTopicList() {
                 const topic = data.result
                 const $topicPreview = $(`
                 <div class="v2p-topic-preview">
-                <div class="v2p-topic-preview__title">${topic.title}</div>
-                <div class="v2p-topic-preview__content">${topic.content_rendered}</div>
+                  <div class="v2p-topic-preview__title">${topic.title}</div>
+                  <div class="v2p-topic-preview__content">${topic.content_rendered}</div>
                 </div>
                 `)
                 $topicPreview.appendTo($topicItem)
