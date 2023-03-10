@@ -322,7 +322,6 @@ export function handlingComments() {
             const userComments = commentDataList.filter(
               (data) => data.memberName === dataFromIndex.memberName
             )
-            const userCommentIds = userComments.map((data) => `#${data.id}`).join(', ')
 
             computePosition(avatar, memberPopup, {
               placement: 'bottom-start',
@@ -339,65 +338,103 @@ export function handlingComments() {
                 handlePopupClose()
               })
 
+            const $memberPopup = $(memberPopup)
+
+            const $content = $(`
+              <div class="v2p-ctn">
+                <div class="v2p-ctn-left">
+                  <div class="v2p-avatar-box"></div>
+                </div>
+
+                <div class="v2p-ctn-right">
+                  <div class="v2p-username v2p-loading"></div>
+                  <div class="v2p-no v2p-loading"></div>
+                  <div class="v2p-created-date v2p-loading"></div>
+                </div>
+              </div>
+              `)
+
+            $memberPopup.append($content)
+
             setTimeout(() => {
               fetch(`${V2EX.API}/members/show.json?username=${dataFromIndex.memberName}`, {
                 signal: abortController?.signal,
               })
                 .then((res) => res.json())
                 .then((data: Member) => {
-                  console.log(data)
-                  const $content = $(`
-                  <div class="v2p-content">
-                  <img class="v2p-avatar" src="${data.avatar_large}">
-                  <span class="v2p-username">${data.username}</span>
-                  <span class="v2p-no">V2EX 第 ${data.id} 号会员</span>
-                  <span class="v2p-created-date">加入于 ${formatTimestamp(data.created)}</span>
-                  </div>
-                  `)
-                  $(memberPopup).append($content)
+                  $memberPopup
+                    .find('.v2p-avatar-box')
+                    .removeClass('v2p-loading')
+                    .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
+                  $memberPopup.find('.v2p-username').removeClass('v2p-loading').text(data.username)
+                  $memberPopup
+                    .find('.v2p-no')
+                    .removeClass('v2p-loading')
+                    .text(`V2EX 第 ${data.id} 号会员`)
+                  $memberPopup
+                    .find('.v2p-created-date')
+                    .removeClass('v2p-loading')
+                    .text(`加入于 ${formatTimestamp(data.created)}`)
+
                   // 如果回复多于一条：
-                  if (userCommentIds.length > 1) {
-                    memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
+                  if (userComments.length > 1) {
+                    const $replyList = $(
+                      `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
+                    )
+                    $replyList.append(`
+                    <ul class="v2p-reply-list">
+                      ${userComments
+                        .map(({ content }) => {
+                          return `<li>${content}</li>`
+                        })
+                        .join('')}
+                    </ul>
+                    `)
+                    $memberPopup.append($replyList)
                   }
                 })
                 .catch((err: { name: string }) => {
                   if (err.name !== 'AbortError') {
-                    $(memberPopup).append(`<span>获取用户信息失败</span>`)
+                    $memberPopup.append(`<span>获取用户信息失败</span>`)
                   }
                 })
-            }, 1000)
+            }, 0)
           }
         })
       }
 
-      const replyContentBox = cellDom.querySelector('.reply_content')
+      {
+        const replyContentBox = cellDom.querySelector('.reply_content')
 
-      if (replyContentBox instanceof HTMLElement) {
-        const eleHeight = replyContentBox.getBoundingClientRect().height
+        if (replyContentBox instanceof HTMLElement) {
+          const eleHeight = replyContentBox.getBoundingClientRect().height
 
-        const shouldCollapsed = eleHeight + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
+          const shouldCollapsed = eleHeight + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
 
-        if (shouldCollapsed) {
-          const expandBtn = document.createElement('button')
-          expandBtn.classList.add('v2p-expand-btn', 'normal', 'button')
+          if (shouldCollapsed) {
+            const expandBtn = document.createElement('button')
+            expandBtn.classList.add('v2p-expand-btn', 'normal', 'button')
 
-          const toggleContent = () => {
-            const hasCollapsed = replyContentBox.classList.contains('v2p-reply-limit-content')
+            const toggleContent = () => {
+              const hasCollapsed = replyContentBox.classList.contains('v2p-reply-limit-content')
 
-            replyContentBox.classList.toggle('v2p-reply-limit-content')
-            replyContentBox.style.maxHeight = hasCollapsed ? 'none' : `${READABLE_CONTENT_HEIGHT}px`
-            replyContentBox.style.overflow = hasCollapsed ? 'auto' : 'hidden'
-            replyContentBox.style.paddingBottom = hasCollapsed ? '40px' : '0'
-            expandBtn.innerText = hasCollapsed ? '收起回复' : '展开回复'
-          }
+              replyContentBox.classList.toggle('v2p-reply-limit-content')
+              replyContentBox.style.maxHeight = hasCollapsed
+                ? 'none'
+                : `${READABLE_CONTENT_HEIGHT}px`
+              replyContentBox.style.overflow = hasCollapsed ? 'auto' : 'hidden'
+              replyContentBox.style.paddingBottom = hasCollapsed ? '40px' : '0'
+              expandBtn.innerText = hasCollapsed ? '收起回复' : '展开回复'
+            }
 
-          toggleContent()
-
-          expandBtn.addEventListener('click', () => {
             toggleContent()
-          })
 
-          replyContentBox.appendChild(expandBtn)
+            expandBtn.addEventListener('click', () => {
+              toggleContent()
+            })
+
+            replyContentBox.appendChild(expandBtn)
+          }
         }
       }
 

@@ -50,5 +50,5 @@ export const emoticons = [
   },
 ]
 
-export const READABLE_CONTENT_HEIGHT = 300
+export const READABLE_CONTENT_HEIGHT = 250
 export const MAX_CONTENT_HEIGHT = 550
