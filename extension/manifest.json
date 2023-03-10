@@ -21,11 +21,12 @@
   "content_scripts": [
     {
       "matches": ["https://*.v2ex.com/*"],
-      "css": ["css/v2ex-theme-default.min.css"],
+      "css": ["css/v2ex-theme-default.css"],
       "run_at": "document_start"
     },
     {
       "matches": ["https://*.v2ex.com/*"],
+      "css": ["css/v2ex-effect.css"],
       "js": ["scripts/jquery-3.5.1.min.js", "scripts/common.min.js", "scripts/v2ex-home.min.js"]
     },
     {

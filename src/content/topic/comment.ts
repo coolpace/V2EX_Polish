@@ -1,8 +1,8 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
-import { StorageKey, V2EX } from '../../constants'
-import { type DataWrapper, type Member, type StorageData } from '../../types'
-import { getOS } from '../../utils'
+import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, V2EX } from '../../constants'
+import type { Member } from '../../types'
+import { formatTimestamp, getOS } from '../../utils'
 import {
   $commentBox,
   $commentCells,
@@ -65,7 +65,7 @@ function handlingPopularComments() {
       boundEvent = false
 
       cmContainer.fadeOut('fast')
-      document.body.classList.remove('modal-open')
+      document.body.classList.remove('v2p-modal-open')
     }
 
     const handleModalOpen = () => {
@@ -76,7 +76,7 @@ function handlingPopularComments() {
       }
 
       cmContainer.fadeIn('fast')
-      document.body.classList.add('modal-open')
+      document.body.classList.add('v2p-modal-open')
     }
 
     const closeBtn = cmContainer.find('.v2p-cm-close-btn')
@@ -164,43 +164,6 @@ function insertEmojiBox() {
     `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
   ).replaceAll($('#reply-box input[type="submit"]'))
 
-  const emoticons = [
-    {
-      title: 'Smileys',
-      list: [
-        '😀',
-        '😃',
-        '😄',
-        '😁',
-        '😆',
-        '😅',
-        '🤣',
-        '😂',
-        '🙂',
-        '🙃',
-        '😉',
-        '😮',
-        '😲',
-        '😳',
-        '😱',
-        '😭',
-        '😞',
-        '😓',
-        '😩',
-        '😚',
-        '🤭',
-        '😏',
-        '😒',
-        '😡',
-        '😤',
-      ],
-    },
-    {
-      title: 'Others',
-      list: ['👻', '👋', '🤚', '🖐', '🖖', '🐶', '🐔', '🤡', '💩'],
-    },
-  ]
-
   const emoticonGroup = $('<div class="v2p-emoji-group">')
   const emoticonList = $('<div class="v2p-emoji-list">')
   const emoticonSpan = $('<span class="v2p-emoji">')
@@ -208,7 +171,7 @@ function insertEmojiBox() {
   const groups = emoticons.map((emojiGroup) => {
     const group = emoticonGroup.clone()
 
-    group.append(`<div class="v2p-emoji-name">${emojiGroup.title}</div>`)
+    group.append(`<div class="v2p-emoji-title">${emojiGroup.title}</div>`)
 
     const list = emoticonList.clone().append(
       emojiGroup.list.map((emoji) => {
@@ -323,6 +286,8 @@ export function handlingComments() {
   {
     const memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox).get(0)!
 
+    let abortController: AbortController | null = null
+
     const docClickHandler = (e: JQuery.ClickEvent) => {
       if ($(e.target).closest(memberPopup).length === 0) {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -331,6 +296,7 @@ export function handlingComments() {
     }
 
     const handlePopupClose = () => {
+      abortController?.abort()
       memberPopup.style.visibility = 'hidden'
       memberPopup.innerHTML = ''
       $(document).off('click', docClickHandler)
@@ -339,11 +305,13 @@ export function handlingComments() {
     $commentCells.each((i, cellDom) => {
       const dataFromIndex = commentDataList.at(i)
 
-      {
-        // 处理头像点击事件。
+      // 处理头像点击事件。
+      if (dataFromIndex) {
         const avatar = cellDom.querySelector('.avatar')
 
         avatar?.addEventListener('click', (e) => {
+          abortController = new AbortController()
+
           if (memberPopup.style.visibility === 'visible') {
             handlePopupClose()
           } else {
@@ -352,14 +320,12 @@ export function handlingComments() {
             $(document).on('click', docClickHandler)
 
             const userComments = commentDataList.filter(
-              (data) => data.memberName === dataFromIndex?.memberName
+              (data) => data.memberName === dataFromIndex.memberName
             )
             const userCommentIds = userComments.map((data) => `#${data.id}`).join(', ')
 
-            memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
-
             computePosition(avatar, memberPopup, {
-              placement: 'right-start',
+              placement: 'bottom-start',
               middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
             })
               .then(({ x, y }) => {
@@ -372,8 +338,67 @@ export function handlingComments() {
               .catch(() => {
                 handlePopupClose()
               })
+
+            setTimeout(() => {
+              fetch(`${V2EX.API}/members/show.json?username=${dataFromIndex.memberName}`, {
+                signal: abortController?.signal,
+              })
+                .then((res) => res.json())
+                .then((data: Member) => {
+                  console.log(data)
+                  const $content = $(`
+                  <div class="v2p-content">
+                  <img class="v2p-avatar" src="${data.avatar_large}">
+                  <span class="v2p-username">${data.username}</span>
+                  <span class="v2p-no">V2EX 第 ${data.id} 号会员</span>
+                  <span class="v2p-created-date">加入于 ${formatTimestamp(data.created)}</span>
+                  </div>
+                  `)
+                  $(memberPopup).append($content)
+                  // 如果回复多于一条：
+                  if (userCommentIds.length > 1) {
+                    memberPopup.append(`本页该用户的所有评论：${userCommentIds.toString()}`)
+                  }
+                })
+                .catch((err: { name: string }) => {
+                  if (err.name !== 'AbortError') {
+                    $(memberPopup).append(`<span>获取用户信息失败</span>`)
+                  }
+                })
+            }, 1000)
           }
         })
+      }
+
+      const replyContentBox = cellDom.querySelector('.reply_content')
+
+      if (replyContentBox instanceof HTMLElement) {
+        const eleHeight = replyContentBox.getBoundingClientRect().height
+
+        const shouldCollapsed = eleHeight + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
+
+        if (shouldCollapsed) {
+          const expandBtn = document.createElement('button')
+          expandBtn.classList.add('v2p-expand-btn', 'normal', 'button')
+
+          const toggleContent = () => {
+            const hasCollapsed = replyContentBox.classList.contains('v2p-reply-limit-content')
+
+            replyContentBox.classList.toggle('v2p-reply-limit-content')
+            replyContentBox.style.maxHeight = hasCollapsed ? 'none' : `${READABLE_CONTENT_HEIGHT}px`
+            replyContentBox.style.overflow = hasCollapsed ? 'auto' : 'hidden'
+            replyContentBox.style.paddingBottom = hasCollapsed ? '40px' : '0'
+            expandBtn.innerText = hasCollapsed ? '收起回复' : '展开回复'
+          }
+
+          toggleContent()
+
+          expandBtn.addEventListener('click', () => {
+            toggleContent()
+          })
+
+          replyContentBox.appendChild(expandBtn)
+        }
       }
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。

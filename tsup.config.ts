@@ -2,16 +2,16 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: {
-    'common.min': 'src/userscripts/common.ts',
-    'v2ex-home.min': 'src/userscripts/home/index.ts',
-    'v2ex-topic.min': 'src/userscripts/topic/index.ts',
-    'decode-base64.min': 'src/userscripts/decode-base64.ts',
+    'common.min': 'src/content/common.ts',
+    'v2ex-home.min': 'src/content/home/index.ts',
+    'v2ex-topic.min': 'src/content/topic/index.ts',
+    'decode-base64.min': 'src/content/decode-base64.ts',
+
+    'popup.min': 'src/page/popup.ts',
+    'options.min': 'src/page/options.ts',
 
     'toggle-icon.min': 'src/toggle-icon.ts',
-
-    'background.min': 'src/service-worker/background.ts',
-    'popup.min': 'src/service-worker/popup.ts',
-    'options.min': 'src/service-worker/options.ts',
+    'background.min': 'src/background.ts',
   },
 
   outDir: './extension/scripts',

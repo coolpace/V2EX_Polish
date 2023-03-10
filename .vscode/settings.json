@@ -2,6 +2,7 @@
   "search.exclude": {
     "asset": true,
     "extension/**/{*.min.js}": true,
-    "extension/**/{*.min.css}": true
+    "extension/**/{*.min.css}": true,
+    "extension/css/**/*.css": true
   }
 }
