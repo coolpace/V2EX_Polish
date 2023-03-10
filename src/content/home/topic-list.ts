@@ -3,7 +3,7 @@ import type { DataWrapper, StorageData, Topic } from '../../types'
 import { $topicList } from '../globals'
 
 async function fetchTopic(topicId: string, PAT: string) {
-  const res = await fetch(`${V2EX.API}/topics/${topicId}`, {
+  const res = await fetch(`${V2EX.APIV2}/topics/${topicId}`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${PAT}` },
   })
