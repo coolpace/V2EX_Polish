@@ -8,7 +8,7 @@
     "dev": "npm-run-all --parallel watch:style watch:scripts",
     "build": "npm-run-all --parallel build:style build:scripts",
     "build:scripts": "tsup",
-    "build:style": "sass src/style:extension/css --no-source-map --style=compressed",
+    "build:style": "sass src/styles:extension/css --no-source-map --style=compressed",
     "watch:scripts": "pnpm run build:scripts --watch",
     "watch:style": "pnpm run build:style --watch",
     "lint": "npm-run-all --parallel lint:es lint:style lint:prettier",

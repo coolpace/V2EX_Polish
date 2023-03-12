@@ -463,7 +463,7 @@ export function handlingComments() {
             if (compareName === refName) {
               const firstRefFloor = refFloors?.at(0)
 
-              // 如果手动指定了楼层，那么就以指定的楼层为准，否则就以第一个引用的用户的评论的楼层为准。
+              // 如果手动指定了楼层，那么就以指定的楼层为准（一般来说，由用户指定会更精确），否则就以第一个引用的用户的评论的楼层为准。
               if (firstRefFloor && firstRefFloor !== eachFloor) {
                 const targetIdx = commentDataList
                   .slice(0, j)

@@ -1,4 +1,4 @@
-import { Menu } from './constants'
+import { Menu } from '../constants'
 
 interface Message {
   colorScheme: 'dark' | 'light'
