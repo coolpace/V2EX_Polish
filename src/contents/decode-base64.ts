@@ -51,7 +51,7 @@ const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
   try {
     const decodedStr = window.atob(text)
     count += 1
-    return `${text}(<a class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</a>)`
+    return `<span class="v2p-decode-block">${text}(<a class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</a>)</span>`
   } catch {
     return text
   }
@@ -75,7 +75,7 @@ $commentCells.find('.reply_content').each(contentHandler)
 $topicContentBox.find('.topic_content').each(contentHandler)
 
 if (count === 0) {
-  alert('没有发现 base64 字符串')
+  alert('本页未发现 base64 字符串。')
 } else {
   count = 0
 }
