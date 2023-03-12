@@ -376,6 +376,10 @@ export function handlingComments() {
                     .removeClass('v2p-loading')
                     .text(`加入于 ${formatTimestamp(data.created)}`)
 
+                  if (data.bio && data.bio.trim().length > 0) {
+                    $memberPopup.append(`<div class="v2p-bio">${data.bio}</div>`)
+                  }
+
                   // 如果回复多于一条：
                   if (userComments.length > 1) {
                     const $replyList = $(
