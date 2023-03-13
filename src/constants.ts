@@ -5,8 +5,8 @@ export const enum StorageKey {
 }
 
 export const enum V2EX {
-  API = 'https://www.v2ex.com/api',
-  APIV2 = 'https://www.v2ex.com/api/v2',
+  LegacyAPI = 'https://www.v2ex.com/api',
+  API = 'https://www.v2ex.com/api/v2',
 }
 
 export const enum Menu {

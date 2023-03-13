@@ -20,7 +20,10 @@ async function legacyRequest<Data>(url: string, options?: RequestInit): Promise<
 }
 
 export function fetchUserInfo(memberName: Member['username'], options?: RequestInit) {
-  return legacyRequest<Member>(`${V2EX.API}/members/show.json?username=${memberName}`, options)
+  return legacyRequest<Member>(
+    `${V2EX.LegacyAPI}/members/show.json?username=${memberName}`,
+    options
+  )
 }
 
 async function request<Data>(url: string, options?: RequestInit): Promise<DataWrapper<Data>> {
@@ -45,7 +48,7 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
 }
 
 export function fetchTopic(topicId: string, PAT: string) {
-  return request<Topic>(`${V2EX.APIV2}/topics/${topicId}`, {
+  return request<Topic>(`${V2EX.API}/topics/${topicId}`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${PAT}` },
   })
