@@ -1,11 +1,26 @@
 import { type StorageKey } from './constants'
 
 export interface Options {
-  [StorageKey.OptPAT]?: string
+  avatar?: boolean
+}
+
+export interface LegacyAPI {
+  limit?: number
+  reset?: number
+  remaining?: number
+}
+
+export interface API {
+  pat?: string
+  limit?: number
+  reset?: number
+  remaining?: number
 }
 
 export interface StorageData {
   [StorageKey.Options]?: Options
+  [StorageKey.LegacyAPI]?: LegacyAPI
+  [StorageKey.API]?: API
 }
 
 export interface Topic {

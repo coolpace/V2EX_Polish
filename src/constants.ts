@@ -1,6 +1,7 @@
 export const enum StorageKey {
   Options = 'options',
-  OptPAT = 'PAT',
+  LegacyAPI = 'legacy-api',
+  API = 'api',
 }
 
 export const enum V2EX {

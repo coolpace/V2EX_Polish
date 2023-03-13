@@ -1,26 +1,12 @@
-import { StorageKey, V2EX } from '../../constants'
-import type { DataWrapper, StorageData, Topic } from '../../types'
+import { StorageKey } from '../../constants'
+import { fetchTopic } from '../../service'
+import type { StorageData } from '../../types'
 import { $topicList } from '../globals'
 
-async function fetchTopic(topicId: string, PAT: string) {
-  const res = await fetch(`${V2EX.APIV2}/topics/${topicId}`, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${PAT}` },
-  })
-
-  // const limit = res.headers.get('X-Rate-Limit-Limit')
-  // const reset = res.headers.get('X-Rate-Limit-Reset')
-  // const remaining = res.headers.get('X-Rate-Limit-Remaining')
-
-  const data = (await res.json()) as DataWrapper<Topic>
-  console.log(data)
-
-  return data
-}
-
 export function handlingTopicList() {
-  chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
-    const PAT = result.options?.[StorageKey.OptPAT]
+  chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
+    console.log({ result })
+    const PAT = result[StorageKey.API]?.pat
 
     if (!PAT) {
       return

@@ -3,10 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <title>V2EX Polish 用户面板</title>
+
+    <link rel="stylesheet" href="../css/popup.css" />
   </head>
 
   <body>
-    <button id="go-to-options">Go to options</button>
+    <main>
+      <input id="patv1" placeholder="填写你的个人令牌" />
+      <input id="limitv1" readonly />
+      <input id="resetv1" readonly />
+      <input id="remainingv1" readonly />
+
+      <input id="limit" readonly />
+      <input id="reset" readonly />
+      <input id="remaining" readonly />
+      <button id="save">保存</button>
+    </main>
 
     <script src="../scripts/popup.min.js"></script>
   </body>
