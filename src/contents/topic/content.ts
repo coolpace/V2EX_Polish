@@ -3,7 +3,10 @@ import { iconIgnore, iconLove, iconStar, iconTwitter } from '../icons'
 
 export function handlingContent() {
   {
-    $topicContentBox.find('.topic_content a[href]').prop('target', '_blank')
+    $topicContentBox
+      .find('.topic_content a[href]')
+      .prop('target', '_blank')
+      .prop('rel', 'noopener noreferrer')
   }
 
   {

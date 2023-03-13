@@ -8,7 +8,9 @@
  * 如果以上三个条件都满足，则可以认为这段字符是base64编码。
  */
 
-import { $commentCells, $topicContentBox } from './globals'
+const $topicContentBox = $('#Main .box:has(.topic_content)')
+const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
+const $commentCells = $commentBox.find('.cell[id^="r_"]')
 
 let count = 0
 

@@ -381,21 +381,21 @@ export function handlingComments() {
                   }
 
                   // 如果回复多于一条：
-                  if (userComments.length > 1) {
-                    const $replyList = $(
-                      `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
-                    )
-                    $replyList.append(`
-                    <ul class="v2p-reply-list">
-                      ${userComments
-                        .map(({ content }) => {
-                          return `<li>${content}</li>`
-                        })
-                        .join('')}
-                    </ul>
-                    `)
-                    $memberPopup.append($replyList)
-                  }
+                  // if (userComments.length > 1) {
+                  //   const $replyList = $(
+                  //     `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
+                  //   )
+                  //   $replyList.append(`
+                  //   <ul class="v2p-reply-list">
+                  //     ${userComments
+                  //       .map(({ content }) => {
+                  //         return `<li>${content}</li>`
+                  //       })
+                  //       .join('')}
+                  //   </ul>
+                  //   `)
+                  //   $memberPopup.append($replyList)
+                  // }
                 })
                 .catch((err: { name: string }) => {
                   if (err.name !== 'AbortError') {
