@@ -234,7 +234,7 @@ body {
 }
 
 #v2p-member-popup {
-  max-width: 600px;
+  max-width: 300px;
   text-align: left;
 
   .v2p-ctn {
@@ -273,6 +273,14 @@ body {
   .v2p-created-date {
     width: 160px;
     height: 16px;
+  }
+
+  .v2p-bio {
+    display: -webkit-box;
+    margin-top: 10px;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 
   .v2p-loading {
