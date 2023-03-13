@@ -1,7 +1,7 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
-import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, V2EX } from '../../constants'
-import type { Member } from '../../types'
+import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
+import { fetchUserInfo } from '../../service'
 import { formatTimestamp, getOS } from '../../utils'
 import {
   $commentBox,
@@ -319,10 +319,6 @@ export function handlingComments() {
 
             $(document).on('click', docClickHandler)
 
-            const userComments = commentDataList.filter(
-              (data) => data.memberName === dataFromIndex.memberName
-            )
-
             computePosition(avatar, memberPopup, {
               placement: 'bottom-start',
               middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
@@ -357,11 +353,10 @@ export function handlingComments() {
             $memberPopup.append($content)
 
             setTimeout(() => {
-              fetch(`${V2EX.API}/members/show.json?username=${dataFromIndex.memberName}`, {
+              fetchUserInfo(dataFromIndex.memberName, {
                 signal: abortController?.signal,
               })
-                .then((res) => res.json())
-                .then((data: Member) => {
+                .then((data) => {
                   $memberPopup
                     .find('.v2p-avatar-box')
                     .removeClass('v2p-loading')
@@ -380,6 +375,9 @@ export function handlingComments() {
                     $memberPopup.append(`<div class="v2p-bio">${data.bio}</div>`)
                   }
 
+                  // const userComments = commentDataList.filter(
+                  //   (data) => data.memberName === dataFromIndex.memberName
+                  // )
                   // 如果回复多于一条：
                   // if (userComments.length > 1) {
                   //   const $replyList = $(
