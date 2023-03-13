@@ -4,7 +4,10 @@ import { handlingContent } from './content'
 import { handlingPaging } from './paging'
 
 {
-  $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
+  $commentTableRows
+    .find('> td:nth-child(3) > strong > a')
+    .prop('target', '_blank')
+    .prop('rel', 'noopener noreferrer')
 }
 
 {

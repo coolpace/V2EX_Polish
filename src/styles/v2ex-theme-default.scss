@@ -536,7 +536,7 @@ img::selection {
     }
 
     .item_title {
-      font-weight: 600;
+      font-weight: bold;
       opacity: 0.8;
 
       &:hover {
@@ -658,7 +658,7 @@ img::selection {
     /* 帖主徽章 & 管理员徽章 */
     .badge {
       padding: 2px 5px;
-      font-weight: 600;
+      font-weight: bold;
       border: 1px solid var(--v2p-color-accent-400);
       user-select: none;
 
