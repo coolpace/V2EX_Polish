@@ -32,7 +32,6 @@
     {
       "matches": ["https://*.v2ex.com/*"],
       "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings"],
-      "css": ["css/v2ex-effect.css"],
       "js": ["scripts/v2ex-home.min.js"]
     },
     {

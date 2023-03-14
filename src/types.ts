@@ -88,3 +88,15 @@ export interface DataWrapper<T = unknown> {
   message?: string
   result: T
 }
+
+export interface CommentData {
+  id: string
+  memberName: string
+  memberLink: any
+  content: string
+  likes: number
+  floor: string
+  index: number
+  refMemberNames: string[] | undefined
+  refFloors: string[] | undefined
+}

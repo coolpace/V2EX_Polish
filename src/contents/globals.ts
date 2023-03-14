@@ -1,3 +1,5 @@
+import type { CommentData } from '../types'
+
 /** 登录人的昵称 */
 export const loginName = $('#Top .tools > a[href^="/member"]').text()
 
@@ -18,7 +20,7 @@ export const $commentCells = $commentBox.find('.cell[id^="r_"]')
 export const $commentTableRows = $commentCells.find('> table > tbody > tr')
 
 /** 每一页的回复列表数据 */
-export const commentDataList = $commentTableRows
+export const commentDataList: CommentData[] = $commentTableRows
   .map((idx, tr) => {
     const id = $commentCells[idx].id
     const td = $(tr).find('> td:nth-child(3)')

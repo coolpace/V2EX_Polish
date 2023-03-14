@@ -35,7 +35,7 @@ export function handlingTopicList() {
                 $topicPreview.appendTo($topicItem)
               })
               .catch((err) => {
-                console.log(err)
+                console.error(err)
               })
           }
         })

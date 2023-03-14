@@ -53,7 +53,7 @@ const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
   try {
     const decodedStr = window.atob(text)
     count += 1
-    return `<span class="v2p-decode-block">${text}(<a class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</a>)</span>`
+    return `<span class="v2p-decode-block">${text}(<ins class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</ins>)</span>`
   } catch {
     return text
   }
