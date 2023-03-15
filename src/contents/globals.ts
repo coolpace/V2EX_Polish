@@ -31,7 +31,7 @@ export const commentDataList: CommentData[] = $commentTableRows
     const likes = Number(td.find('span.small').text())
     const floor = td.find('span.no').text()
 
-    const memberNameMatches = Array.from(content.matchAll(/@(\S+)\s/g))
+    const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9]+)/g))
     const refMemberNames =
       memberNameMatches.length > 0
         ? memberNameMatches.map(([, name]) => {
