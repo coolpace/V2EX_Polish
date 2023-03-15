@@ -1,24 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <title>V2EX Polish 用户面板</title>
 
     <link rel="stylesheet" href="../css/normalize.css" />
+    <link rel="stylesheet" href="../css/v2ex-theme-var.css" />
     <link rel="stylesheet" href="../css/popup.css" />
   </head>
 
   <body>
     <main>
-      <div class="">
-        <div>最热</div>
-        <ul class="topics hot"></ul>
-      </div>
+      <nav>
+        <ul class="tabs">
+          <li class="active" data-target="tab1">最热</li>
+          <li data-target="tab2">最新</li>
+        </ul>
+      </nav>
 
-      <div class="">
-        <div>最新</div>
-        <ul class="topics latest"></ul>
-      </div>
+      <section id="tab-contents">
+        <div id="tab1" class="tab-content active">
+          <ul class="topics hot"></ul>
+        </div>
+
+        <div id="tab2" class="tab-content">
+          <ul class="topics latest"></ul>
+        </div>
+      </section>
 
       <input id="limitv1" readonly />
       <input id="resetv1" readonly />

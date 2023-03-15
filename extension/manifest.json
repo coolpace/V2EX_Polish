@@ -21,7 +21,7 @@
   "content_scripts": [
     {
       "matches": ["https://*.v2ex.com/*"],
-      "css": ["css/v2ex-theme-default.css"],
+      "css": ["css/v2ex-theme-var.css", "css/v2ex-theme-default.css"],
       "run_at": "document_start"
     },
     {
