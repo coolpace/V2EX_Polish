@@ -6,6 +6,10 @@ body {
   padding: 0;
 }
 
+p {
+  margin: 0;
+}
+
 body {
   width: 500px;
   height: 600px;
@@ -13,4 +17,31 @@ body {
 
 main {
   padding: 10px;
+}
+
+.topics {
+  padding: 0;
+}
+
+.topic-item {
+  padding: 5px 15px;
+
+  .title {
+    font-weight: bold;
+    font-size: 18px;
+
+    a {
+      color: currentColor;
+      text-decoration: none;
+    }
+  }
+
+  .content {
+    display: -webkit-box;
+    padding: 0;
+    overflow: hidden;
+    font-size: 13px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
 }

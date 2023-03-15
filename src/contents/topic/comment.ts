@@ -1,7 +1,7 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
 import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
-import { fetchUserInfo } from '../../service'
+import { fetchUserInfo } from '../../services'
 import type { CommentData } from '../../types'
 import { formatTimestamp, getOS } from '../../utils'
 import {
@@ -381,7 +381,7 @@ function handleAvatar(cellDom: HTMLElement, commentData: CommentData) {
           })
           .catch((err: { name: string }) => {
             if (err.name !== 'AbortError') {
-              $memberPopup.append(`<span>获取用户信息失败</span>`)
+              $memberPopup.html(`<span>获取用户信息失败</span>`)
             }
           })
       }, 0)

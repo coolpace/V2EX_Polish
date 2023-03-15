@@ -1,1 +1,1 @@
-html,body{width:100%;height:100%;margin:0;padding:0}body{width:500px;height:600px}main{padding:10px}
+html,body{width:100%;height:100%;margin:0;padding:0}p{margin:0}body{width:500px;height:600px}main{padding:10px}.topics{padding:0}.topic-item{padding:5px 15px}.topic-item .title{font-weight:bold;font-size:18px}.topic-item .title a{color:currentColor;text-decoration:none}.topic-item .content{display:-webkit-box;padding:0;overflow:hidden;font-size:13px;-webkit-line-clamp:3;-webkit-box-orient:vertical}

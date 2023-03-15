@@ -1,11 +1,13 @@
 // chrome.runtime.openOptionsPage()
 
 import { StorageKey } from '../constants'
-import type { API, StorageData } from '../types'
+import { fetchHotTopics, fetchLatestTopics } from '../services'
+import type { API, StorageData, Topic } from '../types'
+import { formatTimestamp } from '../utils'
 
-const saveBtn = document.querySelector('#save')
+function loadAPIInfo() {
+  const saveBtn = document.querySelector('#save')
 
-window.addEventListener('load', () => {
   chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
     const patInput = document.querySelector('#pat')
     const limit = document.querySelector('#limit')
@@ -21,11 +23,9 @@ window.addEventListener('load', () => {
       remaining instanceof HTMLInputElement &&
       api
     ) {
-      console.log(api)
       patInput.value = api.pat ?? ''
-      console.log(patInput.value, 123)
       limit.value = String(api.limit)
-      reset.value = String(api.reset)
+      reset.value = api.reset ? formatTimestamp(api.reset) : ''
       remaining.value = String(api.remaining)
     }
   })
@@ -65,4 +65,40 @@ window.addEventListener('load', () => {
       void saveOptions()
     })
   }
+}
+
+function loadTopics() {
+  const getItmes = (topics: Topic[]) => {
+    return topics
+      .map((topic) => {
+        return `
+          <li class="topic-item">
+            <div class="title"><a href="${topic.url}" target="_blank">${topic.title}</a></div>
+            <div class="content">${topic.content}</div>
+          </li>
+          `
+      })
+      .join('')
+  }
+
+  fetchHotTopics()
+    .then((topics) => {
+      $('.topics.hot').append(getItmes(topics))
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+
+  fetchLatestTopics()
+    .then((topics) => {
+      $('.topics.latest').append(getItmes(topics))
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+}
+
+window.addEventListener('load', () => {
+  loadAPIInfo()
+  loadTopics()
 })
