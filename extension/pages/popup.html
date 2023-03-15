@@ -13,40 +13,43 @@
     <main>
       <nav>
         <ul class="tabs">
-          <li class="active" data-target="tab1">最热</li>
+          <li data-target="tab1">最热</li>
           <li data-target="tab2">最新</li>
+          <li data-target="tab3">我的</li>
         </ul>
       </nav>
 
       <section id="tab-contents">
-        <div id="tab1" class="tab-content active">
+        <div id="tab1" class="tab-content">
           <ul class="topics hot"></ul>
         </div>
 
         <div id="tab2" class="tab-content">
           <ul class="topics latest"></ul>
         </div>
+
+        <div id="tab3" class="tab-content">
+          <input id="limitv1" readonly />
+          <input id="resetv1" readonly />
+          <input id="remainingv1" readonly />
+
+          <div>
+            <label for="pat">Token</label>
+            <input id="pat" placeholder="填写你的个人令牌" />
+
+            <label for="limit">限制请求次数</label>
+            <input id="limit" readonly />
+
+            <label for="reset">下次重置时间</label>
+            <input id="reset" readonly />
+
+            <label for="remaining">剩余请求次数</label>
+            <input id="remaining" readonly />
+
+            <button id="save">保存</button>
+          </div>
+        </div>
       </section>
-
-      <input id="limitv1" readonly />
-      <input id="resetv1" readonly />
-      <input id="remainingv1" readonly />
-
-      <div>
-        <label for="pat">Token</label>
-        <input id="pat" placeholder="填写你的个人令牌" />
-
-        <label for="limit">限制请求次数</label>
-        <input id="limit" readonly />
-
-        <label for="reset">下次重置时间</label>
-        <input id="reset" readonly />
-
-        <label for="remaining">剩余请求次数</label>
-        <input id="remaining" readonly />
-
-        <button id="save">保存</button>
-      </div>
     </main>
 
     <script src="../scripts/jquery-3.5.1.min.js"></script>

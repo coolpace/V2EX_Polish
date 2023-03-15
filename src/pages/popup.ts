@@ -5,6 +5,10 @@ import { fetchHotTopics, fetchLatestTopics } from '../services'
 import type { API, StorageData, Topic } from '../types'
 import { formatTimestamp } from '../utils'
 
+interface PopupStorageData {
+  lastActiveTab: string
+}
+
 function loadAPIInfo() {
   const saveBtn = document.querySelector('#save')
 
@@ -68,21 +72,41 @@ function loadAPIInfo() {
 }
 
 function loadTopics() {
-  $('.tabs > li').on('click', (e) => {
-    const $li = $(e.currentTarget)
-    const target = $li.data('target')
-
-    if (typeof target !== 'string') {
-      return
+  const activeTab = ({ tabId, tabEle }: { tabId?: string; tabEle?: JQuery } = {}) => {
+    const toggle = ($tab: JQuery) => {
+      const target = $tab.data('target')
+      if (typeof target === 'string') {
+        const $content = $(`#${target}`)
+        $tab.addClass('active').siblings().removeClass('active')
+        $content.addClass('active').siblings().removeClass('active')
+        // 每次切换 tab 都滚动到最顶部，防止受上一个 tab 的滚动位置影响。
+        window.scrollTo(0, 0)
+      }
     }
 
-    const $content = $(`#${target}`)
+    if (tabId) {
+      toggle($(`.tabs > li[data-target="${tabId}"]`))
+    } else if (tabEle) {
+      toggle(tabEle)
+    } else {
+      toggle($('.tabs > li:first-child'))
+    }
+  }
 
-    $li.addClass('active').siblings().removeClass('active')
-    $content.addClass('active').siblings().removeClass('active')
+  const dataString = window.localStorage.getItem('v2p_popup')
+
+  if (dataString) {
+    const data: PopupStorageData = JSON.parse(dataString)
+    activeTab({ tabId: data.lastActiveTab })
+  } else {
+    activeTab()
+  }
+
+  $('.tabs > li').on('click', (e) => {
+    activeTab({ tabEle: $(e.currentTarget) })
   })
 
-  const getItmes = (topics: Topic[]) => {
+  const generateTopicItmes = (topics: Topic[]) => {
     return topics
       .map((topic) => {
         return `
@@ -99,7 +123,7 @@ function loadTopics() {
 
   fetchHotTopics()
     .then((topics) => {
-      $('.topics.hot').append(getItmes(topics))
+      $('.topics.hot').append(generateTopicItmes(topics))
     })
     .catch((err) => {
       console.error(err)
@@ -107,7 +131,7 @@ function loadTopics() {
 
   fetchLatestTopics()
     .then((topics) => {
-      $('.topics.latest').append(getItmes(topics))
+      $('.topics.latest').append(generateTopicItmes(topics))
     })
     .catch((err) => {
       console.error(err)
@@ -117,4 +141,13 @@ function loadTopics() {
 window.addEventListener('load', () => {
   loadAPIInfo()
   loadTopics()
+})
+
+window.addEventListener('beforeunload', () => {
+  const lastActiveTab = $('.tabs > li.active').data('target')
+
+  if (typeof lastActiveTab === 'string') {
+    const data: PopupStorageData = { lastActiveTab }
+    window.localStorage.setItem('v2p_popup', JSON.stringify(data))
+  }
 })

@@ -269,6 +269,9 @@ function insertEmojiBox() {
   })
 }
 
+/**
+ * 点击头像会展示改用户的信息。
+ */
 function handleAvatar(cellDom: HTMLElement, commentData: CommentData) {
   const memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox).get(0)!
 
@@ -389,6 +392,9 @@ function handleAvatar(cellDom: HTMLElement, commentData: CommentData) {
   })
 }
 
+/**
+ * 处理回复内容，过长内容会被折叠。
+ */
 function handleReplyContent(cellDom: HTMLElement) {
   const $replyContent = $(cellDom).find('.reply_content')
 
@@ -459,6 +465,9 @@ export function handlingComments() {
           : commentDataList.find((data) => data.id === cellDom.id)
 
       if (currentComment) {
+        if (currentComment.floor === '79') {
+          console.log(currentComment)
+        }
         const { memberName, refMemberNames, refFloors } = currentComment
 
         if (memberName === loginName && memberName !== topicOwnerName) {
