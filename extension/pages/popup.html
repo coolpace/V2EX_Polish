@@ -4,22 +4,44 @@
     <meta charset="utf-8" />
     <title>V2EX Polish 用户面板</title>
 
+    <link rel="stylesheet" href="../css/normalize.css" />
     <link rel="stylesheet" href="../css/popup.css" />
   </head>
 
   <body>
     <main>
-      <input id="patv1" placeholder="填写你的个人令牌" />
+      <div class="">
+        <div>最热</div>
+        <ul class="topics hot"></ul>
+      </div>
+
+      <div class="">
+        <div>最新</div>
+        <ul class="topics latest"></ul>
+      </div>
+
       <input id="limitv1" readonly />
       <input id="resetv1" readonly />
       <input id="remainingv1" readonly />
 
-      <input id="limit" readonly />
-      <input id="reset" readonly />
-      <input id="remaining" readonly />
-      <button id="save">保存</button>
+      <div>
+        <label for="pat">Token</label>
+        <input id="pat" placeholder="填写你的个人令牌" />
+
+        <label for="limit">限制请求次数</label>
+        <input id="limit" readonly />
+
+        <label for="reset">下次重置时间</label>
+        <input id="reset" readonly />
+
+        <label for="remaining">剩余请求次数</label>
+        <input id="remaining" readonly />
+
+        <button id="save">保存</button>
+      </div>
     </main>
 
+    <script src="../scripts/jquery-3.5.1.min.js"></script>
     <script src="../scripts/popup.min.js"></script>
   </body>
 </html>

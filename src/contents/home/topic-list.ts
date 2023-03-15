@@ -1,5 +1,5 @@
 import { StorageKey } from '../../constants'
-import { fetchTopic } from '../../service'
+import { fetchTopic } from '../../services'
 import type { StorageData } from '../../types'
 import { $topicList } from '../globals'
 

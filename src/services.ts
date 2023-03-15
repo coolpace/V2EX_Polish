@@ -1,6 +1,11 @@
 import { StorageKey, V2EX } from './constants'
 import type { API, DataWrapper, LegacyAPI, Member, StorageData, Topic } from './types'
 
+/**
+ * V2EX API v1
+ *
+ * 相关的接口文档参考：https://www.v2ex.com/p/7v9TEc53
+ */
 async function legacyRequest<Data>(url: string, options?: RequestInit): Promise<Data> {
   const res = await fetch(url, options)
 
@@ -24,6 +29,16 @@ export function fetchUserInfo(memberName: Member['username'], options?: RequestI
     `${V2EX.LegacyAPI}/members/show.json?username=${memberName}`,
     options
   )
+}
+
+export function fetchLatestTopics(options?: RequestInit) {
+  // return Promise.resolve(mockTopics)
+  return legacyRequest<Topic[]>(`${V2EX.LegacyAPI}/topics/latest.json`, options)
+}
+
+export function fetchHotTopics(options?: RequestInit) {
+  // return Promise.resolve(mockTopics)
+  return legacyRequest<Topic[]>(`${V2EX.LegacyAPI}/topics/hot.json`, options)
 }
 
 async function request<Data>(url: string, options?: RequestInit): Promise<DataWrapper<Data>> {
