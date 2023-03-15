@@ -68,13 +68,29 @@ function loadAPIInfo() {
 }
 
 function loadTopics() {
+  $('.tabs > li').on('click', (e) => {
+    const $li = $(e.currentTarget)
+    const target = $li.data('target')
+
+    if (typeof target !== 'string') {
+      return
+    }
+
+    const $content = $(`#${target}`)
+
+    $li.addClass('active').siblings().removeClass('active')
+    $content.addClass('active').siblings().removeClass('active')
+  })
+
   const getItmes = (topics: Topic[]) => {
     return topics
       .map((topic) => {
         return `
           <li class="topic-item">
-            <div class="title"><a href="${topic.url}" target="_blank">${topic.title}</a></div>
-            <div class="content">${topic.content}</div>
+            <a href="${topic.url}" target="_blank">
+              <span class="title">${topic.title}</span>
+              <span class="content">${topic.content}</span>
+            </a>
           </li>
           `
       })
