@@ -12,8 +12,8 @@ const enum TabId {
 }
 
 interface topicsStore {
-  data: Topic[]
-  lastFetchTime: number
+  data?: Topic[]
+  lastFetchTime?: number
   lastScrollTop?: number
 }
 
@@ -24,7 +24,7 @@ interface PopupStorageData {
   [TabId.Setting]: topicsStore
 }
 
-function loadAPIInfo() {
+function loadSettings() {
   const saveBtn = document.querySelector('#save')
 
   chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
@@ -84,42 +84,13 @@ function loadAPIInfo() {
       void saveOptions()
     })
   }
+
+  $('#clear-storage').on('click', () => {
+    window.localStorage.clear()
+  })
 }
 
-async function loadTopics() {
-  const isTabId = (tabId: any): tabId is TabId => {
-    return typeof tabId === 'string'
-  }
-
-  const activeTab = ({
-    tabId,
-    tabEle,
-    scrollTop = 0,
-  }: { tabId?: string; tabEle?: JQuery; scrollTop?: number } = {}) => {
-    const toggle = ($tab: JQuery) => {
-      const target = $tab.data('target')
-      if (isTabId(target)) {
-        const $content = $(`#${target}`)
-        $tab.addClass('active').siblings().removeClass('active')
-        $content.addClass('active').siblings().removeClass('active')
-
-        setTimeout(() => {
-          // 每次切换 tab 都滚动到最顶部，防止受上一个 tab 的滚动位置影响。
-          // 加入 setTimeout 是为了等待 tab 内容完成插入，否则会出现滚动位置不正确的情况。
-          window.scrollTo(0, scrollTop)
-        }, 0)
-      }
-    }
-
-    if (tabId) {
-      toggle($(`.tabs > li[data-target="${tabId}"]`))
-    } else if (tabEle) {
-      toggle(tabEle)
-    } else {
-      toggle($('.tabs > li:first-child'))
-    }
-  }
-
+function loadTabs() {
   const generateTopicItmes = (topics: Topic[]) => {
     return topics
       .map((topic) => {
@@ -135,41 +106,106 @@ async function loadTopics() {
       .join('')
   }
 
-  let hotTopicList: Topic[] = []
-  let latestTopicList: Topic[] = []
-
-  const dataString = window.localStorage.getItem('v2p_popup')
-
-  if (dataString) {
-    const data: PopupStorageData = JSON.parse(dataString)
-    hotTopicList = data[TabId.Hot].data
-    latestTopicList = data[TabId.Latest].data
-    const { lastScrollTop, lastFetchTime } = data[data.lastActiveTab]
-
-    if (Date.now() - lastFetchTime > 1000 * 60 * 5) {
-      // 5 分钟内不再重新请求数据。
-      const [hotTopics, latestTopics] = await Promise.all([fetchHotTopics(), fetchLatestTopics()])
-
-      hotTopicList = hotTopics
-      latestTopicList = latestTopics
+  const isTabId = (tabId: any): tabId is TabId => {
+    if (typeof tabId === 'string') {
+      if (tabId === TabId.Hot || tabId === TabId.Latest || tabId === TabId.Setting) {
+        return true
+      }
     }
-
-    activeTab({ tabId: data.lastActiveTab, scrollTop: lastScrollTop })
-  } else {
-    activeTab()
-
-    const [hotTopics, latestTopics] = await Promise.all([fetchHotTopics(), fetchLatestTopics()])
-
-    hotTopicList = hotTopics
-    latestTopicList = latestTopics
+    return false
   }
 
-  $('.topics.hot').append(generateTopicItmes(hotTopicList))
-  $('.topics.latest').append(generateTopicItmes(latestTopicList))
+  let hotTopicList: Topic[]
+  let latestTopicList: Topic[]
+  let hotTopicLastFetchTime: number
+  let latestTopicLastFetchTime: number
+
+  const dataString = window.localStorage.getItem('v2p_popup')
+  const storageData = dataString ? (JSON.parse(dataString) as PopupStorageData) : null
+
+  const setupTabContent = async ({ tabId }: { tabId: TabId }) => {
+    let topicList: Topic[] = []
+    let scrollTop = 0
+
+    const $tabContent = $(`#${tabId}`)
+
+    if (tabId === TabId.Hot || tabId === TabId.Latest) {
+      const getData = async () => {
+        $tabContent.html('Loading...')
+
+        if (tabId === TabId.Hot) {
+          const topics = await fetchHotTopics()
+          hotTopicList = topics
+          hotTopicLastFetchTime = Date.now()
+          return topics
+        } else if (tabId === TabId.Latest) {
+          const topics = await fetchLatestTopics()
+          latestTopicList = topics
+          latestTopicLastFetchTime = Date.now()
+          return topics
+        }
+        return []
+      }
+
+      if (storageData) {
+        const { data, lastFetchTime, lastScrollTop } = storageData[tabId]
+
+        if (lastScrollTop) {
+          scrollTop = lastScrollTop
+        }
+
+        if (
+          !data ||
+          !lastFetchTime ||
+          Date.now() - lastFetchTime > 1000 * 60 * 10 // 10 分钟内不再重新请求数据
+        ) {
+          topicList = await getData()
+        } else {
+          topicList = data
+        }
+      } else {
+        topicList = await getData()
+      }
+
+      const $topicList = $(`<ul class="topics">`).append(generateTopicItmes(topicList))
+      $tabContent.children().remove().append($topicList)
+    }
+
+    setTimeout(() => {
+      // 每次切换 tab 都滚动到最顶部，防止受上一个 tab 的滚动位置影响。
+      // 加入 setTimeout 是为了等待 tab 内容完成插入，否则会出现滚动位置不正确的情况。
+      window.scrollTo(0, scrollTop)
+    }, 0)
+  }
+
+  const toggleActiveTab = ($tab: JQuery) => {
+    const tabId = $tab.data('target')
+
+    if (isTabId(tabId)) {
+      $tab.addClass('active').siblings().removeClass('active')
+      $(`#${tabId}`).addClass('active').siblings().removeClass('active')
+
+      void setupTabContent({ tabId })
+    }
+  }
+
+  const activeTab = ({ tabId, tabEle }: { tabId?: string; tabEle?: JQuery } = {}) => {
+    if (tabId) {
+      toggleActiveTab($(`.tabs > li[data-target="${tabId}"]`))
+    } else if (tabEle) {
+      toggleActiveTab(tabEle)
+    } else {
+      toggleActiveTab($('.tabs > li:first-child'))
+    }
+  }
+
+  activeTab({ tabId: storageData?.lastActiveTab })
 
   $('.tabs > li').on('click', (e) => {
     activeTab({ tabEle: $(e.currentTarget) })
   })
+
+  loadSettings()
 
   window.addEventListener('unload', () => {
     const lastActiveTab = $('.tabs > li.active').data('target')
@@ -182,17 +218,15 @@ async function loadTopics() {
         lastActiveTab,
         [TabId.Hot]: {
           data: hotTopicList,
-          lastFetchTime: Date.now(),
+          lastFetchTime: hotTopicLastFetchTime,
           lastScrollTop: lastActiveTab === TabId.Hot ? scrollTop : undefined,
         },
         [TabId.Latest]: {
           data: latestTopicList,
-          lastFetchTime: Date.now(),
+          lastFetchTime: latestTopicLastFetchTime,
           lastScrollTop: lastActiveTab === TabId.Latest ? scrollTop : undefined,
         },
         [TabId.Setting]: {
-          data: [],
-          lastFetchTime: Date.now(),
           lastScrollTop: lastActiveTab === TabId.Setting ? scrollTop : undefined,
         },
       }
@@ -202,6 +236,5 @@ async function loadTopics() {
 }
 
 window.addEventListener('load', () => {
-  loadAPIInfo()
-  void loadTopics()
+  loadTabs()
 })
