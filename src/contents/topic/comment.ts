@@ -15,6 +15,175 @@ import {
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../icons'
 
 /**
+ * 点击头像会展示改用户的信息。
+ */
+function handleAvatar(cellDom: HTMLElement, commentData: CommentData) {
+  const memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox).get(0)!
+
+  let abortController: AbortController | null = null
+
+  const docClickHandler = (e: JQuery.ClickEvent) => {
+    if ($(e.target).closest(memberPopup).length === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handlePopupClose()
+    }
+  }
+
+  const handlePopupClose = () => {
+    abortController?.abort()
+    memberPopup.style.visibility = 'hidden'
+    memberPopup.innerHTML = ''
+    $(document).off('click', docClickHandler)
+  }
+
+  const $avatar = $(cellDom).find('.avatar')
+
+  $avatar.on('click', (e) => {
+    abortController = new AbortController()
+
+    if (memberPopup.style.visibility === 'visible') {
+      handlePopupClose()
+    } else {
+      e.stopPropagation()
+
+      $(document).on('click', docClickHandler)
+
+      const avatar = $avatar.get(0)!
+
+      computePosition(avatar, memberPopup, {
+        placement: 'bottom-start',
+        middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
+      })
+        .then(({ x, y }) => {
+          Object.assign(memberPopup.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+          })
+          memberPopup.style.visibility = 'visible'
+        })
+        .catch((err) => {
+          console.error('计算位置失败', err)
+          handlePopupClose()
+        })
+
+      const $memberPopup = $(memberPopup)
+
+      const $content = $(`
+              <div class="v2p-ctn">
+                <div class="v2p-ctn-left">
+                  <div class="v2p-avatar-box"></div>
+                </div>
+
+                <div class="v2p-ctn-right">
+                  <div class="v2p-username v2p-loading"></div>
+                  <div class="v2p-no v2p-loading"></div>
+                  <div class="v2p-created-date v2p-loading"></div>
+                </div>
+              </div>
+              `)
+
+      $memberPopup.append($content)
+
+      setTimeout(() => {
+        fetchUserInfo(commentData.memberName, {
+          signal: abortController?.signal,
+        })
+          .then((data) => {
+            $memberPopup
+              .find('.v2p-avatar-box')
+              .removeClass('v2p-loading')
+              .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
+            $memberPopup.find('.v2p-username').removeClass('v2p-loading').text(data.username)
+            $memberPopup
+              .find('.v2p-no')
+              .removeClass('v2p-loading')
+              .text(`V2EX 第 ${data.id} 号会员`)
+            $memberPopup
+              .find('.v2p-created-date')
+              .removeClass('v2p-loading')
+              .text(`加入于 ${formatTimestamp(data.created)}`)
+
+            if (data.bio && data.bio.trim().length > 0) {
+              $memberPopup.append(`<div class="v2p-bio">${data.bio}</div>`)
+            }
+
+            // const userComments = commentDataList.filter(
+            //   (data) => data.memberName === dataFromIndex.memberName
+            // )
+            // 如果回复多于一条：
+            // if (userComments.length > 1) {
+            //   const $replyList = $(
+            //     `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
+            //   )
+            //   $replyList.append(`
+            //   <ul class="v2p-reply-list">
+            //     ${userComments
+            //       .map(({ content }) => {
+            //         return `<li>${content}</li>`
+            //       })
+            //       .join('')}
+            //   </ul>
+            //   `)
+            //   $memberPopup.append($replyList)
+            // }
+          })
+          .catch((err: { name: string }) => {
+            if (err.name !== 'AbortError') {
+              $memberPopup.html(`<span>获取用户信息失败</span>`)
+            }
+          })
+      }, 0)
+    }
+  })
+}
+
+/**
+ * 处理回复内容，过长内容会被折叠。
+ */
+function handleReplyContent(cellDom: HTMLElement) {
+  const $cellDom = $(cellDom)
+
+  if ($cellDom.find('.v2p-reply-content').length > 0) {
+    return
+  }
+
+  const $replyContent = $cellDom.find('.reply_content')
+
+  const height = $replyContent.height() ?? 0
+
+  const shouldCollapsed = height + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
+
+  if (shouldCollapsed) {
+    const collapsedCSS = {
+      maxHeight: `${READABLE_CONTENT_HEIGHT}px`,
+      overflow: 'hidden',
+      paddingBottom: '0',
+    }
+
+    const $contentBox = $('<div class="v2p-reply-content v2p-collapsed">').css(collapsedCSS)
+
+    const $expandBtn = $('<button class="v2p-expand-btn normal button">展开回复</button>')
+
+    const toggleContent = () => {
+      const collapsed = $contentBox.hasClass('v2p-collapsed')
+
+      $contentBox
+        .toggleClass('v2p-collapsed')
+        .css(
+          collapsed ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' } : collapsedCSS
+        )
+      $expandBtn.html(collapsed ? '收起回复' : '展开回复')
+    }
+
+    $expandBtn.on('click', () => {
+      toggleContent()
+    })
+
+    $contentBox.append($replyContent.clone()).replaceAll($replyContent).append($expandBtn)
+  }
+}
+
+/**
  * 设置热门回复。
  */
 function handlingPopularComments() {
@@ -78,6 +247,10 @@ function handlingPopularComments() {
 
       cmContainer.fadeIn('fast')
       document.body.classList.add('v2p-modal-open')
+
+      cmContainer.find('.cell[id^="r_"]').each((_, cellDom) => {
+        handleReplyContent(cellDom)
+      })
     }
 
     const closeBtn = cmContainer.find('.v2p-cm-close-btn')
@@ -269,169 +442,6 @@ function insertEmojiBox() {
   })
 }
 
-/**
- * 点击头像会展示改用户的信息。
- */
-function handleAvatar(cellDom: HTMLElement, commentData: CommentData) {
-  const memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox).get(0)!
-
-  let abortController: AbortController | null = null
-
-  const docClickHandler = (e: JQuery.ClickEvent) => {
-    if ($(e.target).closest(memberPopup).length === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      handlePopupClose()
-    }
-  }
-
-  const handlePopupClose = () => {
-    abortController?.abort()
-    memberPopup.style.visibility = 'hidden'
-    memberPopup.innerHTML = ''
-    $(document).off('click', docClickHandler)
-  }
-
-  const $avatar = $(cellDom).find('.avatar')
-
-  $avatar.on('click', (e) => {
-    abortController = new AbortController()
-
-    if (memberPopup.style.visibility === 'visible') {
-      handlePopupClose()
-    } else {
-      e.stopPropagation()
-
-      $(document).on('click', docClickHandler)
-
-      const avatar = $avatar.get(0)!
-
-      computePosition(avatar, memberPopup, {
-        placement: 'bottom-start',
-        middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
-      })
-        .then(({ x, y }) => {
-          Object.assign(memberPopup.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-          })
-          memberPopup.style.visibility = 'visible'
-        })
-        .catch((err) => {
-          console.error('计算位置失败', err)
-          handlePopupClose()
-        })
-
-      const $memberPopup = $(memberPopup)
-
-      const $content = $(`
-              <div class="v2p-ctn">
-                <div class="v2p-ctn-left">
-                  <div class="v2p-avatar-box"></div>
-                </div>
-
-                <div class="v2p-ctn-right">
-                  <div class="v2p-username v2p-loading"></div>
-                  <div class="v2p-no v2p-loading"></div>
-                  <div class="v2p-created-date v2p-loading"></div>
-                </div>
-              </div>
-              `)
-
-      $memberPopup.append($content)
-
-      setTimeout(() => {
-        fetchUserInfo(commentData.memberName, {
-          signal: abortController?.signal,
-        })
-          .then((data) => {
-            $memberPopup
-              .find('.v2p-avatar-box')
-              .removeClass('v2p-loading')
-              .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
-            $memberPopup.find('.v2p-username').removeClass('v2p-loading').text(data.username)
-            $memberPopup
-              .find('.v2p-no')
-              .removeClass('v2p-loading')
-              .text(`V2EX 第 ${data.id} 号会员`)
-            $memberPopup
-              .find('.v2p-created-date')
-              .removeClass('v2p-loading')
-              .text(`加入于 ${formatTimestamp(data.created)}`)
-
-            if (data.bio && data.bio.trim().length > 0) {
-              $memberPopup.append(`<div class="v2p-bio">${data.bio}</div>`)
-            }
-
-            // const userComments = commentDataList.filter(
-            //   (data) => data.memberName === dataFromIndex.memberName
-            // )
-            // 如果回复多于一条：
-            // if (userComments.length > 1) {
-            //   const $replyList = $(
-            //     `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
-            //   )
-            //   $replyList.append(`
-            //   <ul class="v2p-reply-list">
-            //     ${userComments
-            //       .map(({ content }) => {
-            //         return `<li>${content}</li>`
-            //       })
-            //       .join('')}
-            //   </ul>
-            //   `)
-            //   $memberPopup.append($replyList)
-            // }
-          })
-          .catch((err: { name: string }) => {
-            if (err.name !== 'AbortError') {
-              $memberPopup.html(`<span>获取用户信息失败</span>`)
-            }
-          })
-      }, 0)
-    }
-  })
-}
-
-/**
- * 处理回复内容，过长内容会被折叠。
- */
-function handleReplyContent(cellDom: HTMLElement) {
-  const $replyContent = $(cellDom).find('.reply_content')
-
-  const height = $replyContent.height() ?? 0
-
-  const shouldCollapsed = height + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
-
-  if (shouldCollapsed) {
-    const collapsedCSS = {
-      maxHeight: `${READABLE_CONTENT_HEIGHT}px`,
-      overflow: 'hidden',
-      paddingBottom: '0',
-    }
-
-    const $contentBox = $('<div class="v2p-reply-content v2p-collapsed">').css(collapsedCSS)
-
-    const $expandBtn = $('<button class="v2p-expand-btn normal button">展开回复</button>')
-
-    const toggleContent = () => {
-      const collapsed = $contentBox.hasClass('v2p-collapsed')
-
-      $contentBox
-        .toggleClass('v2p-collapsed')
-        .css(
-          collapsed ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' } : collapsedCSS
-        )
-      $expandBtn.html(collapsed ? '收起回复' : '展开回复')
-    }
-
-    $expandBtn.on('click', () => {
-      toggleContent()
-    })
-
-    $contentBox.append($replyContent.clone()).replaceAll($replyContent).append($expandBtn)
-  }
-}
-
 export function handlingComments() {
   {
     /**
@@ -465,9 +475,6 @@ export function handlingComments() {
           : commentDataList.find((data) => data.id === cellDom.id)
 
       if (currentComment) {
-        if (currentComment.floor === '79') {
-          console.log(currentComment)
-        }
         const { memberName, refMemberNames, refFloors } = currentComment
 
         if (memberName === loginName && memberName !== topicOwnerName) {

@@ -8,6 +8,7 @@
  * 如果以上三个条件都满足，则可以认为这段字符是base64编码。
  */
 
+// 不能从 global.ts 中引入，否则会出现脚本执行错误，此错误发生原因未知。
 const $topicContentBox = $('#Main .box:has(.topic_content)')
 const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
 const $commentCells = $commentBox.find('.cell[id^="r_"]')
