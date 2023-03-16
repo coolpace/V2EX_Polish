@@ -39,12 +39,17 @@ nav {
     letter-spacing: 3px;
     border-radius: 3px;
     cursor: pointer;
+    user-select: none;
 
     &.active {
       color: var(--v2p-color-main-100);
       background-color: var(--v2p-color-main-800);
     }
   }
+}
+
+.tab-contents {
+  padding: 10px 0;
 }
 
 .tab-content {

@@ -5,8 +5,23 @@ import { fetchHotTopics, fetchLatestTopics } from '../services'
 import type { API, StorageData, Topic } from '../types'
 import { formatTimestamp } from '../utils'
 
+const enum TabId {
+  Hot = 'tab1',
+  Latest = 'tab2',
+  Setting = 'tab3',
+}
+
+interface topicsStore {
+  data: Topic[]
+  lastFetchTime: number
+  lastScrollTop?: number
+}
+
 interface PopupStorageData {
-  lastActiveTab: string
+  lastActiveTab: TabId
+  [TabId.Hot]: topicsStore
+  [TabId.Latest]: topicsStore
+  [TabId.Setting]: topicsStore
 }
 
 function loadAPIInfo() {
@@ -71,16 +86,28 @@ function loadAPIInfo() {
   }
 }
 
-function loadTopics() {
-  const activeTab = ({ tabId, tabEle }: { tabId?: string; tabEle?: JQuery } = {}) => {
+async function loadTopics() {
+  const isTabId = (tabId: any): tabId is TabId => {
+    return typeof tabId === 'string'
+  }
+
+  const activeTab = ({
+    tabId,
+    tabEle,
+    scrollTop = 0,
+  }: { tabId?: string; tabEle?: JQuery; scrollTop?: number } = {}) => {
     const toggle = ($tab: JQuery) => {
       const target = $tab.data('target')
-      if (typeof target === 'string') {
+      if (isTabId(target)) {
         const $content = $(`#${target}`)
         $tab.addClass('active').siblings().removeClass('active')
         $content.addClass('active').siblings().removeClass('active')
-        // 每次切换 tab 都滚动到最顶部，防止受上一个 tab 的滚动位置影响。
-        window.scrollTo(0, 0)
+
+        setTimeout(() => {
+          // 每次切换 tab 都滚动到最顶部，防止受上一个 tab 的滚动位置影响。
+          // 加入 setTimeout 是为了等待 tab 内容完成插入，否则会出现滚动位置不正确的情况。
+          window.scrollTo(0, scrollTop)
+        }, 0)
       }
     }
 
@@ -92,19 +119,6 @@ function loadTopics() {
       toggle($('.tabs > li:first-child'))
     }
   }
-
-  const dataString = window.localStorage.getItem('v2p_popup')
-
-  if (dataString) {
-    const data: PopupStorageData = JSON.parse(dataString)
-    activeTab({ tabId: data.lastActiveTab })
-  } else {
-    activeTab()
-  }
-
-  $('.tabs > li').on('click', (e) => {
-    activeTab({ tabEle: $(e.currentTarget) })
-  })
 
   const generateTopicItmes = (topics: Topic[]) => {
     return topics
@@ -121,33 +135,73 @@ function loadTopics() {
       .join('')
   }
 
-  fetchHotTopics()
-    .then((topics) => {
-      $('.topics.hot').append(generateTopicItmes(topics))
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+  let hotTopicList: Topic[] = []
+  let latestTopicList: Topic[] = []
 
-  fetchLatestTopics()
-    .then((topics) => {
-      $('.topics.latest').append(generateTopicItmes(topics))
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+  const dataString = window.localStorage.getItem('v2p_popup')
+
+  if (dataString) {
+    const data: PopupStorageData = JSON.parse(dataString)
+    hotTopicList = data[TabId.Hot].data
+    latestTopicList = data[TabId.Latest].data
+    const { lastScrollTop, lastFetchTime } = data[data.lastActiveTab]
+
+    if (Date.now() - lastFetchTime > 1000 * 60 * 5) {
+      // 5 分钟内不再重新请求数据。
+      const [hotTopics, latestTopics] = await Promise.all([fetchHotTopics(), fetchLatestTopics()])
+
+      hotTopicList = hotTopics
+      latestTopicList = latestTopics
+    }
+
+    activeTab({ tabId: data.lastActiveTab, scrollTop: lastScrollTop })
+  } else {
+    activeTab()
+
+    const [hotTopics, latestTopics] = await Promise.all([fetchHotTopics(), fetchLatestTopics()])
+
+    hotTopicList = hotTopics
+    latestTopicList = latestTopics
+  }
+
+  $('.topics.hot').append(generateTopicItmes(hotTopicList))
+  $('.topics.latest').append(generateTopicItmes(latestTopicList))
+
+  $('.tabs > li').on('click', (e) => {
+    activeTab({ tabEle: $(e.currentTarget) })
+  })
+
+  window.addEventListener('unload', () => {
+    const lastActiveTab = $('.tabs > li.active').data('target')
+
+    if (isTabId(lastActiveTab)) {
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+
+      const data: PopupStorageData = {
+        lastActiveTab,
+        [TabId.Hot]: {
+          data: hotTopicList,
+          lastFetchTime: Date.now(),
+          lastScrollTop: lastActiveTab === TabId.Hot ? scrollTop : undefined,
+        },
+        [TabId.Latest]: {
+          data: latestTopicList,
+          lastFetchTime: Date.now(),
+          lastScrollTop: lastActiveTab === TabId.Latest ? scrollTop : undefined,
+        },
+        [TabId.Setting]: {
+          data: [],
+          lastFetchTime: Date.now(),
+          lastScrollTop: lastActiveTab === TabId.Setting ? scrollTop : undefined,
+        },
+      }
+      window.localStorage.setItem('v2p_popup', JSON.stringify(data))
+    }
+  })
 }
 
 window.addEventListener('load', () => {
   loadAPIInfo()
-  loadTopics()
-})
-
-window.addEventListener('beforeunload', () => {
-  const lastActiveTab = $('.tabs > li.active').data('target')
-
-  if (typeof lastActiveTab === 'string') {
-    const data: PopupStorageData = { lastActiveTab }
-    window.localStorage.setItem('v2p_popup', JSON.stringify(data))
-  }
+  void loadTopics()
 })
