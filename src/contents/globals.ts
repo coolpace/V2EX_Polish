@@ -72,42 +72,48 @@ export const commentDataList: CommentData[] = $commentTableRows
 
 interface JQElements {
   $modelMask: JQuery
+  $modelMain: JQuery
   $modelContainer: JQuery
   $modelContent: JQuery
 }
 
 interface CreateModelProps {
+  root?: JQuery
   title?: string
   onMount?: (elements: JQElements) => void
   onOpen?: (elements: JQElements) => void
-  onClose?: () => void
+  onClose?: (elements: JQElements) => void
 }
 
 /**
  * 创建 model 框。
  */
 export function createModel(props: CreateModelProps) {
-  const { title, onOpen, onClose, onMount } = props
+  const { root, title, onOpen, onClose, onMount } = props
 
   const $modelMask = $('<div class="v2p-model-mask">')
 
-  const $modelContent = $(`
-      <div class="v2p-model-content box">
-        <div class="v2p-model-header">
-          <span>${title ?? ''}</span>
-          <button class="v2p-model-close-btn normal button">关闭<kbd>Esc</kbd></button>
-        </div>
-      </div>
-    `)
+  const $modelContent = $('<div class="v2p-model-content">')
 
-  const $modelContainer = $modelMask.append($modelContent).hide()
+  const $modelMain = $(`
+    <div class="v2p-model-main">
+      <div class="v2p-model-header">
+        <span>${title ?? ''}</span>
+        <button class="v2p-model-close-btn normal button">关闭<kbd>Esc</kbd></button>
+      </div>
+    </div>
+    `).append($modelContent)
+
+  const $modelContainer = $modelMask.append($modelMain).hide()
 
   const JQElements = {
     $modelMask,
+    $modelMain,
     $modelContainer,
     $modelContent,
   }
 
+  // 用于判定是否已经绑定了事件, 避免重复绑定。
   let boundEvent = false
 
   const docClickHandler = (e: JQuery.ClickEvent) => {
@@ -133,7 +139,7 @@ export function createModel(props: CreateModelProps) {
     $modelContainer.fadeOut('fast')
     document.body.classList.remove('v2p-modal-open')
 
-    onClose?.()
+    onClose?.(JQElements)
   }
 
   const handleModalOpen = () => {
@@ -149,10 +155,14 @@ export function createModel(props: CreateModelProps) {
     onOpen?.(JQElements)
   }
 
-  const closeBtn = $modelContainer.find('.v2p-model-close-btn')
-  closeBtn.on('click', handleModalClose)
+  const $closeBtn = $modelContainer.find('.v2p-model-close-btn')
+  $closeBtn.on('click', handleModalClose)
 
   onMount?.(JQElements)
 
-  return { ...JQElements, handleModalOpen }
+  if (root) {
+    root.append($modelContainer)
+  }
+
+  return { ...JQElements, open: handleModalOpen }
 }

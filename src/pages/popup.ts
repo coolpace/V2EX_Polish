@@ -168,7 +168,7 @@ function loadTabs() {
       }
 
       const $topicList = $(`<ul class="topics">`).append(generateTopicItmes(topicList))
-      $tabContent.children().remove().append($topicList)
+      $tabContent.empty().append($topicList)
     }
 
     setTimeout(() => {
