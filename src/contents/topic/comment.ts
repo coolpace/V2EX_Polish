@@ -9,6 +9,7 @@ import {
   $commentCells,
   $commentTableRows,
   commentDataList,
+  createModel,
   loginName,
   topicOwnerName,
 } from '../globals'
@@ -17,7 +18,7 @@ import { iconEmoji, iconHeart, iconHide, iconReply } from '../icons'
 /**
  * 点击头像会展示改用户的信息。
  */
-function handleAvatar(cellDom: HTMLElement, commentData: CommentData) {
+function processAvatar(cellDom: HTMLElement, commentData: CommentData) {
   const memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox).get(0)!
 
   let abortController: AbortController | null = null
@@ -140,7 +141,7 @@ function handleAvatar(cellDom: HTMLElement, commentData: CommentData) {
 /**
  * 处理回复内容，过长内容会被折叠。
  */
-function handleReplyContent(cellDom: HTMLElement) {
+function processReplyContent(cellDom: HTMLElement) {
   const $cellDom = $(cellDom)
 
   if ($cellDom.find('.v2p-reply-content').length > 0) {
@@ -195,16 +196,24 @@ function handlingPopularComments() {
     return
   }
 
-  const cmMask = $('<div class="v2p-cm-mask">')
-  const cmContent = $(`
-      <div class="v2p-cm-content box">
-        <div class="v2p-cm-bar">
-          <span>本页共有 ${popularCommentData.length} 条热门回复</span>
-          <button class="v2p-cm-close-btn normal button">关闭<kbd>Esc</kbd></button>
-        </div>
-      </div>
-    `)
-  const cmContainer = cmMask.append(cmContent).hide()
+  const { $modelContainer, handleModalOpen } = createModel({
+    title: `本页共有 ${popularCommentData.length} 条热门回复`,
+    onMount: ({ $modelContent }) => {
+      console.log(typeof $)
+      const templete = $('<templete></templete>')
+
+      popularCommentData.forEach(({ index }) => {
+        templete.append($commentCells.eq(index).clone())
+      })
+
+      $modelContent.append(templete.html())
+    },
+    onOpen: ({ $modelContainer }) => {
+      $modelContainer.find('.cell[id^="r_"]').each((_, cellDom) => {
+        processReplyContent(cellDom)
+      })
+    },
+  })
 
   {
     const commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
@@ -212,54 +221,9 @@ function handlingPopularComments() {
     const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
     const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>`
 
-    let boundEvent = false
-
-    const docClickHandler = (e: JQuery.ClickEvent) => {
-      // 通过判定点击的元素是否在评论框内来判断是否关闭评论框。
-      if ($(e.target).closest(cmContent).length === 0) {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        handleModalClose()
-      }
-    }
-
-    const keyupHandler = (e: JQuery.KeyDownEvent) => {
-      if (e.key === 'Escape') {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        handleModalClose()
-      }
-    }
-
-    const handleModalClose = () => {
-      $(document).off('click', docClickHandler)
-      $(document).off('keydown', keyupHandler)
-      boundEvent = false
-
-      cmContainer.fadeOut('fast')
-      document.body.classList.remove('v2p-modal-open')
-    }
-
-    const handleModalOpen = () => {
-      if (!boundEvent) {
-        $(document).on('click', docClickHandler)
-        $(document).on('keydown', keyupHandler)
-        boundEvent = true
-      }
-
-      cmContainer.fadeIn('fast')
-      document.body.classList.add('v2p-modal-open')
-
-      cmContainer.find('.cell[id^="r_"]').each((_, cellDom) => {
-        handleReplyContent(cellDom)
-      })
-    }
-
-    const closeBtn = cmContainer.find('.v2p-cm-close-btn')
-    closeBtn.on('click', handleModalClose)
-
     const popularBtn = $(
       `<span class="v2p-popular-btn v2p-hover-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
-    )
-    popularBtn.on('click', (e) => {
+    ).on('click', (e) => {
       e.stopPropagation()
       handleModalOpen()
     })
@@ -267,15 +231,9 @@ function handlingPopularComments() {
     commentBoxCount.empty().append(countTextSpan).append(popularBtn)
   }
 
-  const templete = $('<templete></templete>')
-
-  popularCommentData.forEach(({ index }) => {
-    templete.append($commentCells.eq(index).clone())
-  })
-
-  cmContent.append(templete.html())
-
-  $commentBox.append(cmContainer)
+  {
+    $commentBox.append($modelContainer)
+  }
 }
 
 /**
@@ -444,9 +402,7 @@ function insertEmojiBox() {
 
 export function handlingComments() {
   {
-    /**
-     * 替换感谢的爱心。
-     */
+    // 替换感谢的爱心。
     $commentCells
       .find('.small.fade')
       .addClass('v2p-heart-box')
@@ -463,10 +419,10 @@ export function handlingComments() {
 
       // 处理头像点击事件。
       if (dataFromIndex) {
-        handleAvatar(cellDom, dataFromIndex)
+        processAvatar(cellDom, dataFromIndex)
       }
 
-      handleReplyContent(cellDom)
+      processReplyContent(cellDom)
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
       const currentComment =
