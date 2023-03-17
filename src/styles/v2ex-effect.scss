@@ -3,6 +3,8 @@
 =============================== */
 
 body {
+  position: relative;
+
   &.v2p-modal-open {
     overflow: hidden;
   }
@@ -113,7 +115,7 @@ body {
   inset: 0;
 }
 
-.v2p-model-content.box {
+.v2p-model-main {
   position: relative;
   box-sizing: border-box;
   width: 800px;
@@ -122,7 +124,11 @@ body {
   padding: 0 20px;
   overflow-x: hidden;
   overflow-y: auto;
+  background-color: var(--v2p-color-content-bg);
+  border-radius: 10px;
+}
 
+.v2p-model-content {
   .v2p-controls > a:has(.v2p-ac-reply) {
     cursor: not-allowed;
     pointer-events: none;

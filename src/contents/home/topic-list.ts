@@ -1,30 +1,40 @@
 import { StorageKey } from '../../constants'
 import { fetchTopic } from '../../services'
 import type { StorageData } from '../../types'
-import { $topicList } from '../globals'
+import { $topicList, createModel } from '../globals'
 
 export function handlingTopicList() {
   chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
-    console.log({ result })
     const PAT = result[StorageKey.API]?.pat
 
     if (!PAT) {
       return
     }
 
+    const model = createModel({
+      root: $('body'),
+      title: '话题预览',
+      onClose: ({ $modelContent }) => {
+        $modelContent.empty()
+      },
+    })
+
     $topicList.each((_, topicItem) => {
       const $topicItem = $(topicItem)
 
       $(`<button class="v2p-topic-preview-btn">预览</button>`)
-        .on('click', () => {
-          const linkPath = $topicItem.find('.topic-link').attr('href')
-          const match = linkPath?.match(/\/(\d+)#/)
+        .on('click', (e) => {
+          const linkHref = $topicItem.find('.topic-link').attr('href')
+          const match = linkHref?.match(/\/(\d+)#/)
+          const topicId = match?.at(1)
 
-          if (match) {
-            const topicId = match[1]
+          if (topicId) {
+            void (async () => {
+              try {
+                e.stopPropagation()
+                model.open()
 
-            fetchTopic(topicId, PAT)
-              .then((data) => {
+                const data = await fetchTopic(topicId, PAT)
                 const topic = data.result
                 const $topicPreview = $(`
                 <div class="v2p-topic-preview">
@@ -32,11 +42,12 @@ export function handlingTopicList() {
                   <div class="v2p-topic-preview__content">${topic.content_rendered}</div>
                 </div>
                 `)
-                $topicPreview.appendTo($topicItem)
-              })
-              .catch((err) => {
+
+                model.$modelContent.append($topicPreview)
+              } catch (err) {
                 console.error(err)
-              })
+              }
+            })()
           }
         })
         .prependTo($topicItem.find('.topic_info'))

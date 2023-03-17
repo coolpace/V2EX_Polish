@@ -196,10 +196,10 @@ function handlingPopularComments() {
     return
   }
 
-  const { $modelContainer, handleModalOpen } = createModel({
+  const model = createModel({
+    root: $commentBox,
     title: `本页共有 ${popularCommentData.length} 条热门回复`,
     onMount: ({ $modelContent }) => {
-      console.log(typeof $)
       const templete = $('<templete></templete>')
 
       popularCommentData.forEach(({ index }) => {
@@ -221,18 +221,16 @@ function handlingPopularComments() {
     const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
     const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>`
 
-    const popularBtn = $(
+    const $popularBtn = $(
       `<span class="v2p-popular-btn v2p-hover-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
-    ).on('click', (e) => {
+    )
+
+    $popularBtn.on('click', (e) => {
       e.stopPropagation()
-      handleModalOpen()
+      model.open()
     })
 
-    commentBoxCount.empty().append(countTextSpan).append(popularBtn)
-  }
-
-  {
-    $commentBox.append($modelContainer)
+    commentBoxCount.empty().append(countTextSpan).append($popularBtn)
   }
 }
 
