@@ -1,5 +1,5 @@
 /* ============================
-    以下样式需要搭配 JS 脚本使用
+  以下样式应用于 Scripts 注入的元素
 =============================== */
 
 body {
@@ -103,7 +103,7 @@ body {
   background: none !important;
 }
 
-.v2p-cm-mask {
+.v2p-model-mask {
   position: fixed;
   z-index: 999;
   padding: 60px;
@@ -113,7 +113,7 @@ body {
   inset: 0;
 }
 
-.v2p-cm-content.box {
+.v2p-model-content.box {
   position: relative;
   box-sizing: border-box;
   width: 800px;
@@ -133,7 +133,7 @@ body {
   }
 }
 
-.v2p-cm-bar {
+.v2p-model-header {
   position: sticky;
   top: 0;
   right: 0;
@@ -145,7 +145,7 @@ body {
   background-color: var(--v2p-color-content-bg);
 }
 
-.v2p-cm-close-btn {
+.v2p-model-close-btn {
   margin-left: auto;
 }
 

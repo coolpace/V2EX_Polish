@@ -69,3 +69,90 @@ export const commentDataList: CommentData[] = $commentTableRows
     }
   })
   .get()
+
+interface JQElements {
+  $modelMask: JQuery
+  $modelContainer: JQuery
+  $modelContent: JQuery
+}
+
+interface CreateModelProps {
+  title?: string
+  onMount?: (elements: JQElements) => void
+  onOpen?: (elements: JQElements) => void
+  onClose?: () => void
+}
+
+/**
+ * 创建 model 框。
+ */
+export function createModel(props: CreateModelProps) {
+  const { title, onOpen, onClose, onMount } = props
+
+  const $modelMask = $('<div class="v2p-model-mask">')
+
+  const $modelContent = $(`
+      <div class="v2p-model-content box">
+        <div class="v2p-model-header">
+          <span>${title ?? ''}</span>
+          <button class="v2p-model-close-btn normal button">关闭<kbd>Esc</kbd></button>
+        </div>
+      </div>
+    `)
+
+  const $modelContainer = $modelMask.append($modelContent).hide()
+
+  const JQElements = {
+    $modelMask,
+    $modelContainer,
+    $modelContent,
+  }
+
+  let boundEvent = false
+
+  const docClickHandler = (e: JQuery.ClickEvent) => {
+    // 通过判定点击的元素是否在评论框内来判断是否关闭评论框。
+    if ($(e.target).closest($modelContent).length === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handleModalClose()
+    }
+  }
+
+  const keyupHandler = (e: JQuery.KeyDownEvent) => {
+    if (e.key === 'Escape') {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handleModalClose()
+    }
+  }
+
+  const handleModalClose = () => {
+    $(document).off('click', docClickHandler)
+    $(document).off('keydown', keyupHandler)
+    boundEvent = false
+
+    $modelContainer.fadeOut('fast')
+    document.body.classList.remove('v2p-modal-open')
+
+    onClose?.()
+  }
+
+  const handleModalOpen = () => {
+    if (!boundEvent) {
+      $(document).on('click', docClickHandler)
+      $(document).on('keydown', keyupHandler)
+      boundEvent = true
+    }
+
+    $modelContainer.fadeIn('fast')
+    document.body.classList.add('v2p-modal-open')
+
+    onOpen?.(JQElements)
+  }
+
+  const closeBtn = $modelContainer.find('.v2p-model-close-btn')
+  closeBtn.on('click', handleModalClose)
+
+  onMount?.(JQElements)
+
+  return { ...JQElements, handleModalOpen }
+}
