@@ -206,7 +206,7 @@ function handlingPopularComments() {
         templete.append($commentCells.eq(index).clone())
       })
 
-      $modelContent.append(templete.html())
+      $modelContent.css({ padding: '0 20px' }).append(templete.html())
     },
     onOpen: ({ $modelContainer }) => {
       $modelContainer.find('.cell[id^="r_"]').each((_, cellDom) => {
@@ -225,8 +225,7 @@ function handlingPopularComments() {
       `<span class="v2p-popular-btn v2p-hover-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
     )
 
-    $popularBtn.on('click', (e) => {
-      e.stopPropagation()
+    $popularBtn.on('click', () => {
       model.open()
     })
 
@@ -343,7 +342,7 @@ function insertEmojiBox() {
 
   const keyupHandler = (e: JQuery.KeyDownEvent) => {
     if (e.key === 'Escape') {
-      e.stopPropagation() // 需要比关闭评论框的快捷键先执行，否则会先关闭评论框。
+      e.stopPropagation() // 需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
 
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handlePopupClose()
