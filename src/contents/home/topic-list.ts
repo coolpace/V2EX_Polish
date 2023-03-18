@@ -23,7 +23,7 @@ export function handlingTopicList() {
       const $topicItem = $(topicItem)
 
       $(`<button class="v2p-topic-preview-btn">预览</button>`)
-        .on('click', (e) => {
+        .on('click', () => {
           const linkHref = $topicItem.find('.topic-link').attr('href')
           const match = linkHref?.match(/\/(\d+)#/)
           const topicId = match?.at(1)
@@ -31,7 +31,6 @@ export function handlingTopicList() {
           if (topicId) {
             void (async () => {
               try {
-                e.stopPropagation()
                 model.open()
 
                 const data = await fetchTopic(topicId, PAT)

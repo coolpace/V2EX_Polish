@@ -117,6 +117,7 @@ export function createModel(props: CreateModelProps) {
   let boundEvent = false
 
   const docClickHandler = (e: JQuery.ClickEvent) => {
+    console.log(123)
     // 通过判定点击的元素是否在评论框内来判断是否关闭评论框。
     if ($(e.target).closest($modelContent).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -143,11 +144,14 @@ export function createModel(props: CreateModelProps) {
   }
 
   const handleModalOpen = () => {
-    if (!boundEvent) {
-      $(document).on('click', docClickHandler)
-      $(document).on('keydown', keyupHandler)
-      boundEvent = true
-    }
+    setTimeout(() => {
+      // 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
+      if (!boundEvent) {
+        $(document).on('click', docClickHandler)
+        $(document).on('keydown', keyupHandler)
+        boundEvent = true
+      }
+    }, 0)
 
     $modelContainer.fadeIn('fast')
     document.body.classList.add('v2p-modal-open')
@@ -164,5 +168,5 @@ export function createModel(props: CreateModelProps) {
     root.append($modelContainer)
   }
 
-  return { ...JQElements, open: handleModalOpen }
+  return { ...JQElements, open: handleModalOpen, close: handleModalClose }
 }
