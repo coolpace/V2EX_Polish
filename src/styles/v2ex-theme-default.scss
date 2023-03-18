@@ -347,30 +347,16 @@ img::selection {
       column-gap: 5px;
       background: none;
       border-radius: 4px;
+
+      &:not(.v2p-hover-btn) {
+        color: var(--v2p-color-main-400);
+      }
+
+      &:hover:not(.v2p-hover-btn) {
+        color: currentcolor;
+        background: var(--v2p-color-main-100);
+      }
     }
-
-    .tb:hover:not(.v2p-hover-btn) {
-      background: var(--v2p-color-main-100);
-      filter: none;
-    }
-
-    // .tb {
-    //   &:nth-child(1)::after {
-    //     content: '🙏';
-    //   }
-
-    //   &:nth-child(2)::after {
-    //     content: '⭐';
-    //   }
-
-    //   &:nth-child(3)::after {
-    //     content: '🐦';
-    //   }
-
-    //   &:nth-child(4)::after {
-    //     content: '🙈';
-    //   }
-    // }
   }
 
   .topic_content {

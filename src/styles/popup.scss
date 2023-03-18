@@ -12,25 +12,38 @@ body {
 }
 
 main {
-  background-color: #fff;
-}
+  --nav-height: 58px;
 
-nav {
-  position: sticky;
-  top: 0;
-  right: 0;
-  left: 0;
-  padding: 10px;
+  position: relative;
+  height: 100%;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--v2p-color-content-bg);
+
+  > nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    height: var(--nav-height);
+    padding: 0 10px;
+    background-color: var(--v2p-color-content-bg);
+  }
+
+  > section {
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: var(--nav-height);
+  }
 }
 
 .tabs {
   display: flex;
   gap: 0 3px;
   align-items: center;
+  width: 100%;
   padding: 5px 6px;
-  overflow: hidden;
   background-color: var(--v2p-color-main-100);
   border-radius: 5px;
 
@@ -49,14 +62,32 @@ nav {
 }
 
 .tab-contents {
-  padding: 10px 0;
+  height: 100%;
 }
 
 .tab-content {
   display: none;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   &.active {
     display: block;
+  }
+
+  .tab-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 20px;
+
+    .loading {
+      position: relative;
+      top: -100px;
+      right: -13px;
+      width: 50px;
+    }
   }
 }
 
