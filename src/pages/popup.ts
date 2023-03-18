@@ -106,6 +106,10 @@ function loadTabs() {
       .join('')
   }
 
+  const getCurrentActiveTab = () => {
+    return $('.tabs > li.active')
+  }
+
   const isTabId = (tabId: any): tabId is TabId => {
     if (typeof tabId === 'string') {
       if (tabId === TabId.Hot || tabId === TabId.Latest || tabId === TabId.Setting) {
@@ -130,8 +134,41 @@ function loadTabs() {
     const $tabContent = $(`#${tabId}`)
 
     if (tabId === TabId.Hot || tabId === TabId.Latest) {
+      const loading = `
+      <div class="tab-loading">
+        <span class="loading">
+          <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+            <circle fill="currentcolor" stroke="none" cx="6" cy="50" r="6">
+              <animate
+                attributeName="opacity"
+                dur="1s"
+                values="0;1;0"
+                repeatCount="indefinite"
+                begin="0.1"/>    
+            </circle>
+            <circle fill="currentcolor" stroke="none" cx="26" cy="50" r="6">
+              <animate
+                attributeName="opacity"
+                dur="1s"
+                values="0;1;0"
+                repeatCount="indefinite" 
+                begin="0.2"/>       
+            </circle>
+            <circle fill="currentcolor" stroke="none" cx="46" cy="50" r="6">
+              <animate
+                attributeName="opacity"
+                dur="1s"
+                values="0;1;0"
+                repeatCount="indefinite" 
+                begin="0.3"/>     
+            </circle>
+          </svg>
+        </span>
+      </div>
+      `
       const getData = async () => {
-        $tabContent.html('Loading...')
+        $tabContent.html(loading)
 
         if (tabId === TabId.Hot) {
           const topics = await fetchHotTopics()
@@ -173,8 +210,8 @@ function loadTabs() {
 
     setTimeout(() => {
       // 每次切换 tab 都滚动到最顶部，防止受上一个 tab 的滚动位置影响。
-      // 加入 setTimeout 是为了等待 tab 内容完成插入，否则会出现滚动位置不正确的情况。
-      window.scrollTo(0, scrollTop)
+      // 加入 setTimeout 是为了等待 tab 内容完成插入，防止出现滚动位置不正确的情况。
+      $tabContent.scrollTop(scrollTop)
     }, 0)
   }
 
@@ -182,9 +219,17 @@ function loadTabs() {
     const tabId = $tab.data('target')
 
     if (isTabId(tabId)) {
-      $tab.addClass('active').siblings().removeClass('active')
-      $(`#${tabId}`).addClass('active').siblings().removeClass('active')
+      const $currentActiveTab = getCurrentActiveTab()
+      const currentActiveTabId = $currentActiveTab.data('target')
 
+      if (isTabId(currentActiveTabId)) {
+        $currentActiveTab.removeClass('active')
+        $(`#${currentActiveTabId}`).removeClass('active')
+      }
+      $tab.addClass('active')
+      $(`#${tabId}`).addClass('active')
+
+      // FIXME: 保存当前 tab 的滚动位置
       void setupTabContent({ tabId })
     }
   }
@@ -208,26 +253,26 @@ function loadTabs() {
   loadSettings()
 
   window.addEventListener('unload', () => {
-    const lastActiveTab = $('.tabs > li.active').data('target')
+    const activeTabId = getCurrentActiveTab().data('target')
 
-    if (isTabId(lastActiveTab)) {
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+    if (isTabId(activeTabId)) {
+      const $content = $(`#${activeTabId}`)
+      const scrollTop = $content.scrollTop()
 
       const data: PopupStorageData = {
-        lastActiveTab,
+        lastActiveTab: activeTabId,
         [TabId.Hot]: {
           data: hotTopicList,
           lastFetchTime: hotTopicLastFetchTime,
-          lastScrollTop: lastActiveTab === TabId.Hot ? scrollTop : undefined,
+          lastScrollTop: activeTabId === TabId.Hot ? scrollTop : undefined,
         },
         [TabId.Latest]: {
           data: latestTopicList,
           lastFetchTime: latestTopicLastFetchTime,
-          lastScrollTop: lastActiveTab === TabId.Latest ? scrollTop : undefined,
+          lastScrollTop: activeTabId === TabId.Latest ? scrollTop : undefined,
         },
         [TabId.Setting]: {
-          lastScrollTop: lastActiveTab === TabId.Setting ? scrollTop : undefined,
+          lastScrollTop: activeTabId === TabId.Setting ? scrollTop : undefined,
         },
       }
       window.localStorage.setItem('v2p_popup', JSON.stringify(data))

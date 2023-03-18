@@ -13,7 +13,7 @@ import {
   loginName,
   topicOwnerName,
 } from '../globals'
-import { iconEmoji, iconHeart, iconHide, iconReply } from '../icons'
+import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 
 /**
  * 点击头像会展示改用户的信息。
