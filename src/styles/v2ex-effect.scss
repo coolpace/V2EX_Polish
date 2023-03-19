@@ -58,16 +58,26 @@ body {
   }
 }
 
-#Main > .box > .cell:has(.v2p-popular-btn) {
-  > .fr {
-    position: relative;
-    top: 4px;
-    margin: 0 !important;
+#Main {
+  > .box > .cell:has(.v2p-popular-btn) {
+    > .fr {
+      position: relative;
+      top: 4px;
+      margin: 0 !important;
+    }
+
+    > .gray {
+      display: inline-flex;
+      align-items: center;
+    }
   }
 
-  > .gray {
-    display: inline-flex;
-    align-items: center;
+  .cell {
+    &:hover {
+      .v2p-topic-preview-btn {
+        opacity: 1;
+      }
+    }
   }
 }
 
@@ -95,10 +105,17 @@ body {
 }
 
 .v2p-topic-preview-btn {
-  background-color: transparent;
+  position: relative;
+  top: -1px;
+  margin-left: 10px;
+  color: var(--button-foreground-color);
+  font-size: 12px;
+  background-color: var(--button-hover-color);
   border: none;
+  border-radius: 3px;
   outline: none;
   cursor: pointer;
+  opacity: 0;
 }
 
 .v2p-dot {

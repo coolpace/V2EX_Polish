@@ -128,7 +128,39 @@ main {
     }
   }
 
-  #settings-form {
+  .settings {
     padding: 20px;
+
+    .pat-input {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-fade);
+      border-radius: 4px;
+
+      #pat {
+        flex: 1;
+        padding: 4px;
+        border: none;
+        outline: none;
+        filter: blur(6px);
+
+        &:focus {
+          filter: none;
+        }
+      }
+
+      .submit-btn {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 5px 10px;
+        color: var(--v2p-color-main-100);
+        background-color: var(--v2p-color-main-800);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
   }
 }

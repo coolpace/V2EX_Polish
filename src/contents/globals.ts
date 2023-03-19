@@ -117,7 +117,6 @@ export function createModel(props: CreateModelProps) {
   let boundEvent = false
 
   const docClickHandler = (e: JQuery.ClickEvent) => {
-    console.log(123)
     // 通过判定点击的元素是否在评论框内来判断是否关闭评论框。
     if ($(e.target).closest($modelContent).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define

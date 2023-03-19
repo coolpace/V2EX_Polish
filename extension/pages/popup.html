@@ -26,29 +26,32 @@
           <div id="tab2" class="tab-content"></div>
 
           <div id="tab3" class="tab-content">
-            <form id="settings-form">
-              <input id="limitv1" readonly />
-              <input id="resetv1" readonly />
-              <input id="remainingv1" readonly />
+            <div class="settings">
+              <form id="settings-form">
+                <input id="limitv1" readonly />
+                <input id="resetv1" readonly />
+                <input id="remainingv1" readonly />
 
-              <div>
-                <label for="pat">Token</label>
-                <input id="pat" type="text" placeholder="填写你的个人令牌" />
+                <div>
+                  <label for="pat">Token</label>
+                  <div class="pat-input">
+                    <input id="pat" type="text" placeholder="填写你的个人令牌" />
+                    <button class="submit-btn" type="submit">保存</button>
+                  </div>
 
-                <label for="limit">限制请求次数</label>
-                <input id="limit" readonly />
+                  <label for="limit">限制请求次数</label>
+                  <input id="limit" readonly />
 
-                <label for="reset">下次重置时间</label>
-                <input id="reset" readonly />
+                  <label for="reset">下次重置时间</label>
+                  <input id="reset" readonly />
 
-                <label for="remaining">剩余请求次数</label>
-                <input id="remaining" readonly />
+                  <label for="remaining">剩余请求次数</label>
+                  <input id="remaining" readonly />
 
-                <button id="save" type="submit">保存</button>
-
-                <button id="clear-storage">清除缓存数据</button>
-              </div>
-            </form>
+                  <button id="clear-storage">清除缓存数据</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </section>

@@ -416,7 +416,11 @@ img::selection {
       .votes,
       .node,
       strong:first-of-type,
-      span:first-of-type,
+      span:first-of-type {
+        position: relative;
+        z-index: 2;
+      }
+
       a[href^='/member'] {
         color: var(--v2p-color-main-500);
         font-weight: 500;
@@ -440,11 +444,13 @@ img::selection {
     }
 
     .item_title {
-      font-weight: bold;
-      opacity: 0.8;
+      .topic-link {
+        font-weight: bold;
+        opacity: 0.8;
 
-      &:hover {
-        opacity: 1;
+        &:hover {
+          opacity: 1;
+        }
       }
     }
   }
