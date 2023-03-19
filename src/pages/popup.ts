@@ -9,9 +9,12 @@
  */
 
 import { StorageKey } from '../constants'
-import { fetchHotTopics, fetchLatestTopics } from '../services'
+import { iconLoading } from '../icons'
+import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'
 import { formatTimestamp } from '../utils'
+
+const defaultValue = '-'
 
 const enum TabId {
   Hot = 'tab1',
@@ -37,29 +40,20 @@ function loadSettings() {
     const api = result[StorageKey.API]
 
     if (api) {
-      $('#pat').val(api.pat ?? '')
-      $('#limit').val(api.limit ?? '')
-      $('#reset').val(api.reset ? formatTimestamp(api.reset) : '')
-      $('#remaining').val(api.remaining ?? '')
-    }
-  })
+      if (api.pat) {
+        $('#pat').addClass('has-value').val(api.pat)
 
-  chrome.storage.sync.get(StorageKey.LegacyAPI, (result: StorageData) => {
-    const limitv1 = document.querySelector('#limitv1')
-    const resetv1 = document.querySelector('#resetv1')
-    const remainingv1 = document.querySelector('#remainingv1')
-
-    const apiv1 = result[StorageKey.LegacyAPI]
-
-    if (
-      limitv1 instanceof HTMLInputElement &&
-      resetv1 instanceof HTMLInputElement &&
-      remainingv1 instanceof HTMLInputElement &&
-      apiv1
-    ) {
-      limitv1.value = String(apiv1.limit)
-      resetv1.value = String(apiv1.reset)
-      remainingv1.value = String(apiv1.remaining)
+        fetchNotifications(api.pat)
+          .then((notifications) => {
+            console.log({ notifications })
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+      }
+      $('#limit').val(api.limit ?? defaultValue)
+      $('#reset').val(api.reset ? formatTimestamp(api.reset, true) : defaultValue)
+      $('#remaining').val(api.remaining ?? defaultValue)
     }
   })
 
@@ -84,12 +78,11 @@ function loadTabs() {
   const generateTopicItmes = (topics: Topic[]) => {
     return topics
       .map((topic) => {
-        // 已知问题：如果 topic.content 中包含了 a 标签字符串，会导致渲染异常，因为 a 标签不允许嵌套 a 标签。
         return `
           <li class="topic-item">
             <a href="${topic.url}" target="_blank">
               <span class="title">${topic.title}</span>
-              <span class="content">${topic.content}</span>
+              <span class="content">${topic.content.replace(/<[^>]*>/g, '')}</span>
             </a>
           </li>
           `
@@ -142,36 +135,11 @@ function loadTabs() {
         const loading = `
         <div class="tab-loading">
           <span class="loading">
-            <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-              viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
-              <circle fill="currentcolor" stroke="none" cx="6" cy="50" r="6">
-                <animate
-                  attributeName="opacity"
-                  dur="1s"
-                  values="0;1;0"
-                  repeatCount="indefinite"
-                  begin="0.1"/>    
-              </circle>
-              <circle fill="currentcolor" stroke="none" cx="26" cy="50" r="6">
-                <animate
-                  attributeName="opacity"
-                  dur="1s"
-                  values="0;1;0"
-                  repeatCount="indefinite" 
-                  begin="0.2"/>       
-              </circle>
-              <circle fill="currentcolor" stroke="none" cx="46" cy="50" r="6">
-                <animate
-                  attributeName="opacity"
-                  dur="1s"
-                  values="0;1;0"
-                  repeatCount="indefinite" 
-                  begin="0.3"/>     
-              </circle>
-            </svg>
+            ${iconLoading}
           </span>
         </div>
         `
+
         const getData = async () => {
           $tabContent.html(loading)
 

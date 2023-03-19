@@ -27,10 +27,21 @@ export function getOS() {
 /**
  * 将时间戳格式化为「年月日」。
  */
-export function formatTimestamp(timestamp: number) {
+export function formatTimestamp(timestamp: number, includesTime = false) {
   const date = new Date(timestamp * 1000)
   const year = date.getFullYear().toString()
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
   const day = date.getDate().toString().padStart(2, '0')
-  return `${year}-${month}-${day}`
+
+  const YMH = `${year}-${month}-${day}`
+
+  if (includesTime) {
+    const hour = date.getHours().toString().padStart(2, '0')
+    const minute = date.getMinutes().toString().padStart(2, '0')
+    const second = date.getSeconds().toString().padStart(2, '0')
+
+    return `${YMH} ${hour}:${minute}:${second}`
+  }
+
+  return YMH
 }

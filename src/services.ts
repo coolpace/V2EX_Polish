@@ -1,5 +1,5 @@
 import { StorageKey, V2EX } from './constants'
-import type { API, DataWrapper, LegacyAPI, Member, StorageData, Topic } from './types'
+import type { API, DataWrapper, LegacyAPI, Member, Notification, StorageData, Topic } from './types'
 
 /**
  * V2EX API v1
@@ -62,8 +62,29 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
   return res.json()
 }
 
+export function fetchProfile(PAT: string) {
+  return request<Topic>(`${V2EX.API}/member`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${PAT}` },
+  })
+}
+
 export function fetchTopic(topicId: string, PAT: string) {
   return request<Topic>(`${V2EX.API}/topics/${topicId}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${PAT}` },
+  })
+}
+
+export function fetchNotifications(PAT: string, page = 1) {
+  return request<Notification[]>(`${V2EX.API}/notifications?p=${page}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${PAT}` },
+  })
+}
+
+export function deleteNotification(PAT: string, notification_id: string) {
+  return request(`${V2EX.API}/notifications/${notification_id}`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${PAT}` },
   })

@@ -28,27 +28,37 @@
           <div id="tab3" class="tab-content">
             <div class="settings">
               <form id="settings-form">
-                <input id="limitv1" readonly />
-                <input id="resetv1" readonly />
-                <input id="remainingv1" readonly />
-
                 <div>
-                  <label for="pat">Token</label>
-                  <div class="pat-input">
-                    <input id="pat" type="text" placeholder="填写你的个人令牌" />
-                    <button class="submit-btn" type="submit">保存</button>
+                  <label for="pat">Personal Access Token</label>
+                  <div class="desc">通过 PAT 访问特定的 V2EX API</div>
+                  <div>
+                    <div class="pat-input">
+                      <input id="pat" type="text" placeholder="填写你的个人访问令牌 (PAT)" />
+                      <button class="submit-btn" type="submit">保存</button>
+                    </div>
+                    <div class="new-token">
+                      <a href="https://www.v2ex.com/settings/tokens" target="_blank">创建 Token</a>
+                    </div>
                   </div>
 
-                  <label for="limit">限制请求次数</label>
-                  <input id="limit" readonly />
+                  <hr />
 
-                  <label for="reset">下次重置时间</label>
-                  <input id="reset" readonly />
+                  <div class="form-item">
+                    <label for="limit">每小时限制请求</label>
+                    <input id="limit" readonly />
+                  </div>
 
-                  <label for="remaining">剩余请求次数</label>
-                  <input id="remaining" readonly />
+                  <div class="form-item">
+                    <label for="remaining">剩余请求次数</label>
+                    <input id="remaining" readonly />
+                  </div>
 
-                  <button id="clear-storage">清除缓存数据</button>
+                  <div class="form-item">
+                    <label for="reset">下次重置时间</label>
+                    <input id="reset" readonly />
+                  </div>
+
+                  <button id="clear-storage">清除标签页的缓存数据</button>
                 </div>
               </form>
             </div>

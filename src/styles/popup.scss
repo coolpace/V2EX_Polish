@@ -49,7 +49,7 @@ main {
 
   li {
     padding: 6px 10px;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     border-radius: 3px;
     cursor: pointer;
     user-select: none;
@@ -131,22 +131,41 @@ main {
   .settings {
     padding: 20px;
 
+    label[for='pat'] {
+      margin-bottom: 2px;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .desc {
+      margin-bottom: 8px;
+      opacity: 0.6;
+    }
+
     .pat-input {
       position: relative;
       display: flex;
+      gap: 0 10px;
       align-items: center;
+      padding: 0 5px 0 0;
+      overflow: hidden;
       border: 1px solid var(--color-fade);
-      border-radius: 4px;
+      border-radius: 6px;
 
       #pat {
         flex: 1;
-        padding: 4px;
+        padding: 10px 8px;
         border: none;
         outline: none;
-        filter: blur(6px);
 
-        &:focus {
-          filter: none;
+        &.has-value {
+          opacity: 0.6;
+          filter: blur(6px);
+
+          &:focus {
+            opacity: 1;
+            filter: none;
+          }
         }
       }
 
@@ -156,11 +175,58 @@ main {
         height: 100%;
         padding: 5px 10px;
         color: var(--v2p-color-main-100);
+        font-size: 12px;
         background-color: var(--v2p-color-main-800);
         border: none;
         border-radius: 5px;
         cursor: pointer;
       }
     }
+
+    .new-token {
+      padding: 5px 0 0;
+
+      a {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .form-item {
+      display: flex;
+      gap: 0 20px;
+      align-items: center;
+      font-size: 13px;
+
+      & ~ .form-item {
+        margin-top: 5px;
+      }
+
+      > label {
+        min-width: 95px;
+        opacity: 0.6;
+      }
+    }
   }
+}
+
+input {
+  outline: none;
+}
+
+hr {
+  margin: 15px 0;
+  border: none;
+  border-top: 1px solid var(--color-fade);
+}
+
+#clear-storage {
+  margin-top: 10px;
+  padding: 5px 8px;
+  color: var(--v2p-color-main-800);
+  text-align: center;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
+  cursor: pointer;
 }
