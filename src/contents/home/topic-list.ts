@@ -49,7 +49,7 @@ export function handlingTopicList() {
             })()
           }
         })
-        .appendTo($topicItem.find('.topic-link'))
+        .appendTo($topicItem.find('.item_title'))
     })
   })
 }
