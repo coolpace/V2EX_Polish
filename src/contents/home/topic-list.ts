@@ -33,8 +33,7 @@ export function handlingTopicList() {
               try {
                 model.open()
 
-                const data = await fetchTopic(topicId, PAT)
-                const topic = data.result
+                const { result: topic } = await fetchTopic(topicId, PAT)
                 const $topicPreview = $(`
                 <div class="v2p-topic-preview">
                   <div class="v2p-topic-preview__title">${topic.title}</div>

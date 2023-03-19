@@ -70,6 +70,16 @@ export const commentDataList: CommentData[] = $commentTableRows
   })
   .get()
 
+export function createButton(props: {
+  children: string
+  className?: string
+  type?: 'button' | 'submit'
+}) {
+  const { children, className = '', type = 'button' } = props
+
+  return $(`<button class="normal button ${className}" type="${type}">${children}</button>`)
+}
+
 interface JQElements {
   $modelMask: JQuery
   $modelMain: JQuery
@@ -95,11 +105,16 @@ export function createModel(props: CreateModelProps) {
 
   const $modelContent = $('<div class="v2p-model-content">')
 
+  const $closeBtn = createButton({
+    children: '关闭<kbd>Esc</kbd>',
+    className: 'v2p-model-close-btn',
+  })
+
   const $modelMain = $(`
     <div class="v2p-model-main">
       <div class="v2p-model-header">
-        <span>${title ?? ''}</span>
-        <button class="v2p-model-close-btn normal button">关闭<kbd>Esc</kbd></button>
+        ${title ? `<span>${title}</span>` : ''}
+        ${$closeBtn.get(0)!.outerHTML}
       </div>
     </div>
     `).append($modelContent)
@@ -158,7 +173,6 @@ export function createModel(props: CreateModelProps) {
     onOpen?.(JQElements)
   }
 
-  const $closeBtn = $modelContainer.find('.v2p-model-close-btn')
   $closeBtn.on('click', handleModalClose)
 
   onMount?.(JQElements)
