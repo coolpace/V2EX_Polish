@@ -107,6 +107,8 @@ export interface Member {
   last_modified: number
 }
 
+export interface Notification {}
+
 export interface DataWrapper<T = unknown> {
   suucess: boolean
   message?: string
