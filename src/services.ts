@@ -63,7 +63,7 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
 }
 
 export function fetchProfile(PAT: string) {
-  return request<Topic>(`${V2EX.API}/member`, {
+  return request<Member>(`${V2EX.API}/member`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${PAT}` },
   })

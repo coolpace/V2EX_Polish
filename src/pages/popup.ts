@@ -8,9 +8,9 @@
  * 4. 来回切换 tab 时，应当保持 tab 的滚动位置。
  */
 
-import { StorageKey } from '../constants'
+import { dataExpiryTime, StorageKey } from '../constants'
 import { iconLoading } from '../icons'
-import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
+import { fetchHotTopics, fetchLatestTopics, fetchNotifications, fetchProfile } from '../services'
 import type { StorageData, Topic } from '../types'
 import { formatTimestamp } from '../utils'
 
@@ -43,13 +43,21 @@ function loadSettings() {
       if (api.pat) {
         $('#pat').addClass('has-value').val(api.pat)
 
-        fetchNotifications(api.pat)
-          .then((notifications) => {
-            console.log({ notifications })
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+        // fetchProfile(api.pat)
+        //   .then(({ result: profile }) => {
+        //     console.log({ profile })
+        //   })
+        //   .catch((err) => {
+        //     console.error(err)
+        //   })
+
+        // fetchNotifications(api.pat)
+        //   .then((notifications) => {
+        //     console.log({ notifications })
+        //   })
+        //   .catch((err) => {
+        //     console.error(err)
+        //   })
       }
       $('#limit').val(api.limit ?? defaultValue)
       $('#reset').val(api.reset ? formatTimestamp(api.reset, true) : defaultValue)
@@ -156,7 +164,7 @@ function loadTabs() {
               return topics
             }
           } catch {
-            $tabContent.html('无法获取到列表数据。')
+            $tabContent.html('<div class="fetch-error">无法获取到列表数据，请稍后再试。</div>')
           }
         }
 
@@ -167,11 +175,7 @@ function loadTabs() {
             tabContentScrollTop = lastScrollTop
           }
 
-          if (
-            !data ||
-            !lastFetchTime ||
-            Date.now() - lastFetchTime > 1000 * 60 * 10 // 10 分钟内不再重新请求数据
-          ) {
+          if (!data || !lastFetchTime || Date.now() - lastFetchTime > dataExpiryTime) {
             topicList = await getData()
           } else {
             topicList = data

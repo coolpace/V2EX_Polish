@@ -39,27 +39,7 @@ export interface Topic {
   last_reply_by: string
 
   /** 主题创建者信息 */
-  member: {
-    id: number
-    username: string
-    avatar: string
-    created: number
-    bio?: string
-    twitter?: string
-    github?: string
-    psn?: string
-    btc?: string
-    website?: string
-    location?: string
-    tagline?: string
-
-    // v1:
-    url?: string
-    avatar_mini?: string
-    avatar_normal?: string
-    avatar_large?: string
-    last_modified?: number
-  }
+  member: Member
 
   /** 该主题所属的节点信息 */
   node: {
@@ -89,7 +69,6 @@ export interface Topic {
 export interface Member {
   id: number
   username: string
-  bio?: string
   url: string
 
   avatar_mini: string
@@ -98,16 +77,29 @@ export interface Member {
   avatar_xlarge: string
   avatar_xxlarge: string
 
-  location?: string
-  tagline?: string
+  bio?: string
   github?: string
   website?: string
   twitter?: string
+  btc?: string
+  psn?: string
+  location?: string
+  tagline?: string
+
   created: number
   last_modified: number
 }
 
-export interface Notification {}
+export interface Notification {
+  id: number
+  created: number
+  for_member_id: number
+  member: Pick<Member, 'username'>
+  member_id: number
+  payload: null
+  payload_rendered: string
+  text: string
+}
 
 export interface DataWrapper<T = unknown> {
   suucess: boolean

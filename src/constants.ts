@@ -53,3 +53,5 @@ export const emoticons = [
 
 export const READABLE_CONTENT_HEIGHT = 250
 export const MAX_CONTENT_HEIGHT = 550
+
+export const dataExpiryTime = 60 * 60 * 1000

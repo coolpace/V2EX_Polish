@@ -1,6 +1,7 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
 import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
+import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import { fetchUserInfo } from '../../services'
 import type { CommentData } from '../../types'
 import { formatTimestamp, getOS } from '../../utils'
@@ -9,11 +10,11 @@ import {
   $commentCells,
   $commentTableRows,
   commentDataList,
+  createButton,
   createModel,
   loginName,
   topicOwnerName,
 } from '../globals'
-import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 
 /**
  * 点击头像会展示改用户的信息。
@@ -163,7 +164,7 @@ function processReplyContent(cellDom: HTMLElement) {
 
     const $contentBox = $('<div class="v2p-reply-content v2p-collapsed">').css(collapsedCSS)
 
-    const $expandBtn = $('<button class="v2p-expand-btn normal button">展开回复</button>')
+    const $expandBtn = createButton({ children: '展开回复', className: 'v2p-expand-btn' })
 
     const toggleContent = () => {
       const collapsed = $contentBox.hasClass('v2p-collapsed')
@@ -289,9 +290,10 @@ function insertEmojiBox() {
 
   const replyTextArea = document.querySelector('#reply_content')
 
-  const replyBtn = $(
-    `<button class="normal button">回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd></button>`
-  ).replaceAll($('#reply-box input[type="submit"]'))
+  const $replyBtn = createButton({
+    children: `回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd>`,
+    type: 'submit',
+  }).replaceAll($('#reply-box input[type="submit"]'))
 
   const emoticonGroup = $('<div class="v2p-emoji-group">')
   const emoticonList = $('<div class="v2p-emoji-list">')
@@ -331,9 +333,7 @@ function insertEmojiBox() {
   })
   const emoticonsBox = $('<div class="v2p-emoticons-box">').append(groups)
 
-  const emojiBtn = $(
-    `<button type="button" class="normal button">${iconEmoji}</button>`
-  ).insertAfter(replyBtn)
+  const $emojiBtn = createButton({ children: iconEmoji }).insertAfter($replyBtn)
 
   const emojiPopup = $('<div id="v2p-emoji-popup">')
     .append(emoticonsBox)
@@ -366,7 +366,7 @@ function insertEmojiBox() {
     $(document).on('click', docClickHandler)
     $('body').on('keydown', keyupHandler)
 
-    computePosition(emojiBtn.get(0)!, emojiPopup, {
+    computePosition($emojiBtn.get(0)!, emojiPopup, {
       placement: 'right-end',
       middleware: [offset({ mainAxis: 10, crossAxis: 8 }), flip(), shift({ padding: 8 })],
     })
@@ -382,7 +382,7 @@ function insertEmojiBox() {
       })
   }
 
-  emojiBtn.on('click', (e) => {
+  $emojiBtn.on('click', (e) => {
     e.stopPropagation()
 
     if (emojiPopup.style.visibility === 'visible') {
