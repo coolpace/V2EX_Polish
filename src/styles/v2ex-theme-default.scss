@@ -161,6 +161,11 @@ body {
         box-shadow: 0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
       }
     }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   }
 
   a.node:active,
@@ -714,6 +719,25 @@ img::selection {
   #no-comments-yet {
     color: var(--color-gray);
     border-color: var(--color-gray);
+  }
+
+  #notifications {
+    .cell[id^='n'] {
+      &:hover {
+        .node {
+          opacity: 1;
+        }
+      }
+
+      .node {
+        opacity: 0;
+      }
+
+      .payload {
+        color: var(--v2p-color-main-800);
+        background-color: var(--v2p-color-main-100);
+      }
+    }
   }
 }
 

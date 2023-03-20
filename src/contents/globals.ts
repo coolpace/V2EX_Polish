@@ -80,19 +80,21 @@ export function createButton(props: {
   return $(`<button class="normal button ${className}" type="${type}">${children}</button>`)
 }
 
-interface JQElements {
-  $modelMask: JQuery
-  $modelMain: JQuery
-  $modelContainer: JQuery
-  $modelContent: JQuery
+interface ModelElements {
+  $mask: JQuery
+  $main: JQuery
+  $container: JQuery
+  $title: JQuery
+  $actions: JQuery
+  $content: JQuery
 }
 
 interface CreateModelProps {
   root?: JQuery
   title?: string
-  onMount?: (elements: JQElements) => void
-  onOpen?: (elements: JQElements) => void
-  onClose?: (elements: JQElements) => void
+  onMount?: (elements: ModelElements) => void
+  onOpen?: (elements: ModelElements) => void
+  onClose?: (elements: ModelElements) => void
 }
 
 /**
@@ -101,31 +103,32 @@ interface CreateModelProps {
 export function createModel(props: CreateModelProps) {
   const { root, title, onOpen, onClose, onMount } = props
 
-  const $modelMask = $('<div class="v2p-model-mask">')
+  const $mask = $('<div class="v2p-model-mask">')
 
-  const $modelContent = $('<div class="v2p-model-content">')
+  const $content = $('<div class="v2p-model-content">')
 
   const $closeBtn = createButton({
     children: '关闭<kbd>Esc</kbd>',
     className: 'v2p-model-close-btn',
   })
 
-  const $modelMain = $(`
-    <div class="v2p-model-main">
-      <div class="v2p-model-header">
-        ${title ? `<span>${title}</span>` : ''}
-        ${$closeBtn.get(0)!.outerHTML}
-      </div>
-    </div>
-    `).append($modelContent)
+  const $title = $(`<div class="v2p-model-title">${title ?? ''}</div>`)
 
-  const $modelContainer = $modelMask.append($modelMain).hide()
+  const $actions = $('<div class="v2p-model-actions">').append($closeBtn)
 
-  const JQElements = {
-    $modelMask,
-    $modelMain,
-    $modelContainer,
-    $modelContent,
+  const $header = $('<div class="v2p-model-header">').append($title, $actions)
+
+  const $main = $('<div class="v2p-model-main">').append($header, $content)
+
+  const $container = $mask.append($main).hide()
+
+  const modelElements = {
+    $mask,
+    $main,
+    $container,
+    $title,
+    $actions,
+    $content,
   }
 
   // 用于判定是否已经绑定了事件, 避免重复绑定。
@@ -133,7 +136,7 @@ export function createModel(props: CreateModelProps) {
 
   const docClickHandler = (e: JQuery.ClickEvent) => {
     // 通过判定点击的元素是否在评论框内来判断是否关闭评论框。
-    if ($(e.target).closest($modelContent).length === 0) {
+    if ($(e.target).closest($main).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleModalClose()
     }
@@ -151,10 +154,10 @@ export function createModel(props: CreateModelProps) {
     $(document).off('keydown', keyupHandler)
     boundEvent = false
 
-    $modelContainer.fadeOut('fast')
+    $container.fadeOut('fast')
     document.body.classList.remove('v2p-modal-open')
 
-    onClose?.(JQElements)
+    onClose?.(modelElements)
   }
 
   const handleModalOpen = () => {
@@ -167,19 +170,19 @@ export function createModel(props: CreateModelProps) {
       }
     }, 0)
 
-    $modelContainer.fadeIn('fast')
+    $container.fadeIn('fast')
     document.body.classList.add('v2p-modal-open')
 
-    onOpen?.(JQElements)
+    onOpen?.(modelElements)
   }
 
   $closeBtn.on('click', handleModalClose)
 
-  onMount?.(JQElements)
+  onMount?.(modelElements)
 
   if (root) {
-    root.append($modelContainer)
+    root.append($container)
   }
 
-  return { ...JQElements, open: handleModalOpen, close: handleModalClose }
+  return { ...modelElements, open: handleModalOpen, close: handleModalClose }
 }
