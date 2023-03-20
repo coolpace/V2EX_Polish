@@ -69,10 +69,11 @@ export function fetchProfile(PAT: string) {
   })
 }
 
-export function fetchTopic(topicId: string, PAT: string) {
+export function fetchTopic(topicId: string, PAT: string, options?: RequestInit) {
   return request<Topic>(`${V2EX.API}/topics/${topicId}`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${PAT}` },
+    ...options,
   })
 }
 

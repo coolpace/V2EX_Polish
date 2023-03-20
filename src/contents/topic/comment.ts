@@ -200,17 +200,17 @@ function handlingPopularComments() {
   const model = createModel({
     root: $commentBox,
     title: `本页共有 ${popularCommentData.length} 条热门回复`,
-    onMount: ({ $modelContent }) => {
+    onMount: ({ $content }) => {
       const templete = $('<templete></templete>')
 
       popularCommentData.forEach(({ index }) => {
         templete.append($commentCells.eq(index).clone())
       })
 
-      $modelContent.css({ padding: '0 20px' }).append(templete.html())
+      $content.css({ padding: '0 20px' }).append(templete.html())
     },
-    onOpen: ({ $modelContainer }) => {
-      $modelContainer.find('.cell[id^="r_"]').each((_, cellDom) => {
+    onOpen: ({ $container }) => {
+      $container.find('.cell[id^="r_"]').each((_, cellDom) => {
         processReplyContent(cellDom)
       })
     },
