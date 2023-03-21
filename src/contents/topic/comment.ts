@@ -430,8 +430,10 @@ export function handlingComments() {
       if (currentComment) {
         const { memberName, refMemberNames, refFloors } = currentComment
 
-        if (memberName === loginName && memberName !== topicOwnerName) {
-          $(cellDom).find('.badges').append('<div class="badge you">YOU</div>')
+        if (memberName === loginName) {
+          $(cellDom)
+            .find('.badges')
+            .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
         }
 
         if (!refMemberNames || refMemberNames.length === 0) {

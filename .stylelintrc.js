@@ -5,7 +5,7 @@ module.exports = {
     'selector-id-pattern': null,
     'selector-class-pattern': null,
     'no-descending-specificity': null,
-    'at-rule-no-unknown': [true, { ignoreAtRules: ['support'] }],
+    'at-rule-no-unknown': null,
     'value-keyword-case': null,
   },
   ignoreFiles: [

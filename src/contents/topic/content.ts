@@ -1,5 +1,5 @@
-import { $topicContentBox } from '../globals'
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
+import { $topicContentBox } from '../globals'
 
 export function handlingContent() {
   {
