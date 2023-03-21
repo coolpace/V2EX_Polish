@@ -47,16 +47,18 @@ interface PopupStorageData {
   lastActiveTab: TabId
   [TabId.Hot]: RemoteDataStore
   [TabId.Latest]: RemoteDataStore
-  [TabId.Setting]: RemoteDataStore
+  [TabId.Setting]: CommonTabStore
 }
 
 function loadSettings() {
-  $('#pat').on('change', (e) => {
+  const $patInput = $('#pat')
+
+  $patInput.on('change', (e) => {
     const value = (e.target as HTMLInputElement).value
     if (value) {
-      $('#pat').addClass('has-value')
+      $patInput.addClass('has-value')
     } else {
-      $('#pat').removeClass('has-value')
+      $patInput.removeClass('has-value')
     }
   })
 
@@ -65,7 +67,7 @@ function loadSettings() {
 
     if (api) {
       if (api.pat) {
-        $('#pat').val(api.pat).addClass('has-value')
+        $patInput.val(api.pat).addClass('has-value')
       }
       $('#limit').val(api.limit ?? defaultValue)
       $('#reset').val(api.reset ? formatTimestamp(api.reset, true) : defaultValue)
@@ -74,13 +76,19 @@ function loadSettings() {
   })
 
   $('#settings-form').on('submit', function (ev) {
+    console.log(123)
     ev.preventDefault() // 阻止默认的表单提交行为
 
-    const PAT = $('#pat').val()
+    const PAT = $patInput.val()
 
     if (typeof PAT === 'string') {
       chrome.storage.sync.set({ [StorageKey.API]: { pat: PAT } }, () => {
-        console.log('保存成功')
+        const $submitBtn = $('.submit-btn')
+        const submitText = $submitBtn.text()
+        $submitBtn.text('保存成功').prop('disabled', true)
+        setTimeout(() => {
+          $submitBtn.text(submitText).prop('disabled', false)
+        }, 1500)
       })
     }
   })
@@ -90,7 +98,7 @@ function loadSettings() {
   })
 }
 
-function loadTabs() {
+function initTabs() {
   const generateTopicItmes = (topics: Topic[]) => {
     return topics
       .map((topic) => {
@@ -152,9 +160,9 @@ function loadTabs() {
     const $tabContent = $(`#${tabId}`)
 
     if (tabId === TabId.Hot || tabId === TabId.Latest) {
-      const loadedTopics = $tabContent.find('.topics').length > 0
+      const loaded = $tabContent.find('.list').length > 0
 
-      if (loadedTopics) {
+      if (loaded) {
         tabContentScrollTop = topicContentData[tabId].lastScrollTop ?? 0
       } else {
         const getData = async () => {
@@ -205,29 +213,35 @@ function loadTabs() {
         const api = result[StorageKey.API]
 
         if (api?.pat) {
+          const loaded = $tabContent.find('.list').length > 0
+
+          if (loaded) {
+            return
+          }
+
           $tabContent.html(loading)
 
-          let page = 1
-
-          fetchNotifications(api.pat, page)
+          fetchNotifications(api.pat)
             .then(({ result: notifications }) => {
-              const $noticeList = $(`<ul class="list">`).append(
-                notifications
-                  .map((notice) => {
-                    return `
-                  <li class="notice-item">
-                    <div class="notice">
-                      ${notice.text}
-                    </div>
-                    ${notice.payload ? `<div class="payload">${notice.payload}</div>` : ''}
-                  </li>
-                  `
-                  })
-                  .join('')
-              )
-              $tabContent.empty().append($noticeList)
-
-              page = page + 1
+              if (notifications.length > 0) {
+                const $noticeList = $(`<ul class="list">`).append(
+                  notifications
+                    .map((notice) => {
+                      return `
+                    <li class="notice-item">
+                      <div class="notice">
+                        ${notice.text}
+                      </div>
+                      ${notice.payload ? `<div class="payload">${notice.payload}</div>` : ''}
+                    </li>
+                    `
+                    })
+                    .join('')
+                )
+                $tabContent.empty().append($noticeList)
+              } else {
+                $tabContent.empty().append('<div class="tip">暂无消息</div>')
+              }
             })
             .catch(() => {
               $tabContent.html(errorDisplay)
@@ -320,5 +334,5 @@ function loadTabs() {
 }
 
 window.addEventListener('load', () => {
-  loadTabs()
+  initTabs()
 })

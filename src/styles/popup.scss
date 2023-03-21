@@ -129,6 +129,7 @@ main {
 
     .notice {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
 
       > a {
@@ -200,6 +201,10 @@ main {
         border: none;
         border-radius: 5px;
         cursor: pointer;
+
+        &:disabled {
+          cursor: default;
+        }
       }
     }
 
