@@ -93,11 +93,18 @@ export interface Member {
 export interface Notification {
   id: number
   created: number
-  for_member_id: number
   member: Pick<Member, 'username'>
+
+  /** 发送消息的人 */
   member_id: number
-  payload: null
-  payload_rendered: string
+  /** 接收消息的人 */
+  for_member_id: number
+
+  /** 留言评论内容 */
+  payload: string | null
+  payload_rendered: Notification['payload']
+
+  /** 已渲染的消息展示 html 字符串 */
   text: string
 }
 
