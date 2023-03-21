@@ -1,6 +1,4 @@
-/* ============================
-  以下样式应用于 Scripts 注入的元素
-=============================== */
+@use './share';
 
 body {
   position: relative;
@@ -173,14 +171,18 @@ body {
   left: 0;
   z-index: 10;
   display: flex;
+  gap: 0 20px;
   align-items: center;
   padding: 15px 20px 20px;
   background-color: var(--v2p-color-content-bg);
 }
 
 .v2p-model-title {
+  overflow: hidden;
   font-weight: bold;
   font-size: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .v2p-model-actions {
@@ -332,11 +334,9 @@ body {
   }
 
   .v2p-bio {
-    display: -webkit-box;
+    @include share.line-clamp(3);
+
     margin-top: 10px;
-    overflow: hidden;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
   }
 
   .v2p-loading {

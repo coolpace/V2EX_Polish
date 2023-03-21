@@ -1,3 +1,5 @@
+@use './share';
+
 /* stylelint-disable-next-line no-duplicate-selectors */
 body {
   overflow: overlay;
@@ -95,34 +97,9 @@ body {
   .button {
     &.normal,
     &.super {
-      position: relative;
-      display: inline-flex;
-      gap: 5px;
-      align-items: center;
-      height: 28px;
-      padding: 0 12px;
-      color: var(--button-foreground-color);
-      font-weight: 500;
-      font-size: 14px;
-      font-family: inherit;
-      line-height: 28px;
-      text-shadow: none;
-      background: var(--button-background-color);
-      border: none;
-      border-radius: 6px;
-      outline: none;
-      box-shadow: 0 1.8px 0 var(--box-background-hover-color),
-        0 1.8px 0 var(--button-background-color);
-      cursor: pointer;
-      transition: background-color 0.25s, box-shadow 0.25s;
-      user-select: none;
+      @include share.common-button;
 
       &:hover:enabled {
-        color: var(--button-foreground-color);
-        font-weight: 500;
-        text-shadow: none;
-        background: var(--button-hover-color);
-        border: none;
         box-shadow: 0 1.8px 0 var(--button-border-color), 0 1.8px 0 var(--button-background-color);
       }
 
@@ -137,16 +114,6 @@ body {
         cursor: default;
         opacity: 0.5;
         pointer-events: none;
-      }
-
-      kbd {
-        position: relative;
-        right: -4px;
-        padding: 0 3px;
-        font-size: 90%;
-        line-height: initial;
-        border: 1px solid var(--button-border-color);
-        border-radius: 4px;
       }
     }
 
@@ -577,7 +544,7 @@ img::selection {
       user-select: none;
     }
 
-    /* 帖主徽章 & 管理员徽章 */
+    /* 帖主徽章 & 管理员徽章 & 自己徽章 */
     .badge {
       padding: 2px 5px;
       font-weight: bold;

@@ -4,7 +4,7 @@ import type { CommentData } from '../types'
 export const loginName = $('#Top .tools > a[href^="/member"]').text()
 
 /** 发帖人的昵称 */
-export const topicOwnerName = $('#Main > .box:nth-child(1) > .header > small > a').text()
+export const topicOwnerName = $('#Main > .box > .header > small > a[href^="/member"]').text()
 
 export const $topicList = $('#Main #Tabs ~ .cell.item')
 

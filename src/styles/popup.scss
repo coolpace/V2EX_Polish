@@ -1,3 +1,5 @@
+@use './share';
+
 html,
 body {
   width: 100%;
@@ -106,24 +108,18 @@ main {
       }
 
       .title {
-        display: -webkit-box;
+        @include share.line-clamp(2);
+
         margin-bottom: 6px;
-        overflow: hidden;
         font-size: 16px;
-        line-height: 1.4;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
       }
 
       .content {
-        display: -webkit-box;
+        @include share.line-clamp(3);
+
         padding: 0;
-        overflow: hidden;
         font-size: 13px;
-        line-height: 1.4;
         opacity: 0.6;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
       }
     }
   }
@@ -269,5 +265,11 @@ hr {
 
   > p {
     margin-bottom: 10px;
+  }
+}
+
+.button {
+  &.normal {
+    @include share.common-button;
   }
 }
