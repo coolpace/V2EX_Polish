@@ -9,55 +9,63 @@
  */
 
 import { dataExpiryTime, StorageKey } from '../constants'
+import { createButton } from '../contents/globals'
 import { iconLoading } from '../icons'
-import { fetchHotTopics, fetchLatestTopics, fetchNotifications, fetchProfile } from '../services'
+import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'
 import { formatTimestamp } from '../utils'
 
 const defaultValue = '-'
 
+const loading = `
+<div class="tab-loading">
+  <span class="loading">
+    ${iconLoading}
+  </span>
+</div>
+`
+
+const errorDisplay = '<div class="fetch-error">无法获取到列表数据，请稍后再试。</div>'
+
 const enum TabId {
-  Hot = 'tab1',
-  Latest = 'tab2',
-  Setting = 'tab3',
+  Hot = 'tab-hot',
+  Latest = 'tab-latest',
+  Message = 'tab-message',
+  Setting = 'tab-setting',
 }
 
-interface TopicsStore {
+interface CommonTabStore {
+  lastScrollTop?: number
+}
+
+interface RemoteDataStore extends CommonTabStore {
   data?: Topic[]
   lastFetchTime?: number
-  lastScrollTop?: number
 }
 
 interface PopupStorageData {
   lastActiveTab: TabId
-  [TabId.Hot]: TopicsStore
-  [TabId.Latest]: TopicsStore
-  [TabId.Setting]: TopicsStore
+  [TabId.Hot]: RemoteDataStore
+  [TabId.Latest]: RemoteDataStore
+  [TabId.Setting]: RemoteDataStore
 }
 
 function loadSettings() {
+  $('#pat').on('change', (e) => {
+    const value = (e.target as HTMLInputElement).value
+    if (value) {
+      $('#pat').addClass('has-value')
+    } else {
+      $('#pat').removeClass('has-value')
+    }
+  })
+
   chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
     const api = result[StorageKey.API]
 
     if (api) {
       if (api.pat) {
-        $('#pat').addClass('has-value').val(api.pat)
-
-        // fetchProfile(api.pat)
-        //   .then(({ result: profile }) => {
-        //     console.log({ profile })
-        //   })
-        //   .catch((err) => {
-        //     console.error(err)
-        //   })
-
-        // fetchNotifications(api.pat)
-        //   .then((notifications) => {
-        //     console.log({ notifications })
-        //   })
-        //   .catch((err) => {
-        //     console.error(err)
-        //   })
+        $('#pat').val(api.pat).addClass('has-value')
       }
       $('#limit').val(api.limit ?? defaultValue)
       $('#reset').val(api.reset ? formatTimestamp(api.reset, true) : defaultValue)
@@ -104,14 +112,19 @@ function loadTabs() {
 
   const isTabId = (tabId: any): tabId is TabId => {
     if (typeof tabId === 'string') {
-      if (tabId === TabId.Hot || tabId === TabId.Latest || tabId === TabId.Setting) {
+      if (
+        tabId === TabId.Hot ||
+        tabId === TabId.Latest ||
+        tabId === TabId.Message ||
+        tabId === TabId.Setting
+      ) {
         return true
       }
     }
     return false
   }
 
-  const topicContentData: Record<TabId, TopicsStore> = {
+  const topicContentData: Record<TabId, RemoteDataStore> = {
     [TabId.Hot]: {
       data: undefined,
       lastFetchTime: undefined,
@@ -121,6 +134,10 @@ function loadTabs() {
       data: undefined,
       lastFetchTime: undefined,
       lastScrollTop: undefined,
+    },
+    [TabId.Message]: {
+      data: undefined,
+      lastFetchTime: undefined,
     },
     [TabId.Setting]: {},
   }
@@ -140,14 +157,6 @@ function loadTabs() {
       if (loadedTopics) {
         tabContentScrollTop = topicContentData[tabId].lastScrollTop ?? 0
       } else {
-        const loading = `
-        <div class="tab-loading">
-          <span class="loading">
-            ${iconLoading}
-          </span>
-        </div>
-        `
-
         const getData = async () => {
           $tabContent.html(loading)
 
@@ -164,7 +173,7 @@ function loadTabs() {
               return topics
             }
           } catch {
-            $tabContent.html('<div class="fetch-error">无法获取到列表数据，请稍后再试。</div>')
+            $tabContent.html(errorDisplay)
           }
         }
 
@@ -185,10 +194,55 @@ function loadTabs() {
         }
 
         if (topicList) {
-          const $topicList = $(`<ul class="topics">`).append(generateTopicItmes(topicList))
+          const $topicList = $(`<ul class="list">`).append(generateTopicItmes(topicList))
           $tabContent.empty().append($topicList)
         }
       }
+    }
+
+    if (tabId === TabId.Message) {
+      chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
+        const api = result[StorageKey.API]
+
+        if (api?.pat) {
+          $tabContent.html(loading)
+
+          let page = 1
+
+          fetchNotifications(api.pat, page)
+            .then(({ result: notifications }) => {
+              const $noticeList = $(`<ul class="list">`).append(
+                notifications
+                  .map((notice) => {
+                    return `
+                  <li class="notice-item">
+                    <div class="notice">
+                      ${notice.text}
+                    </div>
+                    ${notice.payload ? `<div class="payload">${notice.payload}</div>` : ''}
+                  </li>
+                  `
+                  })
+                  .join('')
+              )
+              $tabContent.empty().append($noticeList)
+
+              page = page + 1
+            })
+            .catch(() => {
+              $tabContent.html(errorDisplay)
+            })
+        } else {
+          const $tipBtn = createButton({ children: '去设置' }).on('click', () => {
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            activeTab({ tabId: TabId.Setting })
+          })
+          const $tip = $(
+            '<div class="tip"><p>需求设置您的个人访问令牌（PAT）后才能请求获取消息数据</p></div>'
+          ).append($tipBtn)
+          $tabContent.empty().append($tip)
+        }
+      })
     }
 
     setTimeout(() => {

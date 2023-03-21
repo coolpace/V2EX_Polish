@@ -90,12 +90,12 @@ main {
     }
   }
 
-  .topics {
+  .list {
     padding: 0;
   }
 
   .topic-item {
-    a {
+    > a {
       display: block;
       padding: 20px 15px;
       color: currentColor;
@@ -104,27 +104,51 @@ main {
       &:hover {
         background-color: var(--v2p-color-main-100);
       }
+
+      .title {
+        display: -webkit-box;
+        margin-bottom: 6px;
+        overflow: hidden;
+        font-size: 16px;
+        line-height: 1.4;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      .content {
+        display: -webkit-box;
+        padding: 0;
+        overflow: hidden;
+        font-size: 13px;
+        line-height: 1.4;
+        opacity: 0.6;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
+
+  .notice-item {
+    padding: 10px 12px;
+
+    .notice {
+      display: flex;
+      align-items: center;
+
+      > a {
+        margin: 0 5px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
 
-    .title {
-      display: -webkit-box;
-      margin-bottom: 6px;
-      overflow: hidden;
-      font-size: 16px;
-      line-height: 1.4;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .content {
-      display: -webkit-box;
-      padding: 0;
-      overflow: hidden;
-      font-size: 13px;
-      line-height: 1.4;
-      opacity: 0.6;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
+    .payload {
+      margin-top: 5px;
+      padding: 5px;
+      background-color: var(--v2p-color-main-100);
+      border-radius: 5px;
     }
   }
 
@@ -234,4 +258,16 @@ hr {
 .fetch-error {
   padding: 50px 0;
   text-align: center;
+}
+
+.tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+
+  > p {
+    margin-bottom: 10px;
+  }
 }
