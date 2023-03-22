@@ -246,6 +246,19 @@ hr {
   border-top: 1px solid var(--color-fade);
 }
 
+.message-actions {
+  padding: 5px 10px;
+
+  .view-all-btn {
+    padding: 5px 8px;
+    color: var(--v2p-color-main-800);
+    text-align: center;
+    background-color: var(--v2p-color-main-200);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+
 #clear-storage {
   margin-top: 10px;
   padding: 5px 8px;
