@@ -8,7 +8,7 @@
  * 4. 来回切换 tab 时，应当保持 tab 的滚动位置。
  */
 
-import { dataExpiryTime, StorageKey } from '../constants'
+import { dataExpiryTime, StorageKey, V2EX } from '../constants'
 import { createButton } from '../contents/globals'
 import { iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
@@ -238,9 +238,26 @@ function initTabs() {
                     })
                     .join('')
                 )
-                $tabContent.empty().append($noticeList)
+
+                $noticeList.find('.notice-item .notice > a').each((_, a) => {
+                  const link = $(a)
+                  link
+                    .prop('target', '_blank')
+                    .prop('href', `${V2EX.Host}${link.attr('href') ?? ''}`)
+                })
+
+                $tabContent
+                  .empty()
+                  .append(
+                    `
+                  <div class="message-actions">
+                    <a class="view-all-btn" href="${V2EX.Host}/notifications" target="_blank">查看所有消息</a>
+                  </div>
+                  `
+                  )
+                  .append($noticeList)
               } else {
-                $tabContent.empty().append('<div class="tip">暂无消息</div>')
+                $tabContent.empty().append('<div class="tip">无任何消息</div>')
               }
             })
             .catch(() => {
