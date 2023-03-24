@@ -288,12 +288,14 @@ function handlingControls() {
 function insertEmojiBox() {
   const os = getOS()
 
+  const $replyBox = $('#reply-box')
+
   const replyTextArea = document.querySelector('#reply_content')
 
   const $replyBtn = createButton({
     children: `回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd>`,
     type: 'submit',
-  }).replaceAll($('#reply-box input[type="submit"]'))
+  }).replaceAll($replyBox.find('input[type="submit"]'))
 
   const emoticonGroup = $('<div class="v2p-emoji-group">')
   const emoticonList = $('<div class="v2p-emoji-list">')
@@ -395,6 +397,13 @@ function insertEmojiBox() {
       replyTextArea.focus()
     }
   })
+
+  {
+    $replyBox
+      .find('#undock-button, #undock-button + a')
+      .addClass('v2p-hover-btn')
+      .css('padding', '3px 5px')
+  }
 }
 
 export function handlingComments() {
