@@ -43,6 +43,12 @@ body {
     transform: scale(1);
     opacity: 1;
   }
+
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .v2p-icon-heart {
@@ -429,15 +435,16 @@ body {
   }
 
   &.v2p-collapsed {
-    &::after {
+    &::before {
       position: absolute;
       right: 0;
       bottom: 0;
       left: 0;
       z-index: 10;
       height: 120px;
-      background: linear-gradient(0deg, var(--v2p-color-content-bg), transparent);
+      background: linear-gradient(to top, var(--v2p-color-content-bg), transparent);
       content: '';
+      pointer-events: none;
     }
 
     .v2p-expand-btn.normal.button {

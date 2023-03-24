@@ -8,12 +8,5 @@ module.exports = {
     'at-rule-no-unknown': null,
     'value-keyword-case': null,
   },
-  ignoreFiles: [
-    'node_modules/**',
-    'dist/**',
-    'asset/**',
-    'extension/css/**',
-    '**/*.min.css',
-    'src/styles/normalize.css',
-  ],
+  ignoreFiles: ['node_modules/**', 'dist/**', 'asset/**', 'extension/css/**', '**/*.min.css'],
 }
