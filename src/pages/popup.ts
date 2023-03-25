@@ -1,5 +1,3 @@
-// chrome.runtime.openOptionsPage()
-
 /**
  * Popup 功能描述：
  * 1. 切换到某个 tab 时，如果该 tab 的内容没有加载过，则加载内容。
@@ -14,8 +12,15 @@ import { iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'
 import { formatTimestamp } from '../utils'
-
-const defaultValue = '-'
+import {
+  calculateLocalStorageSize,
+  escapeHTML,
+  formatSizeUnits,
+  isTabId,
+  TabId,
+} from './popup.helper'
+import type { PopupStorageData, RemoteDataStore } from './popup.type'
+import { defaultValue } from './popup.var'
 
 const loading = `
 <div class="tab-loading">
@@ -27,27 +32,22 @@ const loading = `
 
 const errorDisplay = '<div class="fetch-error">无法获取到列表数据，请稍后再试。</div>'
 
-const enum TabId {
-  Hot = 'tab-hot',
-  Latest = 'tab-latest',
-  Message = 'tab-message',
-  Setting = 'tab-setting',
-}
-
-interface CommonTabStore {
-  lastScrollTop?: number
-}
-
-interface RemoteDataStore extends CommonTabStore {
-  data?: Topic[]
-  lastFetchTime?: number
-}
-
-interface PopupStorageData {
-  lastActiveTab: TabId
-  [TabId.Hot]: RemoteDataStore
-  [TabId.Latest]: RemoteDataStore
-  [TabId.Setting]: CommonTabStore
+const topicContentData: Record<TabId, RemoteDataStore> = {
+  [TabId.Hot]: {
+    data: undefined,
+    lastFetchTime: undefined,
+    lastScrollTop: undefined,
+  },
+  [TabId.Latest]: {
+    data: undefined,
+    lastFetchTime: undefined,
+    lastScrollTop: undefined,
+  },
+  [TabId.Message]: {
+    data: undefined,
+    lastFetchTime: undefined,
+  },
+  [TabId.Setting]: {},
 }
 
 function loadSettings() {
@@ -75,8 +75,7 @@ function loadSettings() {
     }
   })
 
-  $('#settings-form').on('submit', function (ev) {
-    console.log(123)
+  $('#settings-form').on('submit', (ev) => {
     ev.preventDefault() // 阻止默认的表单提交行为
 
     const PAT = $patInput.val()
@@ -93,9 +92,22 @@ function loadSettings() {
     }
   })
 
-  $('#clear-storage').on('click', () => {
-    window.localStorage.clear()
-  })
+  {
+    const calculate = () => {
+      const storageSize = calculateLocalStorageSize()
+      const size = formatSizeUnits(storageSize)
+      $('.storage-size').text(size)
+    }
+
+    calculate()
+
+    $('#clear-storage').on('click', () => {
+      topicContentData[TabId.Hot].data = undefined
+      topicContentData[TabId.Latest].data = undefined
+      window.localStorage.clear()
+      calculate()
+    })
+  }
 }
 
 function initTabs() {
@@ -105,7 +117,7 @@ function initTabs() {
         return `
           <li class="topic-item">
             <a href="${topic.url}" target="_blank">
-              <span class="title">${topic.title}</span>
+              <span class="title">${escapeHTML(topic.title)}</span>
               <span class="content">${topic.content.replace(/<[^>]*>/g, '')}</span>
             </a>
           </li>
@@ -116,38 +128,6 @@ function initTabs() {
 
   const getCurrentActiveTab = () => {
     return $('.tabs > li.active')
-  }
-
-  const isTabId = (tabId: any): tabId is TabId => {
-    if (typeof tabId === 'string') {
-      if (
-        tabId === TabId.Hot ||
-        tabId === TabId.Latest ||
-        tabId === TabId.Message ||
-        tabId === TabId.Setting
-      ) {
-        return true
-      }
-    }
-    return false
-  }
-
-  const topicContentData: Record<TabId, RemoteDataStore> = {
-    [TabId.Hot]: {
-      data: undefined,
-      lastFetchTime: undefined,
-      lastScrollTop: undefined,
-    },
-    [TabId.Latest]: {
-      data: undefined,
-      lastFetchTime: undefined,
-      lastScrollTop: undefined,
-    },
-    [TabId.Message]: {
-      data: undefined,
-      lastFetchTime: undefined,
-    },
-    [TabId.Setting]: {},
   }
 
   const dataString = window.localStorage.getItem('v2p_popup')

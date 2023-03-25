@@ -16,39 +16,7 @@ body {
 }
 
 .v2p-hover-btn {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-  background: none;
-  background-color: transparent;
-  cursor: pointer;
-  user-select: none;
-
-  &::before {
-    position: absolute;
-    top: 0;
-    right: -5px;
-    bottom: 0;
-    left: -5px;
-    z-index: -1;
-    background-color: var(--v2p-color-main-100);
-    border-radius: 5px;
-    transform: scale(0.6);
-    opacity: 0;
-    transition: background-color 0.3s, transform 0.3s, opacity 0.3s;
-    content: '';
-  }
-
-  &:hover::before {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  a {
-    &:hover {
-      text-decoration: none;
-    }
-  }
+  @include share.hover-button;
 }
 
 .v2p-icon-heart {
@@ -155,7 +123,7 @@ body {
   margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: var(--v2p-color-content-bg);
+  background-color: var(--v2p-color-bg-content);
   border-radius: 10px;
 }
 
@@ -180,7 +148,7 @@ body {
   gap: 0 20px;
   align-items: center;
   padding: 15px 20px 20px;
-  background-color: var(--v2p-color-content-bg);
+  background-color: var(--v2p-color-bg-content);
 }
 
 .v2p-model-title {
@@ -291,9 +259,9 @@ body {
   overflow-y: auto;
   color: var(--v2p-color-main-600);
   font-size: 14px;
-  background: var(--v2p-color-content-bg);
+  background: var(--v2p-color-bg-content);
   border-radius: 8px;
-  box-shadow: 0 9px 24px -3px var(--button-border-color), 0 4px 8px -1px var(--button-hover-color);
+  box-shadow: var(--v2p-widget-shadow);
   visibility: hidden;
 }
 
@@ -442,7 +410,7 @@ body {
       left: 0;
       z-index: 10;
       height: 120px;
-      background: linear-gradient(to top, var(--v2p-color-content-bg), transparent);
+      background: linear-gradient(to top, var(--v2p-color-bg-content), transparent);
       content: '';
       pointer-events: none;
     }

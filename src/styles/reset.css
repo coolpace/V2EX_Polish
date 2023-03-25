@@ -9,11 +9,6 @@
   border-width: 0;
 }
 
-::before,
-::after {
-  content: '';
-}
-
 :where([hidden]:not([hidden='until-found'])) {
   display: none !important;
 }
@@ -74,7 +69,8 @@
 }
 
 :where(a) {
-  text-underline-offset: 0.2ex;
+  color: inherit;
+  text-decoration: none;
 }
 
 :where(ul, ol) {

@@ -47,3 +47,66 @@
     border-radius: 4px;
   }
 }
+
+@mixin input($minHeight, $maxHeight: 800px) {
+  height: unset;
+  min-height: $minHeight !important;
+  max-height: $maxHeight !important;
+  overflow: hidden;
+  font-size: 15px;
+  background-color: var(--button-background-color);
+  border: 2px solid var(--button-background-color);
+  border-radius: 8px;
+  resize: none;
+
+  @content;
+
+  &::placeholder {
+    color: var(--v2p-color-main-500);
+    font-size: 15px;
+  }
+
+  &:focus {
+    background-color: transparent;
+    border-color: var(--button-border-color);
+    outline: none;
+  }
+}
+
+@mixin hover-button {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  text-decoration: none;
+  background: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color 0.3s;
+  user-select: none;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    right: -5px;
+    bottom: 0;
+    left: -5px;
+    z-index: -1;
+    background-color: var(--v2p-color-bg-hover-btn);
+    border-radius: 5px;
+    transform: scale(0.6);
+    opacity: 0;
+    transition: background-color 0.3s, transform 0.3s, opacity 0.3s;
+    content: '';
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    &::before {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @content;
+}

@@ -19,7 +19,7 @@ main {
   position: relative;
   height: 100%;
   overflow: hidden;
-  background-color: var(--v2p-color-content-bg);
+  background-color: var(--v2p-color-bg-content);
 
   > nav {
     position: absolute;
@@ -30,13 +30,19 @@ main {
     align-items: center;
     height: var(--nav-height);
     padding: 0 10px;
-    background-color: var(--v2p-color-content-bg);
+    background-color: var(--v2p-color-bg-content);
   }
 
   > section {
     box-sizing: border-box;
     height: 100%;
     padding-top: var(--nav-height);
+  }
+}
+
+button {
+  &:disabled {
+    opacity: 0.8;
   }
 }
 
@@ -136,7 +142,8 @@ main {
         margin: 0 5px;
 
         &:hover {
-          text-decoration: underline;
+          text-decoration: underline dashed;
+          text-underline-offset: 0.4ex;
         }
       }
     }
@@ -200,11 +207,6 @@ main {
         background-color: var(--v2p-color-main-800);
         border: none;
         border-radius: 5px;
-        cursor: pointer;
-
-        &:disabled {
-          cursor: default;
-        }
       }
     }
 
@@ -255,18 +257,33 @@ hr {
     text-align: center;
     background-color: var(--v2p-color-main-200);
     border-radius: 5px;
-    cursor: pointer;
   }
 }
 
-#clear-storage {
+.storage-data-bar {
+  display: inline-flex;
+  gap: 0 20px;
+  align-items: center;
   margin-top: 10px;
   padding: 5px 8px;
   color: var(--v2p-color-main-800);
-  text-align: center;
   background-color: var(--v2p-color-main-100);
   border-radius: 5px;
-  cursor: pointer;
+
+  @at-root {
+    #clear-storage {
+      @include share.hover-button {
+        &::before {
+          background-color: #fee2e2;
+          border-radius: 3px;
+        }
+
+        &:hover {
+          color: #ef4444;
+        }
+      }
+    }
+  }
 }
 
 .fetch-error {
