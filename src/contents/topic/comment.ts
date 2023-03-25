@@ -19,8 +19,8 @@ import {
 /**
  * 点击头像会展示改用户的信息。
  */
-function processAvatar(cellDom: HTMLElement, commentData: CommentData) {
-  const memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox).get(0)!
+function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: CommentData) {
+  const memberPopup = $memberPopup.get(0)!
 
   let abortController: AbortController | null = null
 
@@ -50,9 +50,7 @@ function processAvatar(cellDom: HTMLElement, commentData: CommentData) {
 
       $(document).on('click', docClickHandler)
 
-      const avatar = $avatar.get(0)!
-
-      computePosition(avatar, memberPopup, {
+      computePosition($avatar.get(0)!, memberPopup, {
         placement: 'bottom-start',
         middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
       })
@@ -67,8 +65,6 @@ function processAvatar(cellDom: HTMLElement, commentData: CommentData) {
           console.error('计算位置失败', err)
           handlePopupClose()
         })
-
-      const $memberPopup = $(memberPopup)
 
       const $content = $(`
               <div class="v2p-ctn">
@@ -402,7 +398,7 @@ function insertEmojiBox() {
     $replyBox
       .find('#undock-button, #undock-button + a')
       .addClass('v2p-hover-btn')
-      .css('padding', '3px 5px')
+      .css('padding', '5px 4px')
   }
 }
 
@@ -420,12 +416,14 @@ export function handlingComments() {
   handlingPopularComments()
 
   {
+    const $memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox)
+
     $commentCells.each((i, cellDom) => {
       const dataFromIndex = commentDataList.at(i)
 
       // 处理头像点击事件。
       if (dataFromIndex) {
-        processAvatar(cellDom, dataFromIndex)
+        processAvatar(cellDom, $memberPopup, dataFromIndex)
       }
 
       processReplyContent(cellDom)

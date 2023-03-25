@@ -44,24 +44,29 @@
 
                   <hr />
 
-                  <div class="form-item">
-                    <label for="limit">每小时限制请求</label>
-                    <input id="limit" readonly />
-                  </div>
+                  <fieldset>
+                    <div class="form-item">
+                      <label for="limit">每小时限制请求</label>
+                      <input id="limit" readonly />
+                    </div>
 
-                  <div class="form-item">
-                    <label for="remaining">剩余请求次数</label>
-                    <input id="remaining" readonly />
-                  </div>
+                    <div class="form-item">
+                      <label for="remaining">剩余请求次数</label>
+                      <input id="remaining" readonly />
+                    </div>
 
-                  <div class="form-item">
-                    <label for="reset">下次重置时间</label>
-                    <input id="reset" readonly />
-                  </div>
-
-                  <button id="clear-storage">清除标签页的缓存数据</button>
+                    <div class="form-item">
+                      <label for="reset">下次重置时间</label>
+                      <input id="reset" readonly />
+                    </div>
+                  </fieldset>
                 </div>
               </form>
+
+              <span class="storage-data-bar">
+                <span>已缓存数据：<span class="storage-size">-</span></span>
+                <button id="clear-storage" type="button">清除</button>
+              </span>
             </div>
           </div>
         </div>
