@@ -135,6 +135,9 @@ body {
     }
 
     &.special {
+      --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-200),
+        0 1.8px 0 var(--v2p-color-accent-100);
+
       color: var(--v2p-color-accent-500);
       background-color: var(--v2p-color-accent-100);
       box-shadow: var(--button-hover-shadow);
