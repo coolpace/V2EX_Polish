@@ -4,13 +4,13 @@ V2EX Polish 是一款专门为 V2EX 用户设计的浏览器插件，丰富的�
 
 主要功能：
 
-- 界面美化：UI 设计更具现代感，带来愉悦的视觉感受。
+- 界面美化：UI 设计更现代化，带来愉悦的视觉感受。
 
 - 评论回复嵌套层级：通过嵌套主题下的评论回复，可以更轻松地跟踪和回复其他用户的评论。
 
 - 热门回复展示：选取最受欢迎的评论，更容易找到热门回复。
 
-- 表情回复支持：评论输入框支持选择表情，让回复更加生动和有趣。
+- 表情回复支持：评论输入框支持选择表情，让回复更加生动有趣。
 
 - 长回复优化：智能折叠长篇回复，一键展开查看完整内容。
 
@@ -26,4 +26,4 @@ V2EX Polish 是一款专门为 V2EX 用户设计的浏览器插件，丰富的�
 
 - 翻页后自动跳转到回复区。
 
-更多功能等你一探究竟，[立即下载](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm?hl=zh-CN&authuser=0)，探索更先进的 V2EX 吧！
+更多功能等你一探究竟，[立即下载 V2EX Polish](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm?hl=zh-CN&authuser=0)，探索更先进的 V2EX 吧！
