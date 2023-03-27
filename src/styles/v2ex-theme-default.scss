@@ -1,6 +1,12 @@
 @use './share';
 
 :root {
+  color-scheme: light;
+
+  &:has(#Wrapper.Night) {
+    color-scheme: dark;
+  }
+
   html,
   body {
     min-height: 100vh;
@@ -19,7 +25,7 @@ body {
   }
 
   #Bottom {
-    color: var(--v2p-color-main-400);
+    color: var(--v2p-color-font-secondary);
     border: none;
   }
 
@@ -150,7 +156,7 @@ body {
   a.node:link,
   a.node:visited {
     padding: 5px 6px;
-    color: var(--v2p-color-main-400);
+    color: var(--v2p-color-font-secondary);
     font-size: 13px;
     background-color: var(--v2p-color-main-100);
     border-radius: 4px;
@@ -250,7 +256,7 @@ img::selection {
   .tag {
     &:link,
     &:visited {
-      color: var(--v2p-color-main-400);
+      color: var(--v2p-color-font-secondary);
       font-size: 12px;
       background-color: var(--v2p-color-main-100);
       border-radius: 5px;
@@ -289,7 +295,7 @@ img::selection {
     .top {
       margin-left: 0;
       padding: 3px 5px;
-      color: var(--v2p-color-main-400);
+      color: var(--v2p-color-font-secondary);
       border-radius: 4px;
 
       &:hover {
@@ -349,7 +355,7 @@ img::selection {
       border-radius: 4px;
 
       &:not(.v2p-hover-btn) {
-        color: var(--v2p-color-main-400);
+        color: var(--v2p-color-font-secondary);
       }
 
       &:hover:not(.v2p-hover-btn) {
@@ -392,7 +398,7 @@ img::selection {
       text-decoration: none;
 
       &:visited {
-        color: var(--v2p-color-main-400);
+        color: var(--v2p-color-font-secondary);
       }
     }
 
@@ -434,7 +440,7 @@ img::selection {
     .count_livid {
       display: inline-block;
       padding: 5px 10px;
-      color: var(--v2p-color-main-400);
+      color: var(--v2p-color-font-secondary);
       font-weight: 400;
       font-size: 12px;
       white-space: nowrap;
@@ -641,7 +647,7 @@ img::selection {
     font-size: 15px;
 
     a[href^='/member'] {
-      color: var(--v2p-color-main-400);
+      color: var(--v2p-color-font-secondary);
       font-size: 13px;
       text-decoration: underline;
       background-color: var(--v2p-color-main-100);
