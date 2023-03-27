@@ -5,7 +5,7 @@
 
   "version": "0.3.0",
 
-  "description": "专门为 V2EX 用户设计，提供卓越的浏览体验。",
+  "description": "专门为 V2EX 用户设计，提供丰富和强大的扩展功能。",
 
   "permissions": ["scripting", "contextMenus", "storage"],
 
