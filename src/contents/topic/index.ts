@@ -11,18 +11,21 @@ import { handlingPaging } from './paging'
 }
 
 {
-  // 按 ESC 隐藏回复框。
+  // 按 Esc 隐藏回复框。
   $(document).on('keydown', (ev) => {
-    if (ev.key === 'Escape') {
-      const $replyBox = $('#reply-box')
-      const $replyContent = $('#reply_content')
+    console.log(ev.isDefaultPrevented())
+    if (!ev.isDefaultPrevented()) {
+      if (ev.key === 'Escape') {
+        const $replyBox = $('#reply-box')
+        const $replyContent = $('#reply_content')
 
-      if ($replyBox.hasClass('reply-box-sticky')) {
-        $replyBox.removeClass('reply-box-sticky')
-        $('#undock-button').css('display', 'none')
+        if ($replyBox.hasClass('reply-box-sticky')) {
+          $replyBox.removeClass('reply-box-sticky')
+          $('#undock-button').css('display', 'none')
+        }
+
+        $replyContent.trigger('blur')
       }
-
-      $replyContent.trigger('blur')
     }
   })
 }

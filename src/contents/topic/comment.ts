@@ -17,7 +17,7 @@ import {
 } from '../globals'
 
 /**
- * 点击头像会展示改用户的信息。
+ * 点击头像会展示该用户的信息。
  */
 function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: CommentData) {
   const memberPopup = $memberPopup.get(0)!
@@ -340,7 +340,7 @@ function insertEmojiBox() {
 
   const keyupHandler = (ev: JQuery.KeyDownEvent) => {
     if (ev.key === 'Escape') {
-      ev.stopPropagation() // 需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
+      ev.preventDefault()
 
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handlePopupClose()
@@ -362,7 +362,7 @@ function insertEmojiBox() {
 
   const handlePopupOpen = () => {
     $(document).on('click', docClickHandler)
-    $('body').on('keydown', keyupHandler)
+    $('body').on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
 
     computePosition($emojiBtn.get(0)!, emojiPopup, {
       placement: 'right-end',
