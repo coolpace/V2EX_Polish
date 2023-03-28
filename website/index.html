@@ -6,14 +6,29 @@
     <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
 
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@900&display=swap');
+
       ::selection {
         color: currentColor;
-        background-color: rgb(30 41 59 / 0.1);
+        background-color: rgb(30 41 59 / 10%);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        border-color: currentColor;
+        border-style: solid;
+        border-width: 0;
       }
 
       html,
       body {
         --color-main: #1e293b;
+        --color-fade: #cbd5e1;
+        --color-background: #fff;
 
         min-width: 1000px;
         height: 100%;
@@ -21,36 +36,34 @@
         padding: 0;
         color: var(--color-main);
         font-family: system-ui, sans-serif;
-        background-color: #fff;
+        background-color: var(--color-background);
       }
 
       main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        background-image: linear-gradient(to bottom, rgb(30 41 59 / 0.1), transparent);
-      }
-
-      .display-section {
-        height: 100vh;
+        background-image: linear-gradient(to bottom, rgb(30 41 59 / 10%), transparent);
       }
 
       .hero {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        height: 100%;
+        box-sizing: border-box;
       }
 
       .hero-logo {
-        width: 65px;
-        height: 65px;
-        margin-right: 20px;
+        width: 70px;
+        height: 70px;
       }
 
       .hero-title {
         display: flex;
+        gap: 0 30px;
         align-items: center;
         justify-content: center;
         font-weight: bolder;
@@ -58,13 +71,21 @@
 
       .hero-title h1 {
         margin: 0;
-        font-size: 60px;
-        text-shadow: 0 4px 0 #cbd5e1;
+        font-size: 75px;
+        font-family: 'Noto Sans';
+        text-shadow: 0 4px 0 var(--color-fade);
+      }
+
+      .text-border {
+        -webkit-text-fill-color: var(--color-background);
+        -webkit-text-stroke-width: 2px;
+        -webkit-text-stroke-color: var(--color-main);
+        text-shadow: 0 4px 0 var(--color-main);
       }
 
       .hero-sub-heading {
-        font-size: 20px;
         margin: 30px 0 60px;
+        font-size: 20px;
       }
 
       .actions {
@@ -76,21 +97,57 @@
       }
 
       .action {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         padding: 15px 35px;
+        overflow: hidden;
+        color: inherit;
+        font-weight: bold;
+        text-decoration: none;
         border: 2px solid currentColor;
         border-radius: 8px;
-        color: inherit;
-        text-decoration: none;
-        box-shadow: 0 5px 0 -2px #cbd5e1;
+        box-shadow: 0 5px 0 -2px var(--color-fade);
         cursor: pointer;
+      }
+
+      .action:hover {
+        background-color: rgb(229 229 229);
+      }
+
+      .arrow-right {
+        position: relative;
+        right: -12px;
+        width: 24px;
+        height: 24px;
+        transform: rotateZ(-0.25turn);
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 60px 40px;
+        width: 1000px;
+        margin: 150px auto 0;
+      }
+
+      .features > div > h2 {
+        margin-bottom: 20px;
+      }
+
+      .features > div > p {
+        font-size: 16px;
+      }
+
+      .other-features {
+        width: 1000px;
+        margin: 150px auto 0;
       }
     </style>
   </head>
 
   <body>
     <main>
-      <section class="display-section">
+      <section>
         <div class="hero">
           <div class="hero-title">
             <div class="hero-logo">
@@ -132,16 +189,68 @@
           </p>
 
           <div class="actions">
-            <a class="action" href="https://github.com/coolpace/V2EX_Polish" target="_blank"
-              >GitHub 开源</a
-            >
+            <a class="action" href="https://github.com/coolpace/V2EX_Polish" target="_blank">
+              GitHub 开源
+            </a>
             <a
               class="action"
               href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm?hl=zh-CN&authuser=0"
               target="_blank"
             >
               安装至 Chrome
+              <span class="arrow-right">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    fill="#1D354F"
+                    d="M6.293 8.793a1 1 0 0 1 1.32-.083l.094.083L12 13.085l4.293-4.292a1 1 0 0 1 1.32-.083l.094.083a1 1 0 0 1 .083 1.32l-.083.094-5 5a1 1 0 0 1-1.32.083l-.094-.083-5-5a1 1 0 0 1 0-1.414z"
+                  ></path>
+                </svg>
+              </span>
             </a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="features">
+          <div>
+            <h2>🪄 界面美化</h2>
+            <p>UI 设计更现代化，带来愉悦的视觉感受。</p>
+          </div>
+          <div>
+            <h2>📥 评论回复嵌套层级</h2>
+            <p>通过嵌套主题下的评论回复，可以更轻松地跟踪和回复其他用户的评论。</p>
+          </div>
+          <div>
+            <h2>🔥 热门回复展示</h2>
+            <p>选取最受欢迎的评论，更容易找到热门回复。</p>
+          </div>
+          <div>
+            <h2>😀 表情回复支持</h2>
+            <p>评论输入框支持选择表情，让回复更加生动有趣。</p>
+          </div>
+          <div>
+            <h2>📃 长回复优化</h2>
+            <p>智能折叠长篇回复，一键展开查看完整内容。</p>
+          </div>
+          <div>
+            <h2>📰 内置主题列表</h2>
+            <p>插件内快速获取最热、最新的主题列表和消息通知。</p>
+          </div>
+          <div>
+            <p>⊙ 点击用户头像，查看用户信息。</p>
+          </div>
+          <div>
+            <p>⊙ 右键菜单支持解析页面中所有使用 Base64 编码的内容。</p>
+          </div>
+          <div>
+            <p>⊙ 在主题列表中即可预览内容，无需再进入主题页面。</p>
+          </div>
+          <div>
+            <p>⊙ 翻页后自动跳转到回复区。</p>
+          </div>
+          <div>
+            <p>⊙ ......</p>
           </div>
         </div>
       </section>
