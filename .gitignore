@@ -4,3 +4,9 @@ node_modules
 .pnpm-debug.log*
 *.tsbuildinfo
 *.zip
+
+/extension
+!/extension/manifest.json
+!/extension/images
+!/extension/pages
+!/extension/scripts/jquery*.min.js
