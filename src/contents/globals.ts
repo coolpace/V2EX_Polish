@@ -134,16 +134,16 @@ export function createModel(props: CreateModelProps) {
   // 用于判定是否已经绑定了事件, 避免重复绑定。
   let boundEvent = false
 
-  const docClickHandler = (e: JQuery.ClickEvent) => {
+  const docClickHandler = (ev: JQuery.ClickEvent) => {
     // 通过判定点击的元素是否在评论框内来判断是否关闭评论框。
-    if ($(e.target).closest($main).length === 0) {
+    if ($(ev.target).closest($main).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleModalClose()
     }
   }
 
-  const keyupHandler = (e: JQuery.KeyDownEvent) => {
-    if (e.key === 'Escape') {
+  const keyupHandler = (ev: JQuery.KeyDownEvent) => {
+    if (ev.key === 'Escape') {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleModalClose()
     }

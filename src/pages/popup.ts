@@ -53,8 +53,8 @@ const topicContentData: Record<TabId, RemoteDataStore> = {
 function loadSettings() {
   const $patInput = $('#pat')
 
-  $patInput.on('change', (e) => {
-    const value = (e.target as HTMLInputElement).value
+  $patInput.on('change', (ev) => {
+    const value = (ev.target as HTMLInputElement).value
     if (value) {
       $patInput.addClass('has-value')
     } else {
@@ -294,8 +294,8 @@ function initTabs() {
     }
   }
 
-  $('.tabs > li').on('click', (e) => {
-    activeTab({ tabEle: $(e.currentTarget) })
+  $('.tabs > li').on('click', (ev) => {
+    activeTab({ tabEle: $(ev.currentTarget) })
   })
 
   loadSettings()

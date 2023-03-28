@@ -12,8 +12,8 @@ import { handlingPaging } from './paging'
 
 {
   // 按 ESC 隐藏回复框。
-  $(document).on('keydown', (e) => {
-    if (e.key === 'Escape') {
+  $(document).on('keydown', (ev) => {
+    if (ev.key === 'Escape') {
       const $replyBox = $('#reply-box')
       const $replyContent = $('#reply_content')
 

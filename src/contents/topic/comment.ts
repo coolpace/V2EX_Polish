@@ -24,8 +24,8 @@ function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: 
 
   let abortController: AbortController | null = null
 
-  const docClickHandler = (e: JQuery.ClickEvent) => {
-    if ($(e.target).closest(memberPopup).length === 0) {
+  const docClickHandler = (ev: JQuery.ClickEvent) => {
+    if ($(ev.target).closest(memberPopup).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handlePopupClose()
     }
@@ -40,13 +40,13 @@ function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: 
 
   const $avatar = $(cellDom).find('.avatar')
 
-  $avatar.on('click', (e) => {
+  $avatar.on('click', (ev) => {
     abortController = new AbortController()
 
     if (memberPopup.style.visibility === 'visible') {
       handlePopupClose()
     } else {
-      e.stopPropagation()
+      ev.stopPropagation()
 
       $(document).on('click', docClickHandler)
 
@@ -338,17 +338,17 @@ function insertEmojiBox() {
     .appendTo($('#reply-box'))
     .get(0)!
 
-  const keyupHandler = (e: JQuery.KeyDownEvent) => {
-    if (e.key === 'Escape') {
-      e.stopPropagation() // 需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
+  const keyupHandler = (ev: JQuery.KeyDownEvent) => {
+    if (ev.key === 'Escape') {
+      ev.stopPropagation() // 需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
 
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handlePopupClose()
     }
   }
 
-  const docClickHandler = (e: JQuery.ClickEvent) => {
-    if ($(e.target).closest(emojiPopup).length === 0) {
+  const docClickHandler = (ev: JQuery.ClickEvent) => {
+    if ($(ev.target).closest(emojiPopup).length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handlePopupClose()
     }
@@ -380,8 +380,8 @@ function insertEmojiBox() {
       })
   }
 
-  $emojiBtn.on('click', (e) => {
-    e.stopPropagation()
+  $emojiBtn.on('click', (ev) => {
+    ev.stopPropagation()
 
     if (emojiPopup.style.visibility === 'visible') {
       handlePopupClose()
