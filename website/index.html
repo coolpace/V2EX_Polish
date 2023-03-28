@@ -2,7 +2,21 @@
 
 <html>
   <head>
-    <title>V2EX Polish</title>
+    <title>V2EX Polish - 浏览器插件</title>
+    <meta
+      name="description"
+      content="专门为 V2EX 用户设计的浏览器插件，丰富的扩展功能为你带来出色的体验。"
+    />
+
+    <meta content="website" property="og:type" />
+    <meta content="V2EX Polish - 浏览器插件" property="og:title" />
+    <meta
+      content="专门为 V2EX 用户设计的浏览器插件，丰富的扩展功能为你带来出色的体验。"
+      property="og:description"
+    />
+    <meta content="https://v2p.vercel.app" property="og:url" />
+    <meta content="https://i.imgur.com/q2minty.png" property="og:image" />
+
     <link
       href="/favicon.svg"
       rel="icon"
@@ -54,7 +68,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        height: 100%;
+        min-height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
         background-image: linear-gradient(to bottom, rgb(30 41 59 / 10%), transparent);
@@ -95,13 +109,15 @@
       }
 
       .hero-sub-heading {
+        text-align: center;
+
         margin: 30px 0 60px;
         font-size: 20px;
       }
 
       .actions {
         display: flex;
-        gap: 0 25px;
+        gap: 10px 25px;
         align-items: center;
         justify-content: center;
         user-select: none;
@@ -110,6 +126,7 @@
       .action {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         padding: 15px 35px;
         overflow: hidden;
         color: inherit;
@@ -125,12 +142,32 @@
         background-color: rgb(229 229 229);
       }
 
-      .arrow-right {
-        position: relative;
-        right: -12px;
+      .action:hover .icon-chrome {
+        width: 0;
+        margin-right: 0;
+
+        opacity: 0;
+      }
+
+      .action:hover .icon-arrow {
         width: 24px;
-        height: 24px;
+        opacity: 1;
+        margin-left: 5px;
+      }
+
+      .icon-chrome {
+        margin-right: 5px;
+
+        transition: all 0.3s;
+      }
+
+      .icon-arrow {
+        margin-left: 0;
+
+        width: 0;
+        opacity: 0;
         transform: rotateZ(-0.25turn);
+        transition: all 0.3s;
       }
 
       .features {
@@ -146,12 +183,52 @@
       }
 
       .features > div > p {
-        font-size: 16px;
+        font-size: 15px;
       }
 
       .other-features {
         width: 1000px;
         margin: 150px auto 0;
+      }
+
+      @media screen and (max-width: 1000px) {
+        html,
+        body {
+          min-width: unset;
+        }
+
+        main {
+          padding: 0 20px;
+        }
+
+        .hero-logo {
+          display: none;
+        }
+
+        .actions {
+          flex-direction: column;
+        }
+
+        .action {
+          width: 220px;
+        }
+
+        .features {
+          grid-template-columns: 2fr;
+          width: 100%;
+          justify-content: center;
+          margin: 100px auto 0;
+        }
+
+        .features h2 {
+          font-size: 20px;
+          text-align: center;
+        }
+
+        .features p {
+          font-size: 14px;
+          text-align: center;
+        }
       }
     </style>
   </head>
@@ -162,13 +239,7 @@
         <div class="hero">
           <div class="hero-title">
             <div class="hero-logo">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                fill="none"
-                version="1.1"
-                viewBox="0 0 80 80"
-              >
+              <svg fill="none" version="1.1" viewBox="0 0 80 80">
                 <g style="mix-blend-mode: passthrough">
                   <g style="mix-blend-mode: passthrough">
                     <path
@@ -208,15 +279,30 @@
               href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm?hl=zh-CN&authuser=0"
               target="_blank"
             >
+              <svg
+                class="icon-chrome"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="4"></circle>
+                <line x1="21.17" y1="8" x2="12" y2="8"></line>
+                <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+                <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+              </svg>
               安装至 Chrome
-              <span class="arrow-right">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    fill="#1D354F"
-                    d="M6.293 8.793a1 1 0 0 1 1.32-.083l.094.083L12 13.085l4.293-4.292a1 1 0 0 1 1.32-.083l.094.083a1 1 0 0 1 .083 1.32l-.083.094-5 5a1 1 0 0 1-1.32.083l-.094-.083-5-5a1 1 0 0 1 0-1.414z"
-                  ></path>
-                </svg>
-              </span>
+              <svg class="icon-arrow" width="24" height="24" viewBox="0 0 24 24">
+                <path
+                  fill="#1D354F"
+                  d="M6.293 8.793a1 1 0 0 1 1.32-.083l.094.083L12 13.085l4.293-4.292a1 1 0 0 1 1.32-.083l.094.083a1 1 0 0 1 .083 1.32l-.083.094-5 5a1 1 0 0 1-1.32.083l-.094-.083-5-5a1 1 0 0 1 0-1.414z"
+                ></path>
+              </svg>
             </a>
           </div>
         </div>
