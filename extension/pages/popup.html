@@ -37,8 +37,17 @@
                       <input id="pat" type="text" placeholder="填写你的个人访问令牌 (PAT)" />
                       <button class="submit-btn" type="submit">保存</button>
                     </div>
-                    <div class="new-token">
-                      <a href="https://www.v2ex.com/settings/tokens" target="_blank">创建 Token</a>
+                    <div class="new-token"></div>
+                    <div class="details">
+                      <details>
+                        <summary>为什么需要 PAT？如何获取？</summary>
+                        为了能够让应用正常请求资源，我们需要使用您的个人访问令牌（PAT）。请放心，我们非常重视您的隐私和安全，绝不会以任何方式滥用您的
+                        PAT。如果您还没有 PAT，请<a
+                          href="https://www.v2ex.com/settings/tokens"
+                          target="_blank"
+                          >前往创建</a
+                        >。
+                      </details>
                     </div>
                   </div>
 
@@ -65,7 +74,7 @@
 
               <span class="storage-data-bar">
                 <span>已缓存数据：<span class="storage-size">-</span></span>
-                <button id="clear-storage" type="button">清除</button>
+                <button id="clear-storage" type="button">清空</button>
               </span>
             </div>
           </div>
