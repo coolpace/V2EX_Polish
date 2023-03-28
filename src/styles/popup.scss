@@ -308,3 +308,17 @@ hr {
     @include share.common-button;
   }
 }
+
+.details {
+  padding: 5px 0;
+}
+
+details a {
+  text-underline-offset: 0.5ex;
+  text-decoration: underline dashed;
+
+  &:hover {
+    text-decoration: underline;
+    background-color: var(--v2p-color-main-100);
+  }
+}

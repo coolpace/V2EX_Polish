@@ -375,12 +375,12 @@ body {
   padding: 2px 4px;
   color: var(--v2p-color-orange-400);
   font-size: 13px;
+  text-decoration: none;
   background-color: var(--v2p-color-orange-50);
   cursor: copy;
 
   &:hover {
     color: var(--v2p-color-orange-400);
-    text-decoration: underline;
     background-color: var(--v2p-color-orange-50);
   }
 
