@@ -74,10 +74,17 @@ export function createButton(props: {
   children: string
   className?: string
   type?: 'button' | 'submit'
+  tag?: 'button' | 'a'
 }) {
-  const { children, className = '', type = 'button' } = props
+  const { children, className = '', type = 'button', tag = 'button' } = props
 
-  return $(`<button class="normal button ${className}" type="${type}">${children}</button>`)
+  const $button = $(`<${tag} class="normal button ${className}">${children}</${tag}>`)
+
+  if (tag === 'button') {
+    $button.prop('type', type)
+  }
+
+  return $button
 }
 
 interface ModelElements {

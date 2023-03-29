@@ -15,9 +15,10 @@ export function handlingTopicList() {
     let abortController: AbortController | null = null
 
     const $detailBtn = createButton({
-      children: '<a target="_blank">进入主题</a>',
+      children: '进入主题',
       className: 'special',
-    })
+      tag: 'a',
+    }).prop('target', '_blank')
 
     const model = createModel({
       root: $('body'),
@@ -34,7 +35,7 @@ export function handlingTopicList() {
     $topicList.each((_, topicItem) => {
       const $topicItem = $(topicItem)
 
-      $(`<button class="v2p-topic-preview-btn">预览</button>`)
+      $('<button class="v2p-topic-preview-btn">预览</button>')
         .on('click', () => {
           const linkHref = $topicItem.find('.topic-link').attr('href')
           const match = linkHref?.match(/\/(\d+)#/)
@@ -61,13 +62,20 @@ export function handlingTopicList() {
                   signal: abortController.signal,
                 })
 
-                const $topicPreview = $(`
-                <div class="v2p-topic-preview">
-                  <div>${topic.content_rendered}</div>
-                </div>
-                `)
+                const $topicPreview = $('<div class="v2p-topic-preview">')
 
-                $detailBtn.show().find('> a').prop('href', topic.url)
+                if (topic.content_rendered) {
+                  $topicPreview.append(`<div>${topic.content_rendered}</div>`)
+                } else {
+                  $topicPreview.append(`
+                  <div class="v2p-empty-content">
+                    <div class="v2p-text-emoji">¯\\_(ツ)_/¯</div>
+                    <p>该主题没有正文内容</p>
+                  </div>
+                  `)
+                }
+
+                $detailBtn.show().prop('href', topic.url)
 
                 model.$title.empty().text(topic.title)
                 model.$content.empty().append($topicPreview)

@@ -421,3 +421,15 @@ body {
     }
   }
 }
+
+.v2p-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--v2p-color-font-secondary);
+  font-size: 14px;
+
+  .v2p-text-emoji {
+    font-size: 20px;
+  }
+}
