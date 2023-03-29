@@ -6,7 +6,7 @@
   "author": "LeoKu (https://github.com/Codennnn)",
   "scripts": {
     "dev": "npm-run-all --parallel watch:style watch:scripts",
-    "dev:site": "live-server --entry-file=website/index.html",
+    "dev:site": "live-server --entry-file=website/index.html --no-browser",
     "build": "npm-run-all --parallel build:style build:scripts",
     "build:scripts": "tsup",
     "build:style": "sass src/styles:extension/css --no-source-map --style=compressed",
