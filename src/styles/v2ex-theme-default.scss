@@ -91,7 +91,6 @@ body {
   }
 
   .box {
-    overflow: hidden;
     background-color: var(--v2p-color-bg-content);
     border: none;
     border-radius: 8px;
@@ -142,10 +141,14 @@ body {
       background-color: var(--v2p-color-accent-100);
       box-shadow: var(--button-hover-shadow);
 
-      &:hover:enabled {
-        color: var(--v2p-color-accent-500);
-        background-color: var(--v2p-color-accent-100);
-        box-shadow: var(--button-hover-shadow);
+      &:hover {
+        &,
+        &:enabled {
+          color: var(--v2p-color-accent-500);
+          background-color: var(--v2p-color-accent-100);
+          border: none;
+          box-shadow: var(--button-hover-shadow);
+        }
       }
     }
 
@@ -241,6 +244,27 @@ body {
 
   .item_hot_topic_title {
     @include share.line-clamp(2);
+  }
+
+  form textarea.mle {
+    @include share.input;
+
+    &#topic_title {
+      min-height: 75px !important;
+    }
+  }
+
+  // 主题编辑内容的语法。
+  #syntax-selector {
+    .radio-group {
+      padding: 3px;
+      background-color: var(--v2p-color-background);
+
+      & > input[type='radio'] + label {
+        font-size: 13px;
+        cursor: pointer;
+      }
+    }
   }
 }
 
@@ -369,7 +393,7 @@ img::selection {
   }
 
   .topic_content {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .subtle {
@@ -640,9 +664,17 @@ img::selection {
       }
     }
 
+    a[href*='v2ex.com/t'],
     a[href^='/t'] {
       color: var(--v2p-color-orange-400);
-      text-decoration: none;
+      text-decoration: underline dashed;
+      text-underline-offset: 0.5ex;
+      background-color: var(--v2p-color-orange-50);
+
+      &:hover {
+        color: var(--v2p-color-orange-400);
+        background-color: var(--v2p-color-orange-50);
+      }
     }
   }
 
@@ -703,6 +735,7 @@ img::selection {
       &.flex-one-row {
         min-height: 45px;
         padding: 0 10px;
+        border: none;
       }
 
       &.flex-row-end {

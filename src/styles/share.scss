@@ -42,13 +42,14 @@
     right: -4px;
     padding: 0 3px;
     font-size: 90%;
+    font-family: inherit;
     line-height: initial;
     border: 1px solid var(--button-border-color);
     border-radius: 4px;
   }
 }
 
-@mixin input($minHeight, $maxHeight: 800px) {
+@mixin input($minHeight: unset, $maxHeight: 800px) {
   height: unset;
   min-height: $minHeight !important;
   max-height: $maxHeight !important;
@@ -57,6 +58,7 @@
   background-color: var(--v2p-color-bg-input);
   border: 2px solid var(--v2p-color-bg-input);
   border-radius: 8px;
+  transition: opacity 0.25s;
   resize: none;
 
   @content;
@@ -66,9 +68,13 @@
     font-size: 15px;
   }
 
+  &:hover:not(:focus) {
+    opacity: 0.8;
+  }
+
   &:focus {
     background-color: transparent;
-    border-color: var(--button-border-color);
+    border: 2px solid var(--button-border-color);
     outline: none;
   }
 }
