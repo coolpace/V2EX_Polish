@@ -51,29 +51,31 @@
         border-width: 0;
       }
 
-      html,
-      body {
+      :root {
         --color-main: #1e293b;
         --color-fade: #cbd5e1;
         --color-background: #fff;
 
-        min-width: 1000px;
-        height: 100%;
-        margin: 0;
-        padding: 0;
+        background-color: var(--color-background);
+      }
+
+      body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
         color: var(--color-main);
         font-family: system-ui, sans-serif;
-        background-color: var(--color-background);
+        background-image: linear-gradient(to bottom, rgb(30 41 59 / 10%), transparent);
       }
 
       main {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        width: 100%;
         min-height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        background-image: linear-gradient(to bottom, rgb(30 41 59 / 10%), transparent);
       }
 
       .hero {
@@ -139,20 +141,22 @@
         cursor: pointer;
       }
 
-      .action:hover {
-        background-color: rgb(229 229 229);
-      }
+      @media (hover: hover) {
+        .action:hover {
+          background-color: rgb(229 229 229);
+        }
 
-      .action:hover .icon-chrome {
-        width: 0;
-        margin-right: 0;
-        opacity: 0;
-      }
+        .action:hover .icon-chrome {
+          width: 0;
+          margin-right: 0;
+          opacity: 0;
+        }
 
-      .action:hover .icon-arrow {
-        width: 24px;
-        margin-left: 5px;
-        opacity: 1;
+        .action:hover .icon-arrow {
+          width: 24px;
+          margin-left: 5px;
+          opacity: 1;
+        }
       }
 
       .icon-chrome {
@@ -185,16 +189,16 @@
       }
 
       @media screen and (max-width: 1000px) {
-        html,
-        body {
-          min-width: unset;
+        main {
+          padding: 10vh 20px;
         }
 
-        main {
-          padding: 0 20px;
+        .hero-sub-heading {
+          font-size: 18px;
         }
 
         .hero-title h1 {
+          line-height: 1;
           text-align: center;
         }
 
