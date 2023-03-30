@@ -51,7 +51,9 @@ export function handlingTopicList() {
 
                 $detailBtn.hide()
 
-                model.$title.empty().text($itemTitle.find('.topic-link').text())
+                const topicTitle = $itemTitle.find('.topic-link').text()
+
+                model.$title.empty().text(topicTitle).prop('title', topicTitle)
 
                 model.$content.empty().append(`
                 <div class="v2p-model-loading">
@@ -78,7 +80,6 @@ export function handlingTopicList() {
 
                 $detailBtn.show().prop('href', topic.url)
 
-                model.$title.empty().text(topic.title)
                 model.$content.empty().append($topicPreview)
               } catch (err) {
                 console.error(err)

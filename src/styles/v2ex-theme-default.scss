@@ -98,6 +98,8 @@ body {
 
     .header {
       > h1 {
+        font-weight: bold;
+        font-size: 22px;
         text-shadow: 2px 2px var(--v2p-color-bg-content);
       }
 
@@ -138,14 +140,14 @@ body {
         0 1.8px 0 var(--v2p-color-accent-100);
 
       color: var(--v2p-color-accent-500);
-      background-color: var(--v2p-color-accent-100);
+      background: var(--v2p-color-accent-100);
       box-shadow: var(--button-hover-shadow);
 
       &:hover {
         &,
         &:enabled {
           color: var(--v2p-color-accent-500);
-          background-color: var(--v2p-color-accent-100);
+          background: var(--v2p-color-accent-100);
           border: none;
           box-shadow: var(--button-hover-shadow);
         }
@@ -702,6 +704,7 @@ img::selection {
   }
 
   .tab_current {
+    color: var(--box-background-color);
     background-color: var(--box-foreground-color);
   }
 

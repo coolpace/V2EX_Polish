@@ -91,7 +91,10 @@ function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: 
               .find('.v2p-avatar-box')
               .removeClass('v2p-loading')
               .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
-            $memberPopup.find('.v2p-username').removeClass('v2p-loading').text(data.username)
+            $memberPopup
+              .find('.v2p-username')
+              .removeClass('v2p-loading')
+              .append(`<a href="${data.url}" target="_blank">${data.username}</a>`)
             $memberPopup
               .find('.v2p-no')
               .removeClass('v2p-loading')
@@ -336,6 +339,11 @@ function insertEmojiBox() {
   const emojiPopup = $('<div id="v2p-emoji-popup">')
     .append(emoticonsBox)
     .appendTo($('#reply-box'))
+    .on('click', () => {
+      if (replyTextArea instanceof HTMLTextAreaElement) {
+        replyTextArea.focus()
+      }
+    })
     .get(0)!
 
   const keyupHandler = (ev: JQuery.KeyDownEvent) => {
