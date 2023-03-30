@@ -92,6 +92,7 @@ body {
 
 .v2p-topic-preview {
   padding: 30px 25px;
+  line-height: 1.4;
 }
 
 .v2p-dot {
@@ -341,8 +342,6 @@ body {
 }
 
 .v2p-emoji-group {
-  font-size: 15px;
-
   & ~ & {
     margin-top: 10px;
   }
@@ -350,7 +349,7 @@ body {
 
 .v2p-emoji-title {
   margin: 0 0 10px;
-  font-weight: bold;
+  font-size: 15px;
   text-align: left;
 }
 
@@ -358,7 +357,7 @@ body {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 6px;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .v2p-emoji {
