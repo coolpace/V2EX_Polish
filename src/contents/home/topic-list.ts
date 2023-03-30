@@ -34,6 +34,7 @@ export function handlingTopicList() {
 
     $topicList.each((_, topicItem) => {
       const $topicItem = $(topicItem)
+      const $itemTitle = $topicItem.find('.item_title')
 
       $('<button class="v2p-topic-preview-btn">预览</button>')
         .on('click', () => {
@@ -50,7 +51,7 @@ export function handlingTopicList() {
 
                 $detailBtn.hide()
 
-                model.$title.empty().text('...')
+                model.$title.empty().text($itemTitle.find('.topic-link').text())
 
                 model.$content.empty().append(`
                 <div class="v2p-model-loading">
@@ -85,7 +86,7 @@ export function handlingTopicList() {
             })()
           }
         })
-        .appendTo($topicItem.find('.item_title'))
+        .appendTo($itemTitle)
     })
   })
 }
