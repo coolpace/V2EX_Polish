@@ -43,13 +43,13 @@ export function handlingTopicList() {
           const topicId = match?.at(1)
 
           if (topicId) {
+            $detailBtn.prop('href', linkHref)
+
             void (async () => {
               try {
                 abortController = new AbortController()
 
                 model.open()
-
-                $detailBtn.hide()
 
                 const topicTitle = $itemTitle.find('.topic-link').text()
 
@@ -77,8 +77,6 @@ export function handlingTopicList() {
                   </div>
                   `)
                 }
-
-                $detailBtn.show().prop('href', topic.url)
 
                 model.$content.empty().append($topicPreview)
               } catch (err) {

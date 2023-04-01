@@ -13,7 +13,6 @@ import { handlingPaging } from './paging'
 {
   // 按 Esc 隐藏回复框。
   $(document).on('keydown', (ev) => {
-    console.log(ev.isDefaultPrevented())
     if (!ev.isDefaultPrevented()) {
       if (ev.key === 'Escape') {
         const $replyBox = $('#reply-box')

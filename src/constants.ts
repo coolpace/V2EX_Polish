@@ -5,7 +5,7 @@ export const enum StorageKey {
 }
 
 export const enum V2EX {
-  Host = 'https://www.v2ex.com',
+  Origin = 'https://www.v2ex.com',
   LegacyAPI = 'https://www.v2ex.com/api',
   API = 'https://www.v2ex.com/api/v2',
 }

@@ -19,17 +19,26 @@ export const $commentCells = $commentBox.find('.cell[id^="r_"]')
 
 export const $commentTableRows = $commentCells.find('> table > tbody > tr')
 
+/** 当前页面使用的颜色模式：浅色 | 深色 */
+export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'
+
 /** 每一页的回复列表数据 */
 export const commentDataList: CommentData[] = $commentTableRows
   .map((idx, tr) => {
     const id = $commentCells[idx].id
-    const td = $(tr).find('> td:nth-child(3)')
-    const member = td.find('> strong > a')
-    const memberName = member.text()
-    const memberLink = member.prop('href')
-    const content = td.find('> .reply_content').text()
-    const likes = Number(td.find('span.small').text())
-    const floor = td.find('span.no').text()
+
+    const $tr = $(tr)
+    const $td = $tr.find('> td:nth-child(3)')
+
+    const thanked = $tr.find('> td:last-of-type > .fr').find('> .thank_area').hasClass('thanked')
+
+    const $member = $td.find('> strong > a')
+    const memberName = $member.text()
+    const memberLink = $member.prop('href')
+
+    const content = $td.find('> .reply_content').text()
+    const likes = Number($td.find('span.small').text())
+    const floor = $td.find('span.no').text()
 
     const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9]+)/g))
     const refMemberNames =
@@ -66,6 +75,8 @@ export const commentDataList: CommentData[] = $commentTableRows
       refMemberNames,
       /** 回复中 # 楼层 */
       refFloors,
+      /** 是否已经感谢过 */
+      thanked,
     }
   })
   .get()
@@ -169,13 +180,13 @@ export function createModel(props: CreateModelProps) {
 
   const handleModalOpen = () => {
     setTimeout(() => {
-      // 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
+      // Hack: 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
       if (!boundEvent) {
         $(document).on('click', docClickHandler)
         $(document).on('keydown', keyupHandler)
         boundEvent = true
       }
-    }, 0)
+    })
 
     $container.fadeIn('fast')
     document.body.classList.add('v2p-modal-open')

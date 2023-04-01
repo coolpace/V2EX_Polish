@@ -188,6 +188,18 @@ body {
   align-items: center;
   column-gap: 5px;
   user-select: none;
+
+  &.v2p-thanked {
+    color: var(--v2p-color-heart);
+    font-weight: bold;
+    opacity: 0.8;
+
+    .v2p-icon-heart {
+      svg {
+        fill: var(--v2p-color-heart);
+      }
+    }
+  }
 }
 
 @supports not selector(:has(*)) {
@@ -228,6 +240,11 @@ body {
   height: 16px;
   padding: 4px 0;
   color: var(--v2p-color-font-secondary);
+
+  &.v2p-thanked {
+    color: var(--v2p-color-heart);
+    cursor: default;
+  }
 }
 
 .topic_buttons .v2p-tb.v2p-hover-btn {
@@ -256,7 +273,6 @@ body {
   z-index: 999;
   width: max-content;
   max-height: 285px;
-  padding: 12px;
   overflow-y: auto;
   color: var(--v2p-color-main-600);
   font-size: 14px;
@@ -266,8 +282,13 @@ body {
   visibility: hidden;
 }
 
+#v2p-emoji-popup {
+  padding: 15px;
+}
+
 #v2p-member-popup {
   max-width: 300px;
+  padding: 12px;
   text-align: left;
 
   .v2p-ctn {
