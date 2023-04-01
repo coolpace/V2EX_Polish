@@ -248,11 +248,17 @@ body {
     @include share.line-clamp(2);
   }
 
-  form textarea.mle {
-    @include share.input;
+  form {
+    textarea#topic_title {
+      @include share.input(75px);
+    }
 
-    &#topic_title {
-      min-height: 75px !important;
+    #topic_title {
+      @include share.input(30px);
+    }
+
+    #topic_content {
+      @include share.input(120px);
     }
   }
 
@@ -350,6 +356,7 @@ img::selection {
 
     .cell {
       padding: 20px 10px;
+      background-image: none !important;
     }
   }
 
@@ -711,7 +718,7 @@ img::selection {
   #reply-box {
     &.reply-box-sticky {
       bottom: 20px;
-      z-index: 10;
+      z-index: 99;
       overflow: visible;
       border: none;
       border-radius: 10px;

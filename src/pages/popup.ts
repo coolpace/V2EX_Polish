@@ -70,7 +70,7 @@ function loadSettings() {
         $patInput.val(api.pat).addClass('has-value')
       }
       $('#limit').val(api.limit ?? defaultValue)
-      $('#reset').val(api.reset ? formatTimestamp(api.reset, true) : defaultValue)
+      $('#reset').val(api.reset ? formatTimestamp(api.reset, { format: 'YMDHMS' }) : defaultValue)
       $('#remaining').val(api.remaining ?? defaultValue)
     }
   })
@@ -223,7 +223,7 @@ function initTabs() {
                   const link = $(a)
                   link
                     .prop('target', '_blank')
-                    .prop('href', `${V2EX.Host}${link.attr('href') ?? ''}`)
+                    .prop('href', `${V2EX.Origin}${link.attr('href') ?? ''}`)
                 })
 
                 $tabContent
@@ -231,7 +231,7 @@ function initTabs() {
                   .append(
                     `
                   <div class="message-actions">
-                    <a class="view-all-btn" href="${V2EX.Host}/notifications" target="_blank">查看所有消息</a>
+                    <a class="view-all-btn" href="${V2EX.Origin}/notifications" target="_blank">查看所有消息</a>
                   </div>
                   `
                   )
@@ -260,7 +260,7 @@ function initTabs() {
       // 每次切换 tab 都滚动到最顶部，防止受上一个 tab 的滚动位置影响。
       // 加入 setTimeout 是为了等待 tab 内容完成插入，防止出现滚动位置不正确的情况。
       $tabContent.scrollTop(tabContentScrollTop)
-    }, 0)
+    })
   }
 
   const toggleActiveTab = ($tab: JQuery) => {

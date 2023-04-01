@@ -4,13 +4,13 @@ export interface Options {
   avatar?: boolean
 }
 
-export interface LegacyAPI {
+export interface LegacyAPI_Info {
   limit?: number
   reset?: number
   remaining?: number
 }
 
-export interface API {
+export interface API_Info {
   pat?: string
   limit?: number
   reset?: number
@@ -19,8 +19,8 @@ export interface API {
 
 export interface StorageData {
   [StorageKey.Options]?: Options
-  [StorageKey.LegacyAPI]?: LegacyAPI
-  [StorageKey.API]?: API
+  [StorageKey.LegacyAPI]?: LegacyAPI_Info
+  [StorageKey.API]?: API_Info
 }
 
 export interface Topic {
@@ -124,4 +124,5 @@ export interface CommentData {
   index: number
   refMemberNames: string[] | undefined
   refFloors: string[] | undefined
+  thanked: boolean
 }

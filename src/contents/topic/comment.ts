@@ -139,7 +139,8 @@ function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: 
 }
 
 /**
- * 处理回复内容，过长内容会被折叠。
+ * 处理回复内容：
+ *  - 过长内容会被折叠。
  */
 function processReplyContent(cellDom: HTMLElement) {
   const $cellDom = $(cellDom)
@@ -150,9 +151,9 @@ function processReplyContent(cellDom: HTMLElement) {
 
   const $replyContent = $cellDom.find('.reply_content')
 
-  const height = $replyContent.height() ?? 0
+  const contentHeight = $replyContent.height() ?? 0
 
-  const shouldCollapsed = height + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
+  const shouldCollapsed = contentHeight + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
 
   if (shouldCollapsed) {
     const collapsedCSS = {
@@ -250,7 +251,7 @@ function handlingControls() {
     const thanked = thankArea.hasClass('thanked')
 
     if (thanked) {
-      thankIcon.prop('title', '已感谢').css({ color: '#f43f5e', cursor: 'default' })
+      thankIcon.prop('title', '已感谢').addClass('v2p-thanked')
       crtlContainer.append($('<a>').append(thankIcon))
     } else {
       const thankEle = thankArea.find('> .thank')
@@ -412,16 +413,18 @@ function insertEmojiBox() {
 
 export function handlingComments() {
   {
+    // 此区块的逻辑需要在处理嵌套评论前执行。
+
     // 替换感谢的爱心。
     $commentCells
       .find('.small.fade')
       .addClass('v2p-heart-box')
       .find('img[alt="❤️"]')
       .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
-  }
 
-  handlingControls()
-  handlingPopularComments()
+    handlingControls()
+    handlingPopularComments()
+  }
 
   {
     const $memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox)
@@ -443,12 +446,20 @@ export function handlingComments() {
           : commentDataList.find((data) => data.id === cellDom.id)
 
       if (currentComment) {
-        const { memberName, refMemberNames, refFloors } = currentComment
+        const { memberName, refMemberNames, refFloors, thanked } = currentComment
+
+        const $cellDom = $(cellDom)
 
         if (memberName === loginName) {
-          $(cellDom)
+          $cellDom
             .find('.badges')
             .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
+        }
+
+        {
+          if (thanked) {
+            $cellDom.find('.v2p-heart-box').addClass('v2p-thanked')
+          }
         }
 
         if (!refMemberNames || refMemberNames.length === 0) {
