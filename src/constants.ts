@@ -91,6 +91,10 @@ export const emoticons = [
   },
 ]
 
+export const enum Links {
+  Feedback = 'https://github.com/coolpace/V2EX_Polish/discussions/1',
+}
+
 export const READABLE_CONTENT_HEIGHT = 250
 export const MAX_CONTENT_HEIGHT = 550
 
