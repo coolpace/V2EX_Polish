@@ -56,15 +56,27 @@ button {
   border-radius: 5px;
 
   li {
-    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 0 10px;
     letter-spacing: 1px;
     border-radius: 3px;
     cursor: pointer;
     user-select: none;
 
+    &:hover {
+      background-color: var(--v2p-color-main-200);
+    }
+
     &.active {
       color: var(--v2p-color-main-100);
       background-color: var(--v2p-color-main-800);
+    }
+
+    &[data-target='tab-setting'] {
+      margin-left: auto;
     }
   }
 }
@@ -314,7 +326,7 @@ hr {
   padding: 5px 0;
 }
 
-details a {
+a.link {
   text-underline-offset: 0.5ex;
   text-decoration: underline dashed;
 

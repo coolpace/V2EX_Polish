@@ -6,7 +6,7 @@
  * 4. 来回切换 tab 时，应当保持 tab 的滚动位置。
  */
 
-import { dataExpiryTime, StorageKey, V2EX } from '../constants'
+import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
 import { createButton } from '../contents/globals'
 import { iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
@@ -30,7 +30,11 @@ const loading = `
 </div>
 `
 
-const errorDisplay = '<div class="fetch-error">无法获取到列表数据，请稍后再试。</div>'
+const errorDisplay = `
+<div class="fetch-error">
+  无法获取列表数据，请稍后再试，或<a class="link" href="${Links.Feedback}" target="_blank">报告问题</a>。
+</div>
+`
 
 const topicContentData: Record<TabId, RemoteDataStore> = {
   [TabId.Hot]: {

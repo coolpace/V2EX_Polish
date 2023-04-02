@@ -647,10 +647,10 @@ img::selection {
     flex-wrap: wrap;
     gap: 6px 8px;
     align-items: center;
+    user-select: none;
 
     .tab {
       margin: 0;
-      user-select: none;
     }
   }
 
