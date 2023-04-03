@@ -1,8 +1,8 @@
 import { TOKEN_EXPIRED_MESSAGE } from '../../constants'
 import { iconLoading } from '../../icons'
-import { fetchTopic } from '../../services'
+import { fetchTopic, fetchTopicReplies } from '../../services'
 import { $topicList } from '../globals'
-import { createButton, createModel, getPAT, isV2EX_RequestError } from '../helpers'
+import { createButton, createModel, escapeHTML, getPAT, isV2EX_RequestError } from '../helpers'
 
 export function handlingTopicList() {
   void getPAT().then((PAT) => {
@@ -59,9 +59,14 @@ export function handlingTopicList() {
                 </div>
                 `)
 
-                const { result: topic } = await fetchTopic(topicId, {
-                  signal: abortController.signal,
-                })
+                const promises = [
+                  fetchTopic(topicId, {
+                    signal: abortController.signal,
+                  }),
+                  fetchTopicReplies(topicId),
+                ] as const
+
+                const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
 
                 const $topicPreview = $('<div class="v2p-topic-preview">')
 
@@ -74,6 +79,26 @@ export function handlingTopicList() {
                     <p>该主题没有正文内容</p>
                   </div>
                   `)
+                }
+
+                if (topicReplies.length > 0) {
+                  const $template = $('<div>')
+
+                  topicReplies.forEach((r) => {
+                    $template.append(`
+                    <div class="v2p-topic-reply">
+                      <div class="v2p-topic-reply-member">
+                        <img src="${r.member.avatar}">
+                        <span>${r.member.username}：</span>
+                      </div>
+                      <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
+                    </div>
+                    `)
+                  })
+
+                  $('<div class="v2p-topic-reply-box">')
+                    .append($template.html())
+                    .appendTo($topicPreview)
                 }
 
                 model.$content.empty().append($topicPreview)

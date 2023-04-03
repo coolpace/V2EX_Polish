@@ -23,6 +23,30 @@ export interface StorageData {
   [StorageKey.API]?: API_Info
 }
 
+export interface Member {
+  id: number
+  username: string
+  url: string
+
+  avatar_mini: string
+  avatar_normal: string
+  avatar_large: string
+  avatar_xlarge: string
+  avatar_xxlarge: string
+
+  bio?: string
+  github?: string
+  website?: string
+  twitter?: string
+  btc?: string
+  psn?: string
+  location?: string
+  tagline?: string
+
+  created: number
+  last_modified: number
+}
+
 export interface Topic {
   id: number
   title: string
@@ -66,28 +90,12 @@ export interface Topic {
   }
 }
 
-export interface Member {
+export interface TopicReply {
   id: number
-  username: string
-  url: string
-
-  avatar_mini: string
-  avatar_normal: string
-  avatar_large: string
-  avatar_xlarge: string
-  avatar_xxlarge: string
-
-  bio?: string
-  github?: string
-  website?: string
-  twitter?: string
-  btc?: string
-  psn?: string
-  location?: string
-  tagline?: string
-
   created: number
-  last_modified: number
+  content: string
+  content_rendered: string
+  member: { avatar: string } & Pick<Member, 'id' | 'url' | 'username'>
 }
 
 export interface Notification {

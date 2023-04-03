@@ -454,6 +454,42 @@ body {
   }
 }
 
+.v2p-topic-reply-box {
+  margin-top: 50px;
+  padding: 30px 0;
+  color: var(--v2p-color-main-500);
+  font-size: 13px;
+  line-height: 1.55;
+  border-top: 1px solid var(--v2p-color-divider);
+}
+
+.v2p-topic-reply {
+  & ~ & {
+    margin-top: 15px;
+  }
+
+  .v2p-topic-reply-member {
+    display: inline-flex;
+    gap: 0 5px;
+    color: var(--v2p-color-main-700);
+    vertical-align: bottom;
+
+    img {
+      width: 14px;
+      height: 14px;
+      object-fit: cover;
+
+      & + span {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .v2p-topic-reply-content {
+    display: inline;
+  }
+}
+
 #Bottom {
   @at-root {
     .v2p-footer {

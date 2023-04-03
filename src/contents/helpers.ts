@@ -41,6 +41,15 @@ export function getPAT(): Promise<PersonalAccessToken> {
   })
 }
 
+export function escapeHTML(html: string) {
+  return html
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/"/g, '"')
+    .replace(/'/g, "'")
+}
+
 export function createButton(props: {
   children: string
   className?: string

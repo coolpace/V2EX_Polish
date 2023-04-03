@@ -262,14 +262,27 @@ hr {
 }
 
 .message-actions {
-  padding: 5px 10px;
+  display: flex;
+  min-height: 25px;
+  padding: 0 10px;
 
   .view-all-btn {
+    display: inline-flex;
+    gap: 0 6px;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
     padding: 5px 8px;
     color: var(--v2p-color-main-800);
     text-align: center;
     background-color: var(--v2p-color-main-200);
     border-radius: 5px;
+
+    .icon-chat {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+    }
   }
 }
 
