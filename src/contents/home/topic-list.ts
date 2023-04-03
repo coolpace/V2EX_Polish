@@ -1,13 +1,11 @@
-import { StorageKey } from '../../constants'
+import { TOKEN_EXPIRED_MESSAGE } from '../../constants'
 import { iconLoading } from '../../icons'
 import { fetchTopic } from '../../services'
-import type { StorageData } from '../../types'
-import { $topicList, createButton, createModel } from '../globals'
+import { $topicList } from '../globals'
+import { createButton, createModel, getPAT, isV2EX_RequestError } from '../helpers'
 
 export function handlingTopicList() {
-  chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
-    const PAT = result[StorageKey.API]?.pat
-
+  void getPAT().then((PAT) => {
     if (!PAT) {
       return
     }
@@ -61,7 +59,7 @@ export function handlingTopicList() {
                 </div>
                 `)
 
-                const { result: topic } = await fetchTopic(topicId, PAT, {
+                const { result: topic } = await fetchTopic(topicId, {
                   signal: abortController.signal,
                 })
 
@@ -80,7 +78,12 @@ export function handlingTopicList() {
 
                 model.$content.empty().append($topicPreview)
               } catch (err) {
-                console.error(err)
+                if (isV2EX_RequestError(err)) {
+                  const message = err.cause.message
+                  if (message === TOKEN_EXPIRED_MESSAGE) {
+                    model.$content.empty().append(`<div>${err.cause.message}</div>`)
+                  }
+                }
               }
             })()
           }

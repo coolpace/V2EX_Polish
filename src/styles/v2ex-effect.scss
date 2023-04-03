@@ -453,3 +453,73 @@ body {
     font-size: 20px;
   }
 }
+
+#Bottom {
+  @at-root {
+    .v2p-footer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 35px 10px;
+      color: var(--v2p-color-main-500);
+      font-size: 12px;
+      border-top: 1px solid var(--v2p-color-divider);
+
+      a {
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .v2p-footer-logo {
+      --logo-size: 16px;
+
+      position: absolute;
+      top: calc(-1 * (var(--logo-size) + 5px) / 2);
+      left: 50%;
+      display: inline-flex;
+      box-sizing: border-box;
+      padding: 3px 25px;
+      background-color: var(--v2p-color-bg-footer);
+      transform: translateX(-50%);
+      opacity: 0.8;
+
+      svg {
+        width: var(--logo-size);
+      }
+    }
+
+    .v2p-footer-text {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 240px;
+      color: var(--v2p-color-font-secondary);
+    }
+
+    .v2p-footer-link {
+      display: inline-flex;
+      gap: 0 8px;
+      align-items: center;
+
+      > span > a {
+        padding: 2px 5px;
+        color: currentColor;
+      }
+    }
+
+    .v2p-footer-brand {
+      display: inline-flex;
+      gap: 0 15px;
+      align-items: center;
+      justify-content: flex-end;
+      width: 240px;
+
+      > span {
+        width: 20px;
+      }
+    }
+  }
+}

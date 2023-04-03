@@ -7,7 +7,7 @@
  */
 
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
-import { createButton } from '../contents/globals'
+import { createButton } from '../contents/helpers'
 import { iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'
@@ -205,7 +205,7 @@ function initTabs() {
 
           $tabContent.html(loading)
 
-          fetchNotifications(api.pat)
+          fetchNotifications()
             .then(({ result: notifications }) => {
               if (notifications.length > 0) {
                 const $noticeList = $(`<ul class="list">`).append(

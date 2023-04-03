@@ -109,9 +109,15 @@ export interface Notification {
 }
 
 export interface DataWrapper<T = unknown> {
-  suucess: boolean
+  success: boolean
   message?: string
   result: T
+}
+
+export interface V2EX_RequestErrorResponce {
+  cause: Pick<DataWrapper, 'success'> & {
+    message: string
+  }
 }
 
 export interface CommentData {
@@ -126,3 +132,5 @@ export interface CommentData {
   refFloors: string[] | undefined
   thanked: boolean
 }
+
+export type PersonalAccessToken = string | undefined

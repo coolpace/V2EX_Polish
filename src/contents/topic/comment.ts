@@ -10,11 +10,10 @@ import {
   $commentCells,
   $commentTableRows,
   commentDataList,
-  createButton,
-  createModel,
   loginName,
   topicOwnerName,
 } from '../globals'
+import { createButton, createModel } from '../helpers'
 
 /**
  * 点击头像会展示该用户的信息。
@@ -201,13 +200,13 @@ function handlingPopularComments() {
     root: $commentBox,
     title: `本页共有 ${popularCommentData.length} 条热门回复`,
     onMount: ({ $content }) => {
-      const templete = $('<templete></templete>')
+      const $templete = $('<templete></templete>')
 
       popularCommentData.forEach(({ index }) => {
-        templete.append($commentCells.eq(index).clone())
+        $templete.append($commentCells.eq(index).clone())
       })
 
-      $content.css({ padding: '0 20px' }).append(templete.html())
+      $content.css({ padding: '0 20px' }).append($templete.html())
     },
     onOpen: ({ $container }) => {
       $container.find('.cell[id^="r_"]').each((_, cellDom) => {
