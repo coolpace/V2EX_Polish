@@ -2,13 +2,15 @@
 
 V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能。
 
-### 使用方式
+## 使用方式
 
-- [Chrome 商店安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
+- [Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
 - [手动安装](https://github.com/coolpace/V2EX_Polish/release)
 
 > **Note**  
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
+
+## 扩展功能
 
 ### ⊙ 主要功能：
 
@@ -28,7 +30,7 @@ V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰�
 
 - 点击用户头像，查看用户信息。
 
-- 右键菜单支持解析页面中所有使用 Base64 编码的内容。
+- 右键菜单扩展：支持解析页面中所有使用 Base64 编码的内容。
 
 - 在主题列表中即可预览内容，无需再进入主题页面。
 
@@ -36,8 +38,14 @@ V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰�
 
 更多功能等你一探究竟，一起来探索更先进的 V2EX 吧！
 
-### 问题反馈
+## 为什么选择 V2EX Polish？
 
-我们需要你的建议和反馈，以提供更优质的体验。如果在使用中遇难任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1)向我们反馈。
+在社区中早已存在众多对于增强 v2ex.com 的[脚本](https://greasyfork.org/zh-CN/scripts/by-site/v2ex.com)和[插件](https://chrome.google.com/webstore/search/v2ex?_category=extensions)，然而它们带来的体验良莠不齐，且大多数已经停止更新。
 
-喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)给我们好评！🥰
+V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护，快速响应 V2EX 用户的需求。我们希望打造的是最高质量的 V2EX 扩展，提供最佳的体验。
+
+## 问题反馈
+
+我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1)向我们反馈。
+
+喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰
