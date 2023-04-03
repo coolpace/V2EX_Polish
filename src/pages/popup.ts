@@ -8,7 +8,7 @@
 
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
 import { createButton } from '../contents/helpers'
-import { iconLoading } from '../icons'
+import { iconChat, iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'
 import { formatTimestamp } from '../utils'
@@ -235,7 +235,10 @@ function initTabs() {
                   .append(
                     `
                   <div class="message-actions">
-                    <a class="view-all-btn" href="${V2EX.Origin}/notifications" target="_blank">查看所有消息</a>
+                    <a class="view-all-btn" href="${V2EX.Origin}/notifications" target="_blank">
+                      <span class="icon-chat">${iconChat}</span>
+                      查看所有消息
+                    </a>
                   </div>
                   `
                   )

@@ -8,6 +8,7 @@ import type {
   Notification,
   StorageData,
   Topic,
+  TopicReply,
 } from './types'
 
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
@@ -93,6 +94,13 @@ export function fetchProfile() {
 
 export function fetchTopic(topicId: string, options?: RequestInit) {
   return request<Topic>(`${V2EX_API}/topics/${topicId}`, { method: 'GET', ...options })
+}
+
+export function fetchTopicReplies(topicId: string, options?: RequestInit) {
+  return request<TopicReply[]>(`${V2EX_API}/topics/${topicId}/replies`, {
+    method: 'GET',
+    ...options,
+  })
 }
 
 export function fetchNotifications(page = 1) {

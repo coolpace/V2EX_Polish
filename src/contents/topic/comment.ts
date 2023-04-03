@@ -200,13 +200,13 @@ function handlingPopularComments() {
     root: $commentBox,
     title: `本页共有 ${popularCommentData.length} 条热门回复`,
     onMount: ({ $content }) => {
-      const $templete = $('<templete></templete>')
+      const $template = $('<div>')
 
       popularCommentData.forEach(({ index }) => {
-        $templete.append($commentCells.eq(index).clone())
+        $template.append($commentCells.eq(index).clone())
       })
 
-      $content.css({ padding: '0 20px' }).append($templete.html())
+      $content.css({ padding: '0 20px' }).append($template.html())
     },
     onOpen: ({ $container }) => {
       $container.find('.cell[id^="r_"]').each((_, cellDom) => {
