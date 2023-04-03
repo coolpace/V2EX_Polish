@@ -1,4 +1,5 @@
 import { StorageKey, V2EX } from './constants'
+import { getPAT } from './contents/helpers'
 import type {
   API_Info,
   DataWrapper,
@@ -56,7 +57,12 @@ export function fetchHotTopics(options?: RequestInit) {
 }
 
 async function request<Data>(url: string, options?: RequestInit): Promise<DataWrapper<Data>> {
-  const res = await fetch(url, options)
+  const PAT = await getPAT()
+
+  const res = await fetch(url, {
+    ...options,
+    headers: { Authorization: PAT ? `Bearer ${PAT}` : '', ...options?.headers },
+  })
 
   const limit = res.headers.get('X-Rate-Limit-Limit')
   const reset = res.headers.get('X-Rate-Limit-Reset')
@@ -72,35 +78,27 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
     void chrome.storage.sync.set({ [StorageKey.API]: api })
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return res.json()
+  const resultData: DataWrapper<Data> = await res.json()
+
+  if (typeof resultData.success === 'boolean' && !resultData.success) {
+    throw new Error(resultData.message, { cause: resultData })
+  }
+
+  return resultData
 }
 
-export function fetchProfile(PAT: string) {
-  return request<Member>(`${V2EX_API}/member`, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${PAT}` },
-  })
+export function fetchProfile() {
+  return request<Member>(`${V2EX_API}/member`, { method: 'GET' })
 }
 
-export function fetchTopic(topicId: string, PAT: string, options?: RequestInit) {
-  return request<Topic>(`${V2EX_API}/topics/${topicId}`, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${PAT}` },
-    ...options,
-  })
+export function fetchTopic(topicId: string, options?: RequestInit) {
+  return request<Topic>(`${V2EX_API}/topics/${topicId}`, { method: 'GET', ...options })
 }
 
-export function fetchNotifications(PAT: string, page = 1) {
-  return request<Notification[]>(`${V2EX_API}/notifications?p=${page}`, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${PAT}` },
-  })
+export function fetchNotifications(page = 1) {
+  return request<Notification[]>(`${V2EX_API}/notifications?p=${page}`, { method: 'GET' })
 }
 
-export function deleteNotification(PAT: string, notification_id: string) {
-  return request(`${V2EX_API}/notifications/${notification_id}`, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${PAT}` },
-  })
+export function deleteNotification(notification_id: string) {
+  return request(`${V2EX_API}/notifications/${notification_id}`, { method: 'GET' })
 }

@@ -99,3 +99,6 @@ export const READABLE_CONTENT_HEIGHT = 250
 export const MAX_CONTENT_HEIGHT = 550
 
 export const dataExpiryTime = 60 * 60 * 1000
+
+/** 当 PAT 过期时 V2EX API 返回的错误信息 */
+export const TOKEN_EXPIRED_MESSAGE = 'Token expired'
