@@ -36,13 +36,19 @@ V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰�
 
 - 翻页后自动跳转到回复区。
 
-更多功能等你一探究竟，一起来探索更先进的 V2EX 吧！
+- ...... _更多功能等你一探究竟！_
 
 ## 为什么选择 V2EX Polish？
 
 在社区中早已存在众多对于增强 v2ex.com 的[脚本](https://greasyfork.org/zh-CN/scripts/by-site/v2ex.com)和[插件](https://chrome.google.com/webstore/search/v2ex?_category=extensions)，然而它们带来的体验良莠不齐，且大多数已经停止更新。
 
 V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护，快速响应 V2EX 用户的需求。我们希望打造的是最高质量的 V2EX 扩展，提供最佳的体验。
+
+## 如何帮助我们
+
+- 为我们的项目点个 Star ⭐️ 或分享给他人，让更多的人知道我们的存在。
+- 为我们的项目提供反馈，帮助我们改进。
+- 为我们的项目提供[代码贡献](./.github/CONTRIBUTING.md)。
 
 ## 问题反馈
 
