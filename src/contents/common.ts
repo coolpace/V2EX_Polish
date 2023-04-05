@@ -12,13 +12,9 @@ import { colorTheme } from './globals'
   <div class="v2p-footer">
     <div class="v2p-footer-text">扩展自 V2EX Polish </div>
 
-    <div class="v2p-footer-link">
-      <span>
-        <a href="https://v2p.app" target="_blank">插件主页</a>
-      </span>
-      <span>
-        <a href="https://github.com/coolpace/V2EX_Polish/discussions/1" target="_blank">问题反馈</a>
-      </span>
+    <div class="v2p-footer-links">
+      <a class="v2p-footer-link v2p-hover-btn" href="https://v2p.app" target="_blank">插件主页</a>
+      <a class="v2p-footer-link v2p-hover-btn" href="https://github.com/coolpace/V2EX_Polish/discussions/1" target="_blank">问题反馈</a>
     </div>
 
     <div class="v2p-footer-brand">

@@ -539,15 +539,15 @@ body {
       color: var(--v2p-color-font-secondary);
     }
 
-    .v2p-footer-link {
+    .v2p-footer-links {
       display: inline-flex;
       gap: 0 8px;
       align-items: center;
+    }
 
-      > span > a {
-        padding: 2px 5px;
-        color: currentColor;
-      }
+    .v2p-footer-link {
+      padding: 4px 5px;
+      color: currentColor;
     }
 
     .v2p-footer-brand {
