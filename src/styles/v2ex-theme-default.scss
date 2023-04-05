@@ -705,6 +705,7 @@ img::selection {
 
   .tab {
     background-color: transparent;
+    user-select: none;
 
     &:not(.v2p-hover-btn):hover {
       background-color: var(--v2p-color-main-100);
@@ -714,6 +715,7 @@ img::selection {
   .tab_current {
     color: var(--box-background-color);
     background-color: var(--box-foreground-color);
+    user-select: none;
   }
 
   #reply-box {

@@ -23,12 +23,22 @@ import { colorTheme } from './globals'
 
     <div class="v2p-footer-brand">
       <span>
-        <a href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm" target="_blank">
+        <a
+          href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
+          target="_blank"
+          title="Chrome 应用商店"
+        >
           ${iconChromeWebStore}
         </a>
       </span>
       <span>
-        <a href="https://github.com/coolpace/V2EX_Polish" target="_blank">${iconGitHub}</a>
+        <a
+          href="https://github.com/coolpace/V2EX_Polish"
+          target="_blank"
+          title="GitHub 仓库"
+        >
+          ${iconGitHub}
+        </a>
       </span>
     </div>
   </div>
