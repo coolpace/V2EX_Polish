@@ -1,4 +1,4 @@
-import { TOKEN_EXPIRED_MESSAGE } from '../../constants'
+import { RequestMessage } from '../../constants'
 import { iconLoading } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import { $topicList } from '../globals'
@@ -88,8 +88,8 @@ export function handlingTopicList() {
                     $template.append(`
                     <div class="v2p-topic-reply">
                       <div class="v2p-topic-reply-member">
-                        <img src="${r.member.avatar}">
-                        <span>${r.member.username}：</span>
+                        <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
+                        <span class="v2p-topic-reply-username">${r.member.username}：</span>
                       </div>
                       <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
                     </div>
@@ -105,7 +105,10 @@ export function handlingTopicList() {
               } catch (err) {
                 if (isV2EX_RequestError(err)) {
                   const message = err.cause.message
-                  if (message === TOKEN_EXPIRED_MESSAGE) {
+                  if (
+                    message === RequestMessage.TokenExpired ||
+                    message === RequestMessage.InvalidToken
+                  ) {
                     model.$content.empty().append(`<div>${err.cause.message}</div>`)
                   }
                 }
