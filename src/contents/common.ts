@@ -1,9 +1,31 @@
-import { iconChromeWebStore, iconGitHub, iconLogoDark, iconLogoLight } from '../icons'
+import {
+  iconChromeWebStore,
+  iconDark,
+  iconGitHub,
+  iconLight,
+  iconLogoDark,
+  iconLogoLight,
+} from '../icons'
 import { colorTheme } from './globals'
 
 {
   // 为顶部导航栏的按钮添加 hover 效果。
   $('#Top .site-nav .tools > .top').addClass('v2p-hover-btn')
+}
+
+{
+  const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
+  const $toggleImg = $toggle.find('> img')
+
+  if ($toggleImg.prop('alt') === 'Light') {
+    $toggle.prop('title', '切换至深色模式')
+    $toggleImg.replaceWith(iconDark)
+  }
+
+  if ($toggleImg.prop('alt') === 'Dark') {
+    $toggle.prop('title', '切换至浅色模式')
+    $toggleImg.replaceWith(iconLight)
+  }
 }
 
 {

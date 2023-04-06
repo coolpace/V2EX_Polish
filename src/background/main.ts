@@ -35,7 +35,7 @@ chrome.contextMenus.removeAll(() => {
   chrome.contextMenus.create({
     documentUrlPatterns: ['https://*.v2ex.com/t*'],
     contexts: ['page'],
-    title: '解析 Base64',
+    title: '解析本页 Base64',
     id: Menu.Decode,
     parentId: Menu.Root,
   })

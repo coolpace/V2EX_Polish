@@ -47,7 +47,7 @@ body {
   .cell {
     &:hover {
       .v2p-topic-preview-btn {
-        opacity: 1;
+        visibility: visible;
       }
     }
   }
@@ -81,13 +81,13 @@ body {
   top: -1px;
   margin-left: 10px;
   color: var(--button-foreground-color);
-  font-size: 12px;
+  font-size: 14px;
   background-color: var(--button-hover-color);
   border: none;
   border-radius: 3px;
   outline: none;
+  visibility: hidden;
   cursor: pointer;
-  opacity: 0;
 }
 
 .v2p-topic-preview {
@@ -239,7 +239,11 @@ body {
   width: 16px;
   height: 16px;
   padding: 4px 0;
-  color: var(--v2p-color-font-secondary);
+  color: var(--v2p-color-main-500);
+
+  &:hover {
+    color: var(--v2p-color-main-600);
+  }
 
   &.v2p-thanked {
     color: var(--v2p-color-heart);
@@ -561,5 +565,15 @@ body {
         width: 20px;
       }
     }
+  }
+}
+
+.v2p-color-mode-toggle {
+  width: 22px;
+  height: 22px;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
   }
 }
