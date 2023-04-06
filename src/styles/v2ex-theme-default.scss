@@ -127,6 +127,7 @@ body {
         color: var(--v2p-color-main-500) !important;
         text-shadow: none !important;
         background-color: var(--v2p-color-main-100) !important;
+        background-image: none !important;
       }
 
       &.disable_now {
@@ -231,6 +232,10 @@ body {
     }
 
     .member-activity-almost {
+      background-color: var(--v2p-color-accent-600);
+    }
+
+    .member-activity-done {
       background-color: var(--v2p-color-orange-400);
     }
   }
@@ -274,6 +279,11 @@ body {
         cursor: pointer;
       }
     }
+  }
+
+  // 提醒系统里的回复时间。
+  .snow {
+    color: var(--v2p-color-main-400);
   }
 }
 
@@ -470,20 +480,36 @@ img::selection {
       }
     }
 
-    &:hover .count_livid {
-      opacity: 1;
+    &:hover {
+      .count_livid,
+      .count_orange {
+        opacity: 1;
+      }
     }
 
-    .count_livid {
+    @mixin count {
       display: inline-block;
       padding: 5px 10px;
-      color: var(--v2p-color-font-secondary);
       font-weight: 400;
       font-size: 12px;
       white-space: nowrap;
-      background-color: var(--v2p-color-main-200);
       border-radius: 5px;
       opacity: 0.8;
+    }
+
+    .count_livid {
+      @include count;
+
+      color: var(--v2p-color-font-secondary);
+      background-color: var(--v2p-color-main-200);
+    }
+
+    .count_orange {
+      @include count;
+
+      color: var(--v2p-color-main-100);
+      font-weight: bold;
+      background-color: var(--v2p-color-orange-400);
     }
 
     .item_title {
