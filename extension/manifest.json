@@ -3,13 +3,13 @@
 
   "name": "V2EX Polish",
 
-  "version": "1.0.0",
+  "version": "1.0.1",
 
   "description": "专为 V2EX 用户设计，提供了丰富的扩展功能。",
 
   "permissions": ["scripting", "contextMenus", "storage"],
 
-  "host_permissions": ["https://*.v2ex.com/*"],
+  "host_permissions": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
 
   "icons": {
     "16": "images/icon-16.png",
@@ -20,22 +20,22 @@
 
   "content_scripts": [
     {
-      "matches": ["https://*.v2ex.com/*"],
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "css": ["css/v2ex-theme-var.css", "css/v2ex-theme-default.css"],
       "run_at": "document_start"
     },
     {
-      "matches": ["https://*.v2ex.com/*"],
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "css": ["css/v2ex-effect.css"],
       "js": ["scripts/jquery-3.5.1.min.js", "scripts/common.min.js"]
     },
     {
-      "matches": ["https://*.v2ex.com/*"],
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings"],
       "js": ["scripts/v2ex-home.min.js"]
     },
     {
-      "matches": ["https://*.v2ex.com/t/*"],
+      "matches": ["https://v2ex.com/t/*", "https://www.v2ex.com/t/*"],
       "js": ["scripts/v2ex-topic.min.js"]
     },
     {
