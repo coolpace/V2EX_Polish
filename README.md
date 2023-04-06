@@ -1,13 +1,13 @@
 # V2EX Polish
 
-V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能。
+V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX 页面焕然一新 ！。
 
 ## 使用方式
 
 - [Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
-- [手动安装](https://github.com/coolpace/V2EX_Polish/release)
+- [手动安装](https://github.com/coolpace/V2EX_Polish/releases)
 
-> **Note**  
+> **Note**
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
 
 ## 扩展功能
