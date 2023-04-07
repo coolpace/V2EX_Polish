@@ -105,6 +105,10 @@ body {
 
 .v2p-paging {
   background: none !important;
+
+  &.cell {
+    border-bottom: none;
+  }
 }
 
 .v2p-model-mask {
@@ -115,6 +119,20 @@ body {
   overflow-y: auto;
   background-color: var(--v2p-color-mask);
   inset: 0;
+}
+
+.v2p-popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  width: max-content;
+  overflow-y: auto;
+  color: var(--v2p-color-main-600);
+  font-size: 14px;
+  background: var(--v2p-color-bg-content);
+  border-radius: 8px;
+  box-shadow: var(--v2p-widget-shadow);
 }
 
 .v2p-model-main {
@@ -266,65 +284,67 @@ body {
     text-decoration: none;
     opacity: 1;
   }
-}
-
-.v2p-control {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  padding: 4px 0;
-  color: var(--v2p-color-main-500);
-
-  &:hover {
-    color: var(--v2p-color-main-600);
-  }
-
-  &.v2p-thanked {
-    color: var(--v2p-color-heart);
-    cursor: default;
-  }
-
-  &::after {
-    position: absolute;
-    top: -8px;
-    z-index: 10;
-    min-width: 30px;
-    padding: 2px 5px;
-    font-size: 12px;
-    white-space: nowrap;
-    text-align: center;
-    background-color: var(--v2p-color-bg-content);
-    border-radius: 4px;
-    box-shadow: var(--v2p-widget-shadow);
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  &:hover::after {
-    opacity: 1;
-  }
 
   @at-root {
-    &.v2p-control-hide::after {
-      content: '隐藏回复';
-    }
+    .v2p-control {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 4px 0;
+      color: var(--v2p-color-main-500);
 
-    &.v2p-control-thank {
+      &:hover {
+        color: var(--v2p-color-main-600);
+      }
+
+      &.v2p-thanked {
+        color: var(--v2p-color-heart);
+        cursor: default;
+      }
+
       &::after {
-        content: '感谢回复';
+        position: absolute;
+        top: -8px;
+        z-index: 10;
+        min-width: 30px;
+        padding: 2px 5px;
+        font-size: 12px;
+        white-space: nowrap;
+        text-align: center;
+        background-color: var(--v2p-color-bg-content);
+        border-radius: 4px;
+        box-shadow: var(--v2p-widget-shadow);
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
       }
 
-      &.v2p-thanked::after {
-        content: '已感谢';
+      &:hover::after {
+        opacity: 1;
       }
-    }
 
-    &.v2p-control-reply::after {
-      content: '回复';
+      @at-root {
+        &.v2p-control-hide::after {
+          content: '隐藏回复';
+        }
+
+        &.v2p-control-thank {
+          &::after {
+            content: '感谢回复';
+          }
+
+          &.v2p-thanked::after {
+            content: '已感谢';
+          }
+        }
+
+        &.v2p-control-reply::after {
+          content: '回复';
+        }
+      }
     }
   }
 }
@@ -540,39 +560,43 @@ body {
   margin-top: 50px;
   padding: 30px 0;
   color: var(--v2p-color-main-500);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.55;
   border-top: 1px solid var(--v2p-color-divider);
-}
 
-.v2p-topic-reply {
-  & ~ & {
-    margin-top: 15px;
-  }
+  @at-root {
+    .v2p-topic-reply {
+      & ~ & {
+        margin-top: 15px;
+      }
 
-  .v2p-topic-reply-member {
-    display: inline;
-    color: var(--v2p-color-main-700);
-  }
+      @at-root {
+        .v2p-topic-reply-member {
+          display: inline;
+          color: var(--v2p-color-main-700);
+        }
 
-  .v2p-topic-reply-avatar {
-    position: relative;
-    top: 2px;
-    width: 14px;
-    height: 14px;
-    margin-right: 5px;
-    object-fit: cover;
-    overflow: hidden;
-    background-color: var(--v2p-color-main-200);
-    border-radius: 2px;
-  }
+        .v2p-topic-reply-avatar {
+          position: relative;
+          top: 2px;
+          width: 15px;
+          height: 15px;
+          margin-right: 5px;
+          object-fit: cover;
+          overflow: hidden;
+          background-color: var(--v2p-color-main-200);
+          border-radius: 2px;
+        }
 
-  .v2p-topic-reply-username {
-    font-weight: bold;
-  }
+        .v2p-topic-reply-username {
+          font-weight: bold;
+        }
 
-  .v2p-topic-reply-content {
-    display: inline;
+        .v2p-topic-reply-content {
+          display: inline;
+        }
+      }
+    }
   }
 }
 
@@ -652,5 +676,36 @@ body {
 
   &:hover {
     opacity: 1;
+  }
+}
+
+.v2p-reply-tools-box {
+  position: relative;
+  margin-right: auto;
+
+  @at-root {
+    .v2p-reply-tools-icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.v2p-reply-tool-content {
+  padding: 5px;
+  border-radius: 5px;
+
+  @at-root {
+    .v2p-reply-tool {
+      padding: 5px 10px;
+      white-space: nowrap;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--v2p-color-main-100);
+      }
+    }
   }
 }

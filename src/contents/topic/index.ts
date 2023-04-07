@@ -1,6 +1,7 @@
-import { iconReply, iconScrollTop } from '../../icons'
-import { $commentTableRows, $replyBox } from '../globals'
-import { handlingComments } from './comment'
+import { iconEllipsis, iconReply, iconScrollTop } from '../../icons'
+import { $commentTableRows, $replyBox, replyTextArea } from '../globals'
+import { createPopup } from '../helpers'
+import { handlingComments, insertTextToReplyInput } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
 
@@ -69,3 +70,42 @@ handlingContent()
 
 handlingComments()
 handlingPaging()
+
+{
+  const $more = $(`
+  <div class="v2p-reply-tools-box">
+    <span class="v2p-reply-tools-icon v2p-hover-btn">${iconEllipsis}</span>
+  </div>
+  `)
+
+  const $toolContent = $(`
+  <div class="v2p-reply-tool-content">
+    <div class="v2p-reply-tool v2p-reply-tool-encode">文字转 Base64</div>
+  </div>
+  `)
+
+  const handler = createPopup({
+    root: $replyBox,
+    children: $more,
+    content: $toolContent,
+  })
+
+  $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
+    if (replyTextArea instanceof HTMLTextAreaElement) {
+      replyTextArea.focus()
+    }
+
+    handler.close()
+
+    setTimeout(() => {
+      const inputText = window.prompt('输入你想加密的字符串：')
+
+      if (inputText) {
+        const encodedText = window.btoa(inputText)
+        insertTextToReplyInput(encodedText)
+      }
+    })
+  })
+
+  $replyBox.find('> .flex-row-end').prepend($more)
+}

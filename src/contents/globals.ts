@@ -25,6 +25,9 @@ export const $replyBox = $('#reply-box')
 /** 当前页面使用的颜色模式：浅色 | 深色 */
 export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'
 
+/** 主题回复输入框 */
+export const replyTextArea = document.querySelector('#reply_content')
+
 /** 每一页的回复列表数据 */
 export const commentDataList: CommentData[] = $commentTableRows
   .map((idx, tr) => {
