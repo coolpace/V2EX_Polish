@@ -1,6 +1,9 @@
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
 import { $topicContentBox } from '../globals'
 
+/**
+ * 处理主题的正文内容。
+ */
 export function handlingContent() {
   {
     $topicContentBox
@@ -17,9 +20,9 @@ export function handlingContent() {
     if (textLength >= 200) {
       $topicContents.each((_, topicContent) => {
         if (textLength >= 400) {
-          topicContent.style.fontSize = '13px'
+          topicContent.style.fontSize = '14px'
         }
-        topicContent.style.fontSize = '14px'
+        topicContent.style.fontSize = '14.5px'
       })
     }
   }

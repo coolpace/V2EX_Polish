@@ -1,3 +1,5 @@
+import { computePosition, flip, offset, shift } from '@floating-ui/dom'
+
 import { StorageKey } from '../constants'
 import type { PersonalAccessToken, StorageData, V2EX_RequestErrorResponce } from '../types'
 
@@ -76,6 +78,11 @@ interface ModelElements {
   $content: JQuery
 }
 
+interface ModelHandler extends ModelElements {
+  open: () => void
+  close: () => void
+}
+
 interface CreateModelProps {
   root?: JQuery
   title?: string
@@ -87,7 +94,7 @@ interface CreateModelProps {
 /**
  * 创建 model 框。
  */
-export function createModel(props: CreateModelProps) {
+export function createModel(props: CreateModelProps): ModelHandler {
   const { root, title, onOpen, onClose, onMount } = props
 
   const $mask = $('<div class="v2p-model-mask">')
@@ -172,4 +179,77 @@ export function createModel(props: CreateModelProps) {
   }
 
   return { ...modelElements, open: handleModalOpen, close: handleModalClose }
+}
+
+interface PopupHandler {
+  $trigger: JQuery
+  close: () => void
+}
+
+interface CreatePopupProps {
+  root: JQuery
+  children: JQuery
+  content?: JQuery
+}
+
+/**
+ * 创建 Popup 框。
+ */
+export function createPopup(props: CreatePopupProps): PopupHandler {
+  const { root, children, content } = props
+
+  const $popup = $('<div class="v2p-popup">').css('visibility', 'hidden')
+
+  root.append($popup)
+
+  if (content) {
+    $popup.append(content)
+  }
+
+  const popup = $popup.get(0)!
+
+  const docClickHandler = (ev: JQuery.ClickEvent) => {
+    if ($(ev.target).closest(popup).length === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handlePopupClose()
+    }
+  }
+
+  const handlePopupClose = () => {
+    $popup.css('visibility', 'hidden')
+    $(document).off('click', docClickHandler)
+  }
+
+  const popupHandler: PopupHandler = {
+    $trigger: children,
+    close: handlePopupClose,
+  }
+
+  popupHandler.$trigger.on('click', (ev) => {
+    if (popup.style.visibility !== 'hidden') {
+      handlePopupClose()
+    } else {
+      ev.stopPropagation()
+
+      $(document).on('click', docClickHandler)
+
+      computePosition(popupHandler.$trigger.get(0)!, popup, {
+        placement: 'bottom-start',
+        middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
+      })
+        .then(({ x, y }) => {
+          Object.assign(popup.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+          })
+          $popup.css('visibility', 'visible')
+        })
+        .catch((err) => {
+          console.error('计算位置失败', err)
+          handlePopupClose()
+        })
+    }
+  })
+
+  return popupHandler
 }

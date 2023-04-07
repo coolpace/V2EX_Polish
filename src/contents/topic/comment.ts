@@ -12,9 +12,25 @@ import {
   $replyBox,
   commentDataList,
   loginName,
+  replyTextArea,
   topicOwnerName,
 } from '../globals'
 import { createButton, createModel } from '../helpers'
+
+export function insertTextToReplyInput(text: string) {
+  if (replyTextArea instanceof HTMLTextAreaElement) {
+    const startPos = replyTextArea.selectionStart
+    const endPos = replyTextArea.selectionEnd
+
+    const valueToStart = replyTextArea.value.substring(0, startPos)
+    const valueFromEnd = replyTextArea.value.substring(endPos, replyTextArea.value.length)
+    replyTextArea.value = `${valueToStart}${text}${valueFromEnd}`
+
+    replyTextArea.focus()
+
+    replyTextArea.selectionStart = replyTextArea.selectionEnd = startPos + text.length
+  }
+}
 
 /**
  * 点击头像会展示该用户的信息。
@@ -82,58 +98,53 @@ function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: 
 
       $memberPopup.append($content)
 
-      setTimeout(() => {
-        fetchUserInfo(commentData.memberName, {
-          signal: abortController?.signal,
+      fetchUserInfo(commentData.memberName, {
+        signal: abortController.signal,
+      })
+        .then((data) => {
+          $memberPopup
+            .find('.v2p-avatar-box')
+            .removeClass('v2p-loading')
+            .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
+          $memberPopup
+            .find('.v2p-username')
+            .removeClass('v2p-loading')
+            .append(`<a href="${data.url}" target="_blank">${data.username}</a>`)
+          $memberPopup.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)
+          $memberPopup
+            .find('.v2p-created-date')
+            .removeClass('v2p-loading')
+            .text(`加入于 ${formatTimestamp(data.created)}`)
+
+          if (data.bio && data.bio.trim().length > 0) {
+            $memberPopup.append(`<div class="v2p-bio">${data.bio}</div>`)
+          }
+
+          // const userComments = commentDataList.filter(
+          //   (data) => data.memberName === dataFromIndex.memberName
+          // )
+          // 如果回复多于一条：
+          // if (userComments.length > 1) {
+          //   const $replyList = $(
+          //     `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
+          //   )
+          //   $replyList.append(`
+          //   <ul class="v2p-reply-list">
+          //     ${userComments
+          //       .map(({ content }) => {
+          //         return `<li>${content}</li>`
+          //       })
+          //       .join('')}
+          //   </ul>
+          //   `)
+          //   $memberPopup.append($replyList)
+          // }
         })
-          .then((data) => {
-            $memberPopup
-              .find('.v2p-avatar-box')
-              .removeClass('v2p-loading')
-              .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
-            $memberPopup
-              .find('.v2p-username')
-              .removeClass('v2p-loading')
-              .append(`<a href="${data.url}" target="_blank">${data.username}</a>`)
-            $memberPopup
-              .find('.v2p-no')
-              .removeClass('v2p-loading')
-              .text(`V2EX 第 ${data.id} 号会员`)
-            $memberPopup
-              .find('.v2p-created-date')
-              .removeClass('v2p-loading')
-              .text(`加入于 ${formatTimestamp(data.created)}`)
-
-            if (data.bio && data.bio.trim().length > 0) {
-              $memberPopup.append(`<div class="v2p-bio">${data.bio}</div>`)
-            }
-
-            // const userComments = commentDataList.filter(
-            //   (data) => data.memberName === dataFromIndex.memberName
-            // )
-            // 如果回复多于一条：
-            // if (userComments.length > 1) {
-            //   const $replyList = $(
-            //     `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
-            //   )
-            //   $replyList.append(`
-            //   <ul class="v2p-reply-list">
-            //     ${userComments
-            //       .map(({ content }) => {
-            //         return `<li>${content}</li>`
-            //       })
-            //       .join('')}
-            //   </ul>
-            //   `)
-            //   $memberPopup.append($replyList)
-            // }
-          })
-          .catch((err: { name: string }) => {
-            if (err.name !== 'AbortError') {
-              $memberPopup.html(`<span>获取用户信息失败</span>`)
-            }
-          })
-      }, 0)
+        .catch((err: { name: string }) => {
+          if (err.name !== 'AbortError') {
+            $memberPopup.html(`<span>获取用户信息失败</span>`)
+          }
+        })
     }
   })
 }
@@ -290,8 +301,6 @@ function handlingControls() {
 function insertEmojiBox() {
   const os = getOS()
 
-  const replyTextArea = document.querySelector('#reply_content')
-
   const $replyBtn = createButton({
     children: `回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd>`,
     type: 'submit',
@@ -312,18 +321,7 @@ function insertEmojiBox() {
           .clone()
           .text(emoji)
           .on('click', () => {
-            if (replyTextArea instanceof HTMLTextAreaElement) {
-              const startPos = replyTextArea.selectionStart
-              const endPos = replyTextArea.selectionEnd
-
-              const valueToStart = replyTextArea.value.substring(0, startPos)
-              const valueFromEnd = replyTextArea.value.substring(endPos, replyTextArea.value.length)
-              replyTextArea.value = `${valueToStart}${emoji}${valueFromEnd}`
-
-              replyTextArea.focus()
-
-              replyTextArea.selectionStart = replyTextArea.selectionEnd = startPos + emoji.length
-            }
+            insertTextToReplyInput(emoji)
           })
         return emoticon
       })
