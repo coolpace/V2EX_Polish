@@ -181,6 +181,12 @@ body {
       font-weight: 500;
       background-color: var(--v2p-color-bg-content);
       box-shadow: 0 2px 2px var(--box-background-hover-color);
+      transition: transform 0.25s;
+
+      &:hover {
+        background-color: var(--v2p-color-main-50);
+        transform: scale(1.1) translateY(-2px);
+      }
     }
   }
 
@@ -269,6 +275,10 @@ body {
   // 提醒系统里的回复时间。
   .snow {
     color: var(--v2p-color-main-400);
+  }
+
+  a:hover {
+    text-underline-offset: 0.4ex;
   }
 }
 
@@ -376,12 +386,17 @@ img::selection {
       text-shadow: none;
     }
 
+    .topic_thanked {
+      font-size: 12px;
+    }
+
     a.tb:link {
       display: flex;
       flex-direction: row-reverse;
       align-items: center;
       padding: 5px;
       white-space: nowrap;
+      text-shadow: none;
       column-gap: 5px;
       background: none;
       border-radius: 4px;
@@ -398,7 +413,7 @@ img::selection {
   }
 
   .topic_content {
-    font-size: 15px;
+    font-size: 15.5px;
   }
 
   .subtle {
@@ -539,6 +554,7 @@ img::selection {
         padding: 20px 0 0 15px;
         background-color: var(--v2p-color-main-50);
         border: none;
+        border-left: 3px solid var(--v2p-color-main-200);
 
         .cell {
           padding: 20px 0 0; /* 多层嵌套取消缩进 */
@@ -562,9 +578,9 @@ img::selection {
           }
         }
 
-        /* 回复的内容 */
+        /* 嵌套回复的内容 */
         .reply_content {
-          font-size: 14px;
+          font-size: 15px;
         }
       }
 
@@ -648,10 +664,14 @@ img::selection {
   }
 
   #Tabs {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     flex-wrap: wrap;
     gap: 6px 8px;
     align-items: center;
+    background-color: var(--v2p-color-bg-content);
     user-select: none;
 
     .tab {
@@ -667,6 +687,8 @@ img::selection {
 
   .topic_content,
   .reply_content {
+    font-size: 15.5px;
+
     a[href^='http'] {
       color: var(--v2p-color-main-500);
       text-decoration: none;
@@ -678,6 +700,7 @@ img::selection {
       }
     }
 
+    // 主题链接
     a[href*='v2ex.com/t'],
     a[href^='/t'] {
       color: var(--v2p-color-orange-400);
@@ -690,11 +713,8 @@ img::selection {
         background-color: var(--v2p-color-orange-50);
       }
     }
-  }
 
-  .reply_content {
-    font-size: 15px;
-
+    // 被 @ 的用户
     a[href^='/member'] {
       color: var(--v2p-color-font-secondary);
       font-size: 13px;
@@ -757,6 +777,7 @@ img::selection {
 
       &.flex-row-end {
         padding: 12px 10px;
+        border: none;
       }
 
       &:has(form) {

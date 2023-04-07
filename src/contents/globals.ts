@@ -19,6 +19,9 @@ export const $commentCells = $commentBox.find('.cell[id^="r_"]')
 
 export const $commentTableRows = $commentCells.find('> table > tbody > tr')
 
+/** 回复输入控件 */
+export const $replyBox = $('#reply-box')
+
 /** 当前页面使用的颜色模式：浅色 | 深色 */
 export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'
 

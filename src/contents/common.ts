@@ -1,12 +1,4 @@
-import {
-  iconChromeWebStore,
-  iconDark,
-  iconGitHub,
-  iconLight,
-  iconLogoDark,
-  iconLogoLight,
-} from '../icons'
-import { colorTheme } from './globals'
+import { iconChromeWebStore, iconDark, iconGitHub, iconLight, iconLogo } from '../icons'
 
 {
   // 为顶部导航栏的按钮添加 hover 效果。
@@ -18,12 +10,12 @@ import { colorTheme } from './globals'
   const $toggleImg = $toggle.find('> img')
 
   if ($toggleImg.prop('alt') === 'Light') {
-    $toggle.prop('title', '切换至深色模式')
+    $toggle.prop('title', '使用深色模式')
     $toggleImg.replaceWith(iconDark)
   }
 
   if ($toggleImg.prop('alt') === 'Dark') {
-    $toggle.prop('title', '切换至浅色模式')
+    $toggle.prop('title', '使用浅色模式')
     $toggleImg.replaceWith(iconLight)
   }
 }
@@ -62,8 +54,7 @@ import { colorTheme } from './globals'
   </div>
   `)
 
-  const logo = colorTheme === 'light' ? iconLogoLight : iconLogoDark
-  $(`<div class="v2p-footer-logo">${logo}</div>`).prependTo($extraFooter)
+  $(`<div class="v2p-footer-logo">${iconLogo}</div>`).prependTo($extraFooter)
 
   $('#Bottom .content').append($extraFooter)
 }

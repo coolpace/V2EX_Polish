@@ -9,6 +9,7 @@ import {
   $commentBox,
   $commentCells,
   $commentTableRows,
+  $replyBox,
   commentDataList,
   loginName,
   topicOwnerName,
@@ -192,7 +193,9 @@ function handlingPopularComments() {
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
 
-  if (popularCommentData.length <= 0) {
+  const popularCount = popularCommentData.length
+
+  if (popularCount <= 0) {
     return
   }
 
@@ -219,17 +222,19 @@ function handlingPopularComments() {
     const commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
     const countText = commentBoxCount.text()
     const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
-    const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>`
+    const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>${popularCount} 条热门回复`
 
     const $popularBtn = $(
-      `<span class="v2p-popular-btn v2p-hover-btn"><span class="v2p-icon-heart">${iconHeart}</span>查看本页感谢回复</span>`
+      `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon">${iconHeart}</span>热门回复</span>`
     )
 
     $popularBtn.on('click', () => {
       model.open()
     })
 
-    commentBoxCount.empty().append(countTextSpan).append($popularBtn)
+    $('.v2p-tools').prepend($popularBtn)
+
+    commentBoxCount.empty().append(countTextSpan)
   }
 }
 
@@ -244,36 +249,34 @@ function handlingControls() {
 
     const crtlContainer = $('<span class="v2p-controls">')
 
-    const thankIcon = $(`<span class="v2p-control">${iconHeart}</span>`)
+    const thankIcon = $(`<span class="v2p-control v2p-control-thank">${iconHeart}</span>`)
 
     const thankArea = ctrlArea.find('> .thank_area')
     const thanked = thankArea.hasClass('thanked')
 
     if (thanked) {
-      thankIcon.prop('title', '已感谢').addClass('v2p-thanked')
+      thankIcon.addClass('v2p-thanked')
       crtlContainer.append($('<a>').append(thankIcon))
     } else {
       const thankEle = thankArea.find('> .thank')
-      const hide = thankEle.eq(0).removeClass('thank')
-      const thank = thankEle.eq(1).removeClass('thank')
+      const $hide = thankEle.eq(0).removeClass('thank')
+      const $thank = thankEle.eq(1).removeClass('thank')
 
-      hide.html(`<span class="v2p-control v2p-hover-btn" title="隐藏">${iconHide}</span>`)
+      $hide.html(`<span class="v2p-control v2p-hover-btn v2p-control-hide">${iconHide}</span>`)
 
-      thankIcon.prop('title', '感谢').addClass('v2p-hover-btn')
-      thank.empty().append(thankIcon)
+      thankIcon.addClass('v2p-hover-btn')
+      $thank.empty().append(thankIcon)
 
-      crtlContainer.append(hide).append(thank)
+      crtlContainer.append($hide).append($thank)
     }
 
-    const reply = ctrlArea.find('a:last-of-type')
+    const $reply = ctrlArea.find('a:last-of-type')
 
-    reply
+    $reply
       .find('> img[alt="Reply"]')
-      .replaceWith(
-        `<span class="v2p-control v2p-ac-reply v2p-hover-btn" title="回复">${iconReply}</span>`
-      )
+      .replaceWith(`<span class="v2p-control v2p-hover-btn v2p-control-reply">${iconReply}</span>`)
 
-    crtlContainer.append(reply)
+    crtlContainer.append($reply)
 
     thankArea.remove()
     const floorNum = ctrlArea.find('.no').clone()
@@ -286,8 +289,6 @@ function handlingControls() {
  */
 function insertEmojiBox() {
   const os = getOS()
-
-  const $replyBox = $('#reply-box')
 
   const replyTextArea = document.querySelector('#reply_content')
 
@@ -338,7 +339,7 @@ function insertEmojiBox() {
 
   const emojiPopup = $('<div id="v2p-emoji-popup">')
     .append(emoticonsBox)
-    .appendTo($('#reply-box'))
+    .appendTo($replyBox)
     .on('click', () => {
       if (replyTextArea instanceof HTMLTextAreaElement) {
         replyTextArea.focus()
