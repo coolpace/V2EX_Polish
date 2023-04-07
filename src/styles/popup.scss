@@ -339,12 +339,19 @@ hr {
   padding: 5px 0;
 }
 
-a.link {
-  text-underline-offset: 0.5ex;
-  text-decoration: underline dashed;
-
+a {
   &:hover {
+    text-underline-offset: 0.5ex;
     text-decoration: underline;
-    background-color: var(--v2p-color-main-100);
+  }
+
+  &.link {
+    text-underline-offset: 0.5ex;
+    text-decoration: underline dashed;
+
+    &:hover {
+      text-decoration: underline;
+      background-color: var(--v2p-color-main-100);
+    }
   }
 }
