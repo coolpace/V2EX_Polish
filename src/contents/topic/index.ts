@@ -1,7 +1,8 @@
 import { iconReply, iconScrollTop, iconTool } from '../../icons'
 import { uploadReplyImg } from '../../services'
 import { createPopup } from '../components/popup'
-import { $commentTableRows, $replyBox, replyTextArea } from '../globals'
+import { $commentTableRows, $replyBox } from '../globals'
+import { focusReplyInput } from '../helpers'
 import { handlingComments, insertTextToReplyInput } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -92,12 +93,6 @@ handlingPaging()
     children: $more,
     content: $toolContent,
   })
-
-  const focusReplyInput = () => {
-    if (replyTextArea instanceof HTMLTextAreaElement) {
-      replyTextArea.focus()
-    }
-  }
 
   $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
     focusReplyInput()
