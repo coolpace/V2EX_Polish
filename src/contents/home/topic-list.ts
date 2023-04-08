@@ -56,9 +56,7 @@ export function handlingTopicList() {
                   `)
 
                   const promises = [
-                    fetchTopic(topicId, {
-                      signal: abortController.signal,
-                    }),
+                    fetchTopic(topicId, { signal: abortController.signal }),
                     fetchTopicReplies(topicId),
                   ] as const
 
@@ -94,6 +92,7 @@ export function handlingTopicList() {
 
                     $('<div class="v2p-topic-reply-box">')
                       .append($template.html())
+                      .append(`<div class="v2p-more-reply-tip">在主题内查看完整评论...</div>`)
                       .appendTo($topicPreview)
                   }
 

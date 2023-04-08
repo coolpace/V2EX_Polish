@@ -578,7 +578,7 @@ body {
 
         .v2p-topic-reply-avatar {
           position: relative;
-          top: 2px;
+          top: 3px;
           width: 15px;
           height: 15px;
           margin-right: 5px;
@@ -594,6 +594,13 @@ body {
 
         .v2p-topic-reply-content {
           display: inline;
+        }
+
+        .v2p-more-reply-tip {
+          margin-top: 20px;
+          color: var(--v2p-color-main-400);
+          font-size: 12px;
+          text-align: center;
         }
       }
     }
@@ -681,7 +688,12 @@ body {
 
 .v2p-reply-tools-box {
   position: relative;
+  display: inline-flex;
+  gap: 0 5px;
+  align-items: center;
   margin-right: auto;
+  padding: 2px 0;
+  font-size: 13px;
 
   @at-root {
     .v2p-reply-tools-icon {

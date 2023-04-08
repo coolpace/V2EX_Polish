@@ -1,4 +1,5 @@
-import { iconEllipsis, iconReply, iconScrollTop } from '../../icons'
+import { iconReply, iconScrollTop, iconTool } from '../../icons'
+import { uploadReplyImg } from '../../services'
 import { $commentTableRows, $replyBox, replyTextArea } from '../globals'
 import { createPopup } from '../helpers'
 import { handlingComments, insertTextToReplyInput } from './comment'
@@ -73,14 +74,16 @@ handlingPaging()
 
 {
   const $more = $(`
-  <div class="v2p-reply-tools-box">
-    <span class="v2p-reply-tools-icon v2p-hover-btn">${iconEllipsis}</span>
+  <div class="v2p-reply-tools-box v2p-hover-btn">
+    <span class="v2p-reply-tools-icon">${iconTool}</span>
+    工具箱
   </div>
   `)
 
   const $toolContent = $(`
   <div class="v2p-reply-tool-content">
     <div class="v2p-reply-tool v2p-reply-tool-encode">文字转 Base64</div>
+    <div class="v2p-reply-tool v2p-reply-tool-img">上传图片</div>
   </div>
   `)
 
@@ -90,21 +93,57 @@ handlingPaging()
     content: $toolContent,
   })
 
-  $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
+  const focusReplyInput = () => {
     if (replyTextArea instanceof HTMLTextAreaElement) {
       replyTextArea.focus()
     }
+  }
 
+  $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
+    focusReplyInput()
     handler.close()
 
     setTimeout(() => {
-      const inputText = window.prompt('输入你想加密的字符串：')
+      // 加入下次事件循环，避免阻塞 Popup 关闭。
+      const inputText = window.prompt('输入要加密的字符串，完成后将填写到回复框中：')
 
       if (inputText) {
         const encodedText = window.btoa(inputText)
         insertTextToReplyInput(encodedText)
       }
     })
+  })
+
+  $toolContent.find('.v2p-reply-tool-img').on('click', () => {
+    focusReplyInput()
+    handler.close()
+
+    const imgInput = document.createElement('input')
+
+    imgInput.style.display = 'none'
+    imgInput.type = 'file'
+    imgInput.accept = 'image/*'
+
+    imgInput.addEventListener('change', () => {
+      const selectedFile = imgInput.files?.[0]
+
+      if (selectedFile) {
+        document.body.style.cursor = 'wait'
+
+        uploadReplyImg(selectedFile)
+          .then((imgLink) => {
+            insertTextToReplyInput(imgLink)
+          })
+          .catch(() => {
+            window.alert('上传图片失败')
+          })
+          .finally(() => {
+            document.body.style.cursor = ''
+          })
+      }
+    })
+
+    imgInput.click()
   })
 
   $replyBox.find('> .flex-row-end').prepend($more)

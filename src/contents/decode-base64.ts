@@ -78,7 +78,7 @@ $commentCells.find('.reply_content').each(contentHandler)
 $topicContentBox.find('.topic_content').each(contentHandler)
 
 if (count === 0) {
-  alert('本页未发现 base64 字符串。')
+  window.alert('本页未发现 base64 字符串。')
 } else {
   count = 0
 }

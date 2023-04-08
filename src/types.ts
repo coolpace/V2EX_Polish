@@ -142,3 +142,14 @@ export interface CommentData {
 }
 
 export type PersonalAccessToken = string | undefined
+
+export interface ImgurResponse {
+  status: number
+  success: boolean
+  data: {
+    /** 上传成功后生成的图片资源 hash */
+    id: string
+    /** 上传成功后生成的在线链接 */
+    link: string
+  }
+}

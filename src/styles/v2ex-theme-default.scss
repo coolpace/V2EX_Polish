@@ -717,10 +717,12 @@ img::selection {
 
     // 被 @ 的用户
     a[href^='/member'] {
-      color: var(--v2p-color-font-secondary);
+      position: relative;
+      bottom: 1px;
+      color: var(--v2p-color-main-500);
       font-size: 13px;
       text-decoration: underline;
-      background-color: var(--v2p-color-main-100);
+      text-underline-offset: 0.4ex;
     }
   }
 
