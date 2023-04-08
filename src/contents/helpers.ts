@@ -1,5 +1,6 @@
 import { StorageKey } from '../constants'
 import type { PersonalAccessToken, StorageData, V2EX_RequestErrorResponce } from '../types'
+import { replyTextArea } from './globals'
 
 export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorResponce {
   if ('cause' in error) {
@@ -54,4 +55,10 @@ export function escapeHTML(html: string) {
     .replace(/>/g, '>')
     .replace(/"/g, '"')
     .replace(/'/g, "'")
+}
+
+export function focusReplyInput() {
+  if (replyTextArea instanceof HTMLTextAreaElement) {
+    replyTextArea.focus()
+  }
 }

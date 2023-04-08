@@ -7,6 +7,7 @@ import type { CommentData } from '../../types'
 import { formatTimestamp, getOS } from '../../utils'
 import { createButton } from '../components/button'
 import { createModel } from '../components/model'
+import { createPopup } from '../components/popup'
 import {
   $commentBox,
   $commentCells,
@@ -17,6 +18,7 @@ import {
   replyTextArea,
   topicOwnerName,
 } from '../globals'
+import { focusReplyInput } from '../helpers'
 
 export function insertTextToReplyInput(text: string) {
   if (replyTextArea instanceof HTMLTextAreaElement) {
@@ -27,7 +29,7 @@ export function insertTextToReplyInput(text: string) {
     const valueFromEnd = replyTextArea.value.substring(endPos, replyTextArea.value.length)
     replyTextArea.value = `${valueToStart}${text}${valueFromEnd}`
 
-    replyTextArea.focus()
+    focusReplyInput()
 
     replyTextArea.selectionStart = replyTextArea.selectionEnd = startPos + text.length
   }
@@ -336,73 +338,40 @@ function insertEmojiBox() {
 
   const $emojiBtn = createButton({ children: iconEmoji }).insertAfter($replyBtn)
 
-  const emojiPopup = $('<div id="v2p-emoji-popup">')
+  const $emojiContent = $('<div class="v2p-emoji-container">')
     .append(emoticonsBox)
     .appendTo($replyBox)
     .on('click', () => {
-      if (replyTextArea instanceof HTMLTextAreaElement) {
-        replyTextArea.focus()
-      }
+      focusReplyInput()
     })
-    .get(0)!
 
   const keyupHandler = (ev: JQuery.KeyDownEvent) => {
     if (ev.key === 'Escape') {
       ev.preventDefault()
-
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      handlePopupClose()
+      handler.close()
     }
   }
 
-  const docClickHandler = (ev: JQuery.ClickEvent) => {
-    if ($(ev.target).closest(emojiPopup).length === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      handlePopupClose()
-    }
-  }
+  $emojiBtn.on('click', () => {
+    focusReplyInput()
+  })
 
-  const handlePopupClose = () => {
-    emojiPopup.style.visibility = 'hidden'
-    $(document).off('click', docClickHandler)
-    $('body').off('keydown', keyupHandler)
-  }
-
-  const handlePopupOpen = () => {
-    $(document).on('click', docClickHandler)
-    $('body').on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
-
-    computePosition($emojiBtn.get(0)!, emojiPopup, {
-      placement: 'right-end',
-      middleware: [offset({ mainAxis: 10, crossAxis: 8 }), flip(), shift({ padding: 8 })],
-    })
-      .then(({ x, y }) => {
-        Object.assign(emojiPopup.style, {
-          left: `${x}px`,
-          top: `${y}px`,
-        })
-        emojiPopup.style.visibility = 'visible'
-      })
-      .catch(() => {
-        handlePopupClose()
-      })
-  }
-
-  $emojiBtn.on('click', (ev) => {
-    ev.stopPropagation()
-
-    if (emojiPopup.style.visibility === 'visible') {
-      handlePopupClose()
-    } else {
-      handlePopupOpen()
-    }
-
-    if (replyTextArea instanceof HTMLTextAreaElement) {
-      replyTextArea.focus()
-    }
+  const handler = createPopup({
+    root: $replyBox,
+    children: $emojiBtn,
+    content: $emojiContent,
+    options: { placement: 'right-end' },
+    onOpen: () => {
+      $('body').on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
+    },
+    onClose: () => {
+      $('body').off('keydown', keyupHandler)
+    },
   })
 
   {
+    // 给“取消回复框停靠”、“回到顶部”按钮添加样式。
     $replyBox
       .find('#undock-button, #undock-button + a')
       .addClass('v2p-hover-btn')

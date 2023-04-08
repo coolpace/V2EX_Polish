@@ -1,4 +1,4 @@
-import { computePosition, flip, offset, shift } from '@floating-ui/dom'
+import { computePosition, type ComputePositionConfig, flip, offset, shift } from '@floating-ui/dom'
 
 interface PopupHandler {
   $trigger: JQuery
@@ -9,13 +9,16 @@ interface CreatePopupProps {
   root: JQuery
   children: JQuery
   content?: JQuery
+  options?: Partial<ComputePositionConfig>
+  onOpen?: () => void
+  onClose?: () => void
 }
 
 /**
  * 创建 Popup 框。
  */
 export function createPopup(props: CreatePopupProps): PopupHandler {
-  const { root, children, content } = props
+  const { root, children, content, options, onOpen, onClose } = props
 
   const $popup = $('<div class="v2p-popup">').css('visibility', 'hidden')
 
@@ -37,6 +40,7 @@ export function createPopup(props: CreatePopupProps): PopupHandler {
   const handlePopupClose = () => {
     $popup.css('visibility', 'hidden')
     $(document).off('click', docClickHandler)
+    onClose?.()
   }
 
   const popupHandler: PopupHandler = {
@@ -55,6 +59,7 @@ export function createPopup(props: CreatePopupProps): PopupHandler {
       computePosition(popupHandler.$trigger.get(0)!, popup, {
         placement: 'bottom-start',
         middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
+        ...options,
       })
         .then(({ x, y }) => {
           Object.assign(popup.style, {
@@ -67,6 +72,8 @@ export function createPopup(props: CreatePopupProps): PopupHandler {
           console.error('计算位置失败', err)
           handlePopupClose()
         })
+
+      onOpen?.()
     }
   })
 
