@@ -5,6 +5,8 @@ import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import { fetchUserInfo } from '../../services'
 import type { CommentData } from '../../types'
 import { formatTimestamp, getOS } from '../../utils'
+import { createButton } from '../components/button'
+import { createModel } from '../components/model'
 import {
   $commentBox,
   $commentCells,
@@ -15,7 +17,6 @@ import {
   replyTextArea,
   topicOwnerName,
 } from '../globals'
-import { createButton, createModel } from '../helpers'
 
 export function insertTextToReplyInput(text: string) {
   if (replyTextArea instanceof HTMLTextAreaElement) {
