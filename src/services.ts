@@ -1,8 +1,9 @@
-import { StorageKey, V2EX } from './constants'
+import { imgurClientIdPool, StorageKey, V2EX } from './constants'
 import { getPAT } from './contents/helpers'
 import type {
   API_Info,
   DataWrapper,
+  ImgurResponse,
   LegacyAPI_Info,
   Member,
   Notification,
@@ -109,4 +110,30 @@ export function fetchNotifications(page = 1) {
 
 export function deleteNotification(notification_id: string) {
   return request(`${V2EX_API}/notifications/${notification_id}`, { method: 'GET' })
+}
+
+export async function uploadReplyImg(file: File): Promise<string> {
+  const formData = new FormData()
+  formData.append('image', file)
+
+  // 随机获取一个 Imgur Client ID。
+  const randomIndex = Math.floor(Math.random() * imgurClientIdPool.length)
+  const clidenId = imgurClientIdPool[randomIndex]
+
+  // 使用详情参考 Imgur API 文档：https://apidocs.imgur.com/
+  const res = await fetch('https://api.imgur.com/3/upload', {
+    method: 'POST',
+    headers: { Authorization: `Client-ID ${clidenId}` },
+    body: formData,
+  })
+
+  if (res.ok) {
+    const resData: ImgurResponse = await res.json()
+
+    if (resData.success) {
+      return resData.data.link
+    }
+  }
+
+  throw new Error('上传失败')
 }

@@ -29,6 +29,9 @@ declare global {
   }
 }
 
+/**
+ * 获取用户设置存储的个人访问令牌。
+ */
 export function getPAT(): Promise<PersonalAccessToken> {
   return new Promise((resolve) => {
     if (typeof window.__V2P_PAT__ === 'string') {
@@ -43,6 +46,9 @@ export function getPAT(): Promise<PersonalAccessToken> {
   })
 }
 
+/**
+ * 转义 HTML 字符串中的特殊字符。
+ */
 export function escapeHTML(html: string) {
   return html
     .replace(/&/g, '&')

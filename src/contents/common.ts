@@ -1,3 +1,4 @@
+import { Links } from '../constants'
 import { iconChromeWebStore, iconDark, iconGitHub, iconLight, iconLogo } from '../icons'
 
 {
@@ -10,12 +11,12 @@ import { iconChromeWebStore, iconDark, iconGitHub, iconLight, iconLogo } from '.
   const $toggleImg = $toggle.find('> img')
 
   if ($toggleImg.prop('alt') === 'Light') {
-    $toggle.prop('title', '使用深色模式')
+    $toggle.prop('title', '使用深色主题')
     $toggleImg.replaceWith(iconDark)
   }
 
   if ($toggleImg.prop('alt') === 'Dark') {
-    $toggle.prop('title', '使用浅色模式')
+    $toggle.prop('title', '使用浅色主题')
     $toggleImg.replaceWith(iconLight)
   }
 }
@@ -27,8 +28,8 @@ import { iconChromeWebStore, iconDark, iconGitHub, iconLight, iconLogo } from '.
     <div class="v2p-footer-text">扩展自 V2EX Polish </div>
 
     <div class="v2p-footer-links">
-      <a class="v2p-footer-link v2p-hover-btn" href="https://v2p.app" target="_blank">插件主页</a>
-      <a class="v2p-footer-link v2p-hover-btn" href="https://github.com/coolpace/V2EX_Polish/discussions/1" target="_blank">问题反馈</a>
+      <a class="v2p-footer-link v2p-hover-btn" href="${Links.Home}" target="_blank">插件主页</a>
+      <a class="v2p-footer-link v2p-hover-btn" href="${Links.Feedback}" target="_blank">问题反馈</a>
     </div>
 
     <div class="v2p-footer-brand">
