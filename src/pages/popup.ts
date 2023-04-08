@@ -7,7 +7,7 @@
  */
 
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
-import { createButton } from '../contents/helpers'
+import { createButton } from '../contents/components/button'
 import { iconChat, iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'

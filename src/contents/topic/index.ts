@@ -1,7 +1,7 @@
 import { iconReply, iconScrollTop, iconTool } from '../../icons'
 import { uploadReplyImg } from '../../services'
+import { createPopup } from '../components/popup'
 import { $commentTableRows, $replyBox, replyTextArea } from '../globals'
-import { createPopup } from '../helpers'
 import { handlingComments, insertTextToReplyInput } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'

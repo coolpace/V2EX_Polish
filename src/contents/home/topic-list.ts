@@ -1,8 +1,10 @@
 import { RequestMessage } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
+import { createButton } from '../components/button'
+import { createModel } from '../components/model'
 import { $topicList } from '../globals'
-import { createButton, createModel, escapeHTML, getPAT, isV2EX_RequestError } from '../helpers'
+import { escapeHTML, getPAT, isV2EX_RequestError } from '../helpers'
 
 export function handlingTopicList() {
   void getPAT().then((PAT) => {
