@@ -1,0 +1,48 @@
+.wrapper {
+  min-width: 300px;
+  max-width: max-content;
+  margin: 0 auto;
+  padding: 50px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+#options-form {
+  margin: 20px 0;
+  padding: 20px;
+  border: 2px solid var(--v2p-color-main-700);
+  border-radius: 10px;
+
+  @at-root {
+    .form-item {
+      display: flex;
+      gap: 0 20px;
+      align-items: center;
+      font-size: 16px;
+
+      & ~ & {
+        margin-top: 5px;
+      }
+
+      > label {
+        min-width: 120px;
+      }
+    }
+  }
+}
+
+#save {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-top: 20px;
+  padding: 5px 10px;
+  color: var(--v2p-color-main-100);
+  font-size: 12px;
+  background-color: var(--v2p-color-main-800);
+  border: none;
+  border-radius: 5px;
+}

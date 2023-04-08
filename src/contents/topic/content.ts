@@ -1,15 +1,20 @@
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
 import { $topicContentBox } from '../globals'
+import { getOptions } from '../helpers'
 
 /**
  * 处理主题的正文内容。
  */
 export function handlingContent() {
   {
-    $topicContentBox
-      .find('.topic_content a[href]')
-      .prop('target', '_blank')
-      .prop('rel', 'noopener noreferrer')
+    void getOptions().then((options) => {
+      if (options.openInNewTab) {
+        $topicContentBox
+          .find('.topic_content a[href]')
+          .prop('target', '_blank')
+          .prop('rel', 'noopener noreferrer')
+      }
+    })
   }
 
   {

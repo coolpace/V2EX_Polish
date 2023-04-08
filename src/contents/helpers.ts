@@ -1,4 +1,5 @@
 import { StorageKey } from '../constants'
+import { type Options } from '../pages/option.type'
 import type { PersonalAccessToken, StorageData, V2EX_RequestErrorResponce } from '../types'
 import { replyTextArea } from './globals'
 
@@ -61,4 +62,16 @@ export function focusReplyInput() {
   if (replyTextArea instanceof HTMLTextAreaElement) {
     replyTextArea.focus()
   }
+}
+
+export function getOptions(): Promise<Options> {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
+      const options = result[StorageKey.Options]
+
+      if (options) {
+        resolve(options)
+      }
+    })
+  })
 }

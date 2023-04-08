@@ -1,8 +1,5 @@
-import { type StorageKey } from './constants'
-
-export interface Options {
-  avatar?: boolean
-}
+import type { StorageKey } from './constants'
+import type { Options } from './pages/option.type'
 
 export interface LegacyAPI_Info {
   limit?: number

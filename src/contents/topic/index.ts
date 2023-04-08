@@ -2,16 +2,20 @@ import { iconReply, iconScrollTop, iconTool } from '../../icons'
 import { uploadReplyImg } from '../../services'
 import { createPopup } from '../components/popup'
 import { $commentTableRows, $replyBox } from '../globals'
-import { focusReplyInput } from '../helpers'
+import { focusReplyInput, getOptions } from '../helpers'
 import { handlingComments, insertTextToReplyInput } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
 
 {
-  $commentTableRows
-    .find('> td:nth-child(3) > strong > a')
-    .prop('target', '_blank')
-    .prop('rel', 'noopener noreferrer')
+  void getOptions().then((options) => {
+    if (options.openInNewTab) {
+      $commentTableRows
+        .find('> td:nth-child(3) > strong > a')
+        .prop('target', '_blank')
+        .prop('rel', 'noopener noreferrer')
+    }
+  })
 }
 
 {
