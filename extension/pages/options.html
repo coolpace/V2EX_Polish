@@ -3,12 +3,28 @@
   <head>
     <meta charset="utf-8" />
     <title>V2EX Polish 控制选项</title>
+
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/v2ex-theme-var.css" />
+    <link rel="stylesheet" href="../css/options.css" />
+
+    <style></style>
   </head>
 
   <body>
-    <input id="pat" placeholder="填写你的个人令牌" />
-    <button id="save">保存</button>
+    <div class="wrapper">
+      <h1 class="title">V2EX Polish 控制选项</h1>
+      <form id="options-form">
+        <div class="form-item">
+          <label for="openInNewTab">新标签页打开链接</label>
+          <input type="checkbox" id="openInNewTab" checked="false" />
+        </div>
 
+        <button id="save" type="submit">保存设置</button>
+      </form>
+    </div>
+
+    <script src="../scripts/jquery-3.5.1.min.js"></script>
     <script src="../scripts/options.min.js"></script>
   </body>
 </html>

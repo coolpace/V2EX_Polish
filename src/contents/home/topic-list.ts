@@ -4,7 +4,7 @@ import { fetchTopic, fetchTopicReplies } from '../../services'
 import { createButton } from '../components/button'
 import { createModel } from '../components/model'
 import { $topicList } from '../globals'
-import { escapeHTML, getPAT, isV2EX_RequestError } from '../helpers'
+import { escapeHTML, getOptions, getPAT, isV2EX_RequestError } from '../helpers'
 
 export function handlingTopicList() {
   void getPAT().then((PAT) => {
@@ -14,7 +14,13 @@ export function handlingTopicList() {
       children: '进入主题',
       className: 'special',
       tag: 'a',
-    }).prop('target', '_blank')
+    })
+
+    void getOptions().then((options) => {
+      if (options.openInNewTab) {
+        $detailBtn.prop('target', '_blank')
+      }
+    })
 
     const model = createModel({
       root: $('body'),

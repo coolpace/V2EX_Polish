@@ -532,6 +532,12 @@ img::selection {
             }
           }
         }
+
+        /* 嵌套的回复 */
+        ~ .cell {
+          background-color: var(--v2p-color-main-100);
+          border-left: 3px solid var(--v2p-color-main-300);
+        }
       }
     }
 
@@ -548,9 +554,8 @@ img::selection {
         }
       }
 
+      /* 嵌套的回复 */
       ~ .cell {
-        /* 嵌套回复 */
-
         padding: 20px 0 0 15px;
         background-color: var(--v2p-color-main-50);
         border: none;

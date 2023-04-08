@@ -112,6 +112,12 @@ function loadSettings() {
       calculate()
     })
   }
+
+  {
+    $('#open-options').on('click', () => {
+      chrome.runtime.openOptionsPage()
+    })
+  }
 }
 
 function initTabs() {

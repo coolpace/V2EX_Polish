@@ -68,9 +68,9 @@ export function createPopup(props: CreatePopupProps): PopupHandler {
           })
           $popup.css('visibility', 'visible')
         })
-        .catch((err) => {
-          console.error('计算位置失败', err)
+        .catch(() => {
           handlePopupClose()
+          window.alert('Popup 渲染失败')
         })
 
       onOpen?.()
