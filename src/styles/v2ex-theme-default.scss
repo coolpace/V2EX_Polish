@@ -282,15 +282,6 @@ body {
   }
 }
 
-::selection {
-  color: currentColor;
-  background-color: var(--v2p-color-main-200);
-}
-
-img::selection {
-  background-color: var(--v2p-color-main-400);
-}
-
 /* ====== 帖子标签 ====== */
 
 .box {
