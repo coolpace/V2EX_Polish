@@ -53,9 +53,9 @@
     --box-background-color: var(--v2p-color-bg-content);
     --box-background-alt-color: var(--v2p-color-main-100);
     --box-background-hover-color: var(--v2p-color-main-200);
-    --button-hover-color: var(--v2p-color-main-200);
     --button-background-color: var(--v2p-color-main-100);
     --button-background-hover-color: var(--v2p-color-main-200);
+    --button-hover-color: var(--button-background-hover-color);
     --button-foreground-color: var(--v2p-color-main-500);
     --button-foreground-hover-color: var(--v2p-color-main-600);
     --button-border-color: var(--v2p-color-main-300);
@@ -64,20 +64,31 @@
     color: var(--v2p-color-foreground);
     font-family: system-ui, sans-serif;
     background-color: var(--v2p-color-background);
+
+    ::selection {
+      color: currentColor;
+      background-color: var(--v2p-color-main-200);
+    }
+
+    img::selection {
+      background-color: var(--v2p-color-main-400);
+    }
   }
 
   body:has(#Wrapper.Night) {
     // 基础色：
-    --v2p-color-main-50: #2229;
-    --v2p-color-main-100: #222;
-    --v2p-color-main-200: #393939;
-    --v2p-color-main-300: #4c4c4c;
-    --v2p-color-main-350: #6a6a6acc;
-    --v2p-color-main-400: #6a6a6a;
-    --v2p-color-main-500: #999;
-    --v2p-color-main-600: #cbcbcb;
-    --v2p-color-main-700: #e0e0e0;
-    --v2p-color-main-800: #f1f1f1;
+    --v2p-color-main-50: #11182799;
+    --v2p-color-main-100: #111827;
+    --v2p-color-main-200: #374151;
+    --v2p-color-main-300: #374151;
+    --v2p-color-main-350: #6b7280cc;
+    --v2p-color-main-400: #6b7280;
+    --v2p-color-main-500: #9ca3af;
+    --v2p-color-main-600: #9ca3af;
+    --v2p-color-main-700: #d1d5db;
+    --v2p-color-main-800: #e5e7eb;
+    --v2p-color-main-900: #111827;
+    --v2p-color-main-950: #030712;
     --v2p-color-accent-50: #064e3b;
     --v2p-color-accent-100: #065f46;
     --v2p-color-accent-200: #047857;
@@ -90,9 +101,10 @@
     --v2p-color-orange-400: #fb923c;
 
     // 特别色：
-    --v2p-color-background: #111;
+    --v2p-color-background: var(--v2p-color-main-100);
     --v2p-color-foreground: var(--v2p-color-main-800);
-    --v2p-color-bg-content: #181818;
+    --v2p-color-font-secondary: var(--v2p-color-main-600);
+    --v2p-color-bg-content: #1f2937;
     --v2p-color-bg-hover-btn: var(--v2p-color-main-200);
     --v2p-color-bg-subtle: rgb(6 78 59 / 30%);
     --v2p-color-bg-search: var(--v2p-color-main-200);
@@ -104,7 +116,26 @@
     // V2EX 原有的 CSS 变量：
     --link-color: var(--v2p-color-main-700);
     --link-hover-color: var(--v2p-color-main-800);
-    --box-foreground-color: var(--v2p-color-main-600);
-    --button-background-color: var(--v2p-color-main-200);
+    --box-border-color: var(--v2p-color-main-350);
+    --box-foreground-color: var(--v2p-color-main-800);
+    --box-background-color: var(--v2p-color-bg-content);
+    --box-background-alt-color: var(--v2p-color-main-100);
+    --box-background-hover-color: var(--v2p-color-main-300);
+    --button-background-color: var(--v2p-color-main-900);
+    --button-background-hover-color: var(--v2p-color-main-950);
+    --button-hover-color: var(--button-background-hover-color);
+    --button-foreground-color: var(--v2p-color-main-500);
+    --button-foreground-hover-color: var(--v2p-color-main-600);
+    --button-border-color: var(--v2p-color-main-300);
+    --button-border-hover-color: var(--v2p-color-main-400);
+
+    ::selection {
+      color: currentColor;
+      background-color: var(--v2p-color-main-950);
+    }
+
+    img::selection {
+      background-color: var(--v2p-color-main-950);
+    }
   }
 }
