@@ -1,5 +1,7 @@
 import { computePosition, type ComputePositionConfig, flip, offset, shift } from '@floating-ui/dom'
 
+import { createToast } from './toast'
+
 interface PopupHandler {
   $trigger: JQuery
   close: () => void
@@ -71,7 +73,7 @@ export function createPopup(props: CreatePopupProps): PopupHandler {
         })
         .catch(() => {
           handlePopupClose()
-          window.alert('Popup 渲染失败')
+          createToast({ message: 'Popup 渲染失败' })
         })
 
       onOpen?.()

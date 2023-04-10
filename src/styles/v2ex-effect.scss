@@ -130,10 +130,27 @@ body {
   overflow-y: auto;
   color: var(--v2p-color-main-600);
   font-size: 14px;
-  background: var(--v2p-color-bg-content);
+  background: var(--v2p-color-bg-widget);
   border: 1px solid var(--box-border-color);
   border-radius: 8px;
   box-shadow: var(--v2p-widget-shadow);
+  backdrop-filter: blur(16px);
+}
+
+.v2p-toast {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  z-index: 999;
+  padding: 10px 15px;
+  color: var(--v2p-color-main-800);
+  font-size: 14px;
+  background: var(--v2p-color-bg-widget);
+  border: 3px solid var(--box-border-color);
+  border-radius: 8px;
+  box-shadow: var(--v2p-toast-shadow);
+  transform: translateX(-50%);
+  backdrop-filter: blur(16px);
 }
 
 .v2p-model-main {
@@ -373,7 +390,6 @@ body {
   padding: 15px 18px;
   overflow-y: auto;
   color: var(--v2p-color-main-600);
-  background: var(--v2p-color-bg-content);
 }
 
 #v2p-member-popup {
