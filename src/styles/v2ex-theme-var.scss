@@ -39,8 +39,7 @@
     --v2p-color-mask: rgb(0 0 0 / 25%);
     --v2p-color-divider: var(--v2p-color-main-200);
     --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
-    --v2p-widget-shadow: 0 9px 24px -3px var(--v2p-color-main-100),
-      0 4px 8px -1px var(--v2p-color-main-200);
+    --v2p-widget-shadow: 0 9px 24px -3px rgb(0 0 0 / 6%), 0 4px 8px -1px rgb(0 0 0 /12%);
     --v2p-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
       0 9px 28px 8px rgb(0 0 0 / 5%);
 

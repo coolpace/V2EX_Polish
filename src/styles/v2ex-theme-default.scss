@@ -285,6 +285,17 @@ body {
   .orange-dot {
     background: var(--v2p-color-orange-400);
   }
+
+  form[action='/notes/new'] {
+    .inner.alt {
+      background-color: var(--v2p-color-bg-input);
+      border: 1px solid var(--button-border-color);
+    }
+
+    .cell {
+      background-color: transparent !important;
+    }
+  }
 }
 
 /* ====== 帖子标签 ====== */
