@@ -3,7 +3,6 @@ import type { Options } from './pages/option.type'
 
 declare global {
   interface Window {
-    __V2P_PAT__: PersonalAccessToken
     __V2P_DecodeStatus__?: 'decodeed'
   }
 }
