@@ -1,5 +1,5 @@
-import { StorageKey } from '../constants'
-import { type Options } from '../pages/option.type'
+import { defaultOptions, StorageKey } from '../constants'
+import type { Options } from '../pages/option.type'
 import type { PersonalAccessToken, StorageData, V2EX_RequestErrorResponce } from '../types'
 import { replyTextArea } from './globals'
 
@@ -21,12 +21,6 @@ export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorRespo
   }
 
   return false
-}
-
-declare global {
-  interface Window {
-    __V2P_PAT__: PersonalAccessToken
-  }
 }
 
 /**
@@ -64,13 +58,18 @@ export function focusReplyInput() {
   }
 }
 
+/**
+ * 获取用户存储的自定义设置。
+ */
 export function getOptions(): Promise<Options> {
   return new Promise((resolve) => {
     chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
       const options = result[StorageKey.Options]
 
       if (options) {
-        resolve(options)
+        resolve({ ...defaultOptions, ...options })
+      } else {
+        resolve(defaultOptions)
       }
     })
   })

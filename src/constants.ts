@@ -1,3 +1,5 @@
+import type { Options } from './pages/option.type'
+
 export const enum StorageKey {
   Options = 'options',
   LegacyAPI = 'legacy-api',
@@ -126,3 +128,7 @@ export const imgurClientIdPool = [
   'c4a4a563f698595',
   '81be04b9e4a08ce',
 ] as const satisfies readonly string[]
+
+export const defaultOptions: Options = {
+  openInNewTab: false,
+}

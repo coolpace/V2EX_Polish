@@ -131,11 +131,11 @@
 
     ::selection {
       color: currentColor;
-      background-color: var(--v2p-color-main-950);
+      background-color: var(--v2p-color-orange-50);
     }
 
     img::selection {
-      background-color: var(--v2p-color-main-950);
+      background-color: var(--v2p-color-orange-50);
     }
   }
 }

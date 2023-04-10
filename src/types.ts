@@ -1,17 +1,21 @@
 import type { StorageKey } from './constants'
 import type { Options } from './pages/option.type'
 
+declare global {
+  interface Window {
+    __V2P_PAT__: PersonalAccessToken
+    __V2P_DecodeStatus__?: 'decodeed'
+  }
+}
+
 export interface LegacyAPI_Info {
   limit?: number
   reset?: number
   remaining?: number
 }
 
-export interface API_Info {
+export interface API_Info extends LegacyAPI_Info {
   pat?: string
-  limit?: number
-  reset?: number
-  remaining?: number
 }
 
 export interface StorageData {
