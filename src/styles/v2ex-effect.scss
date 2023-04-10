@@ -131,6 +131,7 @@ body {
   color: var(--v2p-color-main-600);
   font-size: 14px;
   background: var(--v2p-color-bg-content);
+  border: 1px solid var(--box-border-color);
   border-radius: 8px;
   box-shadow: var(--v2p-widget-shadow);
 }
@@ -367,23 +368,6 @@ body {
   height: 15px;
 }
 
-#v2p-emoji-popup,
-#v2p-member-popup {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 999;
-  width: max-content;
-  max-height: 285px;
-  overflow-y: auto;
-  color: var(--v2p-color-main-600);
-  font-size: 14px;
-  background: var(--v2p-color-bg-content);
-  border-radius: 8px;
-  box-shadow: var(--v2p-widget-shadow);
-  visibility: hidden;
-}
-
 .v2p-emoji-container {
   max-height: 285px;
   padding: 15px 18px;
@@ -394,8 +378,11 @@ body {
 
 #v2p-member-popup {
   max-width: 300px;
+  max-height: 285px;
   padding: 12px;
+  overflow-y: auto;
   text-align: left;
+  visibility: hidden;
 
   .v2p-ctn {
     display: flex;
@@ -603,7 +590,7 @@ body {
         .v2p-more-reply-tip {
           margin-top: 20px;
           color: var(--v2p-color-main-400);
-          font-size: 12px;
+          font-size: 13px;
           text-align: center;
         }
       }

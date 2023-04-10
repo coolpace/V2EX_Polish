@@ -15,12 +15,17 @@
     <div class="wrapper">
       <h1 class="title">V2EX Polish 控制选项</h1>
       <form id="options-form">
-        <div class="form-item">
-          <label for="openInNewTab">新标签页打开链接</label>
+        <div class="form-checkbox">
           <input type="checkbox" id="openInNewTab" checked="false" />
+          <div class="combo">
+            <label for="openInNewTab">新标签页打开主题</label>
+            <p>启用后点击主题将在新的页签中打开</p>
+          </div>
         </div>
 
-        <button id="save" type="submit">保存设置</button>
+        <div class="actions">
+          <button id="save" type="submit">保存设置</button>
+        </div>
       </form>
     </div>
 

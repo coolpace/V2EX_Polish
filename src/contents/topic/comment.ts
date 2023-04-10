@@ -18,7 +18,7 @@ import {
   replyTextArea,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput } from '../helpers'
+import { focusReplyInput, getOptions } from '../helpers'
 
 export function insertTextToReplyInput(text: string) {
   if (replyTextArea instanceof HTMLTextAreaElement) {
@@ -104,16 +104,21 @@ function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: 
       fetchUserInfo(commentData.memberName, {
         signal: abortController.signal,
       })
-        .then((data) => {
+        .then(async (data) => {
           $memberPopup
             .find('.v2p-avatar-box')
             .removeClass('v2p-loading')
             .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
-          $memberPopup
-            .find('.v2p-username')
-            .removeClass('v2p-loading')
-            .append(`<a href="${data.url}" target="_blank">${data.username}</a>`)
+
+          const options = await getOptions()
+          const $memberName = $(`<a href="${data.url}">${data.username}</a>`)
+          if (options.openInNewTab) {
+            $memberName.prop('target', '_blank')
+          }
+          $memberPopup.find('.v2p-username').removeClass('v2p-loading').append($memberName)
+
           $memberPopup.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)
+
           $memberPopup
             .find('.v2p-created-date')
             .removeClass('v2p-loading')
@@ -395,7 +400,9 @@ export function handlingComments() {
   }
 
   {
-    const $memberPopup = $('<div id="v2p-member-popup" tabindex="0">').appendTo($commentBox)
+    const $memberPopup = $('<div id="v2p-member-popup" class="v2p-popup" tabindex="0">').appendTo(
+      $commentBox
+    )
 
     $commentCells.each((i, cellDom) => {
       const dataFromIndex = commentDataList.at(i)
