@@ -6,8 +6,8 @@
 
 ## 使用方式
 
-- [Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
-- [手动安装](https://github.com/coolpace/V2EX_Polish/releases)
+- Chrome 和 Edge 用户请在[Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
+- 想要体验最新的功能，可以[手动安装](https://github.com/coolpace/V2EX_Polish/releases)
 
 > **Note**
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
