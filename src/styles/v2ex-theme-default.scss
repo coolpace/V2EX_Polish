@@ -280,6 +280,11 @@ body {
   a:hover {
     text-underline-offset: 0.4ex;
   }
+
+  // 新消息提醒。
+  .orange-dot {
+    background: var(--v2p-color-orange-400);
+  }
 }
 
 /* ====== 帖子标签 ====== */

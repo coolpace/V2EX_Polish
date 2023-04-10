@@ -24,23 +24,6 @@ export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorRespo
 }
 
 /**
- * 获取用户设置存储的个人访问令牌。
- */
-export function getPAT(): Promise<PersonalAccessToken> {
-  return new Promise((resolve) => {
-    if (typeof window.__V2P_PAT__ === 'string') {
-      return resolve(window.__V2P_PAT__)
-    } else {
-      chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
-        const PAT = result[StorageKey.API]?.pat
-        window.__V2P_PAT__ = PAT
-        resolve(PAT)
-      })
-    }
-  })
-}
-
-/**
  * 转义 HTML 字符串中的特殊字符。
  */
 export function escapeHTML(html: string) {
@@ -56,6 +39,17 @@ export function focusReplyInput() {
   if (replyTextArea instanceof HTMLTextAreaElement) {
     replyTextArea.focus()
   }
+}
+
+/**
+ * 获取用户设置存储的个人访问令牌。
+ */
+export function getPAT(): Promise<PersonalAccessToken> {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
+      resolve(result[StorageKey.API]?.pat)
+    })
+  })
 }
 
 /**
