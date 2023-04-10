@@ -1,8 +1,8 @@
-# V2EX Polish
+# V2EX Polish - 体验更现代化的 V2EX
 
 ![V2EX Polish 宣传封面图](https://i.imgur.com/yoAMTzH.jpg)
 
-V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX 页面焕然一新 ！
+这是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！
 
 ## 使用方式
 
