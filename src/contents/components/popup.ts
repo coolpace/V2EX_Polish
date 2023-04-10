@@ -20,7 +20,7 @@ interface CreatePopupProps {
 export function createPopup(props: CreatePopupProps): PopupHandler {
   const { root, children, content, options, onOpen, onClose } = props
 
-  const $popup = $('<div class="v2p-popup">').css('visibility', 'hidden')
+  const $popup = $('<div class="v2p-popup" tabindex="0">').css('visibility', 'hidden')
 
   root.append($popup)
 
@@ -48,13 +48,14 @@ export function createPopup(props: CreatePopupProps): PopupHandler {
     close: handlePopupClose,
   }
 
-  popupHandler.$trigger.on('click', (ev) => {
+  popupHandler.$trigger.on('click', () => {
     if (popup.style.visibility !== 'hidden') {
       handlePopupClose()
     } else {
-      ev.stopPropagation()
-
-      $(document).on('click', docClickHandler)
+      // 为了避免点击外部区域立即关闭 Popup，需要延迟绑定 document 的 click 事件。
+      setTimeout(() => {
+        $(document).on('click', docClickHandler)
+      })
 
       computePosition(popupHandler.$trigger.get(0)!, popup, {
         placement: 'bottom-start',

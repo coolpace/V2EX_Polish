@@ -8,5 +8,5 @@ node_modules
 /extension
 !/extension/manifest.json
 !/extension/images
-!/extension/pages
+!/extension/pages/*.html
 !/extension/scripts/jquery*.min.js
