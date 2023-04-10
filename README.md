@@ -1,11 +1,13 @@
 # V2EX Polish
 
-V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX 页面焕然一新 ！。
+V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX 页面焕然一新 ！
 
 ## 使用方式
 
 - [Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
 - [手动安装](https://github.com/coolpace/V2EX_Polish/releases)
+
+<sub>Safari 和 Firefox 浏览器正在计划支持中，敬请期待！</sub>
 
 > **Note**
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
@@ -46,9 +48,11 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 
 ## 如何帮助我们
 
-- 为我们的项目点个 Star ⭐️ 或分享给他人，让更多的人知道我们的存在。
-- 为我们的项目提供反馈，帮助我们改进。
-- 为我们的项目提供[代码贡献](./.github/CONTRIBUTING.md)。
+作为开发者，创造对他人有用的东西始终是我们的热情所在，这个项目也不例外。我们投入了大量的时间和精力，致力于为 V2EX 用户带来更好的体验。因此，如果我们的项目帮助了你，欢迎你为我们的项目：
+
+- 点个 Star ⭐️ 或分享给他人，让更多的人知道我们的存在。
+- 提供反馈，帮助我们改进。
+- 提供[代码贡献](./.github/CONTRIBUTING.md)。
 
 ## 问题反馈
 
