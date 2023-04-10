@@ -33,6 +33,7 @@
     --v2p-color-bg-input: var(--v2p-color-main-50);
     --v2p-color-bg-search: var(--v2p-color-main-100);
     --v2p-color-bg-search-active: var(--v2p-color-main-200);
+    --v2p-color-bg-widget: rgb(255 255 255 / 70%);
     --v2p-color-heart: #ef4444;
     --v2p-color-heart-fill: #fee2e2;
     --v2p-color-mask: rgb(0 0 0 / 25%);
@@ -40,6 +41,8 @@
     --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
     --v2p-widget-shadow: 0 9px 24px -3px var(--v2p-color-main-100),
       0 4px 8px -1px var(--v2p-color-main-200);
+    --v2p-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
+      0 9px 28px 8px rgb(0 0 0 / 5%);
 
     // V2EX 原有的 CSS 变量：
     --color-fade: var(--v2p-color-font-secondary);
@@ -47,7 +50,7 @@
     --link-color: var(--v2p-color-main-800);
     --link-darker-color: var(--v2p-color-main-600);
     --link-hover-color: var(--v2p-color-main-800);
-    --link-caution-color: #f59e0b;
+    --link-caution-color: var(--v2p-color-orange-400);
     --box-border-color: var(--v2p-color-main-200);
     --box-foreground-color: var(--v2p-color-main-800);
     --box-background-color: var(--v2p-color-bg-content);
@@ -108,9 +111,11 @@
     --v2p-color-bg-subtle: rgb(6 78 59 / 30%);
     --v2p-color-bg-search: var(--v2p-color-main-200);
     --v2p-color-bg-search-active: var(--v2p-color-main-200);
+    --v2p-color-bg-widget: var(--v2p-color-bg-content);
     --v2p-color-heart: #b91c1c;
     --v2p-color-heart-fill: #fca5a5;
     --v2p-color-mask: rgb(0 0 0 / 70%);
+    --v2p-toast-shadow: none;
 
     // V2EX 原有的 CSS 变量：
     --link-color: var(--v2p-color-main-700);

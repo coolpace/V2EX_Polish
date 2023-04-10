@@ -8,8 +8,10 @@
  * 如果以上三个条件都满足，则可以认为这段字符是base64编码。
  */
 
+import { createToast } from './components/toast'
+
 if (window.__V2P_DecodeStatus__ === 'decodeed') {
-  window.alert('已解析本页所有的 Base64 字符串。')
+  createToast({ message: '已解析完本页所有的 Base64 字符串' })
 } else {
   // 不能从 global.ts 中引入，否则会出现脚本执行错误，此错误发生原因未知。
   const $topicContentBox = $('#Main .box:has(.topic_content)')
@@ -81,9 +83,10 @@ if (window.__V2P_DecodeStatus__ === 'decodeed') {
   $topicContentBox.find('.topic_content').each(contentHandler)
 
   if (count === 0) {
-    window.alert('本页未发现 base64 字符串。')
+    createToast({ message: '本页未发现 Base64 字符串' })
   } else {
     window.__V2P_DecodeStatus__ = 'decodeed'
+    createToast({ message: `已解析本页所有的 Base64 字符串，共 ${count} 条` })
   }
 
   $('.v2p-decode').on('click', (ev) => {
