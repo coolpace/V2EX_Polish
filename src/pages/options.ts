@@ -1,10 +1,5 @@
 import { StorageKey } from '../constants'
 import { getOptions } from '../contents/helpers'
-import { type Options } from './option.type'
-
-const defaultOptions: Options = {
-  openInNewTab: false,
-}
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   console.log(changes, `Storage namespace "${namespace}" changed.`)
@@ -23,6 +18,7 @@ $('#options-form').on('submit', (ev) => {
   saveOptions()
 })
 
-void getOptions().then((options) => {
-  $('#openInNewTab').prop('checked', options.openInNewTab ?? defaultOptions.openInNewTab)
-})
+void (async function init() {
+  const options = await getOptions()
+  $('#openInNewTab').prop('checked', options.openInNewTab)
+})()
