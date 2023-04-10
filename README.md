@@ -1,5 +1,7 @@
 # V2EX Polish
 
+![V2EX Polish 宣传封面图](https://i.imgur.com/yoAMTzH.jpg)
+
 V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX 页面焕然一新 ！
 
 ## 使用方式
@@ -7,10 +9,10 @@ V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰�
 - [Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
 - [手动安装](https://github.com/coolpace/V2EX_Polish/releases)
 
-<sub>Safari 和 Firefox 浏览器正在计划支持中，敬请期待！</sub>
-
 > **Note**
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
+
+_Safari 和 Firefox 浏览器正在计划支持中，敬请期待！_
 
 ## 扩展功能
 
@@ -52,10 +54,10 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 
 - 点个 Star ⭐️ 或分享给他人，让更多的人知道我们的存在。
 - 提供反馈，帮助我们改进。
-- 提供[代码贡献](./.github/CONTRIBUTING.md)。
+- 改善代码（请阅读我们的[代码贡献指南](./.github/CONTRIBUTING.md)）。
 
 ## 问题反馈
 
 我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1)向我们反馈。
 
-喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰
+**喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰**
