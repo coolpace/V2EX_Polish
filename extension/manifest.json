@@ -39,7 +39,7 @@
       "js": ["scripts/v2ex-topic.min.js"]
     },
     {
-      "matches": ["https://v2ex.com/t/*", "https://www.v2ex.com/t/*"],
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "js": ["scripts/toggle-icon.min.js"]
     }
   ],
