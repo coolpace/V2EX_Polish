@@ -10,6 +10,8 @@
 
 import { createToast } from './components/toast'
 
+const dataTitle = '点击复制'
+
 if (window.__V2P_DecodeStatus__ === 'decodeed') {
   createToast({ message: '已解析完本页所有的 Base64 字符串' })
 } else {
@@ -59,7 +61,7 @@ if (window.__V2P_DecodeStatus__ === 'decodeed') {
     try {
       const decodedStr = window.atob(text)
       count += 1
-      return `<span class="v2p-decode-block">${text}(<ins class="v2p-decode" title="复制：${decodedStr}">${decodedStr}</ins>)</span>`
+      return `<span class="v2p-decode-block">${text}(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
     } catch {
       return text
     }
@@ -91,7 +93,12 @@ if (window.__V2P_DecodeStatus__ === 'decodeed') {
 
   $('.v2p-decode').on('click', (ev) => {
     const text = ev.target.innerText
-    void navigator.clipboard.writeText(text)
+    void navigator.clipboard.writeText(text).then(() => {
+      ev.target.dataset.title = '已复制'
+      setTimeout(() => {
+        ev.target.dataset.title = dataTitle
+      }, 1000)
+    })
     // TODO 提示复制成功
   })
 }

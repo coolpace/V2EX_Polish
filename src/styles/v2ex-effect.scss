@@ -501,6 +501,7 @@ body {
 }
 
 .v2p-decode {
+  position: relative;
   padding: 2px 4px;
   color: var(--v2p-color-orange-400);
   font-size: 13px;
@@ -511,10 +512,30 @@ body {
   &:hover {
     color: var(--v2p-color-orange-400);
     background-color: var(--v2p-color-orange-50);
+
+    &::after {
+      opacity: 1;
+    }
   }
 
-  &:active {
-    opacity: 0.6;
+  &::after {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    z-index: 10;
+    width: max-content;
+    padding: 2px 6px;
+    color: var(--v2p-color-main-800);
+    font-size: 12px;
+    white-space: nowrap;
+    text-align: center;
+    background-color: var(--v2p-color-bg-content);
+    border-radius: 4px;
+    box-shadow: var(--v2p-widget-shadow);
+    transform: translate(-50%, -100%);
+    opacity: 0;
+    content: attr(data-title);
+    pointer-events: none;
   }
 }
 
