@@ -1,6 +1,4 @@
-import { defaultOptions, StorageKey } from '../constants'
-import type { Options } from '../pages/option.type'
-import type { PersonalAccessToken, StorageData, V2EX_RequestErrorResponce } from '../types'
+import type { V2EX_RequestErrorResponce } from '../types'
 import { replyTextArea } from './globals'
 
 export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorResponce {
@@ -39,32 +37,4 @@ export function focusReplyInput() {
   if (replyTextArea instanceof HTMLTextAreaElement) {
     replyTextArea.focus()
   }
-}
-
-/**
- * 获取用户设置存储的个人访问令牌。
- */
-export function getPAT(): Promise<PersonalAccessToken> {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
-      resolve(result[StorageKey.API]?.pat)
-    })
-  })
-}
-
-/**
- * 获取用户存储的自定义设置。
- */
-export function getOptions(): Promise<Options> {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
-      const options = result[StorageKey.Options]
-
-      if (options) {
-        resolve({ ...defaultOptions, ...options })
-      } else {
-        resolve(defaultOptions)
-      }
-    })
-  })
 }

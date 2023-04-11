@@ -4,7 +4,7 @@ import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../co
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import { fetchUserInfo } from '../../services'
 import type { CommentData } from '../../types'
-import { formatTimestamp, getOS } from '../../utils'
+import { formatTimestamp, getOptions, getOS } from '../../utils'
 import { createButton } from '../components/button'
 import { createModel } from '../components/model'
 import { createPopup } from '../components/popup'
@@ -18,7 +18,7 @@ import {
   replyTextArea,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput, getOptions } from '../helpers'
+import { focusReplyInput } from '../helpers'
 
 export function insertTextToReplyInput(text: string) {
   if (replyTextArea instanceof HTMLTextAreaElement) {

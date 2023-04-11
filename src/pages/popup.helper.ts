@@ -2,6 +2,7 @@ export const enum TabId {
   Hot = 'tab-hot',
   Latest = 'tab-latest',
   Message = 'tab-message',
+  Feature = 'tab-feature',
   Setting = 'tab-setting',
 }
 
@@ -11,6 +12,7 @@ export function isTabId(tabId: any): tabId is TabId {
       tabId === TabId.Hot ||
       tabId === TabId.Latest ||
       tabId === TabId.Message ||
+      tabId === TabId.Feature ||
       tabId === TabId.Setting
     ) {
       return true

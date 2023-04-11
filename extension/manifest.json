@@ -7,7 +7,7 @@
 
   "description": "专为 V2EX 用户设计，提供了丰富的扩展功能。",
 
-  "permissions": ["scripting", "contextMenus", "storage"],
+  "permissions": ["scripting", "contextMenus", "storage", "alarms"],
 
   "host_permissions": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
 

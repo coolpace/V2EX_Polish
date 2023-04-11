@@ -1,4 +1,4 @@
-import { getOptions } from '../helpers'
+import { getOptions } from '../../utils'
 import { handlingTopicList } from './topic-list'
 
 {

@@ -51,11 +51,12 @@ button {
   gap: 0 3px;
   align-items: center;
   width: 100%;
-  padding: 5px 6px;
+  padding: 4px 6px;
+  font-size: 14px;
   background-color: var(--v2p-color-main-100);
   border-radius: 5px;
 
-  li {
+  > li[data-target] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,10 +75,10 @@ button {
       color: var(--v2p-color-main-100);
       background-color: var(--v2p-color-main-800);
     }
+  }
 
-    &[data-target='tab-setting'] {
-      margin-left: auto;
-    }
+  .tabs-right {
+    margin-left: auto;
   }
 }
 
@@ -353,5 +354,27 @@ a {
       text-decoration: underline;
       background-color: var(--v2p-color-main-100);
     }
+  }
+}
+
+.features {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 10px;
+
+  .feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: var(--v2p-color-main-200);
+  }
+
+  .feature-title {
+    font-weight: 500;
+    text-align: center;
   }
 }
