@@ -35,7 +35,7 @@ export function formatTimestamp(
   timestamp: number,
   { format = 'YMD' }: { format?: 'YMD' | 'YMDHMS' } = {}
 ) {
-  const date = new Date(timestamp * 1000)
+  const date = new Date(timestamp.toString().length === 10 ? timestamp * 1000 : timestamp)
   const year = date.getFullYear().toString()
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
   const day = date.getDate().toString().padStart(2, '0')
