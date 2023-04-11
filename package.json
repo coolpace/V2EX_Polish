@@ -30,6 +30,6 @@
     "sass": "^1.58.0",
     "stylelint": "^14.16.1",
     "tsup": "^6.6.0",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.4"
   }
 }
