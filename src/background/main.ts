@@ -1,4 +1,6 @@
 import { Menu } from '../constants'
+import { getOptions } from '../utils'
+import { checkIn } from './daily-check-in'
 
 interface Message {
   colorScheme: 'dark' | 'light'
@@ -25,7 +27,7 @@ chrome.runtime.onMessage.addListener((message: Message) => {
 
 chrome.contextMenus.removeAll(() => {
   chrome.contextMenus.create({
-    documentUrlPatterns: ['https://*.v2ex.com/*'],
+    documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*'],
     contexts: ['page'],
     title: 'V2EX Polish',
     visible: true,
@@ -33,7 +35,7 @@ chrome.contextMenus.removeAll(() => {
   })
 
   chrome.contextMenus.create({
-    documentUrlPatterns: ['https://*.v2ex.com/t*'],
+    documentUrlPatterns: ['https://v2ex.com/t/*', 'https://www.v2ex.com/t/*'],
     contexts: ['page'],
     title: '解析本页 Base64',
     id: Menu.Decode,
@@ -50,4 +52,25 @@ chrome.contextMenus.removeAll(() => {
       }
     }
   })
+})
+
+const checkInAlarmName = 'dailyCheckIn'
+
+chrome.alarms.get(checkInAlarmName, (alarm) => {
+  if (typeof alarm === 'undefined') {
+    // background 脚本无法持久运行，在 Chrome 中 5 分钟内会关闭连接，所以需要使用 alarm 来保持定时任务。
+    chrome.alarms.create(checkInAlarmName, {
+      periodInMinutes: 4.9,
+    })
+  }
+})
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === checkInAlarmName) {
+    void getOptions().then((options) => {
+      if (options.autoCheckIn.enabled) {
+        void checkIn()
+      }
+    })
+  }
 })

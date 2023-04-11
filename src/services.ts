@@ -1,5 +1,4 @@
 import { imgurClientIdPool, StorageKey, V2EX } from './constants'
-import { getPAT } from './contents/helpers'
 import type {
   API_Info,
   DataWrapper,
@@ -11,10 +10,13 @@ import type {
   Topic,
   TopicReply,
 } from './types'
+import { getPAT } from './utils'
 
+// 动态获取 V2EX 的域名，防止跨域。
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
   ? window.location.origin
   : V2EX.Origin
+
 const V2EX_LEGACY_API = `${V2EX_ORIGIN}/api`
 const V2EX_API = `${V2EX_ORIGIN}/api/v2`
 

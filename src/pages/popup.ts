@@ -6,12 +6,13 @@
  * 4. 来回切换 tab 时，应当保持 tab 的滚动位置。
  */
 
+import { checkIn } from '../background/daily-check-in'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
 import { createButton } from '../contents/components/button'
 import { iconChat, iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'
-import { formatTimestamp } from '../utils'
+import { formatTimestamp, isSameDay } from '../utils'
 import {
   calculateLocalStorageSize,
   escapeHTML,
@@ -51,6 +52,7 @@ const topicContentData: Record<TabId, RemoteDataStore> = {
     data: undefined,
     lastFetchTime: undefined,
   },
+  [TabId.Feature]: {},
   [TabId.Setting]: {},
 }
 
@@ -196,6 +198,23 @@ function initTabs() {
           $tabContent.empty().append($topicList)
         }
       }
+    }
+
+    if (tabId === TabId.Feature) {
+      chrome.storage.sync.get(StorageKey.Daily, (result: StorageData) => {
+        const dailyInfo = result[StorageKey.Daily]
+        const $checkIn = $('.feature-check-in')
+
+        if (dailyInfo?.lastCheckInTime) {
+          if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
+            $checkIn.find('.feature-title').text('今日已签到')
+          }
+        } else {
+          $checkIn.on('click', () => {
+            void checkIn()
+          })
+        }
+      })
     }
 
     if (tabId === TabId.Message) {

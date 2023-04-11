@@ -1,5 +1,6 @@
 import { StorageKey } from '../constants'
-import { getOptions } from '../contents/helpers'
+import type { Options } from '../types'
+import { getOptions } from '../utils'
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   console.log(changes, `Storage namespace "${namespace}" changed.`)
@@ -9,10 +10,15 @@ const saveOptions = async () => {
   const $save = $('#save')
   const originText = $save.text()
 
-  await chrome.storage.sync.set({
-    [StorageKey.Options]: {
-      openInNewTab: $('#openInNewTab').prop('checked'),
+  const currentOptions: Options = {
+    openInNewTab: $('#openInNewTab').prop('checked'),
+    autoCheckIn: {
+      enabled: $('#autoCheckIn').prop('checked'),
     },
+  }
+
+  await chrome.storage.sync.set({
+    [StorageKey.Options]: currentOptions,
   })
 
   $save.addClass('success').text('保存成功')
@@ -30,4 +36,5 @@ $('#options-form').on('submit', (ev) => {
 void (async function init() {
   const options = await getOptions()
   $('#openInNewTab').prop('checked', options.openInNewTab)
+  $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
 })()

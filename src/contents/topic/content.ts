@@ -1,6 +1,6 @@
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
+import { getOptions } from '../../utils'
 import { $topicContentBox } from '../globals'
-import { getOptions } from '../helpers'
 
 /**
  * 处理主题的正文内容。

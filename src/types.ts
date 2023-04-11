@@ -1,9 +1,15 @@
 import type { StorageKey } from './constants'
-import type { Options } from './pages/option.type'
 
 declare global {
   interface Window {
     __V2P_DecodeStatus__?: 'decodeed'
+  }
+}
+
+export interface Options {
+  openInNewTab: boolean
+  autoCheckIn: {
+    enabled: boolean
   }
 }
 
@@ -17,10 +23,15 @@ export interface API_Info extends LegacyAPI_Info {
   pat?: string
 }
 
+export interface DailyInfo {
+  lastCheckInTime?: number
+}
+
 export interface StorageData {
   [StorageKey.Options]?: Options
   [StorageKey.LegacyAPI]?: LegacyAPI_Info
   [StorageKey.API]?: API_Info
+  [StorageKey.Daily]?: DailyInfo
 }
 
 export interface Member {

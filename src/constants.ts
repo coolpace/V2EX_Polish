@@ -1,9 +1,10 @@
-import type { Options } from './pages/option.type'
+import type { Options } from './types'
 
 export const enum StorageKey {
   Options = 'options',
   LegacyAPI = 'legacy-api',
   API = 'api',
+  Daily = 'daily',
 }
 
 export const enum V2EX {
@@ -129,6 +130,10 @@ export const imgurClientIdPool = [
   '81be04b9e4a08ce',
 ] as const satisfies readonly string[]
 
+/** 扩展初始化提供的默认选项 */
 export const defaultOptions: Options = {
   openInNewTab: false,
+  autoCheckIn: {
+    enabled: true,
+  },
 }
