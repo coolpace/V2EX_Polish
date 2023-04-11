@@ -562,9 +562,9 @@ body {
       }
 
       /* 嵌套的回复 */
-      ~ .cell {
+      ~ .cell[id^='r'] {
         padding: 20px 0 0 15px;
-        background-color: var(--v2p-color-main-50);
+        background-color: var(--v2p-color-bg-nested-reply);
         border: none;
         border-left: 3px solid var(--v2p-color-main-200);
 

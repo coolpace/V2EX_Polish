@@ -553,6 +553,8 @@ body {
   }
 
   &.v2p-collapsed {
+    --collapsed-fade: var(--v2p-color-bg-content);
+
     &::before {
       position: absolute;
       right: 0;
@@ -560,7 +562,7 @@ body {
       left: 0;
       z-index: 10;
       height: 120px;
-      background: linear-gradient(to top, var(--v2p-color-bg-content), transparent);
+      background: linear-gradient(to top, var(--collapsed-fade), transparent);
       content: '';
       pointer-events: none;
     }
@@ -568,6 +570,18 @@ body {
     .v2p-expand-btn.normal.button {
       bottom: 10px;
       transform: translateX(-50%);
+    }
+  }
+}
+
+.cell[id^='r'] .cell[id^='r'] {
+  .v2p-reply-content.v2p-collapsed {
+    --collapsed-fade: var(--v2p-color-bg-nested-reply);
+
+    .v2p-expand-btn.normal.button {
+      color: var(--button-foreground-color);
+      background: var(--button-hover-color);
+      box-shadow: var(--button-hover-shadow);
     }
   }
 }
