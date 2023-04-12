@@ -499,7 +499,7 @@ body {
     .count_livid {
       @include count;
 
-      color: var(--v2p-color-font-secondary);
+      color: var(--v2p-color-main-500);
       background-color: var(--v2p-color-main-200);
     }
 
@@ -541,7 +541,7 @@ body {
         }
 
         /* 嵌套的回复 */
-        ~ .cell {
+        ~ .cell[id^='r'] {
           background-color: var(--v2p-color-main-100);
           border-left: 3px solid var(--v2p-color-main-300);
         }
@@ -567,6 +567,10 @@ body {
         background-color: var(--v2p-color-bg-nested-reply);
         border: none;
         border-left: 3px solid var(--v2p-color-main-200);
+
+        &:last-of-type {
+          padding: 20px 0 10px 15px; // 最后一个嵌套回复与背景之间留点间隙。
+        }
 
         .cell {
           padding: 20px 0 0; /* 多层嵌套取消缩进 */
