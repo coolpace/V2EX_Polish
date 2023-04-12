@@ -15,25 +15,9 @@ import {
   $replyBox,
   commentDataList,
   loginName,
-  replyTextArea,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput } from '../helpers'
-
-export function insertTextToReplyInput(text: string) {
-  if (replyTextArea instanceof HTMLTextAreaElement) {
-    const startPos = replyTextArea.selectionStart
-    const endPos = replyTextArea.selectionEnd
-
-    const valueToStart = replyTextArea.value.substring(0, startPos)
-    const valueFromEnd = replyTextArea.value.substring(endPos, replyTextArea.value.length)
-    replyTextArea.value = `${valueToStart}${text}${valueFromEnd}`
-
-    focusReplyInput()
-
-    replyTextArea.selectionStart = replyTextArea.selectionEnd = startPos + text.length
-  }
-}
+import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 
 /**
  * 点击头像会展示该用户的信息。
@@ -266,7 +250,7 @@ function handlingControls() {
   crtlAreas.each((_, el) => {
     const ctrlArea = $(el)
 
-    const crtlContainer = $('<span class="v2p-controls">')
+    const $controls = $('<span class="v2p-controls">')
 
     const thankIcon = $(`<span class="v2p-control v2p-control-thank">${iconHeart}</span>`)
 
@@ -275,7 +259,7 @@ function handlingControls() {
 
     if (thanked) {
       thankIcon.addClass('v2p-thanked')
-      crtlContainer.append($('<a>').append(thankIcon))
+      $controls.append($('<a>').append(thankIcon))
     } else {
       const thankEle = thankArea.find('> .thank')
       const $hide = thankEle.eq(0).removeClass('thank')
@@ -286,7 +270,13 @@ function handlingControls() {
       thankIcon.addClass('v2p-hover-btn')
       $thank.empty().append(thankIcon)
 
-      crtlContainer.append($hide).append($thank)
+      $thank.on('click', () => {
+        thankIcon.addClass('v2p-thanked')
+        $hide.hide()
+        $thank.off('click')
+      })
+
+      $controls.append($hide).append($thank)
     }
 
     const $reply = ctrlArea.find('a:last-of-type')
@@ -295,11 +285,11 @@ function handlingControls() {
       .find('> img[alt="Reply"]')
       .replaceWith(`<span class="v2p-control v2p-hover-btn v2p-control-reply">${iconReply}</span>`)
 
-    crtlContainer.append($reply)
+    $controls.append($reply)
 
     thankArea.remove()
     const floorNum = ctrlArea.find('.no').clone()
-    ctrlArea.empty().append(crtlContainer, floorNum)
+    ctrlArea.empty().append($controls, floorNum)
   })
 }
 
