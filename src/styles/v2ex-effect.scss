@@ -45,7 +45,7 @@ body {
     .v2p-tool-box {
       position: sticky;
       top: 20px;
-      z-index: 10;
+      z-index: var(--zidx-tools-box);
 
       > .cell {
         font-size: 13px;
@@ -113,7 +113,7 @@ body {
 
 .v2p-model-mask {
   position: fixed;
-  z-index: 999;
+  z-index: var(--zidx-model-mask);
   padding: 60px;
   overflow: hidden;
   overflow-y: auto;
@@ -125,7 +125,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: var(--zidx-popup);
   width: max-content;
   overflow-y: auto;
   color: var(--v2p-color-main-600);
@@ -141,7 +141,7 @@ body {
   position: fixed;
   top: 50px;
   left: 50%;
-  z-index: 999;
+  z-index: var(--zidx-toast);
   padding: 10px 15px;
   color: var(--v2p-color-main-800);
   font-size: 14px;
@@ -181,7 +181,7 @@ body {
       top: 0;
       right: 0;
       left: 0;
-      z-index: 10;
+      z-index: var(--zidx-model-header);
       display: flex;
       gap: 0 20px;
       align-items: center;
@@ -325,7 +325,7 @@ body {
       &::after {
         position: absolute;
         top: -8px;
-        z-index: 10;
+        z-index: var(--zidx-tip);
         min-width: 30px;
         padding: 2px 5px;
         font-size: 12px;
@@ -413,7 +413,7 @@ body {
     width: 73px;
     height: 73px;
     overflow: hidden;
-    background-color: var(--button-background-color);
+    background-color: var(--button-background-hover-color);
     border-radius: 10px;
   }
 
@@ -444,7 +444,7 @@ body {
   }
 
   .v2p-loading {
-    background-color: var(--button-background-color);
+    background-color: var(--button-background-hover-color);
     border-radius: 6px;
   }
 }
@@ -521,7 +521,7 @@ body {
     position: absolute;
     top: -8px;
     left: 50%;
-    z-index: 10;
+    z-index: var(--zidx-tip);
     width: max-content;
     padding: 2px 6px;
     color: var(--v2p-color-main-800);
@@ -545,7 +545,7 @@ body {
     position: absolute;
     bottom: 5px;
     left: 50%;
-    z-index: 20;
+    z-index: var(--zidx-expand-btn);
     font-weight: 400;
     font-size: 12px;
     transform: translateX(-50%);
@@ -559,7 +559,7 @@ body {
       right: 0;
       bottom: 0;
       left: 0;
-      z-index: 10;
+      z-index: var(--zidx-expand-mask);
       height: 120px;
       background: linear-gradient(to top, var(--collapsed-fade), transparent);
       content: '';
