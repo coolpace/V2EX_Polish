@@ -569,7 +569,7 @@ body {
         border-left: 3px solid var(--v2p-color-main-200);
 
         &:last-of-type {
-          padding: 20px 0 10px 15px; // 最后一个嵌套回复与背景之间留点间隙。
+          padding-bottom: 10px; // 最后一个嵌套回复与背景之间留点间隙。
         }
 
         .cell {
