@@ -615,11 +615,12 @@ body {
         .v2p-topic-reply-member {
           display: inline;
           color: var(--v2p-color-main-700);
+          font-weight: bold;
         }
 
         .v2p-topic-reply-avatar {
           position: relative;
-          top: 3px;
+          top: 2px;
           width: 15px;
           height: 15px;
           margin-right: 5px;
@@ -627,10 +628,6 @@ body {
           overflow: hidden;
           background-color: var(--v2p-color-main-200);
           border-radius: 2px;
-        }
-
-        .v2p-topic-reply-username {
-          font-weight: bold;
         }
 
         .v2p-topic-reply-content {
