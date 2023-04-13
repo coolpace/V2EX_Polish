@@ -91,8 +91,10 @@ export function handlingTopicList() {
                       $template.append(`
                       <div class="v2p-topic-reply">
                         <div class="v2p-topic-reply-member">
-                          <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
-                          <span class="v2p-topic-reply-username">${r.member.username}：</span>
+                          <a href="${r.member.url}">
+                            <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
+                            <span>${r.member.username}</span>
+                          </a>：
                         </div>
                         <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
                       </div>
