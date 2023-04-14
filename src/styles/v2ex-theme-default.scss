@@ -544,7 +544,13 @@ body {
         /* 嵌套的回复 */
         ~ .cell[id^='r'] {
           background-color: var(--v2p-color-main-100);
-          border-left: 3px solid var(--v2p-color-main-300);
+          border-color: var(--v2p-color-main-300);
+
+          .cell {
+            &.v2p-indent {
+              border-color: var(--v2p-color-main-350);
+            }
+          }
         }
       }
     }
@@ -574,9 +580,14 @@ body {
         }
 
         .cell {
-          padding: 20px 0 0; /* 多层嵌套取消缩进 */
+          padding-left: 0; /* 多层嵌套取消缩进 */
           background-color: transparent;
           border: none;
+
+          &.v2p-indent {
+            padding-left: 15px;
+            border-left: 1px solid var(--v2p-color-main-300);
+          }
         }
 
         tr td {
@@ -767,6 +778,8 @@ body {
     &.reply-box-sticky {
       bottom: 20px;
       z-index: var(--zidx-reply-box);
+      margin: 0 -10px;
+      padding: 0 22px;
       overflow: visible;
       border: none;
       border-radius: 10px;

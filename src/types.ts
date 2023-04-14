@@ -11,6 +11,9 @@ export interface Options {
   autoCheckIn: {
     enabled: boolean
   }
+  nestedReply: {
+    display: 'align' | 'indent'
+  }
 }
 
 export interface LegacyAPI_Info {

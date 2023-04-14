@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@codennnn/tsconfig': ^1.1.1
+  '@codennnn/tsconfig': ^1.1.2
   '@floating-ui/dom': ^1.2.1
   '@types/chrome': ^0.0.217
   '@types/jquery': ^3.5.16
@@ -18,7 +18,7 @@ dependencies:
   live-server: 1.2.2
 
 devDependencies:
-  '@codennnn/tsconfig': 1.1.1
+  '@codennnn/tsconfig': 1.1.2
   '@types/chrome': 0.0.217
   '@types/jquery': 3.5.16
   npm-run-all: 4.1.5
@@ -246,8 +246,8 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@codennnn/tsconfig/1.1.1:
-    resolution: {integrity: sha512-q+VbNsREPIE32OeSBwuoF8KEaCiouSt9dyekxs0nzhYZ8JkHz78ARkY1uvGOauusWUQGr99cQzpay6UOfuqGwQ==}
+  /@codennnn/tsconfig/1.1.2:
+    resolution: {integrity: sha512-sTomsxwevQT3oIh75tcYxqLZLSgGYsn1wts43BrAGY3Ows/bWqXu574Qql+k4FXJDMU+WyuwaiOch0dyaY2oRg==}
     engines: {node: '>=14.x'}
     dev: true
 
