@@ -5,16 +5,16 @@ import { $topicContentBox } from '../globals'
 /**
  * 处理主题的正文内容。
  */
-export function handlingContent() {
+export async function handlingContent() {
   {
-    void getOptions().then((options) => {
-      if (options.openInNewTab) {
-        $topicContentBox
-          .find('.topic_content a[href]')
-          .prop('target', '_blank')
-          .prop('rel', 'noopener noreferrer')
-      }
-    })
+    const options = await getOptions()
+
+    if (options.openInNewTab) {
+      $topicContentBox
+        .find('.topic_content a[href]')
+        .prop('target', '_blank')
+        .prop('rel', 'noopener noreferrer')
+    }
   }
 
   {

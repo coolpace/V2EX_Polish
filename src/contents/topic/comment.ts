@@ -374,7 +374,7 @@ function insertEmojiBox() {
   }
 }
 
-export function handlingComments() {
+export async function handlingComments() {
   {
     // 此区块的逻辑需要在处理嵌套评论前执行。
 
@@ -394,79 +394,77 @@ export function handlingComments() {
       $commentBox
     )
 
-    void getOptions().then((options) => {
-      const display = options.nestedReply.display
+    const options = await getOptions()
 
-      $commentCells.each((i, cellDom) => {
-        const dataFromIndex = commentDataList.at(i)
+    const display = options.nestedReply.display
 
-        // 处理头像点击事件。
-        if (dataFromIndex) {
-          processAvatar(cellDom, $memberPopup, dataFromIndex)
+    $commentCells.each((i, cellDom) => {
+      const dataFromIndex = commentDataList.at(i)
+
+      // 处理头像点击事件。
+      if (dataFromIndex) {
+        processAvatar(cellDom, $memberPopup, dataFromIndex)
+      }
+
+      processReplyContent(cellDom)
+
+      // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
+      const currentComment =
+        dataFromIndex?.id === cellDom.id
+          ? dataFromIndex
+          : commentDataList.find((data) => data.id === cellDom.id)
+
+      if (currentComment) {
+        const { memberName, refMemberNames, refFloors, thanked } = currentComment
+
+        const $cellDom = $(cellDom)
+
+        if (memberName === loginName) {
+          $cellDom
+            .find('.badges')
+            .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
         }
 
-        processReplyContent(cellDom)
-
-        // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
-        const currentComment =
-          dataFromIndex?.id === cellDom.id
-            ? dataFromIndex
-            : commentDataList.find((data) => data.id === cellDom.id)
-
-        if (currentComment) {
-          const { memberName, refMemberNames, refFloors, thanked } = currentComment
-
-          const $cellDom = $(cellDom)
-
-          if (memberName === loginName) {
-            $cellDom
-              .find('.badges')
-              .append(
-                `<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`
-              )
+        {
+          if (thanked) {
+            $cellDom.find('.v2p-heart-box').addClass('v2p-thanked')
           }
+        }
 
-          {
-            if (thanked) {
-              $cellDom.find('.v2p-heart-box').addClass('v2p-thanked')
-            }
-          }
+        if (!refMemberNames || refMemberNames.length === 0) {
+          return
+        }
 
-          if (!refMemberNames || refMemberNames.length === 0) {
-            return
-          }
+        for (const refName of refMemberNames) {
+          // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
+          for (let j = i - 1; j >= 0; j--) {
+            const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
 
-          for (const refName of refMemberNames) {
-            // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
-            for (let j = i - 1; j >= 0; j--) {
-              const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
+            if (compareName === refName) {
+              const firstRefFloor = refFloors?.at(0)
 
-              if (compareName === refName) {
-                const firstRefFloor = refFloors?.at(0)
+              // 如果手动指定了楼层，那么就以指定的楼层为准（一般来说，由用户指定会更精确），否则就以第一个引用的用户的评论的楼层为准。
+              if (firstRefFloor && firstRefFloor !== eachFloor) {
+                const targetIdx = commentDataList
+                  .slice(0, j)
+                  .findIndex((data) => data.floor === firstRefFloor)
 
-                // 如果手动指定了楼层，那么就以指定的楼层为准（一般来说，由用户指定会更精确），否则就以第一个引用的用户的评论的楼层为准。
-                if (firstRefFloor && firstRefFloor !== eachFloor) {
-                  const targetIdx = commentDataList
-                    .slice(0, j)
-                    .findIndex((data) => data.floor === firstRefFloor)
-
-                  if (targetIdx >= 0) {
-                    $commentCells.eq(targetIdx).append(cellDom)
-                    return
-                  }
+                if (targetIdx >= 0) {
+                  $commentCells.eq(targetIdx).append(cellDom)
+                  return
                 }
-
-                if (display === 'indent') {
-                  cellDom.classList.add('v2p-indent')
-                }
-
-                $commentCells.eq(j).append(cellDom)
-                return
               }
+
+              if (display === 'indent') {
+                cellDom.classList.add('v2p-indent')
+              }
+
+              $commentCells.eq(j).append(cellDom)
+              return
             }
           }
         }
-      })
+      }
     })
   }
 
