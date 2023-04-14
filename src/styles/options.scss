@@ -50,20 +50,31 @@ body {
         margin-top: 6px;
       }
 
-      .combo {
-        margin-left: 10px;
-      }
-
       label {
-        font-weight: bold;
-        font-size: 15px;
-
         & ~ p {
           margin-top: 5px;
           color: var(--v2p-color-main-700);
           font-size: 14px;
         }
       }
+    }
+
+    .form-radio {
+      display: flex;
+      align-items: flex-start;
+
+      input[type='radio'] {
+        margin-top: 6px;
+      }
+    }
+
+    .combo {
+      margin-left: 10px;
+    }
+
+    label[for] {
+      font-weight: bold;
+      font-size: 15px;
     }
   }
 }
@@ -84,6 +95,7 @@ body {
   background-color: var(--v2p-color-main-800);
   border: none;
   border-radius: 5px;
+  user-select: none;
 
   &.success {
     color: var(--v2p-color-accent-500);

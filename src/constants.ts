@@ -90,7 +90,7 @@ export const emoticons = [
   },
   {
     title: '其他',
-    list: ['👻', '🤡', '👀', '💩', '🐴', '🦄', '🐔', '🐒', '🐧', '🙈', '🙉', '🙊', '🐵'],
+    list: ['👻', '🤡', '🐔', '👀', '💩', '🐴', '🦄', '🐧', '🐶', '🐒', '🙈', '🙉', '🙊', '🐵'],
   },
 ] as const satisfies readonly { title: string; list: readonly string[] }[]
 
@@ -135,5 +135,8 @@ export const defaultOptions: Options = {
   openInNewTab: false,
   autoCheckIn: {
     enabled: true,
+  },
+  nestedReply: {
+    display: 'align',
   },
 }

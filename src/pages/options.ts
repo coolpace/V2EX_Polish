@@ -15,6 +15,9 @@ const saveOptions = async () => {
     autoCheckIn: {
       enabled: $('#autoCheckIn').prop('checked'),
     },
+    nestedReply: {
+      display: $('input[name="nestedReplyDisplay"]:checked').prop('value'),
+    },
   }
 
   await chrome.storage.sync.set({
@@ -37,4 +40,6 @@ void (async function init() {
   const options = await getOptions()
   $('#openInNewTab').prop('checked', options.openInNewTab)
   $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
+  $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
+  $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
 })()
