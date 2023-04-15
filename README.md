@@ -61,9 +61,16 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 ## 常见问题
 
 <details>
-<summary>“楼中楼”回复的楼层不正确</summary>
+<summary>为什么有的「楼中楼」回复的楼层不正确？</summary>
 
-由于 V2EX 的原回复并没有记录回复的楼层，本扩展只能根据被回复的用户去寻找此用户的最近一条回复，然后嵌入到这后面去，这种方法并不能识别用户真正要回复的是哪一个楼。
+由于 V2EX 的原回复并没有记录回复的楼层，本扩展只能根据被回复的用户去寻找此用户的最近一条回复，然后嵌入到这后面去，这种方法并不能保证正确识别用户真正要回复的是哪一个楼层。
+
+</details>
+
+<details>
+<summary>为什么需要设置「个人访问令牌（PAT）」？</summary>
+
+PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获取消息通知 等功能时才需要设置，它是用来访问 [V2EX 开放 API](https://www.v2ex.com/help/api) 的。如果你还有没有，请前往[这里创建](https://www.v2ex.com/settings/tokens)。
 
 </details>
 
@@ -72,10 +79,12 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 
 本扩展目前还在不断更新中，在功能稳定后会发布油猴脚本，请关注我们的后续更新。
 
+为了达到最佳的功能体验，我们更推荐你安装扩展。担心扩展的体积太大？请放心，本扩展的安装体积还不到 100 KB！我们十分关注扩展的体积和性能，尽可能减少资源占用率。
+
 </details>
 
 ## 问题反馈
 
-我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1)提出。你也可以加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl) 向我们快速反馈。
+我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1)提出。你也可以加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)向我们快速反馈。
 
 **喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰**
