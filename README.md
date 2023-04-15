@@ -1,13 +1,13 @@
 # V2EX Polish - 体验更现代化的 V2EX
 
-![V2EX Polish 宣传封面图](https://i.imgur.com/yoAMTzH.jpg)
+![V2EX Polish 宣传封面图](https://cdn.jsdelivr.net/gh/Codennnn/static/preview/V2EX_Polish.jpg)
 
-这是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！
+一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！
 
-## 使用方式
+## 安装使用
 
 - Chrome 和 Edge 用户请在[Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
-- 想要体验最新的功能，可以[手动安装](https://github.com/coolpace/V2EX_Polish/releases)
+- 想要体验最新功能，可以[手动安装](https://github.com/coolpace/V2EX_Polish/releases)
 
 > **Note**
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
@@ -32,6 +32,8 @@ _Safari 和 Firefox 浏览器正在计划支持中，敬请期待！_
 
 ### ⊙ 更多功能：
 
+- 便捷回复工具箱：文字转 Base64、上传图片。
+
 - 点击用户头像，查看用户信息。
 
 - 右键菜单扩展：支持解析页面中所有使用 Base64 编码的内容。
@@ -44,9 +46,9 @@ _Safari 和 Firefox 浏览器正在计划支持中，敬请期待！_
 
 ## 为什么选择 V2EX Polish？
 
-在社区中早已存在众多对于增强 v2ex.com 的[脚本](https://greasyfork.org/zh-CN/scripts/by-site/v2ex.com)和[插件](https://chrome.google.com/webstore/search/v2ex?_category=extensions)，然而它们带来的体验良莠不齐，且大多数已经停止更新。
+在社区中早已存在众多用于增强 v2ex.com 的[脚本](https://greasyfork.org/zh-CN/scripts/by-site/v2ex.com)和[插件](https://chrome.google.com/webstore/search/v2ex?_category=extensions)，然而它们带来的体验良莠不齐，且大多数已经停止更新。
 
-V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护，快速响应 V2EX 用户的需求。我们希望打造的是最高质量的 V2EX 扩展，提供最佳的体验。
+V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护，快速响应 V2EX 用户的需求。我们希望打造最高质量的 V2EX 扩展，提供最佳的体验。
 
 ## 如何帮助我们
 
@@ -56,8 +58,24 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 - 提供反馈，帮助我们改进。
 - 改善代码（请阅读我们的[代码贡献指南](./.github/CONTRIBUTING.md)）。
 
+## 常见问题
+
+<details>
+<summary>“楼中楼”回复的楼层不正确</summary>
+
+由于 V2EX 的原回复并没有记录回复的楼层，本扩展只能根据被回复的用户去寻找此用户的最近一条回复，然后嵌入到这后面去，这种方法并不能识别用户真正要回复的是哪一个楼。
+
+</details>
+
+<details>
+<summary>我不想安装扩展，能否提供油猴脚本？</summary>
+
+本扩展目前还在不断更新中，在功能稳定后会发布油猴脚本，请关注我们的后续更新。
+
+</details>
+
 ## 问题反馈
 
-我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1)向我们反馈。
+我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1)提出。你也可以加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl) 向我们快速反馈。
 
 **喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰**
