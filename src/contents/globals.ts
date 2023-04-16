@@ -32,7 +32,7 @@ export const replyTextArea = document.querySelector('#reply_content')
 
 /** 每一页的回复列表数据 */
 export const commentDataList: CommentData[] = $commentTableRows
-  .map((idx, tr) => {
+  .map<CommentData>((idx, tr) => {
     const id = $commentCells[idx].id
 
     const $tr = $(tr)
@@ -43,6 +43,7 @@ export const commentDataList: CommentData[] = $commentTableRows
     const $member = $td.find('> strong > a')
     const memberName = $member.text()
     const memberLink = $member.prop('href')
+    const memberAvatar = $tr.find('.avatar').prop('src')
 
     const content = $td.find('> .reply_content').text()
     const likes = Number($td.find('span.small').text())
@@ -65,25 +66,16 @@ export const commentDataList: CommentData[] = $commentTableRows
         : undefined
 
     return {
-      /** HTML 元素上的 id */
       id,
-      /** 回复者昵称 */
       memberName,
-      /** 回复者主页链接 */
       memberLink,
-      /** 回复内容 */
+      memberAvatar,
       content,
-      /** 该回复被感谢的次数 */
       likes,
-      /** 楼层数 */
       floor,
-      /** 遍历索引值 */
       index: idx,
-      /** 回复中 @ 别人 */
       refMemberNames,
-      /** 回复中 # 楼层 */
       refFloors,
-      /** 是否已经感谢过 */
       thanked,
     }
   })

@@ -8,6 +8,7 @@ import { formatTimestamp, getOptions, getOS } from '../../utils'
 import { createButton } from '../components/button'
 import { createModel } from '../components/model'
 import { createPopup } from '../components/popup'
+import { createToast } from '../components/toast'
 import {
   $commentBox,
   $commentCells,
@@ -17,7 +18,7 @@ import {
   loginName,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput, insertTextToReplyInput } from '../helpers'
+import { escapeHTML, focusReplyInput, insertTextToReplyInput } from '../helpers'
 
 /**
  * 点击头像会展示该用户的信息。
@@ -208,8 +209,38 @@ function handlingPopularComments() {
     onMount: ({ $content }) => {
       const $template = $('<div>')
 
-      popularCommentData.forEach(({ index }) => {
-        $template.append($commentCells.eq(index).clone())
+      popularCommentData.forEach(({ index, refMemberNames }) => {
+        const $clonedCells = $commentCells.eq(index).clone()
+
+        // 查看热门回复时，禁用回复操作和楼层锚点。
+        $clonedCells.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+        $clonedCells.find('.no').css('pointer-events', 'none')
+
+        const firstRefMember = refMemberNames?.at(0)
+        if (firstRefMember) {
+          // 找出回复的是哪一条回复。
+          const replyMember = commentDataList.findLast(
+            (it, idx) => idx < index && it.memberName === firstRefMember
+          )
+          if (replyMember) {
+            const $refCell = $(`
+              <div class="v2p-topic-reply-ref">
+                <div class="v2p-topic-reply">
+                  <div class="v2p-topic-reply-member">
+                    <a href="${replyMember.memberAvatar}">
+                      <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
+                      <span>${replyMember.memberName}</span>
+                    </a>：
+                  </div>
+                  <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
+                </div>
+              </div>
+            `)
+            $clonedCells.prepend($refCell)
+          }
+        }
+
+        $template.append($clonedCells)
       })
 
       $content.css({ padding: '0 20px' }).append($template.html())
@@ -274,6 +305,7 @@ function handlingControls() {
         thankIcon.addClass('v2p-thanked')
         $hide.hide()
         $thank.off('click')
+        createToast({ message: '❤️ 已感谢回复' })
       })
 
       $controls.append($hide).append($thank)
@@ -288,7 +320,9 @@ function handlingControls() {
     $controls.append($reply)
 
     thankArea.remove()
+
     const floorNum = ctrlArea.find('.no').clone()
+
     ctrlArea.empty().append($controls, floorNum)
   })
 }

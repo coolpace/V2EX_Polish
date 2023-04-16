@@ -165,17 +165,6 @@ body {
   border-radius: 10px;
 
   @at-root {
-    .v2p-model-content {
-      .v2p-controls > a:has(.v2p-control-reply) {
-        cursor: not-allowed;
-        pointer-events: none;
-      }
-
-      .no {
-        pointer-events: none;
-      }
-    }
-
     .v2p-model-header {
       position: sticky;
       top: 0;
@@ -368,7 +357,6 @@ body {
 
 .topic_buttons .v2p-tb.v2p-hover-btn {
   color: var(--v2p-color-main-400);
-  transition: color 0.3s;
 
   &:hover {
     color: currentColor;
@@ -574,7 +562,8 @@ body {
 }
 
 .cell[id^='r'] .cell[id^='r'] {
-  .v2p-reply-content.v2p-collapsed {
+  // 加深嵌套回复中「展开按钮」的背景色。
+  .v2p-reply-content {
     --collapsed-fade: var(--v2p-color-bg-nested-reply);
 
     .v2p-expand-btn.normal.button {
@@ -595,6 +584,15 @@ body {
   .v2p-text-emoji {
     font-size: 20px;
   }
+}
+
+.v2p-topic-reply-ref {
+  margin: 0 -10px 15px;
+  padding: 10px;
+  color: var(--v2p-color-main-500);
+  font-size: 13px;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
 }
 
 .v2p-topic-reply-box {

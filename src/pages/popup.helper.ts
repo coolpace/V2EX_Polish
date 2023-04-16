@@ -1,10 +1,4 @@
-export const enum TabId {
-  Hot = 'tab-hot',
-  Latest = 'tab-latest',
-  Message = 'tab-message',
-  Feature = 'tab-feature',
-  Setting = 'tab-setting',
-}
+import { TabId } from './popup.var'
 
 export function isTabId(tabId: any): tabId is TabId {
   if (typeof tabId === 'string') {

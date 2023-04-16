@@ -13,15 +13,9 @@ import { iconChat, iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'
 import { formatTimestamp, isSameDay } from '../utils'
-import {
-  calculateLocalStorageSize,
-  escapeHTML,
-  formatSizeUnits,
-  isTabId,
-  TabId,
-} from './popup.helper'
+import { calculateLocalStorageSize, escapeHTML, formatSizeUnits, isTabId } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
-import { defaultValue } from './popup.var'
+import { defaultValue, TabId } from './popup.var'
 
 const loading = `
 <div class="tab-loading">
