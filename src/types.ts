@@ -143,15 +143,27 @@ export interface V2EX_RequestErrorResponce {
 }
 
 export interface CommentData {
+  /** HTML 元素上的 id */
   id: string
+  /** 回复者昵称 */
   memberName: string
+  /** 回复者主页链接 */
   memberLink: any
+  /** 回复者头像 */
+  memberAvatar: string
+  /** 回复内容 */
   content: string
+  /** 该回复被感谢的次数 */
   likes: number
+  /** 楼层数 */
   floor: string
+  /** 遍历索引值 */
   index: number
+  /** 回复中 @ 别人 */
   refMemberNames: string[] | undefined
+  /** 回复中 # 楼层 */
   refFloors: string[] | undefined
+  /** 是否已经感谢过 */
   thanked: boolean
 }
 

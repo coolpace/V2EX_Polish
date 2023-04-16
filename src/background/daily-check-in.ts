@@ -2,7 +2,7 @@ import { StorageKey, V2EX } from '../constants'
 import type { DailyInfo, StorageData } from '../types'
 import { isSameDay } from '../utils'
 
-const checkedInText = '每日登录奖励已领取'
+const successText = '每日登录奖励已领取'
 
 const handleCheckedIn = async () => {
   const dailyInfo: DailyInfo = { lastCheckInTime: Date.now() }
@@ -11,6 +11,11 @@ const handleCheckedIn = async () => {
 }
 
 export async function checkIn() {
+  // 「自动签到」在每天早上 8 点后才生效。
+  if (new Date().getHours() < 8) {
+    return
+  }
+
   const result: StorageData = await chrome.storage.sync.get(StorageKey.Daily)
   const lastCheckInTime = result[StorageKey.Daily]?.lastCheckInTime
 
@@ -38,14 +43,14 @@ export async function checkIn() {
       const checkInResult = await fetch(checkInUrl)
       const text = await checkInResult.text()
 
-      if (text.includes(checkedInText)) {
+      if (text.includes(successText)) {
         await handleCheckedIn()
         // const result = text.match(/已连续登录 \d+ 天/)
         // console.log(123, result)
       }
     }
   } else {
-    if (htmlPlainText.includes(checkedInText)) {
+    if (htmlPlainText.includes(successText)) {
       void handleCheckedIn()
     }
   }

@@ -74,7 +74,7 @@
   background: none;
   background-color: transparent;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: color 0.2s;
   user-select: none;
 
   &::before {
@@ -86,9 +86,9 @@
     z-index: -1;
     background-color: var(--v2p-color-bg-hover-btn);
     border-radius: 5px;
-    transform: scale(0.6);
+    transform: scale(0.65);
     opacity: 0;
-    transition: background-color 0.3s, transform 0.3s, opacity 0.3s;
+    transition: background-color 0.2s, transform 0.2s, opacity 0.2s;
     content: '';
   }
 

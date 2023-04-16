@@ -1,5 +1,5 @@
 import type { Topic } from '../types'
-import type { TabId } from './popup.helper'
+import type { TabId } from './popup.var'
 
 interface CommonTabStore {
   lastScrollTop?: number
