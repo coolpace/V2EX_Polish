@@ -8,6 +8,7 @@
 
 - Chrome 和 Edge 用户请在[Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
 - 想要体验最新功能，可以[手动安装](https://github.com/coolpace/V2EX_Polish/releases)
+- [油猴脚本](https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex)（仅支持部分功能）
 
 > **Note**
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
@@ -75,11 +76,9 @@ PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获
 </details>
 
 <details>
-<summary>我不想安装扩展，能否提供油猴脚本？</summary>
+<summary>使用油猴脚本和浏览器扩展有什么区别？</summary>
 
-本扩展目前还在不断更新中，在功能稳定后会发布油猴脚本，请关注我们的后续更新。
-
-为了达到最佳的功能体验，我们更推荐你安装扩展。担心扩展的体积太大？请放心，本扩展的安装体积还不到 100 KB！我们十分关注扩展的体积和性能，尽可能减少资源占用率。
+浏览器扩展支持更多功能，为了达到最佳的功能体验，我们更推荐你安装扩展。担心扩展的体积太大？请放心，本扩展的安装体积还不到 100 KB！我们十分关注扩展的体积和性能，尽可能减少资源占用率。
 
 </details>
 
