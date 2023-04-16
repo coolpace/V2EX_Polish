@@ -72,6 +72,10 @@ export function isSameDay(timestamp1: number, timestamp2: number): boolean {
  */
 export function getPAT(): Promise<PersonalAccessToken> {
   return new Promise((resolve) => {
+    if (typeof chrome === 'undefined' || typeof chrome.storage === 'undefined') {
+      return resolve(undefined)
+    }
+
     chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
       resolve(result[StorageKey.API]?.pat)
     })
@@ -83,6 +87,10 @@ export function getPAT(): Promise<PersonalAccessToken> {
  */
 export function getOptions(): Promise<Options> {
   return new Promise((resolve) => {
+    if (typeof chrome === 'undefined' || typeof chrome.storage === 'undefined') {
+      return resolve(defaultOptions)
+    }
+
     chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
       const options = result[StorageKey.Options]
 
