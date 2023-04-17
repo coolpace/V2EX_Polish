@@ -8,7 +8,7 @@
  * 如果以上三个条件都满足，则可以认为这段字符是base64编码。
  */
 
-import { createToast } from './components/toast'
+import { createToast } from '../components/toast'
 
 const dataTitle = '点击复制'
 

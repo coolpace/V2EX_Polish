@@ -5,10 +5,10 @@ import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import { fetchUserInfo } from '../../services'
 import type { CommentData } from '../../types'
 import { formatTimestamp, getOptions, getOS } from '../../utils'
-import { createButton } from '../components/button'
-import { createModel } from '../components/model'
-import { createPopup } from '../components/popup'
-import { createToast } from '../components/toast'
+import { createButton } from '../../components/button'
+import { createModel } from '../../components/model'
+import { createPopup } from '../../components/popup'
+import { createToast } from '../../components/toast'
 import {
   $commentBox,
   $commentCells,
