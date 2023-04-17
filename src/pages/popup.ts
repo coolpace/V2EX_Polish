@@ -7,8 +7,8 @@
  */
 
 import { checkIn } from '../background/daily-check-in'
-import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
 import { createButton } from '../components/button'
+import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
 import { iconChat, iconLoading } from '../icons'
 import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
 import type { StorageData, Topic } from '../types'

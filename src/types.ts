@@ -71,10 +71,14 @@ export interface Topic {
   content_rendered: string
   /** 回复数量 */
   replies: number
+  /** 内容解析语法：0-普通文本，1-Markdown */
+  syntax: 0 | 1
   created: number
   last_touched: number
   last_modified: number
   last_reply_by: string
+  /** 附言 */
+  supplements?: Pick<Topic, 'id' | 'content' | 'content_rendered' | 'created' | 'syntax'>[]
 
   /** 主题创建者信息 */
   member: Member

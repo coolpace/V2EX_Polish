@@ -43,7 +43,9 @@ export function createModel(props: CreateModelProps): ModelHandler {
 
   const $header = $('<div class="v2p-model-header">').append($title, $actions)
 
-  const $main = $('<div class="v2p-model-main">').append($header, $content)
+  const $main = $('<div class="v2p-model-main">')
+    .append($header, $content)
+    .on('click', (ev) => ev.preventDefault())
 
   const $container = $mask.append($main).hide()
 
@@ -59,9 +61,8 @@ export function createModel(props: CreateModelProps): ModelHandler {
   // 用于判定是否已经绑定了事件, 避免重复绑定。
   let boundEvent = false
 
-  const docClickHandler = (ev: JQuery.ClickEvent) => {
-    // 通过判定点击的元素是否在评论框内来判断是否关闭评论框。
-    if ($(ev.target).closest($main).length === 0) {
+  const maskClickHandler = (ev: JQuery.ClickEvent) => {
+    if (!ev.isDefaultPrevented()) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleModalClose()
     }
@@ -75,7 +76,7 @@ export function createModel(props: CreateModelProps): ModelHandler {
   }
 
   const handleModalClose = () => {
-    $(document).off('click', docClickHandler)
+    $mask.off('click', maskClickHandler)
     $(document).off('keydown', keyupHandler)
     boundEvent = false
 
@@ -86,10 +87,10 @@ export function createModel(props: CreateModelProps): ModelHandler {
   }
 
   const handleModalOpen = () => {
+    // Hack: 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
     setTimeout(() => {
-      // Hack: 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
       if (!boundEvent) {
-        $(document).on('click', docClickHandler)
+        $mask.on('click', maskClickHandler)
         $(document).on('keydown', keyupHandler)
         boundEvent = true
       }

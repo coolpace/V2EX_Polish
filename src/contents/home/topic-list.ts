@@ -1,9 +1,9 @@
+import { createButton } from '../../components/button'
+import { createModel } from '../../components/model'
 import { RequestMessage } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import { getOptions, getPAT } from '../../utils'
-import { createButton } from '../../components/button'
-import { createModel } from '../../components/model'
 import { $topicList } from '../globals'
 import { escapeHTML, isV2EX_RequestError } from '../helpers'
 
