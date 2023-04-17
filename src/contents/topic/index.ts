@@ -1,7 +1,7 @@
+import { createPopup } from '../../components/popup'
 import { iconReply, iconScrollTop, iconTool } from '../../icons'
 import { uploadReplyImg } from '../../services'
 import { getOptions } from '../../utils'
-import { createPopup } from '../../components/popup'
 import { $commentTableRows, $replyBox } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 import { handlingComments } from './comment'

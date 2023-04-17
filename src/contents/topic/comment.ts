@@ -1,14 +1,14 @@
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
 
+import { createButton } from '../../components/button'
+import { createModel } from '../../components/model'
+import { createPopup } from '../../components/popup'
+import { createToast } from '../../components/toast'
 import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import { fetchUserInfo } from '../../services'
 import type { CommentData } from '../../types'
 import { formatTimestamp, getOptions, getOS } from '../../utils'
-import { createButton } from '../../components/button'
-import { createModel } from '../../components/model'
-import { createPopup } from '../../components/popup'
-import { createToast } from '../../components/toast'
 import {
   $commentBox,
   $commentCells,
@@ -302,6 +302,24 @@ function handlingControls() {
       $thank.empty().append(thankIcon)
 
       $thank.on('click', () => {
+        const $cell = ctrlArea.closest('.cell[id^="r_"]')
+        const $likesBox = $cell.find('> table .v2p-likes-box')
+        const likes = Number($likesBox.text())
+        const $clonedIconHeart = $likesBox.find('.v2p-icon-heart').clone()
+
+        if (likes > 0) {
+          $likesBox
+            .addClass('v2p-thanked')
+            .empty()
+            .append($clonedIconHeart, ` ${likes + 1}`)
+        } else {
+          $(`
+            <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
+              &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
+            </span>
+            `).insertAfter($cell.find('> table .ago'))
+        }
+
         thankIcon.addClass('v2p-thanked')
         $hide.hide()
         $thank.off('click')
@@ -415,7 +433,7 @@ export async function handlingComments() {
     // 替换感谢的爱心。
     $commentCells
       .find('.small.fade')
-      .addClass('v2p-heart-box')
+      .addClass('v2p-likes-box')
       .find('img[alt="❤️"]')
       .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
 
@@ -461,7 +479,7 @@ export async function handlingComments() {
 
         {
           if (thanked) {
-            $cellDom.find('.v2p-heart-box').addClass('v2p-thanked')
+            $cellDom.find('.v2p-likes-box').addClass('v2p-thanked')
           }
         }
 
