@@ -567,6 +567,10 @@ body {
       }
     }
 
+    .reply_content {
+      padding-bottom: 10px;
+    }
+
     > table {
       &:first-of-type td {
         &:first-of-type {
@@ -586,19 +590,16 @@ body {
         padding: 15px 0 0 15px;
         background-color: var(--v2p-color-bg-nested-reply);
         border: none;
-        border-left: 3px solid var(--v2p-color-main-200);
+        box-shadow: -3px 0 var(--v2p-color-main-200);
 
-        &:last-of-type {
-          padding-bottom: 10px; // 最后一个嵌套回复与背景之间留点间隙。
-        }
-
-        .cell {
-          padding-left: 0; /* 多层嵌套取消缩进 */
+        /* 多层嵌套 */
+        .cell[id^='r'] {
+          padding: 0;
           background-color: transparent;
-          border: none;
+          box-shadow: none;
 
           &.v2p-indent {
-            padding-left: 15px;
+            padding-left: 15px; /* 取消靠左对齐，逐层缩进 */
             border-left: 1px solid var(--v2p-color-main-300);
           }
         }
