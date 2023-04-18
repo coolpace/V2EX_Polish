@@ -548,8 +548,8 @@ body {
       bottom: 0;
       left: 0;
       z-index: var(--zidx-expand-mask);
-      height: 120px;
-      background: linear-gradient(to top, var(--collapsed-fade), transparent);
+      height: 130px;
+      background: linear-gradient(to top, var(--collapsed-fade) 10px, transparent);
       content: '';
       pointer-events: none;
     }
