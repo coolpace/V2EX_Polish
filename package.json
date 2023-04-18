@@ -9,6 +9,8 @@
     "dev:site": "live-server --entry-file=website/index.html --no-browser",
     "build": "run-p build:style build:scripts",
     "build:userscript": "tsup src/user-scripts/index.ts --outDir dist --watch",
+    "output:css": "node src/user-scripts/write-style.mjs",
+    "out": "run-s output:css build:userscript",
     "build:scripts": "tsup",
     "build:style": "sass src/styles:extension/css --no-source-map --style=compressed",
     "watch:scripts": "pnpm run build:scripts --watch",

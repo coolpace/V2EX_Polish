@@ -106,7 +106,6 @@ body {
       > h1 {
         font-weight: bold;
         font-size: 22px;
-        text-shadow: 2px 2px var(--v2p-color-bg-content);
       }
 
       .gray {
@@ -361,6 +360,7 @@ body {
       padding: 0 6px;
       color: var(--v2p-color-main-500);
       line-height: 26px;
+      white-space: nowrap;
       border-radius: 4px;
 
       &:hover {
