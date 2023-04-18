@@ -574,6 +574,7 @@ body {
 
           .avatar {
             width: 40px !important;
+            height: 40px !important;
             border-radius: 5px;
             aspect-ratio: 1;
           }
@@ -582,7 +583,7 @@ body {
 
       /* 嵌套的回复 */
       ~ .cell[id^='r'] {
-        padding: 20px 0 0 15px;
+        padding: 15px 0 0 15px;
         background-color: var(--v2p-color-bg-nested-reply);
         border: none;
         border-left: 3px solid var(--v2p-color-main-200);
@@ -608,6 +609,7 @@ body {
 
             .avatar {
               width: 25px !important;
+              height: 25px !important;
               border-radius: 4px;
             }
           }
