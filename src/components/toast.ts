@@ -10,11 +10,15 @@ export function createToast(props: CreateToastProps) {
     $('.v2p-toast').remove()
   }
 
-  const $toast = $(`<div class="v2p-toast">${message}</div>`)
+  const $toast = $(`<div class="v2p-toast">${message}</div>`).hide()
 
   $(document.body).append($toast)
 
+  $toast.fadeIn('fast')
+
   setTimeout(() => {
-    $toast.remove()
+    $toast.fadeOut('fast', () => {
+      $toast.remove()
+    })
   }, duration)
 }

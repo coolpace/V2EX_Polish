@@ -5,6 +5,7 @@ node_modules
 *.tsbuildinfo
 *.zip
 
+/src/user-scripts/style.ts
 /extension
 !/extension/manifest.json
 !/extension/images

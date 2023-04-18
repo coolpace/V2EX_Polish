@@ -1,6 +1,6 @@
-import { injectGlobalStyle } from './style'
+import { style } from './style'
 
-injectGlobalStyle()
+$(`<style type='text/css'>${style}</style>`).appendTo('head')
 
 void (async () => {
   await import('../contents/common')
