@@ -6,8 +6,7 @@ node_modules
 *.zip
 
 /src/user-scripts/style.ts
-/extension
-!/extension/manifest.json
-!/extension/images
-!/extension/pages/*.html
-!/extension/scripts/jquery*.min.js
+
+/extension/css/*
+/extension/scripts/*
+!/extension/scripts/jquery.min.js
