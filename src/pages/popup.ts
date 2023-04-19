@@ -68,6 +68,8 @@ function loadSettings() {
     if (api) {
       if (api.pat) {
         $patInput.val(api.pat).addClass('has-value')
+      } else {
+        $('.details').prop('open', true)
       }
       $('#limit').val(api.limit ?? defaultValue)
       $('#reset').val(api.reset ? formatTimestamp(api.reset, { format: 'YMDHMS' }) : defaultValue)
@@ -258,13 +260,16 @@ function initTabs() {
                   .empty()
                   .append(
                     `
-                  <div class="message-actions">
-                    <a class="view-all-btn" href="${V2EX.Origin}/notifications" target="_blank">
-                      <span class="icon-chat">${iconChat}</span>
-                      查看所有消息
-                    </a>
-                  </div>
-                  `
+                    <div class="tab-header">
+                      <div class="message-actions">
+                        <a class="action-btn" href="${V2EX.Origin}/notifications" target="_blank">
+                          <span class="action-icon">${iconChat}</span>
+                          查看所有消息
+                        </a>
+                      </div>
+                      <hr />
+                    </div>
+                   `
                   )
                   .append($noticeList)
               } else {
