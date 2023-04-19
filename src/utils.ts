@@ -29,7 +29,7 @@ export function getOS() {
 }
 
 /**
- * 将时间戳格式化为「年月日」。
+ * 将时间戳格式化为「年月日 时:分:秒」。
  */
 export function formatTimestamp(
   timestamp: number,
