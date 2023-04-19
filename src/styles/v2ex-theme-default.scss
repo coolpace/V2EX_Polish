@@ -582,6 +582,10 @@ body {
     }
   }
 
+  .box > .cell[id^='r']:not(:has(.cell[id^='r'])) .reply_content {
+    padding-bottom: 0;
+  }
+
   .cell[id^='r'] {
     --bg-reply: var(--v2p-color-bg-content);
 
