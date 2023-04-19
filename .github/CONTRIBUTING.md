@@ -11,8 +11,9 @@
 ├── src # 开发时的代码
 │   ├── background # 插件后台脚本
 │   ├── contents # 网页内容脚本
-│   ├── pages # 插件页面相关逻辑
-│   ├── styles # 所有与插件相关的样式
+│   ├── pages # 浏览器扩展页面相关的页面文件
+│   ├── styles # 浏览器扩展相关的样式文件
+│   ├── user-scripts # 油猴脚本相关
 │   ├── constants.ts # 常量
 │   ├── icons.ts # svg 图标
 │   ├── services # API 服务
@@ -26,6 +27,14 @@
 ```bash
 pnpm install # 安装依赖
 pnpm dev # 启动开发服务器
+```
+
+### 构建
+
+```bash
+pnpm build:style # 构建浏览器扩展用到的样式
+pnpm build:ext # 构建浏览器扩展
+pnpm build:userscript # 构建油猴脚本
 ```
 
 ### 调试
