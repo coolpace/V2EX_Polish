@@ -29,6 +29,7 @@ function processAvatar(cellDom: HTMLElement, popupControl: PopupControl, comment
   const $avatar = $(cellDom).find('.avatar')
 
   $avatar.on('click', () => {
+    popupControl.close()
     popupControl.open($avatar)
 
     const $content = $(`
