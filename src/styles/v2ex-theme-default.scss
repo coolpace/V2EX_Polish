@@ -217,7 +217,7 @@ body {
   .page_current {
     &:link,
     &:visited {
-      padding: 5px 7px;
+      padding: 6px 9px;
       font-size: 14px;
       border: none;
     }
@@ -476,10 +476,6 @@ body {
     }
   }
 
-  .topic_content {
-    font-size: 15.5px;
-  }
-
   .subtle {
     background-color: var(--v2p-color-bg-subtle);
     border-left: 3px solid var(--v2p-color-accent-200);
@@ -608,6 +604,8 @@ body {
           border-color: var(--v2p-color-main-300);
 
           .cell[id^='r'] {
+            --bg-reply: var(--v2p-color-main-100);
+
             &.v2p-indent {
               border-color: var(--v2p-color-main-350);
             }
@@ -646,8 +644,6 @@ body {
 
         /* 多层嵌套 */
         .cell[id^='r'] {
-          --bg-reply: transparent;
-
           padding: 0;
           box-shadow: none;
 
@@ -751,7 +747,7 @@ body {
 
   .topic_content,
   .reply_content {
-    font-size: 15.5px;
+    font-size: 15.4px;
 
     a[href^='http'] {
       color: currentColor;

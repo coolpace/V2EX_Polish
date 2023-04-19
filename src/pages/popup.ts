@@ -197,16 +197,16 @@ function initTabs() {
     if (tabId === TabId.Feature) {
       chrome.storage.sync.get(StorageKey.Daily, (result: StorageData) => {
         const dailyInfo = result[StorageKey.Daily]
-        const $checkIn = $('.feature-check-in')
+
+        const $checkIn = $('.feature-check-in').on('click', () => {
+          window.open(`${V2EX.Origin}/mission/daily`)
+        })
 
         if (dailyInfo?.lastCheckInTime) {
           if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
             const date = formatTimestamp(dailyInfo.lastCheckInTime, { format: 'YMDHMS' })
-            $checkIn
-              .css('cursor', 'default')
-              .prop('title', `于 ${date} 完成自动签到`)
-              .find('.feature-title')
-              .text('今日已签到')
+            $checkIn.find('.feature-title').text('✅ 今日已签到')
+            $checkIn.find('.feature-content').text(`于 ${date} 自动签到`)
           }
         } else {
           $checkIn.on('click', () => {
