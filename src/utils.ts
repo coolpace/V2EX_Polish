@@ -102,3 +102,25 @@ export function getOptions(): Promise<Options> {
     })
   })
 }
+
+/**
+ * 转义 HTML 字符串中的特殊字符。
+ */
+export function escapeHTML(htmlString: string): string {
+  return htmlString.replace(/[<>&"'']/g, (match) => {
+    switch (match) {
+      case '<':
+        return '&lt;'
+      case '>':
+        return '&gt;'
+      case '&':
+        return '&amp;'
+      case '"':
+        return '&quot;'
+      case "'":
+        return '&#39;'
+      default:
+        return match
+    }
+  })
+}

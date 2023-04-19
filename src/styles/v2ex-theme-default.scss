@@ -148,6 +148,50 @@ body {
     }
   }
 
+  /* 帖主徽章 & 管理员徽章 & 自己徽章 */
+  .badge {
+    padding: 2px 5px;
+    font-weight: bold;
+    border: 1px solid var(--v2p-color-accent-400);
+    user-select: none;
+
+    &:first-child {
+      border: 1px solid var(--v2p-color-accent-400);
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    &:last-child {
+      border: 1px solid var(--v2p-color-accent-400);
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    &.op {
+      color: var(--v2p-color-accent-500);
+      background-color: var(--v2p-color-accent-50);
+    }
+
+    &.mod {
+      color: var(--v2p-color-bg-content);
+      background-color: var(--v2p-color-accent-400);
+    }
+
+    &.you {
+      color: var(--v2p-color-orange-400);
+      background-color: var(--v2p-color-orange-50);
+      border: 1px solid var(--v2p-color-orange-400);
+    }
+
+    &.mini {
+      height: 1.2em;
+      padding: 0 3px;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 1;
+    }
+  }
+
   a.node:active,
   a.node:link,
   a.node:visited {
@@ -543,6 +587,10 @@ body {
   }
 
   .cell[id^='r'] {
+    --bg-reply: var(--v2p-color-bg-content);
+
+    background-color: var(--bg-reply);
+
     &:hover {
       > table {
         td:last-of-type {
@@ -555,10 +603,11 @@ body {
 
         /* 嵌套的回复 */
         ~ .cell[id^='r'] {
-          background-color: var(--v2p-color-main-100);
+          --bg-reply: var(--v2p-color-main-100);
+
           border-color: var(--v2p-color-main-300);
 
-          .cell {
+          .cell[id^='r'] {
             &.v2p-indent {
               border-color: var(--v2p-color-main-350);
             }
@@ -587,15 +636,19 @@ body {
 
       /* 嵌套的回复 */
       ~ .cell[id^='r'] {
+        --bg-reply: var(--v2p-color-main-50);
+
+        position: relative;
+        z-index: var(--zidx-expand-btn);
         padding: 15px 0 0 15px;
-        background-color: var(--v2p-color-bg-nested-reply);
         border: none;
         box-shadow: -3px 0 var(--v2p-color-main-200);
 
         /* 多层嵌套 */
         .cell[id^='r'] {
+          --bg-reply: transparent;
+
           padding: 0;
-          background-color: transparent;
           box-shadow: none;
 
           &.v2p-indent {
@@ -624,6 +677,7 @@ body {
 
         /* 嵌套回复的内容 */
         .reply_content {
+          padding-right: 5px;
           font-size: 15px;
         }
       }
@@ -670,40 +724,6 @@ body {
       background-color: transparent;
       border-radius: 5px;
       user-select: none;
-    }
-
-    /* 帖主徽章 & 管理员徽章 & 自己徽章 */
-    .badge {
-      padding: 2px 5px;
-      font-weight: bold;
-      border: 1px solid var(--v2p-color-accent-400);
-      user-select: none;
-
-      &:first-child {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-      }
-
-      &:last-child {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-      }
-
-      &.op {
-        color: var(--v2p-color-accent-500);
-        background-color: var(--v2p-color-accent-50);
-      }
-
-      &.mod {
-        color: var(--v2p-color-bg-content);
-        background-color: var(--v2p-color-accent-400);
-      }
-
-      &.you {
-        color: var(--v2p-color-orange-400);
-        background-color: var(--v2p-color-orange-50);
-        border: 1px solid var(--v2p-color-orange-400);
-      }
     }
   }
 

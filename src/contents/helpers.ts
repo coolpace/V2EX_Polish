@@ -21,18 +21,6 @@ export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorRespo
   return false
 }
 
-/**
- * 转义 HTML 字符串中的特殊字符。
- */
-export function escapeHTML(html: string) {
-  return html
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/"/g, '"')
-    .replace(/'/g, "'")
-}
-
 export function focusReplyInput() {
   if (replyTextArea instanceof HTMLTextAreaElement) {
     replyTextArea.focus()

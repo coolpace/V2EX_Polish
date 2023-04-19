@@ -126,8 +126,6 @@ body {
   top: 0;
   left: 0;
   z-index: var(--zidx-popup);
-  width: max-content;
-  overflow-y: auto;
   color: var(--v2p-color-main-600);
   font-size: 14px;
   background: var(--v2p-color-bg-widget);
@@ -135,6 +133,11 @@ body {
   border-radius: 8px;
   box-shadow: var(--v2p-widget-shadow);
   backdrop-filter: blur(16px);
+}
+
+.v2p-popup-content {
+  width: max-content;
+  overflow-y: auto;
 }
 
 .v2p-toast {
@@ -312,20 +315,12 @@ body {
       }
 
       &::after {
+        @include share.tooltip;
+
         position: absolute;
         top: -8px;
-        z-index: var(--zidx-tip);
-        min-width: 30px;
-        padding: 2px 5px;
-        font-size: 12px;
-        white-space: nowrap;
-        text-align: center;
-        background-color: var(--v2p-color-bg-content);
-        border-radius: 4px;
-        box-shadow: var(--v2p-widget-shadow);
         transform: translateY(-100%);
         opacity: 0;
-        pointer-events: none;
       }
 
       &:hover::after {
@@ -379,21 +374,19 @@ body {
   color: var(--v2p-color-main-600);
 }
 
-#v2p-member-popup {
+.v2p-member-card {
   max-width: 300px;
   max-height: 285px;
   padding: 12px;
-  overflow-y: auto;
+  font-size: 13px;
   text-align: left;
-  visibility: hidden;
 
-  .v2p-ctn {
+  .v2p-info {
     display: flex;
     gap: 15px;
-    font-size: 13px;
   }
 
-  .v2p-ctn-right {
+  .v2p-info-right {
     padding: 2px 0;
   }
 
@@ -425,15 +418,15 @@ body {
     height: 16px;
   }
 
+  .v2p-loading {
+    background-color: var(--button-background-hover-color);
+    border-radius: 6px;
+  }
+
   .v2p-bio {
     @include share.line-clamp(3);
 
     margin-top: 10px;
-  }
-
-  .v2p-loading {
-    background-color: var(--button-background-hover-color);
-    border-radius: 6px;
   }
 }
 
@@ -506,23 +499,14 @@ body {
   }
 
   &::after {
+    @include share.tooltip;
+
     position: absolute;
     top: -8px;
     left: 50%;
-    z-index: var(--zidx-tip);
-    width: max-content;
-    padding: 2px 6px;
-    color: var(--v2p-color-main-800);
-    font-size: 12px;
-    white-space: nowrap;
-    text-align: center;
-    background-color: var(--v2p-color-bg-content);
-    border-radius: 4px;
-    box-shadow: var(--v2p-widget-shadow);
     transform: translate(-50%, -100%);
     opacity: 0;
     content: attr(data-title);
-    pointer-events: none;
   }
 }
 
@@ -540,8 +524,6 @@ body {
   }
 
   &.v2p-collapsed {
-    --collapsed-fade: var(--v2p-color-bg-content);
-
     &::before {
       position: absolute;
       right: 0;
@@ -549,7 +531,7 @@ body {
       left: 0;
       z-index: var(--zidx-expand-mask);
       height: 130px;
-      background: linear-gradient(to top, var(--collapsed-fade) 10px, transparent);
+      background: linear-gradient(to top, var(--bg-reply) 10px, transparent);
       content: '';
       pointer-events: none;
     }
@@ -564,8 +546,6 @@ body {
 .cell[id^='r'] .cell[id^='r'] {
   // 加深嵌套回复中「展开按钮」的背景色。
   .v2p-reply-content {
-    --collapsed-fade: var(--v2p-color-bg-nested-reply);
-
     .v2p-expand-btn.normal.button {
       color: var(--button-foreground-color);
       background: var(--button-hover-color);

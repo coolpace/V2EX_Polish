@@ -80,7 +80,7 @@ void (async () => {
   handlingPaging()
 
   {
-    const $more = $(`
+    const $tools = $(`
     <div class="v2p-reply-tools-box v2p-hover-btn">
       <span class="v2p-reply-tools-icon">${iconTool}</span>
       工具箱
@@ -94,15 +94,15 @@ void (async () => {
     </div>
     `)
 
-    const handler = createPopup({
+    const toolsPopup = createPopup({
       root: $replyBox,
-      children: $more,
+      trigger: $tools,
       content: $toolContent,
     })
 
     $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
       focusReplyInput()
-      handler.close()
+      toolsPopup.close()
 
       setTimeout(() => {
         // 加入下次事件循环，避免阻塞 Popup 关闭。
@@ -117,7 +117,7 @@ void (async () => {
 
     $toolContent.find('.v2p-reply-tool-img').on('click', () => {
       focusReplyInput()
-      handler.close()
+      toolsPopup.close()
 
       const imgInput = document.createElement('input')
 
@@ -147,6 +147,6 @@ void (async () => {
       imgInput.click()
     })
 
-    $replyBox.find('> .flex-row-end').prepend($more)
+    $replyBox.find('> .flex-row-end').prepend($tools)
   }
 })()

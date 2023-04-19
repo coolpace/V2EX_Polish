@@ -9,7 +9,7 @@ interface ModelElements {
   $content: JQuery
 }
 
-interface ModelHandler extends ModelElements {
+interface ModelControl extends ModelElements {
   open: () => void
   close: () => void
 }
@@ -25,7 +25,7 @@ interface CreateModelProps {
 /**
  * 创建 model 框。
  */
-export function createModel(props: CreateModelProps): ModelHandler {
+export function createModel(props: CreateModelProps): ModelControl {
   const { root, title, onOpen, onClose, onMount } = props
 
   const $mask = $('<div class="v2p-model-mask">')
@@ -61,11 +61,9 @@ export function createModel(props: CreateModelProps): ModelHandler {
   // 用于判定是否已经绑定了事件, 避免重复绑定。
   let boundEvent = false
 
-  const maskClickHandler = (ev: JQuery.ClickEvent) => {
-    if (!ev.isDefaultPrevented()) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      handleModalClose()
-    }
+  const maskClickHandler = () => {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    handleModalClose()
   }
 
   const keyupHandler = (ev: JQuery.KeyDownEvent) => {
