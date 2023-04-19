@@ -133,3 +133,19 @@
     outline: none;
   }
 }
+
+@mixin tooltip {
+  z-index: var(--zidx-tip);
+  width: max-content;
+  min-width: 30px;
+  padding: 2px 5px;
+  overflow: hidden;
+  color: var(--v2p-color-main-800);
+  font-size: 12px;
+  white-space: nowrap;
+  text-align: center;
+  background-color: var(--v2p-color-bg-content);
+  border-radius: 4px;
+  box-shadow: var(--v2p-widget-shadow);
+  pointer-events: none;
+}

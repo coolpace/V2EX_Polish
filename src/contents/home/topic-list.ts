@@ -3,9 +3,9 @@ import { createModel } from '../../components/model'
 import { RequestMessage } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
-import { getOptions, getPAT } from '../../utils'
+import { escapeHTML, getOptions, getPAT } from '../../utils'
 import { $topicList } from '../globals'
-import { escapeHTML, isV2EX_RequestError } from '../helpers'
+import { isV2EX_RequestError } from '../helpers'
 
 export async function handlingTopicList() {
   const PAT = await getPAT()
@@ -88,6 +88,8 @@ export async function handlingTopicList() {
                 if (topicReplies.length > 0) {
                   const $template = $('<div>')
 
+                  const op = topic.member.username
+
                   topicReplies.forEach((r) => {
                     $template.append(`
                     <div class="v2p-topic-reply">
@@ -95,6 +97,9 @@ export async function handlingTopicList() {
                         <a href="${r.member.url}">
                           <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
                           <span>${r.member.username}</span>
+                          <span style="display: ${op === r.member.username ? 'unset' : 'none'};">
+                            <span class="badge op mini">OP</span>
+                          </span>
                         </a>：
                       </div>
                       <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>

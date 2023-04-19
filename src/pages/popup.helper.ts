@@ -48,25 +48,3 @@ export function formatSizeUnits(bytes: number): string {
 
   return bytes.toFixed(2) + ' ' + units[i]
 }
-
-/**
- * 转义 HTML 字符。
- */
-export function escapeHTML(htmlString: string): string {
-  return htmlString.replace(/[<>&"'']/g, (match) => {
-    switch (match) {
-      case '<':
-        return '&lt;'
-      case '>':
-        return '&gt;'
-      case '&':
-        return '&amp;'
-      case '"':
-        return '&quot;'
-      case "'":
-        return '&#39;'
-      default:
-        return match
-    }
-  })
-}

@@ -1,14 +1,12 @@
-import { computePosition, flip, offset, shift } from '@floating-ui/dom'
-
 import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
-import { createPopup } from '../../components/popup'
+import { createPopup, type PopupControl } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import { fetchUserInfo } from '../../services'
-import type { CommentData } from '../../types'
-import { formatTimestamp, getOptions, getOS } from '../../utils'
+import type { CommentData, Member } from '../../types'
+import { escapeHTML, formatTimestamp, getOptions, getOS } from '../../utils'
 import {
   $commentBox,
   $commentCells,
@@ -18,127 +16,91 @@ import {
   loginName,
   topicOwnerName,
 } from '../globals'
-import { escapeHTML, focusReplyInput, insertTextToReplyInput } from '../helpers'
+import { focusReplyInput, insertTextToReplyInput } from '../helpers'
+
+let memberDataCache = new Map<Member['username'], Member>()
 
 /**
  * 点击头像会展示该用户的信息。
  */
-function processAvatar(cellDom: HTMLElement, $memberPopup: JQuery, commentData: CommentData) {
-  const memberPopup = $memberPopup.get(0)!
-
+function processAvatar(cellDom: HTMLElement, popupControl: PopupControl, commentData: CommentData) {
   let abortController: AbortController | null = null
-
-  const docClickHandler = (ev: JQuery.ClickEvent) => {
-    if ($(ev.target).closest(memberPopup).length === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      handlePopupClose()
-    }
-  }
-
-  const handlePopupClose = () => {
-    abortController?.abort()
-    memberPopup.style.visibility = 'hidden'
-    memberPopup.innerHTML = ''
-    $(document).off('click', docClickHandler)
-  }
 
   const $avatar = $(cellDom).find('.avatar')
 
-  $avatar.on('click', (ev) => {
-    abortController = new AbortController()
+  $avatar.on('click', () => {
+    popupControl.open($avatar)
 
-    if (memberPopup.style.visibility === 'visible') {
-      handlePopupClose()
-    } else {
-      ev.stopPropagation()
+    const $content = $(`
+      <div class="v2p-member-card">
+        <div class="v2p-info">
+          <div class="v2p-info-left">
+            <div class="v2p-avatar-box"></div>
+          </div>
 
-      $(document).on('click', docClickHandler)
+          <div class="v2p-info-right">
+            <div class="v2p-username v2p-loading"></div>
+            <div class="v2p-no v2p-loading"></div>
+            <div class="v2p-created-date v2p-loading"></div>
+          </div>
+        </div>
+      </div>
+    `)
 
-      computePosition($avatar.get(0)!, memberPopup, {
-        placement: 'bottom-start',
-        middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
-      })
-        .then(({ x, y }) => {
-          Object.assign(memberPopup.style, {
-            left: `${x}px`,
-            top: `${y}px`,
+    popupControl.$content.empty().append($content)
+
+    void (async () => {
+      const memberName = commentData.memberName
+
+      // 缓存用户卡片的信息，只有在无缓存时才请求远程数据。
+      if (!memberDataCache.has(memberName)) {
+        abortController = new AbortController()
+
+        popupControl.onClose = () => {
+          abortController?.abort()
+        }
+
+        try {
+          const memberData = await fetchUserInfo(memberName, {
+            signal: abortController.signal,
           })
-          memberPopup.style.visibility = 'visible'
-        })
-        .catch((err) => {
-          console.error('计算位置失败', err)
-          handlePopupClose()
-        })
 
-      const $content = $(`
-              <div class="v2p-ctn">
-                <div class="v2p-ctn-left">
-                  <div class="v2p-avatar-box"></div>
-                </div>
-
-                <div class="v2p-ctn-right">
-                  <div class="v2p-username v2p-loading"></div>
-                  <div class="v2p-no v2p-loading"></div>
-                  <div class="v2p-created-date v2p-loading"></div>
-                </div>
-              </div>
-              `)
-
-      $memberPopup.append($content)
-
-      fetchUserInfo(commentData.memberName, {
-        signal: abortController.signal,
-      })
-        .then(async (data) => {
-          $memberPopup
-            .find('.v2p-avatar-box')
-            .removeClass('v2p-loading')
-            .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
-
-          const options = await getOptions()
-          const $memberName = $(`<a href="${data.url}">${data.username}</a>`)
-          if (options.openInNewTab) {
-            $memberName.prop('target', '_blank')
+          memberDataCache = memberDataCache.set(memberName, memberData)
+        } catch (err) {
+          if (err && typeof err === 'object' && 'name' in err && err.name !== 'AbortError') {
+            $content.html(`<span>获取用户信息失败</span>`)
           }
-          $memberPopup.find('.v2p-username').removeClass('v2p-loading').append($memberName)
+          return null
+        }
+      }
 
-          $memberPopup.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)
+      const data = memberDataCache.get(memberName)
 
-          $memberPopup
-            .find('.v2p-created-date')
-            .removeClass('v2p-loading')
-            .text(`加入于 ${formatTimestamp(data.created)}`)
+      if (data) {
+        $content
+          .find('.v2p-avatar-box')
+          .removeClass('v2p-loading')
+          .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
 
-          if (data.bio && data.bio.trim().length > 0) {
-            $memberPopup.append(`<div class="v2p-bio">${data.bio}</div>`)
-          }
+        const options = await getOptions()
+        const $memberName = $(`<a href="${data.url}">${data.username}</a>`)
+        if (options.openInNewTab) {
+          $memberName.prop('target', '_blank')
+        }
+        $content.find('.v2p-username').removeClass('v2p-loading').append($memberName)
 
-          // const userComments = commentDataList.filter(
-          //   (data) => data.memberName === dataFromIndex.memberName
-          // )
-          // 如果回复多于一条：
-          // if (userComments.length > 1) {
-          //   const $replyList = $(
-          //     `<div class="v2p-reply-list-box"><div>本页回复了：</div></div>`
-          //   )
-          //   $replyList.append(`
-          //   <ul class="v2p-reply-list">
-          //     ${userComments
-          //       .map(({ content }) => {
-          //         return `<li>${content}</li>`
-          //       })
-          //       .join('')}
-          //   </ul>
-          //   `)
-          //   $memberPopup.append($replyList)
-          // }
-        })
-        .catch((err: { name: string }) => {
-          if (err.name !== 'AbortError') {
-            $memberPopup.html(`<span>获取用户信息失败</span>`)
-          }
-        })
-    }
+        $content.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)
+
+        $content
+          .find('.v2p-created-date')
+          .removeClass('v2p-loading')
+          .text(`加入于 ${formatTimestamp(data.created)}`)
+
+        if (data.bio && data.bio.trim().length > 0) {
+          $content.append(`<div class="v2p-bio">${data.bio}</div>`)
+        }
+      }
+    })()
   })
 }
 
@@ -396,7 +358,7 @@ function insertEmojiBox() {
     if (ev.key === 'Escape') {
       ev.preventDefault()
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      handler.close()
+      emojiPopup.close()
     }
   }
 
@@ -404,9 +366,9 @@ function insertEmojiBox() {
     focusReplyInput()
   })
 
-  const handler = createPopup({
+  const emojiPopup = createPopup({
     root: $replyBox,
-    children: $emojiBtn,
+    trigger: $emojiBtn,
     content: $emojiContent,
     options: { placement: 'right-end' },
     onOpen: () => {
@@ -430,33 +392,51 @@ export async function handlingComments() {
   {
     // 此区块的逻辑需要在处理嵌套评论前执行。
 
-    // 替换感谢的爱心。
-    $commentCells
-      .find('.small.fade')
-      .addClass('v2p-likes-box')
-      .find('img[alt="❤️"]')
-      .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
+    const popupControl = createPopup({ root: $commentBox })
+
+    $commentCells.each((i, cellDom) => {
+      const currentComment = commentDataList.at(i)
+
+      if (currentComment?.id !== cellDom.id) {
+        return
+      }
+
+      // 处理头像点击事件。
+      processAvatar(cellDom, popupControl, currentComment)
+
+      const $cellDom = $(cellDom)
+
+      const { memberName, thanked } = currentComment
+
+      if (memberName === loginName) {
+        $cellDom
+          .find('.badges')
+          .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
+      }
+
+      // 增加感谢爱心的样式。
+      const $likesBox = $cellDom.find('.small.fade').addClass('v2p-likes-box')
+
+      $likesBox
+        .find('img[alt="❤️"]')
+        .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
+
+      if (thanked) {
+        $likesBox.addClass('v2p-thanked')
+      }
+    })
 
     handlingControls()
     handlingPopularComments()
   }
 
   {
-    const $memberPopup = $('<div id="v2p-member-popup" class="v2p-popup" tabindex="0">').appendTo(
-      $commentBox
-    )
-
     const options = await getOptions()
 
     const display = options.nestedReply.display
 
     $commentCells.each((i, cellDom) => {
       const dataFromIndex = commentDataList.at(i)
-
-      // 处理头像点击事件。
-      if (dataFromIndex) {
-        processAvatar(cellDom, $memberPopup, dataFromIndex)
-      }
 
       processReplyContent(cellDom)
 
@@ -467,21 +447,7 @@ export async function handlingComments() {
           : commentDataList.find((data) => data.id === cellDom.id)
 
       if (currentComment) {
-        const { memberName, refMemberNames, refFloors, thanked } = currentComment
-
-        const $cellDom = $(cellDom)
-
-        if (memberName === loginName) {
-          $cellDom
-            .find('.badges')
-            .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
-        }
-
-        {
-          if (thanked) {
-            $cellDom.find('.v2p-likes-box').addClass('v2p-thanked')
-          }
-        }
+        const { refMemberNames, refFloors } = currentComment
 
         if (!refMemberNames || refMemberNames.length === 0) {
           return
