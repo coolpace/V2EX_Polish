@@ -1,5 +1,9 @@
 @use './share';
 
+:root {
+  --common-padding: 20px;
+}
+
 html,
 body {
   width: 100%;
@@ -11,6 +15,7 @@ body {
 body {
   width: 500px;
   height: 600px;
+  color: var(--v2p-color-main-800);
 }
 
 main {
@@ -43,6 +48,29 @@ main {
 button {
   &:disabled {
     opacity: 0.8;
+  }
+}
+
+.action-btn {
+  display: inline-flex;
+  gap: 0 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 8px;
+  color: var(--v2p-color-main-800);
+  text-decoration: none;
+  background-color: var(--v2p-color-main-200);
+  border-radius: 5px;
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--v2p-color-main-300);
+  }
+
+  .action-icon {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
   }
 }
 
@@ -80,6 +108,11 @@ button {
   .tabs-right {
     margin-left: auto;
   }
+}
+
+.tab-header {
+  padding: var(--common-padding);
+  padding-bottom: 0;
 }
 
 .tab-contents {
@@ -138,8 +171,8 @@ button {
         @include share.line-clamp(3);
 
         padding: 0;
+        color: var(--v2p-color-main-600);
         font-size: 13px;
-        opacity: 0.6;
       }
     }
   }
@@ -171,17 +204,61 @@ button {
   }
 
   .settings {
-    padding: 20px;
+    padding: var(--common-padding);
 
-    label[for='pat'] {
-      margin-bottom: 2px;
-      font-weight: 500;
-      font-size: 15px;
-    }
+    @at-root {
+      #settings-form {
+        label[for='pat'] {
+          display: inline-block;
+          font-weight: 500;
+          font-size: 15px;
 
-    .desc {
-      margin-bottom: 8px;
-      opacity: 0.6;
+          &[for='pat'] {
+            margin-bottom: 8px;
+          }
+        }
+      }
+
+      .description {
+        padding-top: 20px;
+
+        .description-title {
+          font-weight: 500;
+          font-size: 15px;
+        }
+
+        .description-icon {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          margin-right: 15px;
+        }
+
+        ul {
+          padding: 10px 0;
+
+          li {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+
+            & ~ li {
+              margin-top: 6px;
+            }
+
+            > {
+              p {
+                flex: 1;
+              }
+            }
+          }
+        }
+
+        .learn-more {
+          padding: 10px 0;
+          font-size: 14px;
+        }
+      }
     }
 
     .pat-input {
@@ -191,12 +268,19 @@ button {
       align-items: center;
       padding: 0 5px 0 0;
       overflow: hidden;
-      border: 1px solid var(--color-fade);
+      background-color: var(--v2p-color-main-100);
+      border: 1px solid var(--v2p-color-main-100);
       border-radius: 6px;
+
+      &:has(.has-value) {
+        background-color: transparent;
+        border: 1px solid var(--color-fade);
+      }
 
       #pat {
         flex: 1;
         padding: 10px 8px;
+        background-color: transparent;
         border: none;
         outline: none;
 
@@ -224,16 +308,6 @@ button {
       }
     }
 
-    .new-token {
-      padding: 5px 0 0;
-
-      a {
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-
     .form-item {
       display: flex;
       gap: 0 20px;
@@ -246,7 +320,9 @@ button {
 
       > label {
         min-width: 95px;
-        opacity: 0.6;
+        color: var(--v2p-color-main-600);
+        font-weight: normal;
+        font-size: inherit;
       }
     }
   }
@@ -264,27 +340,6 @@ hr {
 
 .message-actions {
   display: flex;
-  min-height: 25px;
-  padding: 0 10px;
-
-  .view-all-btn {
-    display: inline-flex;
-    gap: 0 6px;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
-    padding: 5px 8px;
-    color: var(--v2p-color-main-800);
-    text-align: center;
-    background-color: var(--v2p-color-main-200);
-    border-radius: 5px;
-
-    .icon-chat {
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-    }
-  }
 }
 
 .storage-data-bar {
@@ -338,6 +393,20 @@ hr {
 
 .details {
   padding: 5px 0;
+
+  summary:hover {
+    .summary-text {
+      text-decoration: underline dashed;
+      text-underline-offset: 0.5ex;
+    }
+  }
+
+  @at-root {
+    .details-content {
+      padding: 8px 0 0;
+      color: var(--v2p-color-main-600);
+    }
+  }
 }
 
 a {

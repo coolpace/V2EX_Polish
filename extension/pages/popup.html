@@ -80,29 +80,119 @@
 
           <div id="tab-setting" class="tab-content">
             <div class="settings">
+              <div>
+                <button id="open-options" class="action-btn">
+                  <span class="action-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </span>
+                  更多设置选项
+                </button>
+              </div>
+
+              <hr />
+
               <form id="settings-form">
                 <div>
-                  <label for="pat">Personal Access Token</label>
-                  <div class="desc">
-                    用以请求
-                    <a href="https://www.v2ex.com/help/api" target="_blank">V2EX 开放 API</a>
+                  <!-- <label for="pat">Personal Access Token</label> -->
+                  <label for="pat">设置您的个人访问令牌（PAT）</label>
+
+                  <div class="pat-input">
+                    <input id="pat" type="text" placeholder="填写你的个人访问令牌 (PAT)" />
+                    <button class="submit-btn" type="submit">保存令牌</button>
                   </div>
-                  <div>
-                    <div class="pat-input">
-                      <input id="pat" type="text" placeholder="填写你的个人访问令牌 (PAT)" />
-                      <button class="submit-btn" type="submit">保存</button>
+
+                  <div class="description">
+                    <div class="description-title">这将授权 V2EX Polish 使用令牌：</div>
+                    <ul>
+                      <li>
+                        <span class="description-icon">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            stroke-width="2"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l5 5l10 -10"></path>
+                          </svg>
+                        </span>
+                        <p>
+                          请求
+                          <a href="https://www.v2ex.com/help/api" target="_blank">
+                            V2EX 的开放 API
+                          </a>
+                          以获取所需数据。
+                        </p>
+                      </li>
+                      <li>
+                        <span class="description-icon">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            stroke-width="2"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l5 5l10 -10"></path>
+                          </svg>
+                        </span>
+                        <p>自动更新令牌（需手动开启）。</p>
+                      </li>
+                    </ul>
+
+                    <div class="learn-more">
+                      <a
+                        class="link"
+                        href="https://www.v2ex.com/help/personal-access-token"
+                        target="_blank"
+                      >
+                        了解更多
+                      </a>
                     </div>
-                    <div class="new-token"></div>
-                    <div class="details">
-                      <details>
-                        <summary>为什么需要 PAT？如何获取？</summary>
-                        为了能够让应用正常请求资源，我们需要使用您的个人访问令牌（PAT）。请放心，我们非常重视您的隐私和安全，绝不会以任何方式滥用您的
-                        PAT。如果您还没有 PAT，请
-                        <a class="link" href="https://www.v2ex.com/settings/tokens" target="_blank"
-                          >前往创建 </a
-                        >。
-                      </details>
-                    </div>
+
+                    <details class="details">
+                      <summary>
+                        <span class="summary-text">如何获取 PAT？哪些功能需要它？</span>
+                      </summary>
+                      <div class="details-content">
+                        <p>
+                          如果您还没有 PAT，请
+                          <a
+                            class="link"
+                            href="https://www.v2ex.com/settings/tokens"
+                            target="_blank"
+                            >前往创建 </a
+                          >。
+                        </p>
+                        <p>
+                          主题内容预览、消息通知等功能都需要使用 PAT
+                          请求接口数据，然后作相应的展示。请放心，我们绝不会以任何方式滥用您的 PAT。
+                        </p>
+                      </div>
+                    </details>
                   </div>
 
                   <hr />
@@ -131,12 +221,6 @@
                   <span>已缓存数据：<span class="storage-size">-</span></span>
                   <button id="clear-storage" type="button">清空</button>
                 </span>
-              </div>
-
-              <hr />
-
-              <div>
-                <button id="open-options"><a>打开设置页</a></button>
               </div>
             </div>
           </div>
