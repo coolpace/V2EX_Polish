@@ -18,7 +18,7 @@ import {
 } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 
-let memberDataCache = new Map<Member['username'], Member>()
+const memberDataCache = new Map<Member['username'], Member>()
 
 /**
  * 点击头像会展示该用户的信息。
@@ -66,7 +66,7 @@ function processAvatar(cellDom: HTMLElement, popupControl: PopupControl, comment
             signal: abortController.signal,
           })
 
-          memberDataCache = memberDataCache.set(memberName, memberData)
+          memberDataCache.set(memberName, memberData)
         } catch (err) {
           if (err && typeof err === 'object' && 'name' in err && err.name !== 'AbortError') {
             $content.html(`<span>获取用户信息失败</span>`)
