@@ -1,5 +1,7 @@
 import type { Options } from './types'
 
+export const EXTENSION_NAME = 'V2EX_Polish'
+
 export const enum StorageKey {
   Options = 'options',
   LegacyAPI = 'legacy-api',
