@@ -1,4 +1,4 @@
-import { imgurClientIdPool, StorageKey, V2EX } from './constants'
+import { EXTENSION_NAME, imgurClientIdPool, StorageKey, V2EX } from './constants'
 import type {
   API_Info,
   DataWrapper,
@@ -126,4 +126,73 @@ export async function uploadReplyImg(file: File): Promise<string> {
   }
 
   throw new Error('上传失败')
+}
+
+const mark = `${EXTENSION_NAME}`
+
+export async function getNotes() {
+  const res = await fetch(`${V2EX_ORIGIN}/notes`)
+  const htmlText = await res.text()
+  const $page = $(htmlText)
+  const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
+
+  let noteId: string | undefined
+  let noteValue: string | undefined
+
+  $note.each((_, dom) => {
+    const $dom = $(dom)
+
+    if ($dom.text().startsWith(mark)) {
+      const href = $dom.attr('href')
+
+      if (typeof href === 'string') {
+        const id = href.split('/').at(2)
+        noteId = id
+      }
+
+      return false
+    }
+  })
+
+  if (noteId) {
+    const res = await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`)
+    const txt = await res.text()
+
+    const $editor = $(txt).find('#note_content.note_editor')
+    const value = $editor.val()
+
+    if (typeof value === 'string') {
+      noteValue = value
+
+      return {
+        noteId,
+        noteValue,
+      }
+    }
+  }
+}
+
+export async function createNote() {
+  const data = new FormData()
+
+  data.append('content', mark)
+  data.append('parent_id', '0')
+  data.append('syntax', '0')
+
+  await fetch(`${V2EX_ORIGIN}/notes/new`, {
+    method: 'POST',
+    body: data,
+  })
+}
+
+export async function updateNote(noteId: string) {
+  const data = new FormData()
+
+  data.append('content', mark)
+  data.append('syntax', '0')
+
+  await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, {
+    method: 'POST',
+    body: data,
+  })
 }

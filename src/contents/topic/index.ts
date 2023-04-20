@@ -1,12 +1,17 @@
 import { createPopup } from '../../components/popup'
 import { iconReply, iconScrollTop, iconTool } from '../../icons'
-import { uploadReplyImg } from '../../services'
+import { createNote, getNotes, uploadReplyImg } from '../../services'
 import { getOptions } from '../../utils'
 import { $commentTableRows, $replyBox } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
+
+void (async () => {
+  // await createNote()
+  await getNotes()
+})()
 
 void (async () => {
   {
