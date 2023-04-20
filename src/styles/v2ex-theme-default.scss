@@ -215,6 +215,8 @@ body {
 
   .page_normal,
   .page_current {
+    user-select: none;
+
     &:link,
     &:visited {
       padding: 6px 9px;
@@ -232,7 +234,6 @@ body {
       transition: transform 0.25s;
 
       &:hover {
-        background-color: var(--v2p-color-main-50);
         transform: scale(1.1) translateY(-2px);
       }
     }

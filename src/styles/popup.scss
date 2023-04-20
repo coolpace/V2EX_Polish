@@ -208,14 +208,10 @@ button {
 
     @at-root {
       #settings-form {
-        label[for='pat'] {
-          display: inline-block;
-          font-weight: 500;
+        h2 {
+          margin-bottom: 8px;
+          font-weight: bold;
           font-size: 15px;
-
-          &[for='pat'] {
-            margin-bottom: 8px;
-          }
         }
       }
 
@@ -269,12 +265,12 @@ button {
       padding: 0 5px 0 0;
       overflow: hidden;
       background-color: var(--v2p-color-main-100);
-      border: 1px solid var(--v2p-color-main-100);
+      border: 1px solid var(--v2p-color-main-300);
       border-radius: 6px;
 
       &:has(.has-value) {
         background-color: transparent;
-        border: 1px solid var(--color-fade);
+        border: 1px solid var(--v2p-color-main-500);
       }
 
       #pat {

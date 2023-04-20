@@ -45,7 +45,7 @@ body {
     .v2p-tool-box {
       position: sticky;
       top: 20px;
-      z-index: var(--zidx-tools-box);
+      z-index: var(--zidx-tools-card);
 
       > .cell {
         font-size: 13px;
@@ -568,7 +568,7 @@ body {
 
 .v2p-topic-reply-ref {
   margin: 0 -10px 15px;
-  padding: 10px;
+  padding: 5px 10px;
   color: var(--v2p-color-main-500);
   font-size: 13px;
   background-color: var(--v2p-color-main-100);

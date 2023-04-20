@@ -3,7 +3,6 @@ import type {
   API_Info,
   DataWrapper,
   ImgurResponse,
-  LegacyAPI_Info,
   Member,
   Notification,
   StorageData,
@@ -27,17 +26,6 @@ const V2EX_API = `${V2EX_ORIGIN}/api/v2`
  */
 async function legacyRequest<Data>(url: string, options?: RequestInit): Promise<Data> {
   const res = await fetch(url, options)
-
-  const limit = res.headers.get('X-Rate-Limit-Limit')
-  const reset = res.headers.get('X-Rate-Limit-Reset')
-  const remaining = res.headers.get('X-Rate-Limit-Remaining')
-
-  const api: LegacyAPI_Info = {
-    limit: limit ? Number(limit) : undefined,
-    reset: reset ? Number(reset) : undefined,
-    remaining: remaining ? Number(remaining) : undefined,
-  }
-  await chrome.storage.sync.set({ [StorageKey.LegacyAPI]: api })
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return res.json()

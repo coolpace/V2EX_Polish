@@ -110,8 +110,9 @@
 
               <form id="settings-form">
                 <div>
-                  <!-- <label for="pat">Personal Access Token</label> -->
-                  <label for="pat">设置您的个人访问令牌（PAT）</label>
+                  <h2>
+                    <label for="pat">设置您的个人访问令牌（PAT）</label>
+                  </h2>
 
                   <div class="pat-input">
                     <input id="pat" type="text" placeholder="填写你的个人访问令牌 (PAT)" />
@@ -184,8 +185,10 @@
                             class="link"
                             href="https://www.v2ex.com/settings/tokens"
                             target="_blank"
-                            >前往创建 </a
-                          >。
+                          >
+                            前往创建
+                          </a>
+                          。
                         </p>
                         <p>
                           主题内容预览、消息通知等功能都需要使用 PAT
@@ -197,22 +200,25 @@
 
                   <hr />
 
-                  <fieldset>
-                    <div class="form-item">
-                      <label for="limit">每小时限制请求</label>
-                      <input id="limit" readonly />
-                    </div>
+                  <div>
+                    <h2>API 使用情况</h2>
+                    <fieldset>
+                      <div class="form-item">
+                        <label for="limit">每小时限制请求</label>
+                        <input id="limit" readonly />
+                      </div>
 
-                    <div class="form-item">
-                      <label for="remaining">剩余请求次数</label>
-                      <input id="remaining" readonly />
-                    </div>
+                      <div class="form-item">
+                        <label for="remaining">剩余请求次数</label>
+                        <input id="remaining" readonly />
+                      </div>
 
-                    <div class="form-item">
-                      <label for="reset">下次重置时间</label>
-                      <input id="reset" readonly />
-                    </div>
-                  </fieldset>
+                      <div class="form-item">
+                        <label for="reset">下次重置时间</label>
+                        <input id="reset" readonly />
+                      </div>
+                    </fieldset>
+                  </div>
                 </div>
               </form>
 
