@@ -12,10 +12,12 @@ specifiers:
   stylelint: ^14.16.1
   tsup: ^6.6.0
   typescript: ^5.0.4
+  webext-patterns: ^1.3.0
 
 dependencies:
   '@floating-ui/dom': 1.2.1
   live-server: 1.2.2
+  webext-patterns: 1.3.0
 
 devDependencies:
   '@codennnn/tsconfig': 1.1.2
@@ -1105,6 +1107,7 @@ packages:
 
   /bindings/1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
+    requiresBuild: true
     dependencies:
       file-uri-to-path: 1.0.0
     dev: false
@@ -1815,6 +1818,11 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /escape-string-regexp/5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
+    dev: false
+
   /eslint-config-prettier/8.6.0_eslint@8.33.0:
     resolution: {integrity: sha512-bAF0eLpLVqP5oEVUFKpMA+NnRFICwn9X8B5jrR9FcqnYBuPbqWEjTEspPWMj5ye6czoSLDweCzSo3Ko7gGrZaA==}
     hasBin: true
@@ -2273,6 +2281,7 @@ packages:
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -3658,6 +3667,7 @@ packages:
 
   /nan/2.17.0:
     resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -5770,6 +5780,12 @@ packages:
       unist-util-stringify-position: 1.1.2
       vfile-message: 1.1.1
     dev: true
+
+  /webext-patterns/1.3.0:
+    resolution: {integrity: sha512-X9HMnic9ZtvSFKi2cdh0l+sxyj7f9oLedaa2JfxjnyEqGBz8OJjaHQ40jmraX1DJLTHOpqr+rCz1r3MW2+doUg==}
+    dependencies:
+      escape-string-regexp: 5.0.0
+    dev: false
 
   /webidl-conversions/4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}

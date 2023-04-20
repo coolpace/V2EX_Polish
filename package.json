@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.2.1",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "webext-patterns": "^1.3.0"
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.1.2",
