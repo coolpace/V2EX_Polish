@@ -3,6 +3,7 @@ import { createModel } from '../../components/model'
 import { RequestMessage } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
+import type { Topic, TopicReply } from '../../types'
 import { escapeHTML, getOptions, getPAT } from '../../utils'
 import { $topicList } from '../globals'
 import { isV2EX_RequestError } from '../helpers'
@@ -36,6 +37,11 @@ export async function handlingTopicList() {
     },
   })
 
+  const topicDataCache = new Map<
+    string,
+    { topic: Topic; topicReplies: TopicReply[]; cacheTime: number }
+  >()
+
   $topicList.each((_, topicItem) => {
     const $topicItem = $(topicItem)
     const $itemTitle = $topicItem.find('.item_title')
@@ -56,21 +62,51 @@ export async function handlingTopicList() {
 
           if (PAT) {
             void (async () => {
-              try {
-                abortController = new AbortController()
+              let cacheData = topicDataCache.get(topicId)
 
-                model.$content.empty().append(`
-                <div class="v2p-model-loading">
-                  <div class="v2p-icon-loading">${iconLoading}</div>
-                </div>
-                `)
+              if (
+                !cacheData ||
+                Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 缓存超时时间为十分钟
+              ) {
+                try {
+                  abortController = new AbortController()
 
-                const promises = [
-                  fetchTopic(topicId, { signal: abortController.signal }),
-                  fetchTopicReplies(topicId),
-                ] as const
+                  model.$content.empty().append(`
+                  <div class="v2p-model-loading">
+                    <div class="v2p-icon-loading">${iconLoading}</div>
+                  </div>
+                  `)
 
-                const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
+                  const promises = [
+                    fetchTopic(topicId, { signal: abortController.signal }),
+                    fetchTopicReplies(topicId),
+                  ] as const
+
+                  const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
+
+                  const data = {
+                    topic,
+                    topicReplies,
+                    cacheTime: Date.now(),
+                  }
+
+                  topicDataCache.set(topicId, data)
+                  cacheData = data
+                } catch (err) {
+                  if (isV2EX_RequestError(err)) {
+                    const message = err.cause.message
+                    if (
+                      message === RequestMessage.TokenExpired ||
+                      message === RequestMessage.InvalidToken
+                    ) {
+                      model.$content.empty().append(`<div>${err.cause.message}</div>`)
+                    }
+                  }
+                }
+              }
+
+              if (cacheData) {
+                const { topic, topicReplies } = cacheData
 
                 const $topicPreview = $('<div class="v2p-topic-preview">')
 
@@ -78,11 +114,11 @@ export async function handlingTopicList() {
                   $topicPreview.append(`<div>${topic.content_rendered}</div>`)
                 } else {
                   $topicPreview.append(`
-                  <div class="v2p-empty-content">
-                    <div class="v2p-text-emoji">¯\\_(ツ)_/¯</div>
-                    <p>该主题没有正文内容</p>
-                  </div>
-                  `)
+                    <div class="v2p-empty-content">
+                      <div class="v2p-text-emoji">¯\\_(ツ)_/¯</div>
+                      <p>该主题没有正文内容</p>
+                    </div>
+                    `)
                 }
 
                 if (topicReplies.length > 0) {
@@ -92,19 +128,19 @@ export async function handlingTopicList() {
 
                   topicReplies.forEach((r) => {
                     $template.append(`
-                    <div class="v2p-topic-reply">
-                      <div class="v2p-topic-reply-member">
-                        <a href="${r.member.url}">
-                          <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
-                          <span>${r.member.username}</span>
-                          <span style="display: ${op === r.member.username ? 'unset' : 'none'};">
-                            <span class="badge op mini">OP</span>
-                          </span>
-                        </a>：
+                      <div class="v2p-topic-reply">
+                        <div class="v2p-topic-reply-member">
+                          <a href="${r.member.url}">
+                            <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
+                            <span>${r.member.username}</span>
+                            <span style="display: ${op === r.member.username ? 'unset' : 'none'};">
+                              <span class="badge op mini">OP</span>
+                            </span>
+                          </a>：
+                        </div>
+                        <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
                       </div>
-                      <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
-                    </div>
-                    `)
+                      `)
                   })
 
                   $('<div class="v2p-topic-reply-box">')
@@ -114,16 +150,6 @@ export async function handlingTopicList() {
                 }
 
                 model.$content.empty().append($topicPreview)
-              } catch (err) {
-                if (isV2EX_RequestError(err)) {
-                  const message = err.cause.message
-                  if (
-                    message === RequestMessage.TokenExpired ||
-                    message === RequestMessage.InvalidToken
-                  ) {
-                    model.$content.empty().append(`<div>${err.cause.message}</div>`)
-                  }
-                }
               }
             })()
           } else {
