@@ -101,4 +101,18 @@ export function handleReply() {
       }
     }
   })
+
+  replyTextArea?.addEventListener('drop', (ev) => {
+    ev.preventDefault()
+
+    if (!(ev instanceof DragEvent)) {
+      return
+    }
+
+    const file = ev.dataTransfer?.files[0]
+
+    if (file) {
+      handleUploadImage(file)
+    }
+  })
 }
