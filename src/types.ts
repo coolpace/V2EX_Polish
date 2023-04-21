@@ -39,9 +39,11 @@ export interface StorageData {
 
 export interface Member {
   id: number
+  /** 展示昵称 */
   username: string
   url: string
 
+  avatar: string
   avatar_mini: string
   avatar_normal: string
   avatar_large: string
