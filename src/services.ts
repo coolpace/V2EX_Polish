@@ -102,7 +102,7 @@ export function deleteNotification(notification_id: string) {
   return request(`${V2EX_API}/notifications/${notification_id}`, { method: 'GET' })
 }
 
-export async function uploadReplyImg(file: File): Promise<string> {
+export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData()
   formData.append('image', file)
 

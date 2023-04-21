@@ -201,9 +201,7 @@ body {
     }
   }
 
-  a.node:active,
-  a.node:link,
-  a.node:visited {
+  a.node:is(:active, :link, :visited) {
     padding: 5px 6px;
     color: var(--v2p-color-font-secondary);
     font-size: 13px;
@@ -551,6 +549,7 @@ body {
       display: flex;
       align-items: center;
       user-select: none;
+      pointer-events: none;
 
       &::after {
         position: absolute;
@@ -569,6 +568,7 @@ body {
       span:first-of-type {
         position: relative;
         z-index: 2;
+        pointer-events: auto;
       }
 
       a[href^='/member'] {
@@ -584,6 +584,7 @@ body {
       font-size: 12px;
       white-space: nowrap;
       border-radius: 5px;
+      user-select: none;
     }
 
     .count_livid {
@@ -898,16 +899,11 @@ body {
     align-items: center;
   }
 
-  a.dark {
-    &:link,
-    &:active,
-    &:visited,
-    &:hover {
-      color: var(--v2p-color-main-500);
+  a.dark:is(:link, :active, :visited, :hover) {
+    color: var(--v2p-color-main-500);
 
-      &:hover {
-        color: var(--v2p-color-main-600);
-      }
+    &:hover {
+      color: var(--v2p-color-main-600);
     }
   }
 }
@@ -922,10 +918,7 @@ body {
     font-weight: 400;
     font-size: 13px;
 
-    &:link,
-    &:active,
-    &:visited,
-    &:hover {
+    &:is(:link, :active, :visited, :hover) {
       color: var(--v2p-color-main-500);
     }
   }

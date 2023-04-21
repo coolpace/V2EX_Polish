@@ -80,12 +80,12 @@
     background-color: var(--v2p-color-background);
 
     ::selection {
-      color: currentColor;
-      background-color: var(--v2p-color-main-200);
+      color: var(--v2p-color-main-100);
+      background-color: var(--v2p-color-main-700);
     }
 
     img::selection {
-      background-color: var(--v2p-color-main-400);
+      background-color: var(--v2p-color-main-500);
     }
   }
 
