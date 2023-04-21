@@ -149,3 +149,8 @@
   box-shadow: var(--v2p-widget-shadow);
   pointer-events: none;
 }
+
+@mixin link {
+  text-decoration: underline 2px;
+  text-underline-offset: 0.4ex;
+}

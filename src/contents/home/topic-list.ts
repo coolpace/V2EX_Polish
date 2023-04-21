@@ -4,11 +4,12 @@ import { RequestMessage } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import type { Topic, TopicReply } from '../../types'
-import { escapeHTML, getOptions, getPAT } from '../../utils'
+import { escapeHTML, formatTimestamp, getOptions, getPAT } from '../../utils'
 import { $topicList } from '../globals'
 import { isV2EX_RequestError } from '../helpers'
 
 export async function handlingTopicList() {
+  const options = await getOptions()
   const PAT = await getPAT()
 
   let abortController: AbortController | null = null
@@ -18,8 +19,6 @@ export async function handlingTopicList() {
     className: 'special',
     tag: 'a',
   })
-
-  const options = await getOptions()
 
   if (options.openInNewTab) {
     $detailBtn.prop('target', '_blank')
@@ -58,7 +57,11 @@ export async function handlingTopicList() {
           $detailBtn.prop('href', linkHref)
 
           const topicTitle = $itemTitle.find('.topic-link').text()
-          model.$title.empty().text(topicTitle).prop('title', topicTitle)
+          const $titleLink = $(
+            `<a class="v2p-topic-preview-title-link" title="${topicTitle}">${topicTitle}</a>`
+          )
+
+          model.$title.empty().append($titleLink)
 
           if (PAT) {
             void (async () => {
@@ -83,6 +86,11 @@ export async function handlingTopicList() {
                   ] as const
 
                   const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
+
+                  $titleLink.prop('href', topic.url)
+                  if (options.openInNewTab) {
+                    $titleLink.prop('target', '_blank')
+                  }
 
                   const data = {
                     topic,
@@ -110,8 +118,27 @@ export async function handlingTopicList() {
 
                 const $topicPreview = $('<div class="v2p-topic-preview">')
 
+                const $infoBar = $(`
+                  <div class="v2p-tp-info">
+                    <div class="v2p-tp-member">
+                      <img class="v2p-tp-avatar" src="${topic.member.avatar}">
+                      <span>${topic.member.username}</span>
+                    </div>
+
+                    <span>
+                      ${formatTimestamp(topic.created, { format: 'YMDHMS' })}
+                    </span>
+
+                    <span>${topic.replies} 条回复</span>
+                  </div>
+                `)
+
+                $topicPreview.append($infoBar)
+
                 if (topic.content_rendered) {
-                  $topicPreview.append(`<div>${topic.content_rendered}</div>`)
+                  $topicPreview.append(
+                    `<div class="v2p-topic-preview-content">${topic.content_rendered}</div>`
+                  )
                 } else {
                   $topicPreview.append(`
                     <div class="v2p-empty-content">

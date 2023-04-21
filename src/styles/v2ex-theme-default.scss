@@ -13,13 +13,22 @@
   }
 }
 
-/* stylelint-disable-next-line no-duplicate-selectors */
 body {
   overflow: overlay;
   scrollbar-gutter: stable;
 
-  a:hover {
-    text-underline-offset: 0.4ex;
+  a {
+    text-decoration: none;
+    cursor: default;
+
+    &[href] {
+      cursor: pointer;
+    }
+
+    &:hover {
+      text-decoration: underline 1px;
+      text-underline-offset: 0.5ex;
+    }
   }
 
   #Top {
@@ -355,6 +364,33 @@ body {
   .cell_ops {
     background-color: transparent;
   }
+
+  :is(.topic_content, .reply_content, .v2p-topic-preview-content) {
+    a[href^='http'] {
+      @include share.link;
+
+      color: currentColor;
+      background-color: var(--v2p-color-main-100);
+
+      &:hover {
+        background-color: var(--v2p-color-main-200);
+      }
+    }
+
+    // 主题链接
+    a[href*='v2ex.com/t'],
+    a[href^='/t'] {
+      @include share.link;
+
+      color: var(--v2p-color-accent-500);
+      background-color: var(--v2p-color-accent-50);
+
+      &:hover {
+        color: var(--v2p-color-accent-500);
+        background-color: var(--v2p-color-accent-50);
+      }
+    }
+  }
 }
 
 /* ====== 帖子标签 ====== */
@@ -568,11 +604,6 @@ body {
     .item_title {
       .topic-link {
         font-weight: bold;
-        opacity: 0.8;
-
-        &:hover {
-          opacity: 1;
-        }
       }
     }
   }
@@ -693,6 +724,10 @@ body {
           a.dark {
             color: var(--v2p-color-main-600);
             text-decoration: none;
+
+            &:hover {
+              text-decoration: none;
+            }
           }
 
           .fr {
@@ -753,32 +788,6 @@ body {
   .topic_content,
   .reply_content {
     font-size: 15.4px;
-
-    a[href^='http'] {
-      color: currentColor;
-      text-decoration: underline;
-      text-decoration-thickness: 2px;
-      background-color: var(--v2p-color-main-100);
-      text-underline-offset: 0.4ex;
-
-      &:hover {
-        background-color: var(--v2p-color-main-200);
-      }
-    }
-
-    // 主题链接
-    a[href*='v2ex.com/t'],
-    a[href^='/t'] {
-      color: var(--v2p-color-accent-500);
-      text-decoration: underline;
-      background-color: var(--v2p-color-accent-50);
-      text-underline-offset: 0.4ex;
-
-      &:hover {
-        color: var(--v2p-color-accent-500);
-        background-color: var(--v2p-color-accent-50);
-      }
-    }
 
     // 被 @ 的用户
     a[href^='/member'] {
