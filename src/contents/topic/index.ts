@@ -1,16 +1,10 @@
 import { iconReply, iconScrollTop } from '../../icons'
-import { getNotes } from '../../services'
 import { getOptions } from '../../utils'
 import { $commentTableRows, $replyBox } from '../globals'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
 import { handleReply } from './reply'
-
-void (async () => {
-  // await createNote()
-  await getNotes()
-})()
 
 void (async () => {
   {
