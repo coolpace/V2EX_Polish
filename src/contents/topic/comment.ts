@@ -344,6 +344,7 @@ function insertEmojiBox() {
 
     return group
   })
+
   const emoticonsBox = $('<div class="v2p-emoticons-box">').append(groups)
 
   const $emojiBtn = createButton({ children: iconEmoji }).insertAfter($replyBtn)
@@ -373,10 +374,10 @@ function insertEmojiBox() {
     content: $emojiContent,
     options: { placement: 'right-end' },
     onOpen: () => {
-      $('body').on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
+      $(document.body).on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
     },
     onClose: () => {
-      $('body').off('keydown', keyupHandler)
+      $(document.body).off('keydown', keyupHandler)
     },
   })
 

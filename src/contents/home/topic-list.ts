@@ -25,7 +25,7 @@ export async function handlingTopicList() {
   }
 
   const model = createModel({
-    root: $('body'),
+    root: $(document.body),
     onMount: ({ $actions }) => {
       $actions.prepend($detailBtn)
     },
@@ -120,10 +120,10 @@ export async function handlingTopicList() {
 
                 const $infoBar = $(`
                   <div class="v2p-tp-info">
-                    <div class="v2p-tp-member">
+                    <a class="v2p-tp-member" href="${topic.member.url}">
                       <img class="v2p-tp-avatar" src="${topic.member.avatar}">
                       <span>${topic.member.username}</span>
-                    </div>
+                    </a>
 
                     <span>
                       ${formatTimestamp(topic.created, { format: 'YMDHMS' })}
