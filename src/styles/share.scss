@@ -123,10 +123,6 @@
     font-size: 15px;
   }
 
-  &:hover:not(:focus) {
-    opacity: 0.8;
-  }
-
   &:focus {
     background-color: transparent;
     border: 2px solid var(--button-border-color);

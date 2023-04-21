@@ -832,17 +832,30 @@ body {
       outline: 2px solid var(--v2p-color-main-200);
     }
 
-    #reply_content {
-      @include share.input(120px);
+    .v2p-reply-wrap {
+      #reply_content {
+        background-color: transparent;
+        border: none;
 
-      & + .flex-one-row {
-        flex-direction: row-reverse;
-        gap: 10px;
-        justify-content: flex-start;
-
-        .gray {
-          margin-right: auto;
+        &:focus {
+          background-color: var(--v2p-color-bg-content);
+          outline: none;
         }
+
+        &::placeholder {
+          color: var(--v2p-color-main-500);
+          font-size: 14px;
+        }
+      }
+    }
+
+    .flex-one-row:last-of-type {
+      flex-direction: row-reverse;
+      gap: 10px;
+      justify-content: flex-start;
+
+      .gray {
+        margin-right: auto;
       }
     }
 

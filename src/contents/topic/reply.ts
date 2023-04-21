@@ -40,8 +40,12 @@ export function handleReply() {
     })
   })
 
+  const uploadTip = '选择、粘贴、拖放以上传图片。'
+
+  const $uploadBar = $(`<div class="v2p-reply-upload-bar">${uploadTip}</div>`)
+
   const handleUploadImage = (file: File) => {
-    document.body.style.cursor = 'wait'
+    $uploadBar.text('正在上传图片...')
 
     uploadImage(file)
       .then((imgLink) => {
@@ -51,11 +55,11 @@ export function handleReply() {
         window.alert('上传图片失败')
       })
       .finally(() => {
-        document.body.style.cursor = ''
+        $uploadBar.text(uploadTip)
       })
   }
 
-  $toolContent.find('.v2p-reply-tool-img').on('click', () => {
+  const handleClickUploadImage = () => {
     focusReplyInput()
     toolsPopup.close()
 
@@ -74,6 +78,10 @@ export function handleReply() {
     })
 
     imgInput.click()
+  }
+
+  $toolContent.find('.v2p-reply-tool-img').on('click', () => {
+    handleClickUploadImage()
   })
 
   $replyBox.find('> .flex-row-end').prepend($tools)
@@ -115,4 +123,16 @@ export function handleReply() {
       handleUploadImage(file)
     }
   })
+
+  $('#reply_content')
+    .wrap('<div class="v2p-reply-wrap">')
+    .attr('placeholder', '留下对他人有帮助的回复')
+
+  $('.flex-one-row:last-of-type > .gray').text('')
+
+  $uploadBar.on('click', () => {
+    handleClickUploadImage()
+  })
+
+  $('.v2p-reply-wrap').append($uploadBar)
 }
