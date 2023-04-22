@@ -16,7 +16,7 @@ import {
   loginName,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput, insertTextToReplyInput } from '../helpers'
+import { focusReplyInput, getMemberTags, insertTextToReplyInput, setMemberTags } from '../helpers'
 
 const memberDataCache = new Map<Member['username'], Member>()
 
@@ -78,13 +78,15 @@ function processAvatar(cellDom: HTMLElement, popupControl: PopupControl, comment
       const data = memberDataCache.get(memberName)
 
       if (data) {
+        const memberName = data.username
+
         $content
           .find('.v2p-avatar-box')
           .removeClass('v2p-loading')
           .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
 
         const options = await getOptions()
-        const $memberName = $(`<a href="${data.url}">${data.username}</a>`)
+        const $memberName = $(`<a href="${data.url}">${memberName}</a>`)
         if (options.openInNewTab) {
           $memberName.prop('target', '_blank')
         }
@@ -100,6 +102,28 @@ function processAvatar(cellDom: HTMLElement, popupControl: PopupControl, comment
         if (data.bio && data.bio.trim().length > 0) {
           $content.append(`<div class="v2p-bio">${data.bio}</div>`)
         }
+
+        const $actions = $('<div class="v2p-member-card-actions">')
+        createButton({ children: '用户标签' })
+          .on('click', () => {
+            void (async () => {
+              const tagData = await getMemberTags()
+              const tagValue = tagData
+                ? Reflect.has(tagData, memberName)
+                  ? tagData[memberName].tags?.map((it) => it.name).join('，')
+                  : undefined
+                : undefined
+              const newTagValue = window.prompt('设置用户标签，多个标签以「，」分隔。', tagValue)
+              const tags = newTagValue?.split(/,|，/g).map((it) => ({ name: it }))
+              if (tags) {
+                await setMemberTags(memberName, tags)
+              } else {
+                // 失败
+              }
+            })()
+          })
+          .appendTo($actions)
+        $content.append($actions)
       }
     })()
   })

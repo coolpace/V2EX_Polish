@@ -30,11 +30,18 @@ export interface DailyInfo {
   lastCheckInTime?: number
 }
 
+export interface Tag {
+  name: string
+}
+
+export type MemberTag = Record<Member['username'], { tags?: Tag[] }>
+
 export interface StorageData {
   [StorageKey.Options]?: Options
   [StorageKey.LegacyAPI]?: LegacyAPI_Info
   [StorageKey.API]?: API_Info
   [StorageKey.Daily]?: DailyInfo
+  [StorageKey.MemberTag]?: MemberTag
 }
 
 export interface Member {
