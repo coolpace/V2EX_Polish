@@ -118,7 +118,7 @@ body {
     .v2p-tp-avatar {
       width: 20px;
       height: 20px;
-      border: 5px;
+      border-radius: 3px;
     }
   }
 }
@@ -462,6 +462,10 @@ a.v2p-topic-preview-title-link {
 
     margin-top: 10px;
   }
+}
+
+.v2p-member-card-actions {
+  padding: 10px 0 0;
 }
 
 .v2p-reply-list-box {

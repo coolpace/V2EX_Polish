@@ -9,7 +9,7 @@ import type {
   Topic,
   TopicReply,
 } from './types'
-import { getPAT } from './utils'
+import { getPAT, isValidConfig } from './utils'
 
 // 动态获取 V2EX 的域名，防止跨域。
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
@@ -128,71 +128,77 @@ export async function uploadImage(file: File): Promise<string> {
   throw new Error('上传失败')
 }
 
-const mark = `${EXTENSION_NAME}`
+const mark = `${EXTENSION_NAME}_config`
 
-export async function getNotes() {
-  const res = await fetch(`${V2EX_ORIGIN}/notes`)
-  const htmlText = await res.text()
-  const $page = $(htmlText)
-  const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
-
+export async function getV2P_Config(): Promise<
+  { noteId: string; config: StorageData } | undefined
+> {
   let noteId: string | undefined
-  let noteValue: string | undefined
 
-  $note.each((_, dom) => {
-    const $dom = $(dom)
+  {
+    const res = await fetch(`${V2EX_ORIGIN}/notes`)
+    const htmlText = await res.text()
+    const $page = $(htmlText)
+    const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
 
-    if ($dom.text().startsWith(mark)) {
-      const href = $dom.attr('href')
+    $note.each((_, dom) => {
+      const $dom = $(dom)
 
-      if (typeof href === 'string') {
-        const id = href.split('/').at(2)
-        noteId = id
+      if ($dom.text().startsWith(mark)) {
+        const href = $dom.attr('href')
+
+        if (typeof href === 'string') {
+          const id = href.split('/').at(2)
+          noteId = id
+        }
+
+        return false
       }
-
-      return false
-    }
-  })
+    })
+  }
 
   if (noteId) {
     const res = await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`)
-    const txt = await res.text()
+    const htmlText = await res.text()
 
-    const $editor = $(txt).find('#note_content.note_editor')
+    const $editor = $(htmlText).find('#note_content.note_editor')
     const value = $editor.val()
 
     if (typeof value === 'string') {
-      noteValue = value
+      const config = JSON.parse(value.replace(mark, ''))
 
-      return {
-        noteId,
-        noteValue,
+      if (isValidConfig(config)) {
+        return { noteId, config }
       }
     }
   }
 }
 
-export async function createNote() {
-  const data = new FormData()
+export async function setV2P_Config(storageData: StorageData) {
+  const data = await getV2P_Config()
 
-  data.append('content', mark)
-  data.append('parent_id', '0')
-  data.append('syntax', '0')
+  if (!data) {
+    return
+  }
 
-  await fetch(`${V2EX_ORIGIN}/notes/new`, {
-    method: 'POST',
-    body: data,
-  })
-}
+  const { noteId } = data
 
-export async function updateNote(noteId: string) {
-  const data = new FormData()
+  const formData = new FormData()
 
-  data.append('content', mark)
-  data.append('syntax', '0')
+  formData.append('content', mark + JSON.stringify(storageData))
+  formData.append('syntax', '0')
 
-  await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, {
-    method: 'POST',
-    body: data,
-  })
+  if (noteId) {
+    await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, {
+      method: 'POST',
+      body: formData,
+    })
+  } else {
+    formData.append('parent_id', '0')
+
+    await fetch(`${V2EX_ORIGIN}/notes/new`, {
+      method: 'POST',
+      body: formData,
+    })
+  }
 }

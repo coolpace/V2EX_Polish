@@ -61,7 +61,7 @@ if (window.__V2P_DecodeStatus__ === 'decodeed') {
     try {
       const decodedStr = window.atob(text)
       count += 1
-      return `<span class="v2p-decode-block">${text}(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
+      return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
     } catch {
       return text
     }
@@ -94,11 +94,10 @@ if (window.__V2P_DecodeStatus__ === 'decodeed') {
   $('.v2p-decode').on('click', (ev) => {
     const text = ev.target.innerText
     void navigator.clipboard.writeText(text).then(() => {
-      ev.target.dataset.title = '已复制'
+      ev.target.dataset.title = '✅ 已复制'
       setTimeout(() => {
         ev.target.dataset.title = dataTitle
       }, 1000)
     })
-    // TODO 提示复制成功
   })
 }

@@ -34,7 +34,7 @@ export function getOS() {
 export function formatTimestamp(
   timestamp: number,
   { format = 'YMD' }: { format?: 'YMD' | 'YMDHMS' } = {}
-) {
+): string {
   const date = new Date(timestamp.toString().length === 10 ? timestamp * 1000 : timestamp)
   const year = date.getFullYear().toString()
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
@@ -68,11 +68,24 @@ export function isSameDay(timestamp1: number, timestamp2: number): boolean {
 }
 
 /**
+ * 检查运行在哪个扩展中。
+ */
+export function getRunEnv(): 'chrome' | null {
+  if (typeof chrome !== 'undefined' && typeof chrome.extension !== 'undefined') {
+    return 'chrome'
+  }
+
+  return null
+}
+
+/**
  * 获取用户设置存储的个人访问令牌。
  */
 export function getPAT(): Promise<PersonalAccessToken> {
   return new Promise((resolve) => {
-    if (typeof chrome === 'undefined' || typeof chrome.storage === 'undefined') {
+    const runEnv = getRunEnv()
+
+    if (runEnv !== 'chrome') {
       return resolve(undefined)
     }
 
@@ -87,7 +100,9 @@ export function getPAT(): Promise<PersonalAccessToken> {
  */
 export function getOptions(): Promise<Options> {
   return new Promise((resolve) => {
-    if (typeof chrome === 'undefined' || typeof chrome.storage === 'undefined') {
+    const runEnv = getRunEnv()
+
+    if (runEnv !== 'chrome') {
       return resolve(defaultOptions)
     }
 
@@ -123,4 +138,8 @@ export function escapeHTML(htmlString: string): string {
         return match
     }
   })
+}
+
+export function isValidConfig(config: any): config is StorageData {
+  return !!config && typeof config === 'object' && 'storage' in config
 }

@@ -7,6 +7,7 @@ export const enum StorageKey {
   LegacyAPI = 'legacy-api',
   API = 'api',
   Daily = 'daily',
+  MemberTag = 'member-tag',
 }
 
 export const enum V2EX {
