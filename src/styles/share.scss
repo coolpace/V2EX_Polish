@@ -109,6 +109,7 @@
   min-height: $minHeight !important;
   max-height: $maxHeight !important;
   overflow: hidden;
+  color: currentColor;
   font-size: 15px;
   background-color: var(--v2p-color-bg-input);
   border: 1px solid var(--button-border-color);
@@ -123,10 +124,10 @@
     font-size: 15px;
   }
 
-  &:focus {
+  &:is(:focus, :focus-within) {
     background-color: transparent;
-    border: 2px solid var(--button-border-color);
     outline: none;
+    box-shadow: 0 0 0 1px var(--button-border-color);
   }
 }
 
