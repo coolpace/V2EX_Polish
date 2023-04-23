@@ -45,7 +45,7 @@ export function handleReply() {
   const $uploadBar = $(`<div class="v2p-reply-upload-bar">${uploadTip}</div>`)
 
   const handleUploadImage = (file: File) => {
-    $uploadBar.text('正在上传图片...')
+    $uploadBar.addClass('v2p-reply-upload-bar-disabled').text('正在上传图片...')
 
     uploadImage(file)
       .then((imgLink) => {
@@ -55,7 +55,7 @@ export function handleReply() {
         window.alert('上传图片失败')
       })
       .finally(() => {
-        $uploadBar.text(uploadTip)
+        $uploadBar.removeClass('v2p-reply-upload-bar-disabled').text(uploadTip)
       })
   }
 
@@ -131,7 +131,9 @@ export function handleReply() {
   $('.flex-one-row:last-of-type > .gray').text('')
 
   $uploadBar.on('click', () => {
-    handleClickUploadImage()
+    if (!$uploadBar.hasClass('v2p-reply-upload-bar-disabled')) {
+      handleClickUploadImage()
+    }
   })
 
   $('.v2p-reply-wrap').append($uploadBar)

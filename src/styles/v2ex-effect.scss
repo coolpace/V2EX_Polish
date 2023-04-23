@@ -468,21 +468,14 @@ a.v2p-topic-preview-title-link {
   padding: 10px 0 0;
 }
 
-.v2p-reply-list-box {
-  margin-top: 10px;
-}
-
-.v2p-reply-list {
-  li {
-    padding: 3px 4px;
-    word-break: break-all;
-    background-color: var(--button-background-color);
-    border-radius: 6px;
-
-    & ~ li {
-      margin-top: 10px;
-    }
-  }
+.v2p-reply-tags {
+  display: inline-block;
+  margin-bottom: 2px;
+  padding: 0 3px;
+  font-size: 12px;
+  background-color: var(--v2p-color-main-200);
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 .v2p-emoticons-box {
@@ -670,6 +663,10 @@ a.v2p-topic-preview-title-link {
       font-size: 12px;
       border-top: 1px dashed var(--v2p-color-main-300);
       cursor: pointer;
+    }
+
+    .v2p-reply-upload-bar-disabled {
+      pointer-events: none;
     }
   }
 }
