@@ -3,11 +3,13 @@ import { TabId } from './popup.var'
 export function isTabId(tabId: any): tabId is TabId {
   if (typeof tabId === 'string') {
     if (
+      /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
       tabId === TabId.Hot ||
       tabId === TabId.Latest ||
       tabId === TabId.Message ||
       tabId === TabId.Feature ||
       tabId === TabId.Setting
+      /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
     ) {
       return true
     }

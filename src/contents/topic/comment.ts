@@ -4,7 +4,7 @@ import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { emoticons } from '../../constants'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
-import type { Tag } from '../../types'
+import type { Member } from '../../types'
 import { escapeHTML, getOptions, getOS } from '../../utils'
 import {
   $commentBox,
@@ -15,9 +15,9 @@ import {
   loginName,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput, getMemberTags, insertTextToReplyInput, setMemberTags } from '../helpers'
+import { focusReplyInput, getMemberTags, insertTextToReplyInput } from '../helpers'
 import { processAvatar } from './avatar'
-import { processReplyContent } from './content'
+import { openTagsSetter, processReplyContent, updateMemberTag } from './content'
 
 /**
  * 设置热门回复。
@@ -262,6 +262,7 @@ export async function handlingComments() {
     // 此区块的逻辑需要在处理嵌套评论前执行。
 
     const popupControl = createPopup({ root: $commentBox })
+    const membersHasSetTags = new Set<Member['username']>()
 
     const tagData = await getMemberTags()
 
@@ -276,62 +277,13 @@ export async function handlingComments() {
 
       const { memberName, thanked } = currentComment
 
-      const updateMemberTag = (tags: Tag[] | undefined) => {
-        const $v2pTags = $cellDom.find(`.v2p-tags-${memberName}`)
-
-        const tagsValue = tags?.map((it) => it.name).join('，')
-
-        if ($v2pTags.get().length > 0) {
-          if (tagsValue) {
-            $v2pTags.text(`# ${tagsValue}`)
-          } else {
-            $v2pTags.remove()
-          }
-        } else {
-          if (tagsValue) {
-            $(`<div class="v2p-reply-tags v2p-tags-${memberName}"># ${tagsValue}</div>`)
-              .on('click', () => {
-                // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                onSetTags()
-              })
-              .insertBefore($cellDom.find('.reply_content'))
-          }
-        }
-      }
-
-      const onSetTags = () => {
-        void (async () => {
-          const latestTagsData = await getMemberTags()
-
-          const tagsValue = latestTagsData
-            ? Reflect.has(latestTagsData, memberName)
-              ? latestTagsData[memberName].tags?.map((it) => it.name).join('，')
-              : undefined
-            : undefined
-
-          const newTagsValue = window.prompt(
-            '⚠ 用户标签是实验性的功能，后续版本可能会调整，请勿过于依赖。\n设置用户标签，多个标签以逗号（，）分隔。',
-            tagsValue
-          )
-
-          if (newTagsValue !== null) {
-            const tags =
-              newTagsValue.trim().length > 0
-                ? newTagsValue.split(/,|，/g).map((it) => ({ name: it }))
-                : undefined
-
-            await setMemberTags(memberName, tags)
-
-            updateMemberTag(tags)
-          }
-        })()
-      }
-
       processAvatar({
         $cellDom,
         popupControl,
         commentData: currentComment,
-        onSetTags,
+        onSetTagsClick: () => {
+          openTagsSetter(memberName)
+        },
       })
 
       if (memberName === loginName) {
@@ -351,8 +303,9 @@ export async function handlingComments() {
         $likesBox.addClass('v2p-thanked')
       }
 
-      if (tagData && Reflect.has(tagData, memberName)) {
-        updateMemberTag(tagData[memberName].tags)
+      if (tagData && Reflect.has(tagData, memberName) && !membersHasSetTags.has(memberName)) {
+        updateMemberTag(memberName, tagData[memberName].tags)
+        membersHasSetTags.add(memberName)
       }
     })
 
