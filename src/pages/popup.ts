@@ -208,7 +208,13 @@ function initTabs() {
           if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
             const date = formatTimestamp(dailyInfo.lastCheckInTime, { format: 'YMDHMS' })
             $checkIn.find('.feature-title').text('✅ 今日已签到')
-            $checkIn.find('.feature-content').text(`于 ${date} 自动签到`)
+            $checkIn
+              .find('.feature-content')
+              .html(
+                `于 ${date} 自动签到${
+                  dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
+                }`
+              )
           }
         } else {
           $checkIn.on('click', () => {

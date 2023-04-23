@@ -28,6 +28,7 @@ export interface API_Info extends LegacyAPI_Info {
 
 export interface DailyInfo {
   lastCheckInTime?: number
+  checkInDays?: number
 }
 
 export interface Tag {
