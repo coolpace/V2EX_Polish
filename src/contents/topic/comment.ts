@@ -1,12 +1,11 @@
 import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
-import { createPopup, type PopupControl } from '../../components/popup'
+import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
-import { fetchUserInfo } from '../../services'
-import type { CommentData, Member } from '../../types'
-import { escapeHTML, formatTimestamp, getOptions, getOS } from '../../utils'
+import type { Tag } from '../../types'
+import { escapeHTML, getOptions, getOS } from '../../utils'
 import {
   $commentBox,
   $commentCells,
@@ -17,117 +16,7 @@ import {
   topicOwnerName,
 } from '../globals'
 import { focusReplyInput, getMemberTags, insertTextToReplyInput, setMemberTags } from '../helpers'
-
-const memberDataCache = new Map<Member['username'], Member>()
-
-/**
- * 点击头像会展示该用户的信息。
- */
-function processAvatar(cellDom: HTMLElement, popupControl: PopupControl, commentData: CommentData) {
-  let abortController: AbortController | null = null
-
-  const $avatar = $(cellDom).find('.avatar')
-
-  $avatar.on('click', () => {
-    popupControl.close()
-    popupControl.open($avatar)
-
-    const $content = $(`
-      <div class="v2p-member-card">
-        <div class="v2p-info">
-          <div class="v2p-info-left">
-            <div class="v2p-avatar-box"></div>
-          </div>
-
-          <div class="v2p-info-right">
-            <div class="v2p-username v2p-loading"></div>
-            <div class="v2p-no v2p-loading"></div>
-            <div class="v2p-created-date v2p-loading"></div>
-          </div>
-        </div>
-      </div>
-    `)
-
-    popupControl.$content.empty().append($content)
-
-    void (async () => {
-      const memberName = commentData.memberName
-
-      // 缓存用户卡片的信息，只有在无缓存时才请求远程数据。
-      if (!memberDataCache.has(memberName)) {
-        abortController = new AbortController()
-
-        popupControl.onClose = () => {
-          abortController?.abort()
-        }
-
-        try {
-          const memberData = await fetchUserInfo(memberName, {
-            signal: abortController.signal,
-          })
-
-          memberDataCache.set(memberName, memberData)
-        } catch (err) {
-          if (err && typeof err === 'object' && 'name' in err && err.name !== 'AbortError') {
-            $content.html(`<span>获取用户信息失败</span>`)
-          }
-          return null
-        }
-      }
-
-      const data = memberDataCache.get(memberName)
-
-      if (data) {
-        const memberName = data.username
-
-        $content
-          .find('.v2p-avatar-box')
-          .removeClass('v2p-loading')
-          .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
-
-        const options = await getOptions()
-        const $memberName = $(`<a href="${data.url}">${memberName}</a>`)
-        if (options.openInNewTab) {
-          $memberName.prop('target', '_blank')
-        }
-        $content.find('.v2p-username').removeClass('v2p-loading').append($memberName)
-
-        $content.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)
-
-        $content
-          .find('.v2p-created-date')
-          .removeClass('v2p-loading')
-          .text(`加入于 ${formatTimestamp(data.created)}`)
-
-        if (data.bio && data.bio.trim().length > 0) {
-          $content.append(`<div class="v2p-bio">${data.bio}</div>`)
-        }
-
-        const $actions = $('<div class="v2p-member-card-actions">')
-        createButton({ children: '用户标签' })
-          .on('click', () => {
-            void (async () => {
-              const tagData = await getMemberTags()
-              const tagValue = tagData
-                ? Reflect.has(tagData, memberName)
-                  ? tagData[memberName].tags?.map((it) => it.name).join('，')
-                  : undefined
-                : undefined
-              const newTagValue = window.prompt('设置用户标签，多个标签以「，」分隔。', tagValue)
-              const tags = newTagValue?.split(/,|，/g).map((it) => ({ name: it }))
-              if (tags) {
-                await setMemberTags(memberName, tags)
-              } else {
-                // 失败
-              }
-            })()
-          })
-          .appendTo($actions)
-        $content.append($actions)
-      }
-    })()
-  })
-}
+import { processAvatar } from './avatar'
 
 /**
  * 处理回复内容：
@@ -420,6 +309,8 @@ export async function handlingComments() {
 
     const popupControl = createPopup({ root: $commentBox })
 
+    const tagData = await getMemberTags()
+
     $commentCells.each((i, cellDom) => {
       const currentComment = commentDataList.at(i)
 
@@ -427,12 +318,67 @@ export async function handlingComments() {
         return
       }
 
-      // 处理头像点击事件。
-      processAvatar(cellDom, popupControl, currentComment)
-
       const $cellDom = $(cellDom)
 
       const { memberName, thanked } = currentComment
+
+      const updateMemberTag = (tags: Tag[] | undefined) => {
+        const $v2pTags = $cellDom.find(`.v2p-tags-${memberName}`)
+
+        const tagsValue = tags?.map((it) => it.name).join('，')
+
+        if ($v2pTags.get().length > 0) {
+          if (tagsValue) {
+            $v2pTags.text(`# ${tagsValue}`)
+          } else {
+            $v2pTags.remove()
+          }
+        } else {
+          if (tagsValue) {
+            $(`<div class="v2p-reply-tags v2p-tags-${memberName}"># ${tagsValue}</div>`)
+              .on('click', () => {
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                onSetTags()
+              })
+              .insertBefore($cellDom.find('.reply_content'))
+          }
+        }
+      }
+
+      const onSetTags = () => {
+        void (async () => {
+          const latestTagsData = await getMemberTags()
+
+          const tagsValue = latestTagsData
+            ? Reflect.has(latestTagsData, memberName)
+              ? latestTagsData[memberName].tags?.map((it) => it.name).join('，')
+              : undefined
+            : undefined
+
+          const newTagsValue = window.prompt(
+            '⚠ 用户标签是实验性的功能，后续版本可能会调整，请勿过于依赖。\n设置用户标签，多个标签以逗号（，）分隔。',
+            tagsValue
+          )
+
+          if (newTagsValue !== null) {
+            const tags =
+              newTagsValue.trim().length > 0
+                ? newTagsValue.split(/,|，/g).map((it) => ({ name: it }))
+                : undefined
+
+            await setMemberTags(memberName, tags)
+
+            updateMemberTag(tags)
+          }
+        })()
+      }
+
+      processAvatar({
+        cellDom,
+        popupControl,
+        commentData: currentComment,
+        onSetTags,
+      })
 
       if (memberName === loginName) {
         $cellDom
@@ -449,6 +395,10 @@ export async function handlingComments() {
 
       if (thanked) {
         $likesBox.addClass('v2p-thanked')
+      }
+
+      if (tagData && Reflect.has(tagData, memberName)) {
+        updateMemberTag(tagData[memberName].tags)
       }
     })
 

@@ -62,14 +62,28 @@ export async function getMemberTags(): Promise<MemberTag | undefined> {
   })
 }
 
-export async function setMemberTags(memberName: Member['username'], tags: Tag[]) {
+export async function setMemberTags(memberName: Member['username'], tags: Tag[] | undefined) {
   const runEnv = getRunEnv()
 
   if (runEnv !== 'chrome') {
     return
   }
 
-  await chrome.storage.sync.set({
-    [StorageKey.MemberTag]: tags,
-  })
+  const tagData = await getMemberTags()
+
+  if (tags && tags.length > 0) {
+    const newTagData: MemberTag = { ...tagData, [memberName]: { tags } }
+
+    await chrome.storage.sync.set({
+      [StorageKey.MemberTag]: newTagData,
+    })
+  } else {
+    if (tagData && Reflect.has(tagData, memberName)) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete tagData[memberName]
+      await chrome.storage.sync.set({
+        [StorageKey.MemberTag]: tagData,
+      })
+    }
+  }
 }

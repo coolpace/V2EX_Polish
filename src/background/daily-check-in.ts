@@ -7,7 +7,6 @@ const successText = '每日登录奖励已领取'
 const handleCheckedIn = async () => {
   const dailyInfo: DailyInfo = { lastCheckInTime: Date.now() }
   await chrome.storage.sync.set({ [StorageKey.Daily]: dailyInfo })
-  console.log('自动签到成功')
 }
 
 export async function checkIn() {
@@ -21,7 +20,6 @@ export async function checkIn() {
 
   if (lastCheckInTime) {
     if (isSameDay(lastCheckInTime, Date.now())) {
-      console.log('今天已经领取奖励了')
       return
     }
   }
