@@ -2,7 +2,7 @@ import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
-import { emoticons, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
+import { emoticons } from '../../constants'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import type { Tag } from '../../types'
 import { escapeHTML, getOptions, getOS } from '../../utils'
@@ -17,53 +17,7 @@ import {
 } from '../globals'
 import { focusReplyInput, getMemberTags, insertTextToReplyInput, setMemberTags } from '../helpers'
 import { processAvatar } from './avatar'
-
-/**
- * 处理回复内容：
- *  - 过长内容会被折叠。
- */
-function processReplyContent(cellDom: HTMLElement) {
-  const $cellDom = $(cellDom)
-
-  if ($cellDom.find('.v2p-reply-content').length > 0) {
-    return
-  }
-
-  const $replyContent = $cellDom.find('.reply_content')
-
-  const contentHeight = $replyContent.height() ?? 0
-
-  const shouldCollapsed = contentHeight + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
-
-  if (shouldCollapsed) {
-    const collapsedCSS = {
-      maxHeight: `${READABLE_CONTENT_HEIGHT}px`,
-      overflow: 'hidden',
-      paddingBottom: '0',
-    }
-
-    const $contentBox = $('<div class="v2p-reply-content v2p-collapsed">').css(collapsedCSS)
-
-    const $expandBtn = createButton({ children: '展开回复', className: 'v2p-expand-btn' })
-
-    const toggleContent = () => {
-      const collapsed = $contentBox.hasClass('v2p-collapsed')
-
-      $contentBox
-        .toggleClass('v2p-collapsed')
-        .css(
-          collapsed ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' } : collapsedCSS
-        )
-      $expandBtn.html(collapsed ? '收起回复' : '展开回复')
-    }
-
-    $expandBtn.on('click', () => {
-      toggleContent()
-    })
-
-    $contentBox.append($replyContent.clone()).replaceAll($replyContent).append($expandBtn)
-  }
-}
+import { processReplyContent } from './content'
 
 /**
  * 设置热门回复。
@@ -123,7 +77,7 @@ function handlingPopularComments() {
     },
     onOpen: ({ $container }) => {
       $container.find('.cell[id^="r_"]').each((_, cellDom) => {
-        processReplyContent(cellDom)
+        processReplyContent($(cellDom))
       })
     },
   })
@@ -374,7 +328,7 @@ export async function handlingComments() {
       }
 
       processAvatar({
-        cellDom,
+        $cellDom,
         popupControl,
         commentData: currentComment,
         onSetTags,
@@ -412,9 +366,11 @@ export async function handlingComments() {
     const display = options.nestedReply.display
 
     $commentCells.each((i, cellDom) => {
+      const $cellDom = $(cellDom)
+
       const dataFromIndex = commentDataList.at(i)
 
-      processReplyContent(cellDom)
+      processReplyContent($cellDom)
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
       const currentComment =
