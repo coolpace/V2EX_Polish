@@ -4,8 +4,20 @@ import { isSameDay } from '../utils'
 
 const successText = '每日登录奖励已领取'
 
-const handleCheckedIn = async () => {
-  const dailyInfo: DailyInfo = { lastCheckInTime: Date.now() }
+const handleCheckedIn = async (htmlText: string) => {
+  const matchedArr = htmlText.match(/已连续登录 (\d+) 天/)
+
+  let checkInDays: number | undefined
+
+  if (matchedArr) {
+    const days = Number([...matchedArr].at(1))
+    if (!Number.isNaN(days)) {
+      checkInDays = days
+    }
+  }
+
+  const dailyInfo: DailyInfo = { lastCheckInTime: Date.now(), checkInDays }
+
   await chrome.storage.sync.set({ [StorageKey.Daily]: dailyInfo })
 }
 
@@ -42,14 +54,12 @@ export async function checkIn() {
       const text = await checkInResult.text()
 
       if (text.includes(successText)) {
-        await handleCheckedIn()
-        // const result = text.match(/已连续登录 \d+ 天/)
-        // console.log(123, result)
+        await handleCheckedIn(text)
       }
     }
   } else {
     if (htmlPlainText.includes(successText)) {
-      void handleCheckedIn()
+      await handleCheckedIn(htmlPlainText)
     }
   }
 }
