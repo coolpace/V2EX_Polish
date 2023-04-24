@@ -1,3 +1,4 @@
+import { minifyTemplates, writeFiles } from 'esbuild-minify-templates'
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
@@ -23,4 +24,10 @@ export default defineConfig({
   },
 
   noExternal: ['@floating-ui/dom', 'webext-patterns'],
+
+  esbuildPlugins: [minifyTemplates(), writeFiles()],
+
+  esbuildOptions(options) {
+    options.write = false
+  },
 })

@@ -21,6 +21,9 @@ devDependencies:
   '@types/jquery':
     specifier: ^3.5.16
     version: 3.5.16
+  esbuild-minify-templates:
+    specifier: ^0.10.0
+    version: 0.10.0(esbuild@0.17.18)
   npm-run-all:
     specifier: ^4.1.5
     version: 4.1.5
@@ -637,6 +640,12 @@ packages:
       '@types/har-format': 1.2.10
     dev: true
 
+  /@types/estree@0.0.45:
+    resolution: {integrity: sha512-jnqIUKDUqJbDIUxm0Uj7bnlMnRm1T/eZ9N+AVMqhPgzrba2GhGG5o/jCTwmdPK709nEZsGoMzXEDUjcXHa3W0g==}
+    requiresBuild: true
+    dev: true
+    optional: true
+
   /@types/filesystem@0.0.32:
     resolution: {integrity: sha512-Yuf4jR5YYMR2DVgwuCiP11s0xuVRyPKmz8vo6HBY3CGdeMj8af93CFZX+T82+VD1+UqHOxTq31lO7MI7lepBtQ==}
     dependencies:
@@ -1063,6 +1072,13 @@ packages:
   /astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
+    dev: true
+
+  /astray@1.1.1:
+    resolution: {integrity: sha512-LizvbENqdc8tdvrms/YyYoTtlr43INJni4YZSFr8nNdfOgafi82Hcrfhjm0MdwLhRFBrDhRwtH/0fnntlESxsQ==}
+    engines: {node: '>=8'}
+    optionalDependencies:
+      '@types/estree': 0.0.45
     dev: true
 
   /async-each@1.0.6:
@@ -1817,6 +1833,19 @@ packages:
       is-callable: 1.2.7
       is-date-object: 1.0.5
       is-symbol: 1.0.4
+    dev: true
+
+  /esbuild-minify-templates@0.10.0(esbuild@0.17.18):
+    resolution: {integrity: sha512-VEDDgKwRsHVeL/VbJXaoA6heccsvb48iGg4mG2jY/oA+j5ohtaQ/Klm556F7JlbN/L79YovTEPbCffLL/sr83g==}
+    engines: {node: '>= 12'}
+    peerDependencies:
+      esbuild: ^0.13.0 || ^0.14.0 || ^0.15.0 || ^0.16.0 || ^0.17.0
+    dependencies:
+      '@ampproject/remapping': 2.2.1
+      astray: 1.1.1
+      esbuild: 0.17.18
+      magic-string: 0.27.0
+      meriyah: 4.3.5
     dev: true
 
   /esbuild@0.17.18:
@@ -3494,6 +3523,13 @@ packages:
       yallist: 4.0.0
     dev: true
 
+  /magic-string@0.27.0:
+    resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.15
+    dev: true
+
   /map-cache@0.2.2:
     resolution: {integrity: sha512-8y/eV9QQZCiyn1SprXSrCmqJN0yNRATe+PO8ztwqrvrbdRLA3eYJF0yaR0YayLWkMbsQSKWS9N2gPcGEc4UsZg==}
     engines: {node: '>=0.10.0'}
@@ -3586,6 +3622,11 @@ packages:
   /merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
+    dev: true
+
+  /meriyah@4.3.5:
+    resolution: {integrity: sha512-oCOuzPtD4udAYnvxIi4Rp99nEHJWHtAFHEFmS27hQuDNjxTQ39Z/hQ9uWW+ZgJjCmpi0nRo7wwciT7rtQE31Bw==}
+    engines: {node: '>=10.4.0'}
     dev: true
 
   /micromatch@3.1.10:

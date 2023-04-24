@@ -40,7 +40,7 @@ export function handleReply() {
     })
   })
 
-  const uploadTip = '选择、粘贴、拖放以上传图片。'
+  const uploadTip = '选择、粘贴、拖放上传图片。'
 
   const $uploadBar = $(`<div class="v2p-reply-upload-bar">${uploadTip}</div>`)
 
