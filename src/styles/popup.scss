@@ -207,11 +207,18 @@ button {
     padding: var(--common-padding);
 
     @at-root {
-      #settings-form {
-        h2 {
-          margin-bottom: 8px;
-          font-weight: bold;
-          font-size: 15px;
+      h2 {
+        margin-bottom: 8px;
+        font-weight: bold;
+        font-size: 15px;
+
+        sup {
+          margin-left: 5px;
+          padding: 2px 4px;
+          color: var(--v2p-color-orange-400);
+          font-weight: normal;
+          background-color: var(--v2p-color-orange-100);
+          border-radius: 4px;
         }
       }
 
@@ -349,16 +356,25 @@ hr {
   border-radius: 5px;
 
   @at-root {
-    #clear-storage {
-      @include share.hover-button {
-        &::before {
-          background-color: #fee2e2;
-          border-radius: 3px;
-        }
+    #clear-storage,
+    #sync-settings {
+      padding: 0 5px;
+      background-color: var(--v2p-color-main-200);
+      border-radius: 3px;
+      transition: background-color 0.2s, color 0.2s;
+    }
 
-        &:hover {
-          color: #ef4444;
-        }
+    #clear-storage {
+      &:hover {
+        color: #ef4444;
+        background-color: #fee2e2;
+      }
+    }
+
+    #sync-settings {
+      &:hover {
+        color: var(--v2p-color-accent-600);
+        background-color: var(--v2p-color-accent-100);
       }
     }
   }

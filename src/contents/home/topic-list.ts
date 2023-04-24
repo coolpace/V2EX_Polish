@@ -104,8 +104,10 @@ export async function handlingTopicList() {
                   if (isV2EX_RequestError(err)) {
                     const message = err.cause.message
                     if (
+                      /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
                       message === RequestMessage.TokenExpired ||
                       message === RequestMessage.InvalidToken
+                      /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
                     ) {
                       model.$content.empty().append(`<div>${err.cause.message}</div>`)
                     }

@@ -6,10 +6,11 @@ import type {
   Member,
   Notification,
   StorageData,
+  StorageSettings,
   Topic,
   TopicReply,
 } from './types'
-import { getPAT, isValidConfig } from './utils'
+import { getPAT, isValidSettings } from './utils'
 
 // 动态获取 V2EX 的域名，防止跨域。
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
@@ -128,15 +129,15 @@ export async function uploadImage(file: File): Promise<string> {
   throw new Error('上传失败')
 }
 
-const mark = `${EXTENSION_NAME}_config`
+const mark = `${EXTENSION_NAME}_settings`
 
-export async function getV2P_Config(): Promise<
-  { noteId: string; config: StorageData } | undefined
+export async function getV2P_Settings(): Promise<
+  { noteId: string; config: StorageSettings } | undefined
 > {
   let noteId: string | undefined
 
   {
-    const res = await fetch(`${V2EX_ORIGIN}/notes`)
+    const res = await fetch(`${V2EX.Origin}/notes`)
     const htmlText = await res.text()
     const $page = $(htmlText)
     const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
@@ -158,45 +159,53 @@ export async function getV2P_Config(): Promise<
   }
 
   if (noteId) {
-    const res = await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`)
+    const res = await fetch(`${V2EX.Origin}/notes/edit/${noteId}`)
     const htmlText = await res.text()
 
     const $editor = $(htmlText).find('#note_content.note_editor')
     const value = $editor.val()
 
     if (typeof value === 'string') {
-      const config = JSON.parse(value.replace(mark, ''))
+      const syncSettings = JSON.parse(value.replace(mark, ''))
 
-      if (isValidConfig(config)) {
-        return { noteId, config }
+      if (isValidSettings(syncSettings)) {
+        return { noteId, config: syncSettings }
       }
     }
   }
 }
 
-export async function setV2P_Config(storageData: StorageData) {
-  const data = await getV2P_Config()
+export async function setV2P_Settings(storageSettings: StorageSettings) {
+  const data = await getV2P_Settings()
 
-  if (!data) {
-    return
-  }
-
-  const { noteId } = data
+  const updating = !!data
 
   const formData = new FormData()
 
-  formData.append('content', mark + JSON.stringify(storageData))
+  const syncVersion = updating ? data.config[StorageKey.SyncInfo]!.version + 1 : 1
+
+  const syncInfo: StorageData[StorageKey.SyncInfo] = {
+    version: syncVersion,
+    lastSyncTime: Date.now(),
+  }
+
+  formData.append(
+    'content',
+    mark + JSON.stringify({ ...storageSettings, [StorageKey.SyncInfo]: syncInfo })
+  )
   formData.append('syntax', '0')
 
-  if (noteId) {
-    await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, {
+  if (updating) {
+    const { noteId } = data
+
+    await fetch(`${V2EX.Origin}/notes/edit/${noteId}`, {
       method: 'POST',
       body: formData,
     })
   } else {
     formData.append('parent_id', '0')
 
-    await fetch(`${V2EX_ORIGIN}/notes/new`, {
+    await fetch(`${V2EX.Origin}/notes/new`, {
       method: 'POST',
       body: formData,
     })

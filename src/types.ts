@@ -6,6 +6,11 @@ declare global {
   }
 }
 
+export interface SettingsSyncInfo {
+  version: number
+  lastSyncTime: number
+}
+
 export interface Options {
   openInNewTab: boolean
   autoCheckIn: {
@@ -38,11 +43,16 @@ export interface Tag {
 export type MemberTag = Record<Member['username'], { tags?: Tag[] }>
 
 export interface StorageData {
+  [StorageKey.SyncInfo]?: SettingsSyncInfo
   [StorageKey.Options]?: Options
   [StorageKey.LegacyAPI]?: LegacyAPI_Info
   [StorageKey.API]?: API_Info
   [StorageKey.Daily]?: DailyInfo
   [StorageKey.MemberTag]?: MemberTag
+}
+
+export interface StorageSettings extends StorageData {
+  [StorageKey.Options]: Options
 }
 
 export interface Member {
