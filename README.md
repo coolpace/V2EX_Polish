@@ -8,7 +8,7 @@
 
 - Chrome 和 Edge 用户请在[Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
 - 想要体验最新功能，可以[手动安装](https://github.com/coolpace/V2EX_Polish/releases)
-- [油猴脚本](https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex)（仅支持部分功能）
+- [油猴脚本](https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex)（仅支持部分功能，文档后面介绍了功能差异）
 
 > **Note**
 > 使用其他类似的脚本或插件可能会导致冲突，如果在使用过程中发现网页内容有误，建议关闭其他插件以排查问题。
@@ -45,6 +45,8 @@ _Safari 和 Firefox 浏览器正在计划支持中，敬请期待！_
 
 - 自动领取每日签到奖励。
 
+- 用户标签设置，快速标记各类用户。
+
 - ...... _更多功能等你一探究竟！_
 
 ## 为什么选择 V2EX Polish？
@@ -64,6 +66,19 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 ## 常见问题
 
 <details>
+<summary>使用油猴脚本和浏览器扩展有什么区别？</summary>
+
+油猴脚本不支持：
+
+- 所有个性化设置
+- 右键功能菜单
+- 用户标签设置
+
+浏览器扩展支持全部功能，并且经过了更多的测试。为了达到最佳的功能体验，我们更推荐你安装扩展。担心扩展的体积太大？请放心，本扩展的安装体积还不到 100 KB！我们十分关注扩展的体积和性能，一直在减少资源占用率的方向上努力。
+
+</details>
+
+<details>
 <summary>为什么有的「楼中楼」回复的楼层不正确？</summary>
 
 由于 V2EX 的原回复并没有记录回复的楼层，本扩展只能根据被回复的用户去寻找此用户的最近一条回复，然后嵌入到这后面去，这种方法并不能保证正确识别用户真正要回复的是哪一个楼层。
@@ -74,13 +89,6 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 <summary>为什么需要设置「个人访问令牌（PAT）」？</summary>
 
 PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获取消息通知 等功能时才需要设置，它是用来访问 [V2EX 开放 API](https://www.v2ex.com/help/api) 的。如果你还有没有，请前往[这里创建](https://www.v2ex.com/settings/tokens)。
-
-</details>
-
-<details>
-<summary>使用油猴脚本和浏览器扩展有什么区别？</summary>
-
-浏览器扩展支持更多功能，并且经过了更多的测试。为了达到最佳的功能体验，我们更推荐你安装扩展。担心扩展的体积太大？请放心，本扩展的安装体积还不到 100 KB！我们十分关注扩展的体积和性能，一直在减少资源占用率的方向上努力。
 
 </details>
 
