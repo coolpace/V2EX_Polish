@@ -1,6 +1,6 @@
 import { defaultOptions, StorageKey } from './constants'
 import { deepMerge } from './deep-merge'
-import type { Options, PersonalAccessToken, StorageData } from './types'
+import type { Options, PersonalAccessToken, StorageData, StorageSettings } from './types'
 
 /**
  * 获取用户的操作系统。
@@ -119,6 +119,27 @@ export function getOptions(): Promise<Options> {
 }
 
 /**
+ * 获取用户存储的自定义设置。
+ */
+export function getStorage(): Promise<StorageSettings | undefined> {
+  return new Promise((resolve) => {
+    const runEnv = getRunEnv()
+
+    if (runEnv !== 'chrome') {
+      return resolve(undefined)
+    }
+
+    chrome.storage.sync.get(null, (result: StorageData) => {
+      if (result[StorageKey.Options]) {
+        resolve(result as StorageSettings)
+      } else {
+        resolve({ ...result, [StorageKey.Options]: defaultOptions })
+      }
+    })
+  })
+}
+
+/**
  * 转义 HTML 字符串中的特殊字符。
  */
 export function escapeHTML(htmlString: string): string {
@@ -140,6 +161,6 @@ export function escapeHTML(htmlString: string): string {
   })
 }
 
-export function isValidConfig(config: any): config is StorageData {
-  return !!config && typeof config === 'object' && 'storage' in config
+export function isValidSettings(settings: any): settings is StorageSettings {
+  return !!settings && typeof settings === 'object' && StorageKey.Options in settings
 }

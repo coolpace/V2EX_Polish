@@ -100,13 +100,13 @@ export function updateMemberTag(memberName: Member['username'], tags: Tag[] | un
 
   if ($v2pTags.length > 0) {
     if (tagsValue) {
-      $v2pTags.text(`# ${tagsValue}`)
+      $v2pTags.html(`<b>#</b>&nbsp;${tagsValue}`)
     } else {
       $v2pTags.remove()
     }
   } else {
     if (tagsValue) {
-      $(`<div class="v2p-reply-tags v2p-tags-${memberName}"># ${tagsValue}</div>`)
+      $(`<div class="v2p-reply-tags v2p-tags-${memberName}"><b>#</b>&nbsp;${tagsValue}</div>`)
         .on('click', () => {
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
           openTagsSetter(memberName)
@@ -114,7 +114,7 @@ export function updateMemberTag(memberName: Member['username'], tags: Tag[] | un
         .insertBefore(
           $commentCells
             .filter(`:has(strong > a[href="/member/${memberName}"])`)
-            .find('.reply_content')
+            .find('> table .reply_content')
         )
     }
   }

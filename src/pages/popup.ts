@@ -10,9 +10,15 @@ import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
 import { iconChat, iconLoading } from '../icons'
-import { fetchHotTopics, fetchLatestTopics, fetchNotifications } from '../services'
+import {
+  fetchHotTopics,
+  fetchLatestTopics,
+  fetchNotifications,
+  getV2P_Settings,
+  setV2P_Settings,
+} from '../services'
 import type { StorageData, Topic } from '../types'
-import { escapeHTML, formatTimestamp, isSameDay } from '../utils'
+import { escapeHTML, formatTimestamp, getStorage, isSameDay } from '../utils'
 import { calculateLocalStorageSize, formatSizeUnits, isTabId } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
@@ -114,6 +120,39 @@ function loadSettings() {
   {
     $('#open-options').on('click', () => {
       chrome.runtime.openOptionsPage()
+    })
+  }
+
+  {
+    void getV2P_Settings().then((res) => {
+      const settings = res?.config
+
+      if (settings) {
+        const lastSyncTime = settings[StorageKey.SyncInfo]?.lastSyncTime
+
+        if (lastSyncTime) {
+          const time = formatTimestamp(lastSyncTime, { format: 'YMDHMS' })
+          $('.last-sync-time').text(time)
+        }
+      }
+    })
+
+    const $syncBtn = $('#sync-settings')
+
+    $syncBtn.on('click', () => {
+      void (async () => {
+        const txt = $syncBtn.text()
+        try {
+          $syncBtn.text('备份中...').css('pointer-events', 'none')
+          const storage = await getStorage()
+
+          if (storage) {
+            await setV2P_Settings(storage)
+          }
+        } finally {
+          $syncBtn.text(txt).css('pointer-events', 'auto')
+        }
+      })()
     })
   }
 }

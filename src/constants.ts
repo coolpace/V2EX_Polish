@@ -3,6 +3,7 @@ import type { Options } from './types'
 export const EXTENSION_NAME = 'V2EX_Polish'
 
 export const enum StorageKey {
+  SyncInfo = 'settings-sync',
   Options = 'options',
   LegacyAPI = 'legacy-api',
   API = 'api',
@@ -140,6 +141,6 @@ export const defaultOptions: Options = {
     enabled: true,
   },
   nestedReply: {
-    display: 'align',
+    display: 'indent',
   },
 }

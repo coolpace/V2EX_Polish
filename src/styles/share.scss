@@ -89,7 +89,7 @@
     border-radius: 5px;
     transform: scale(0.65);
     opacity: 0;
-    transition: background-color 0.2s, transform 0.2s, opacity 0.2s;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s, opacity 0.2s;
     content: '';
   }
 

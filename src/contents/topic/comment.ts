@@ -2,10 +2,10 @@ import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
-import { emoticons } from '../../constants'
+import { emoticons, StorageKey } from '../../constants'
 import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
 import type { Member } from '../../types'
-import { escapeHTML, getOptions, getOS } from '../../utils'
+import { escapeHTML, getOS, getStorage } from '../../utils'
 import {
   $commentBox,
   $commentCells,
@@ -15,7 +15,7 @@ import {
   loginName,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput, getMemberTags, insertTextToReplyInput } from '../helpers'
+import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 import { processAvatar } from './avatar'
 import { openTagsSetter, processReplyContent, updateMemberTag } from './content'
 
@@ -258,13 +258,19 @@ function insertEmojiBox() {
 }
 
 export async function handlingComments() {
+  const storage = await getStorage()
+
+  if (!storage) {
+    return
+  }
+
   {
     // 此区块的逻辑需要在处理嵌套评论前执行。
 
     const popupControl = createPopup({ root: $commentBox })
     const membersHasSetTags = new Set<Member['username']>()
 
-    const tagData = await getMemberTags()
+    const tagData = storage[StorageKey.MemberTag]
 
     $commentCells.each((i, cellDom) => {
       const currentComment = commentDataList.at(i)
@@ -314,7 +320,7 @@ export async function handlingComments() {
   }
 
   {
-    const options = await getOptions()
+    const options = storage[StorageKey.Options]
 
     const display = options.nestedReply.display
 
