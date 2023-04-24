@@ -19,6 +19,11 @@ body {
   @include share.hover-button;
 }
 
+.v2p-hover-btn-disabled {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
 .v2p-icon-heart {
   display: inline-flex;
   width: 16px;
@@ -429,7 +434,7 @@ a.v2p-topic-preview-title-link {
     height: 73px;
     overflow: hidden;
     background-color: var(--button-background-hover-color);
-    border-radius: 10px;
+    border-radius: 5px;
   }
 
   .v2p-username {
@@ -661,6 +666,7 @@ a.v2p-topic-preview-title-link {
       padding: 6px 10px;
       color: var(--v2p-color-main-500);
       font-size: 12px;
+      background-color: var(--v2p-color-bg-input);
       border-top: 1px dashed var(--v2p-color-main-300);
       cursor: pointer;
     }
@@ -780,7 +786,7 @@ a.v2p-topic-preview-title-link {
       cursor: pointer;
 
       &:hover {
-        background-color: var(--v2p-color-main-100);
+        background-color: var(--v2p-color-main-200);
       }
     }
   }

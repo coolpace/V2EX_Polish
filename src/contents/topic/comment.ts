@@ -29,7 +29,13 @@ function handlingPopularComments() {
 
   const popularCount = popularCommentData.length
 
+  const $popularBtn = $(
+    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon">${iconHeart}</span>热门回复</span>`
+  )
+  $('.v2p-tools').prepend($popularBtn)
+
   if (popularCount <= 0) {
+    $popularBtn.addClass('v2p-hover-btn-disabled').contents().last().replaceWith('暂无热门')
     return
   }
 
@@ -88,15 +94,9 @@ function handlingPopularComments() {
     const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
     const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>${popularCount} 条热门回复`
 
-    const $popularBtn = $(
-      `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon">${iconHeart}</span>热门回复</span>`
-    )
-
     $popularBtn.on('click', () => {
       model.open()
     })
-
-    $('.v2p-tools').prepend($popularBtn)
 
     commentBoxCount.empty().append(countTextSpan)
   }

@@ -17,6 +17,10 @@ body {
   overflow: overlay;
   scrollbar-gutter: stable;
 
+  h1 {
+    font-weight: bold;
+  }
+
   a {
     text-decoration: none;
     cursor: default;
