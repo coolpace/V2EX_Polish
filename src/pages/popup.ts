@@ -17,7 +17,7 @@ import {
   getV2P_Settings,
   setV2P_Settings,
 } from '../services'
-import type { StorageItems, Topic } from '../types'
+import type { Topic } from '../types'
 import { escapeHTML, formatTimestamp, getStorage, isSameDay } from '../utils'
 import { calculateLocalStorageSize, formatSizeUnits, isTabId } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
@@ -68,8 +68,8 @@ function loadSettings() {
     }
   })
 
-  chrome.storage.sync.get(StorageKey.API, (result: StorageItems) => {
-    const api = result[StorageKey.API]
+  void getStorage().then((storage) => {
+    const api = storage[StorageKey.API]
 
     if (api) {
       if (api.pat) {
@@ -233,12 +233,12 @@ function initTabs() {
     }
 
     if (tabId === TabId.Feature) {
-      chrome.storage.sync.get(StorageKey.Daily, (result: StorageItems) => {
-        const dailyInfo = result[StorageKey.Daily]
+      const $checkIn = $('.feature-check-in').on('click', () => {
+        window.open(`${V2EX.Origin}/mission/daily`)
+      })
 
-        const $checkIn = $('.feature-check-in').on('click', () => {
-          window.open(`${V2EX.Origin}/mission/daily`)
-        })
+      void getStorage().then((storage) => {
+        const dailyInfo = storage[StorageKey.Daily]
 
         if (dailyInfo?.lastCheckInTime) {
           if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
@@ -261,8 +261,8 @@ function initTabs() {
     }
 
     if (tabId === TabId.Message) {
-      chrome.storage.sync.get(StorageKey.API, (result: StorageItems) => {
-        const api = result[StorageKey.API]
+      void getStorage().then((storage) => {
+        const api = storage[StorageKey.API]
 
         if (api?.pat) {
           const loaded = $tabContent.find('.list').length > 0

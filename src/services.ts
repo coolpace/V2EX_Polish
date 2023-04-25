@@ -57,19 +57,19 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
     headers: { Authorization: PAT ? `Bearer ${PAT}` : '', ...options?.headers },
   })
 
-  const limit = res.headers.get('X-Rate-Limit-Limit')
-  const reset = res.headers.get('X-Rate-Limit-Reset')
-  const remaining = res.headers.get('X-Rate-Limit-Remaining')
+  {
+    const limit = res.headers.get('X-Rate-Limit-Limit')
+    const reset = res.headers.get('X-Rate-Limit-Reset')
+    const remaining = res.headers.get('X-Rate-Limit-Remaining')
 
-  chrome.storage.sync.get(StorageKey.API, (result: StorageItems) => {
     const api: API_Info = {
-      pat: result[StorageKey.API]?.pat,
+      pat: PAT,
       limit: limit ? Number(limit) : undefined,
       reset: reset ? Number(reset) : undefined,
       remaining: remaining ? Number(remaining) : undefined,
     }
     void chrome.storage.sync.set({ [StorageKey.API]: api })
-  })
+  }
 
   const resultData: DataWrapper<Data> = await res.json()
 
