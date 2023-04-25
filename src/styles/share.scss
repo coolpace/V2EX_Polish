@@ -30,7 +30,7 @@
   user-select: none;
 
   &:hover:enabled {
-    color: var(--button-foreground-color);
+    color: var(--button-foreground-hover-color);
     font-weight: 500;
     text-shadow: none;
     background: var(--button-hover-color);
@@ -138,7 +138,7 @@
   min-width: 30px;
   padding: 2px 5px;
   overflow: hidden;
-  color: var(--v2p-color-main-800);
+  color: var(--v2p-color-foreground);
   font-size: 12px;
   white-space: nowrap;
   text-align: center;

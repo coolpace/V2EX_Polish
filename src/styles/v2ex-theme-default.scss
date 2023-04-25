@@ -325,10 +325,20 @@ body {
       padding: 3px;
       background-color: var(--v2p-color-background);
 
-      & > input[type='radio'] + label {
-        font-size: 13px;
-        cursor: pointer;
+      & > input[type='radio'] {
+        &:checked + label {
+          background-color: var(--v2p-color-accent-100);
+        }
+
+        + label {
+          font-size: 13px;
+          cursor: pointer;
+        }
       }
+    }
+
+    label {
+      color: var(--v2p-color-foreground);
     }
   }
 
@@ -356,10 +366,10 @@ body {
 
   // https://www.v2ex.com/i/about
   a.btn_hero {
-    border-color: var(--v2p-color-main-800);
+    border-color: var(--v2p-color-foreground);
 
     &:hover {
-      background-color: var(--v2p-color-main-800);
+      background-color: var(--v2p-color-foreground);
     }
   }
 
@@ -391,6 +401,16 @@ body {
         color: var(--v2p-color-accent-500);
         background-color: var(--v2p-color-accent-50);
       }
+    }
+  }
+
+  // 选择主题节点的下拉选择框。
+  .select2-container--default .select2-selection--single {
+    background-color: var(--v2p-color-background);
+    border: 1px solid var(--v2p-color-border);
+
+    .select2-selection__placeholder {
+      color: var(--v2p-color-foreground);
     }
   }
 }
@@ -447,7 +467,7 @@ body {
       border-radius: 4px;
 
       &:hover {
-        color: var(--v2p-color-main-800);
+        color: var(--v2p-color-foreground);
       }
 
       &:not(.v2p-hover-btn):hover {
@@ -535,12 +555,12 @@ body {
   }
 
   .cell_tab_current {
-    border-color: var(--v2p-color-main-800);
+    border-color: var(--v2p-color-foreground);
   }
 
   .cell {
     .topic-link {
-      color: var(--v2p-color-main-800);
+      color: var(--v2p-color-foreground);
       text-decoration: none;
 
       &:visited {
@@ -637,21 +657,6 @@ body {
             }
           }
         }
-
-        /* 嵌套的回复 */
-        ~ .cell[id^='r'] {
-          --bg-reply: var(--v2p-color-main-100);
-
-          border-color: var(--v2p-color-main-300);
-
-          .cell[id^='r'] {
-            --bg-reply: var(--v2p-color-main-100);
-
-            &.v2p-indent {
-              border-color: var(--v2p-color-main-350);
-            }
-          }
-        }
       }
     }
 
@@ -675,13 +680,13 @@ body {
 
       /* 嵌套的回复 */
       ~ .cell[id^='r'] {
-        --bg-reply: var(--v2p-color-main-50);
+        --bg-reply: var(--v2p-color-bg-reply);
 
         position: relative;
         z-index: var(--zidx-expand-btn);
         padding: 15px 0 0 15px;
         border: none;
-        box-shadow: -3px 0 var(--v2p-color-main-200);
+        box-shadow: -2.4px 0 var(--v2p-color-border-reply);
 
         /* 多层嵌套 */
         .cell[id^='r'] {
@@ -690,7 +695,7 @@ body {
 
           &.v2p-indent {
             padding-left: 15px; /* 取消靠左对齐，逐层缩进 */
-            border-left: 1px solid var(--v2p-color-main-300);
+            border-left: 1px solid var(--v2p-color-border-reply);
           }
         }
 
@@ -901,7 +906,7 @@ body {
       }
 
       .payload {
-        color: var(--v2p-color-main-800);
+        color: var(--v2p-color-foreground);
         background-color: var(--v2p-color-main-100);
       }
     }
