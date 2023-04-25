@@ -67,7 +67,7 @@ chrome.alarms.get(checkInAlarmName, (alarm) => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === checkInAlarmName) {
-    void getOptions().then((options) => {
+    void getOptions(false).then((options) => {
       if (options.autoCheckIn.enabled) {
         void checkIn()
       }

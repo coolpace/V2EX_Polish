@@ -102,8 +102,8 @@ export function processAvatar(params: ProcessAvatar) {
         const $actions = $('<div class="v2p-member-card-actions">')
         createButton({ children: '添加用户标签' })
           .on('click', () => {
-            onSetTags?.()
             popupControl.close()
+            onSetTags?.()
           })
           .appendTo($actions)
         $content.append($actions)

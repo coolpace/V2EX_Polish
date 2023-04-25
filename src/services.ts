@@ -5,7 +5,7 @@ import type {
   ImgurResponse,
   Member,
   Notification,
-  StorageData,
+  StorageItems,
   StorageSettings,
   Topic,
   TopicReply,
@@ -61,7 +61,7 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
   const reset = res.headers.get('X-Rate-Limit-Reset')
   const remaining = res.headers.get('X-Rate-Limit-Remaining')
 
-  chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
+  chrome.storage.sync.get(StorageKey.API, (result: StorageItems) => {
     const api: API_Info = {
       pat: result[StorageKey.API]?.pat,
       limit: limit ? Number(limit) : undefined,
@@ -184,7 +184,7 @@ export async function setV2P_Settings(storageSettings: StorageSettings) {
 
   const syncVersion = updating ? data.config[StorageKey.SyncInfo]!.version + 1 : 1
 
-  const syncInfo: StorageData[StorageKey.SyncInfo] = {
+  const syncInfo: StorageItems[StorageKey.SyncInfo] = {
     version: syncVersion,
     lastSyncTime: Date.now(),
   }

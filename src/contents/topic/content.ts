@@ -2,9 +2,9 @@ import { createButton } from '../../components/button'
 import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
 import type { Member, Tag } from '../../types'
-import { getOptions } from '../../utils'
+import { getMemberTags, getOptions } from '../../utils'
 import { $commentCells, $topicContentBox } from '../globals'
-import { getMemberTags, setMemberTags } from '../helpers'
+import { setMemberTags } from '../helpers'
 
 /**
  * 处理主题的正文内容。
@@ -113,7 +113,7 @@ export function updateMemberTag(memberName: Member['username'], tags: Tag[] | un
         })
         .insertBefore(
           $commentCells
-            .filter(`:has(strong > a[href="/member/${memberName}"])`)
+            .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
             .find('> table .reply_content')
         )
     }
@@ -122,7 +122,7 @@ export function updateMemberTag(memberName: Member['username'], tags: Tag[] | un
 
 export function openTagsSetter(memberName: Member['username']) {
   void (async () => {
-    const latestTagsData = await getMemberTags()
+    const latestTagsData = await getMemberTags(false)
 
     const tagsValue = latestTagsData
       ? Reflect.has(latestTagsData, memberName)

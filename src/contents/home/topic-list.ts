@@ -1,16 +1,18 @@
 import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
-import { RequestMessage } from '../../constants'
+import { RequestMessage, StorageKey } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import type { Topic, TopicReply } from '../../types'
-import { escapeHTML, formatTimestamp, getOptions, getPAT } from '../../utils'
+import { escapeHTML, formatTimestamp, getStorage } from '../../utils'
 import { $topicList } from '../globals'
 import { isV2EX_RequestError } from '../helpers'
 
 export async function handlingTopicList() {
-  const options = await getOptions()
-  const PAT = await getPAT()
+  const storage = await getStorage()
+
+  const options = storage[StorageKey.Options]
+  const PAT = storage[StorageKey.API]?.pat
 
   let abortController: AbortController | null = null
 
@@ -87,11 +89,6 @@ export async function handlingTopicList() {
 
                   const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
 
-                  $titleLink.prop('href', topic.url)
-                  if (options.openInNewTab) {
-                    $titleLink.prop('target', '_blank')
-                  }
-
                   const data = {
                     topic,
                     topicReplies,
@@ -119,6 +116,11 @@ export async function handlingTopicList() {
                 const { topic, topicReplies } = cacheData
 
                 const $topicPreview = $('<div class="v2p-topic-preview">')
+
+                $titleLink.prop('href', topic.url)
+                if (options.openInNewTab) {
+                  $titleLink.prop('target', '_blank')
+                }
 
                 const $infoBar = $(`
                   <div class="v2p-tp-info">

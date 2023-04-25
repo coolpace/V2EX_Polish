@@ -260,17 +260,14 @@ function insertEmojiBox() {
 export async function handlingComments() {
   const storage = await getStorage()
 
-  if (!storage) {
-    return
-  }
+  const tagData = storage[StorageKey.MemberTag]
+  const options = storage[StorageKey.Options]
 
   {
     // 此区块的逻辑需要在处理嵌套评论前执行。
 
     const popupControl = createPopup({ root: $commentBox })
     const membersHasSetTags = new Set<Member['username']>()
-
-    const tagData = storage[StorageKey.MemberTag]
 
     $commentCells.each((i, cellDom) => {
       const currentComment = commentDataList.at(i)
@@ -320,8 +317,6 @@ export async function handlingComments() {
   }
 
   {
-    const options = storage[StorageKey.Options]
-
     const display = options.nestedReply.display
 
     $commentCells.each((i, cellDom) => {
