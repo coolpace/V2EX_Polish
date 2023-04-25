@@ -1,5 +1,5 @@
 import { StorageKey, V2EX } from '../constants'
-import type { DailyInfo, StorageData } from '../types'
+import type { DailyInfo, StorageItems } from '../types'
 import { isSameDay } from '../utils'
 
 const successText = '每日登录奖励已领取'
@@ -27,7 +27,7 @@ export async function checkIn() {
     return
   }
 
-  const result: StorageData = await chrome.storage.sync.get(StorageKey.Daily)
+  const result: StorageItems = await chrome.storage.sync.get(StorageKey.Daily)
   const lastCheckInTime = result[StorageKey.Daily]?.lastCheckInTime
 
   if (lastCheckInTime) {

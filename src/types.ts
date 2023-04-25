@@ -3,6 +3,7 @@ import type { StorageKey } from './constants'
 declare global {
   interface Window {
     __V2P_DecodeStatus__?: 'decodeed'
+    __V2P_StorageCache?: StorageSettings
   }
 }
 
@@ -42,7 +43,7 @@ export interface Tag {
 
 export type MemberTag = Record<Member['username'], { tags?: Tag[] }>
 
-export interface StorageData {
+export interface StorageItems {
   [StorageKey.SyncInfo]?: SettingsSyncInfo
   [StorageKey.Options]?: Options
   [StorageKey.LegacyAPI]?: LegacyAPI_Info
@@ -51,7 +52,7 @@ export interface StorageData {
   [StorageKey.MemberTag]?: MemberTag
 }
 
-export interface StorageSettings extends StorageData {
+export interface StorageSettings extends StorageItems {
   [StorageKey.Options]: Options
 }
 

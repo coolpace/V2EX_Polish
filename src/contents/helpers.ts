@@ -1,6 +1,6 @@
 import { StorageKey } from '../constants'
-import type { Member, MemberTag, StorageData, Tag, V2EX_RequestErrorResponce } from '../types'
-import { getRunEnv } from '../utils'
+import type { Member, MemberTag, Tag, V2EX_RequestErrorResponce } from '../types'
+import { getMemberTags, getRunEnv } from '../utils'
 import { replyTextArea } from './globals'
 
 export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorResponce {
@@ -47,21 +47,6 @@ export function insertTextToReplyInput(text: string) {
   }
 }
 
-export async function getMemberTags(): Promise<MemberTag | undefined> {
-  return new Promise((resolve) => {
-    const runEnv = getRunEnv()
-
-    if (runEnv !== 'chrome') {
-      return resolve(undefined)
-    }
-
-    chrome.storage.sync.get(StorageKey.MemberTag, (result: StorageData) => {
-      const memberTag = result[StorageKey.MemberTag]
-      resolve(memberTag)
-    })
-  })
-}
-
 export async function setMemberTags(memberName: Member['username'], tags: Tag[] | undefined) {
   const runEnv = getRunEnv()
 
@@ -69,7 +54,7 @@ export async function setMemberTags(memberName: Member['username'], tags: Tag[] 
     return
   }
 
-  const tagData = await getMemberTags()
+  const tagData = await getMemberTags(false)
 
   if (tags && tags.length > 0) {
     const newTagData: MemberTag = { ...tagData, [memberName]: { tags } }

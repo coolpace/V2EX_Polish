@@ -1,6 +1,12 @@
 import { defaultOptions, StorageKey } from './constants'
 import { deepMerge } from './deep-merge'
-import type { Options, PersonalAccessToken, StorageData, StorageSettings } from './types'
+import type {
+  MemberTag,
+  Options,
+  PersonalAccessToken,
+  StorageItems,
+  StorageSettings,
+} from './types'
 
 /**
  * 获取用户的操作系统。
@@ -79,64 +85,65 @@ export function getRunEnv(): 'chrome' | null {
 }
 
 /**
+ * 获取用户存储的应用数据。
+ */
+export function getStorage(useCache = true): Promise<StorageSettings> {
+  return new Promise((resolve, reject) => {
+    if (useCache) {
+      if (typeof window !== 'undefined' && window.__V2P_StorageCache) {
+        resolve(window.__V2P_StorageCache)
+      }
+    }
+
+    const runEnv = getRunEnv()
+
+    if (runEnv !== 'chrome') {
+      return resolve({ [StorageKey.Options]: defaultOptions })
+    }
+
+    chrome.storage.sync
+      .get()
+      .then((items: StorageItems) => {
+        let data: StorageSettings
+
+        const options = items[StorageKey.Options]
+
+        if (options) {
+          data = { ...items, [StorageKey.Options]: deepMerge(defaultOptions, options) }
+        } else {
+          data = { ...items, [StorageKey.Options]: defaultOptions }
+        }
+
+        if (typeof window !== 'undefined') {
+          window.__V2P_StorageCache = data
+        }
+        resolve(data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+/**
+ * 获取用户存储的自定义设置。
+ */
+export async function getOptions(useCache = true): Promise<Options> {
+  const storage = await getStorage(useCache)
+  return storage[StorageKey.Options]
+}
+
+/**
  * 获取用户设置存储的个人访问令牌。
  */
-export function getPAT(): Promise<PersonalAccessToken> {
-  return new Promise((resolve) => {
-    const runEnv = getRunEnv()
-
-    if (runEnv !== 'chrome') {
-      return resolve(undefined)
-    }
-
-    chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
-      resolve(result[StorageKey.API]?.pat)
-    })
-  })
+export async function getPAT(useCache = true): Promise<PersonalAccessToken> {
+  const storage = await getStorage(useCache)
+  return storage[StorageKey.API]?.pat
 }
 
-/**
- * 获取用户存储的自定义设置。
- */
-export function getOptions(): Promise<Options> {
-  return new Promise((resolve) => {
-    const runEnv = getRunEnv()
-
-    if (runEnv !== 'chrome') {
-      return resolve(defaultOptions)
-    }
-
-    chrome.storage.sync.get(StorageKey.Options, (result: StorageData) => {
-      const options = result[StorageKey.Options]
-
-      if (options) {
-        resolve(deepMerge(defaultOptions, options))
-      } else {
-        resolve(defaultOptions)
-      }
-    })
-  })
-}
-
-/**
- * 获取用户存储的自定义设置。
- */
-export function getStorage(): Promise<StorageSettings | undefined> {
-  return new Promise((resolve) => {
-    const runEnv = getRunEnv()
-
-    if (runEnv !== 'chrome') {
-      return resolve(undefined)
-    }
-
-    chrome.storage.sync.get(null, (result: StorageData) => {
-      if (result[StorageKey.Options]) {
-        resolve(result as StorageSettings)
-      } else {
-        resolve({ ...result, [StorageKey.Options]: defaultOptions })
-      }
-    })
-  })
+export async function getMemberTags(useCache = true): Promise<MemberTag | undefined> {
+  const storage = await getStorage(useCache)
+  return storage[StorageKey.MemberTag]
 }
 
 /**

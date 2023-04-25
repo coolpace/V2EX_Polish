@@ -17,7 +17,7 @@ import {
   getV2P_Settings,
   setV2P_Settings,
 } from '../services'
-import type { StorageData, Topic } from '../types'
+import type { StorageItems, Topic } from '../types'
 import { escapeHTML, formatTimestamp, getStorage, isSameDay } from '../utils'
 import { calculateLocalStorageSize, formatSizeUnits, isTabId } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
@@ -68,7 +68,7 @@ function loadSettings() {
     }
   })
 
-  chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
+  chrome.storage.sync.get(StorageKey.API, (result: StorageItems) => {
     const api = result[StorageKey.API]
 
     if (api) {
@@ -145,10 +145,7 @@ function loadSettings() {
         try {
           $syncBtn.text('备份中...').css('pointer-events', 'none')
           const storage = await getStorage()
-
-          if (storage) {
-            await setV2P_Settings(storage)
-          }
+          await setV2P_Settings(storage)
         } finally {
           $syncBtn.text(txt).css('pointer-events', 'auto')
         }
@@ -236,7 +233,7 @@ function initTabs() {
     }
 
     if (tabId === TabId.Feature) {
-      chrome.storage.sync.get(StorageKey.Daily, (result: StorageData) => {
+      chrome.storage.sync.get(StorageKey.Daily, (result: StorageItems) => {
         const dailyInfo = result[StorageKey.Daily]
 
         const $checkIn = $('.feature-check-in').on('click', () => {
@@ -264,7 +261,7 @@ function initTabs() {
     }
 
     if (tabId === TabId.Message) {
-      chrome.storage.sync.get(StorageKey.API, (result: StorageData) => {
+      chrome.storage.sync.get(StorageKey.API, (result: StorageItems) => {
         const api = result[StorageKey.API]
 
         if (api?.pat) {
