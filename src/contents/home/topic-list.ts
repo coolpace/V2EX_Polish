@@ -4,11 +4,17 @@ import { RequestMessage, StorageKey } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import type { Topic, TopicReply } from '../../types'
-import { escapeHTML, formatTimestamp, getStorage } from '../../utils'
+import { escapeHTML, formatTimestamp, getRunEnv, getStorage } from '../../utils'
 import { $topicList } from '../globals'
 import { isV2EX_RequestError } from '../helpers'
 
 export async function handlingTopicList() {
+  const runEnv = getRunEnv()
+
+  if (!runEnv) {
+    return
+  }
+
   const storage = await getStorage()
 
   const options = storage[StorageKey.Options]
