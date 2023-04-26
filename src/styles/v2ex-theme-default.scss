@@ -648,6 +648,10 @@ body {
 
     background-color: var(--bg-reply);
 
+    &:not(:has(+ .cell[id^='r'])) {
+      border-bottom: none; // 去除最后一条回复的底边框。
+    }
+
     &:hover {
       > table {
         td:last-of-type {
@@ -686,6 +690,7 @@ body {
         z-index: var(--zidx-expand-btn);
         padding: 15px 0 0 15px;
         border: none;
+        border-radius: 0;
         box-shadow: -2.4px 0 var(--v2p-color-border-reply);
 
         /* 多层嵌套 */

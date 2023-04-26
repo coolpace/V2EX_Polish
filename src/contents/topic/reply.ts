@@ -23,6 +23,7 @@ export function handleReply() {
     root: $replyBox,
     trigger: $tools,
     content: $toolContent,
+    offsetOptions: { mainAxis: 5, crossAxis: -5 },
   })
 
   $toolContent.find('.v2p-reply-tool-encode').on('click', () => {

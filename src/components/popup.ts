@@ -1,4 +1,11 @@
-import { computePosition, type ComputePositionConfig, flip, offset, shift } from '@floating-ui/dom'
+import {
+  computePosition,
+  type ComputePositionConfig,
+  flip,
+  offset,
+  type OffsetOptions,
+  shift,
+} from '@floating-ui/dom'
 
 import { createToast } from './toast'
 
@@ -24,13 +31,23 @@ interface CreatePopupProps {
   onOpen?: () => void
   /** Popup 关闭时触发的回调 */
   onClose?: () => void
+
+  offsetOptions?: OffsetOptions
 }
 
 /**
  * 创建 Popup 框。
  */
 export function createPopup(props: CreatePopupProps): PopupControl {
-  const { root, trigger, content, options, onOpen, onClose } = props
+  const {
+    root,
+    trigger,
+    content,
+    options,
+    onOpen,
+    onClose,
+    offsetOptions = { mainAxis: 5, crossAxis: 5 },
+  } = props
 
   const $popupContent = $('<div class="v2p-popup-content">')
   const $popup = $('<div class="v2p-popup" tabindex="0">')
@@ -74,7 +91,7 @@ export function createPopup(props: CreatePopupProps): PopupControl {
 
     computePosition(referenceElement, popup, {
       placement: 'bottom-start',
-      middleware: [offset({ mainAxis: 10, crossAxis: -4 }), flip(), shift({ padding: 8 })],
+      middleware: [offset(offsetOptions), flip(), shift({ padding: 8 })],
       ...options,
     })
       .then(({ x, y }) => {

@@ -266,7 +266,10 @@ export async function handlingComments() {
   {
     // 此区块的逻辑需要在处理嵌套评论前执行。
 
-    const popupControl = createPopup({ root: $commentBox })
+    const popupControl = createPopup({
+      root: $commentBox,
+      offsetOptions: { mainAxis: 10, crossAxis: -4 },
+    })
     const membersHasSetTags = new Set<Member['username']>()
 
     $commentCells.each((i, cellDom) => {
