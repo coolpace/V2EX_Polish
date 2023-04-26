@@ -131,6 +131,9 @@ export async function uploadImage(file: File): Promise<string> {
 
 const mark = `${EXTENSION_NAME}_settings`
 
+/**
+ * 获取存储的个人配置备份。
+ */
 export async function getV2P_Settings(): Promise<
   { noteId: string; config: StorageSettings } | undefined
 > {
@@ -175,6 +178,9 @@ export async function getV2P_Settings(): Promise<
   }
 }
 
+/**
+ * 将个人配置备份存储。
+ */
 export async function setV2P_Settings(storageSettings: StorageSettings) {
   const data = await getV2P_Settings()
 
@@ -210,4 +216,6 @@ export async function setV2P_Settings(storageSettings: StorageSettings) {
       body: formData,
     })
   }
+
+  await chrome.storage.sync.set({ [StorageKey.SyncInfo]: syncInfo })
 }
