@@ -88,7 +88,7 @@ V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护�
 <details>
 <summary>为什么需要设置「个人访问令牌（PAT）」？</summary>
 
-PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获取消息通知 等功能时才需要设置，它是用来访问 [V2EX 开放 API](https://www.v2ex.com/help/api) 的。如果你还有没有，请前往[这里创建](https://www.v2ex.com/settings/tokens)。
+PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获取消息通知 等功能时才需要设置，它是用来访问 [V2EX 开放 API](https://www.v2ex.com/help/api) 的。如果你还没有，请前往[这里创建](https://www.v2ex.com/settings/tokens)。
 
 </details>
 
