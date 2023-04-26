@@ -164,7 +164,10 @@ export async function handlingTopicList() {
                           <a href="${r.member.url}">
                             <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
                             <span>${r.member.username}</span>
-                            <span style="display: ${op === r.member.username ? 'unset' : 'none'};">
+                            <span style="
+                              display: ${op === r.member.username ? 'unset' : 'none'};
+                              margin-left:${op === r.member.username ? '3px' : '0'};
+                            ">
                               <span class="badge op mini">OP</span>
                             </span>
                           </a>：
