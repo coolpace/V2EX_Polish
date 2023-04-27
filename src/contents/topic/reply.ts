@@ -143,7 +143,6 @@ export function handleReply() {
     document.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
         ev.preventDefault()
-        console.log(123)
         $('#reply-box form[action^="/t"]').trigger('submit')
       }
     })
