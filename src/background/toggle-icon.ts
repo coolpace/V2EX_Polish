@@ -1,6 +1,7 @@
+import { MessageKey } from '../constants'
+
 const setColorScheme = (perfersDark: boolean) => {
-  const colorScheme = perfersDark ? 'dark' : 'light'
-  void chrome.runtime.sendMessage({ colorScheme })
+  void chrome.runtime.sendMessage({ [MessageKey.colorScheme]: perfersDark ? 'dark' : 'light' })
 }
 
 const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')

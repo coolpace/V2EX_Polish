@@ -145,3 +145,8 @@ export const defaultOptions: Options = {
     display: 'indent',
   },
 }
+
+export const enum MessageKey {
+  action = 'action',
+  colorScheme = 'colorSchemes',
+}

@@ -274,6 +274,26 @@ a.v2p-topic-preview-title-link {
     border-radius: 2px;
   }
 
+  .v2p-no-pat-steps {
+    display: flex;
+    gap: 20px;
+    max-width: 800px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--v2p-color-main-100);
+    border-radius: 10px;
+  }
+
+  .v2p-no-pat-step {
+    flex: 1;
+  }
+
+  .v2p-no-pat-img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: var(--v2p-widget-shadow);
+  }
+
   .v2p-icon-logo {
     width: 15px;
     height: 15px;
