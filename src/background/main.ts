@@ -1,15 +1,20 @@
-import { Menu } from '../constants'
+import { Menu, MessageKey } from '../constants'
 import { getOptions } from '../utils'
 import { checkIn } from './daily-check-in'
 
 interface Message {
-  colorScheme: 'dark' | 'light'
+  [MessageKey.action]?: 'openPopup'
+  [MessageKey.colorScheme]?: 'dark' | 'light'
 }
 
 chrome.runtime.onMessage.addListener((message: Message) => {
+  // if (message[MessageKey.action] === 'openPopup') {
+  //   void chrome.action.openPopup()
+  // }
+
   void chrome.action.setIcon({
     path:
-      message.colorScheme === 'dark'
+      message[MessageKey.colorScheme] === 'dark'
         ? {
             16: '../images/icon-16-dark.png',
             32: '../images/icon-32-dark.png',
