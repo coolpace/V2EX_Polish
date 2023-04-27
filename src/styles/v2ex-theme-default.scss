@@ -421,6 +421,12 @@ body {
     border-color: var(--v2p-color-orange-400);
     border-bottom: none;
   }
+
+  // 正文内容的表格。
+  .markdown_body table tr th {
+    color: currentColor;
+    border: 1px solid var(--v2p-color-border);
+  }
 }
 
 /* ====== 帖子标签 ====== */
