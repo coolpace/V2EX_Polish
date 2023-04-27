@@ -20,4 +20,11 @@
 		<th width="50%">
 			<p>快速浏览主题列表
 			<p><img src="https://i.imgur.com/Jcb2w1X.gif">
+	<tr>
+		<th width="50%">
+			<p>楼中楼嵌套回复
+			<p><img src="https://i.imgur.com/13EBDrV.png">
+		<th width="50%">
+			<p>热门回复展示
+			<p><img src="https://i.imgur.com/IyffX1w.png">
 </table>
