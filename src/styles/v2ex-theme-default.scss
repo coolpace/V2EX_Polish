@@ -413,6 +413,14 @@ body {
       color: var(--v2p-color-foreground);
     }
   }
+
+  // 提示回复没有内容。
+  .problem {
+    color: currentColor;
+    background-color: var(--v2p-color-orange-50);
+    border-color: var(--v2p-color-orange-400);
+    border-bottom: none;
+  }
 }
 
 /* ====== 帖子标签 ====== */
