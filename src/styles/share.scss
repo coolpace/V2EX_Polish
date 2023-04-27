@@ -29,7 +29,7 @@
   transition: color 0.25s, background-color 0.25s, box-shadow 0.25s;
   user-select: none;
 
-  &:hover:enabled {
+  &:is(:hover:enabled, :active:enabled) {
     color: var(--button-foreground-hover-color);
     font-weight: 500;
     text-shadow: none;
