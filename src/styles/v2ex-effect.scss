@@ -52,10 +52,6 @@ body {
       top: 20px;
       z-index: var(--zidx-tools-card);
 
-      > .cell {
-        font-size: 13px;
-      }
-
       .v2p-tools {
         display: grid;
         grid-auto-rows: auto;
