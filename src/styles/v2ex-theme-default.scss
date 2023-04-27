@@ -800,7 +800,9 @@ body {
     flex-wrap: wrap;
     gap: 6px 8px;
     align-items: center;
+    padding: 10px;
     background-color: var(--v2p-color-bg-content);
+    border-bottom: 1px solid var(--box-border-color);
     user-select: none;
 
     .tab {
@@ -935,9 +937,24 @@ body {
 /* ================================================================ */
 
 #Rightbar {
-  .balance_area {
-    display: flex;
-    align-items: center;
+  #money {
+    a.balance_area:is(:link, :visited) {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      color: var(--v2p-color-foreground);
+      font-weight: 600;
+      text-shadow: none;
+      background: var(--v2p-color-main-100);
+
+      &:hover {
+        background: var(--v2p-color-main-200);
+      }
+    }
+  }
+
+  .cell:has(.light-toggle) {
+    font-size: 13px;
   }
 
   a.dark:is(:link, :active, :visited, :hover) {
