@@ -427,6 +427,16 @@ body {
     color: currentColor;
     border: 1px solid var(--v2p-color-border);
   }
+
+  // 个人页的链接。
+  .social_label:is(:link, :visited, :active) {
+    background-color: var(--v2p-color-main-100);
+    box-shadow: none;
+
+    &:hover {
+      background-color: var(--v2p-color-main-200);
+    }
+  }
 }
 
 /* ====== 帖子标签 ====== */
@@ -503,9 +513,8 @@ body {
     }
   }
 
+  /* ====== 帖子操作按钮 ====== */
   .topic_buttons {
-    /* ====== 帖子操作按钮 ====== */
-
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -566,10 +575,6 @@ body {
     &:hover {
       box-shadow: 0 2px 2px var(--v2p-color-main-200);
     }
-  }
-
-  .cell_tab_current {
-    border-color: var(--v2p-color-foreground);
   }
 
   .cell {
@@ -929,6 +934,21 @@ body {
       .payload {
         color: var(--v2p-color-foreground);
         background-color: var(--v2p-color-main-100);
+      }
+    }
+  }
+
+  .cell_tabs {
+    .cell_tab_current {
+      font-weight: bold;
+      border-color: var(--v2p-color-foreground);
+    }
+
+    .cell_tab {
+      color: var(--v2p-color-foreground);
+
+      &:hover {
+        border-color: var(--v2p-color-main-300);
       }
     }
   }

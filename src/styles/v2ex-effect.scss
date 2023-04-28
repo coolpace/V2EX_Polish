@@ -276,6 +276,7 @@ a.v2p-topic-preview-title-link {
 
   .v2p-no-pat-steps {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     max-width: 800px;
     margin-top: 20px;
