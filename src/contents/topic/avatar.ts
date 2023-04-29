@@ -1,5 +1,5 @@
 import { createButton } from '../../components/button'
-import type { PopupControl } from '../../components/popup'
+import { hoverDelay, type PopupControl } from '../../components/popup'
 import { fetchUserInfo } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { formatTimestamp, getOptions } from '../../utils'
@@ -24,25 +24,25 @@ export function processAvatar(params: ProcessAvatar) {
 
   const $avatar = $cellDom.find('.avatar')
 
-  $avatar.on('click', () => {
+  const handleOver = () => {
     popupControl.close()
     popupControl.open($avatar)
 
     const $content = $(`
-      <div class="v2p-member-card">
-        <div class="v2p-info">
-          <div class="v2p-info-left">
-            <div class="v2p-avatar-box"></div>
-          </div>
+    <div class="v2p-member-card">
+      <div class="v2p-info">
+        <div class="v2p-info-left">
+          <div class="v2p-avatar-box"></div>
+        </div>
 
-          <div class="v2p-info-right">
-            <div class="v2p-username v2p-loading"></div>
-            <div class="v2p-no v2p-loading"></div>
-            <div class="v2p-created-date v2p-loading"></div>
-          </div>
+        <div class="v2p-info-right">
+          <div class="v2p-username v2p-loading"></div>
+          <div class="v2p-no v2p-loading"></div>
+          <div class="v2p-created-date v2p-loading"></div>
         </div>
       </div>
-    `)
+    </div>
+  `)
 
     popupControl.$content.empty().append($content)
 
@@ -109,5 +109,19 @@ export function processAvatar(params: ProcessAvatar) {
         $content.append($actions)
       }
     })()
-  })
+  }
+
+  $avatar
+    .on('mouseover', () => {
+      setTimeout(() => {
+        handleOver()
+      }, hoverDelay)
+    })
+    .on('mouseleave', () => {
+      setTimeout(() => {
+        if (!popupControl.isOver) {
+          popupControl.close()
+        }
+      }, hoverDelay)
+    })
 }
