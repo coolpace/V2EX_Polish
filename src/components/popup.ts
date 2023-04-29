@@ -9,11 +9,14 @@ import {
 
 import { createToast } from './toast'
 
+export const hoverDelay = 350
+
 interface PopupElements {
   $content: JQuery
 }
 
 export interface PopupControl extends PopupElements, Pick<CreatePopupProps, 'onClose'> {
+  isOver: boolean
   open: (reference?: JQuery) => void
   close: () => void
 }
@@ -23,6 +26,8 @@ interface CreatePopupProps {
   root: JQuery
   /** 触发 Popup 的元素 */
   trigger?: JQuery
+  /** 触发的方式 */
+  triggerType?: 'click' | 'hover'
   /** Popup 内部的渲染元素 */
   content?: JQuery
   /** 计算定位方法的配置项 */
@@ -42,6 +47,7 @@ export function createPopup(props: CreatePopupProps): PopupControl {
   const {
     root,
     trigger,
+    triggerType = 'click',
     content,
     options,
     onOpen,
@@ -111,10 +117,28 @@ export function createPopup(props: CreatePopupProps): PopupControl {
 
   const popupControl: PopupControl = {
     $content: $popupContent,
+    isOver: false,
     open: (reference) => {
       handlePopupOpen(reference)
     },
     close: handlePopupClose,
+  }
+
+  if (triggerType === 'hover') {
+    $popup.on('mouseover', () => {
+      if (!popupControl.isOver) {
+        popupControl.isOver = true
+
+        $popup.off('mouseleave').on('mouseleave', () => {
+          popupControl.isOver = false
+          setTimeout(() => {
+            if (!popupControl.isOver) {
+              popupControl.close()
+            }
+          }, hoverDelay)
+        })
+      }
+    })
   }
 
   trigger?.on('click', () => {
