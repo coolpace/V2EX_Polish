@@ -38,8 +38,7 @@
     box-shadow: var(--button-hover-shadow);
   }
 
-  &.hover_now,
-  &.disable_now {
+  &:is(.hover_now, .disable_now) {
     color: var(--button-foreground-color) !important;
     text-shadow: none !important;
     background: var(--button-background-color) !important;
@@ -48,9 +47,15 @@
       0 1.8px 0 var(--button-background-color) !important;
   }
 
-  &.disable_now {
+  &:is(.disable_now, :disabled) {
+    color: var(--button-foreground-color);
+    font-weight: 500;
+    text-shadow: none;
+    background: var(--button-background-color);
+    box-shadow: 0 1.8px 0 var(--box-background-hover-color),
+      0 1.8px 0 var(--button-background-color);
     cursor: default;
-    opacity: 0.5;
+    opacity: 0.8;
     pointer-events: none;
   }
 

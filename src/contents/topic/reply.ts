@@ -1,8 +1,110 @@
+import { createButton } from '../../components/button'
 import { createPopup } from '../../components/popup'
-import { iconTool } from '../../icons'
+import { emoticons } from '../../constants'
+import { iconEmoji, iconTool } from '../../icons'
 import { uploadImage } from '../../services'
-import { $replyBox, replyTextArea } from '../globals'
+import { getOS } from '../../utils'
+import { $replyBox, $replyForm, replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
+
+function handlingReplyActions() {
+  const os = getOS()
+
+  const replyBtnText = `回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd>`
+
+  const $replyBtn = createButton({
+    children: replyBtnText,
+    type: 'submit',
+  }).replaceAll($replyBox.find('input[type="submit"]'))
+
+  $replyForm.on('submit', () => {
+    $replyBtn.text('提交回复中...').prop('disabled', true)
+
+    setTimeout(() => {
+      $replyBtn.text(replyBtnText).prop('disabled', false)
+    }, 5000)
+  })
+
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
+      ev.preventDefault()
+      $replyForm.trigger('submit')
+    }
+  })
+
+  {
+    // 添加表情插入功能。
+    const emoticonGroup = $('<div class="v2p-emoji-group">')
+    const emoticonList = $('<div class="v2p-emoji-list">')
+    const emoticonSpan = $('<span class="v2p-emoji">')
+
+    const groups = emoticons.map((emojiGroup) => {
+      const group = emoticonGroup.clone()
+
+      group.append(`<div class="v2p-emoji-title">${emojiGroup.title}</div>`)
+
+      const list = emoticonList.clone().append(
+        emojiGroup.list.map((emoji) => {
+          const emoticon = emoticonSpan
+            .clone()
+            .text(emoji)
+            .on('click', () => {
+              insertTextToReplyInput(emoji)
+            })
+          return emoticon
+        })
+      )
+
+      group.append(list)
+
+      return group
+    })
+
+    const emoticonsBox = $('<div class="v2p-emoticons-box">').append(groups)
+
+    const $emojiBtn = createButton({ children: iconEmoji }).insertAfter($replyBtn)
+
+    const $emojiContent = $('<div class="v2p-emoji-container">')
+      .append(emoticonsBox)
+      .appendTo($replyBox)
+      .on('click', () => {
+        focusReplyInput()
+      })
+
+    const keyupHandler = (ev: JQuery.KeyDownEvent) => {
+      if (ev.key === 'Escape') {
+        ev.preventDefault()
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        emojiPopup.close()
+      }
+    }
+
+    $emojiBtn.on('click', () => {
+      focusReplyInput()
+    })
+
+    const emojiPopup = createPopup({
+      root: $replyBox,
+      trigger: $emojiBtn,
+      content: $emojiContent,
+      options: { placement: 'right-end' },
+      onOpen: () => {
+        $(document.body).on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
+      },
+      onClose: () => {
+        $(document.body).off('keydown', keyupHandler)
+      },
+    })
+  }
+
+  {
+    // 给「取消回复框停靠」、「回到顶部」按钮添加样式。
+    $replyBox
+      .find('#undock-button, #undock-button + a')
+      .addClass('v2p-hover-btn')
+      .css('padding', '5px 4px')
+  }
+}
 
 export function handleReply() {
   const $tools = $(`
@@ -139,12 +241,5 @@ export function handleReply() {
 
   $('.v2p-reply-wrap').append($uploadBar)
 
-  {
-    document.addEventListener('keydown', (ev) => {
-      if (ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
-        ev.preventDefault()
-        $('#reply-box form[action^="/t"]').trigger('submit')
-      }
-    })
-  }
+  handlingReplyActions()
 }
