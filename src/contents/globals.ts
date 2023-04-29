@@ -23,6 +23,7 @@ export const $commentTableRows = $commentCells.find('> table > tbody > tr')
 
 /** 回复输入控件 */
 export const $replyBox = $('#reply-box')
+export const $replyForm = $replyBox.find('form[action^="/t"]')
 
 /** 当前页面使用的颜色模式：浅色 | 深色 */
 export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'

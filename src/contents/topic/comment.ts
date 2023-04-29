@@ -1,21 +1,18 @@
-import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
-import { emoticons, StorageKey } from '../../constants'
-import { iconEmoji, iconHeart, iconHide, iconReply } from '../../icons'
+import { StorageKey } from '../../constants'
+import { iconHeart, iconHide, iconReply } from '../../icons'
 import type { Member } from '../../types'
-import { escapeHTML, getOS, getStorage } from '../../utils'
+import { escapeHTML, getStorage } from '../../utils'
 import {
   $commentBox,
   $commentCells,
   $commentTableRows,
-  $replyBox,
   commentDataList,
   loginName,
   topicOwnerName,
 } from '../globals'
-import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 import { processAvatar } from './avatar'
 import { openTagsSetter, processReplyContent, updateMemberTag } from './content'
 
@@ -175,88 +172,6 @@ function handlingControls() {
   })
 }
 
-/**
- * 插入表情到回复框。
- */
-function insertEmojiBox() {
-  const os = getOS()
-
-  const $replyBtn = createButton({
-    children: `回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd>`,
-    type: 'submit',
-  }).replaceAll($replyBox.find('input[type="submit"]'))
-
-  const emoticonGroup = $('<div class="v2p-emoji-group">')
-  const emoticonList = $('<div class="v2p-emoji-list">')
-  const emoticonSpan = $('<span class="v2p-emoji">')
-
-  const groups = emoticons.map((emojiGroup) => {
-    const group = emoticonGroup.clone()
-
-    group.append(`<div class="v2p-emoji-title">${emojiGroup.title}</div>`)
-
-    const list = emoticonList.clone().append(
-      emojiGroup.list.map((emoji) => {
-        const emoticon = emoticonSpan
-          .clone()
-          .text(emoji)
-          .on('click', () => {
-            insertTextToReplyInput(emoji)
-          })
-        return emoticon
-      })
-    )
-
-    group.append(list)
-
-    return group
-  })
-
-  const emoticonsBox = $('<div class="v2p-emoticons-box">').append(groups)
-
-  const $emojiBtn = createButton({ children: iconEmoji }).insertAfter($replyBtn)
-
-  const $emojiContent = $('<div class="v2p-emoji-container">')
-    .append(emoticonsBox)
-    .appendTo($replyBox)
-    .on('click', () => {
-      focusReplyInput()
-    })
-
-  const keyupHandler = (ev: JQuery.KeyDownEvent) => {
-    if (ev.key === 'Escape') {
-      ev.preventDefault()
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      emojiPopup.close()
-    }
-  }
-
-  $emojiBtn.on('click', () => {
-    focusReplyInput()
-  })
-
-  const emojiPopup = createPopup({
-    root: $replyBox,
-    trigger: $emojiBtn,
-    content: $emojiContent,
-    options: { placement: 'right-end' },
-    onOpen: () => {
-      $(document.body).on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
-    },
-    onClose: () => {
-      $(document.body).off('keydown', keyupHandler)
-    },
-  })
-
-  {
-    // 给“取消回复框停靠”、“回到顶部”按钮添加样式。
-    $replyBox
-      .find('#undock-button, #undock-button + a')
-      .addClass('v2p-hover-btn')
-      .css('padding', '5px 4px')
-  }
-}
-
 export async function handlingComments() {
   const storage = await getStorage()
 
@@ -374,6 +289,4 @@ export async function handlingComments() {
       }
     })
   }
-
-  insertEmojiBox()
 }
