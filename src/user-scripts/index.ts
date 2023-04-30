@@ -2,20 +2,29 @@ import { patternToRegex } from 'webext-patterns'
 
 import { style } from './style'
 
-const commonRegex = patternToRegex('https://v2ex.com/*', 'https://www.v2ex.com/*')
-const topicRegex = patternToRegex('https://v2ex.com/t/*', 'https://www.v2ex.com/t/*')
-
-const url = window.location.href
-
-void (async () => {
-  if (commonRegex.test(url)) {
+if (typeof window.GM_addStyle !== 'undefined') {
+  // 使用「GM_addStyle」配合「@run-at document-start」，可以解决样式切换导致的页面闪烁问题。
+  window.GM_addStyle(style)
+} else {
+  document.addEventListener('DOMContentLoaded', () => {
     $(`<style type='text/css'>${style}</style>`).appendTo('head')
+  })
+}
 
-    import('../contents/common')
-    import('../contents/home/index')
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  const commonRegex = patternToRegex('https://v2ex.com/*', 'https://www.v2ex.com/*')
+  const topicRegex = patternToRegex('https://v2ex.com/t/*', 'https://www.v2ex.com/t/*')
 
-  if (topicRegex.test(url)) {
-    await import('../contents/topic/index')
-  }
-})()
+  const url = window.location.href
+
+  void (async () => {
+    if (commonRegex.test(url)) {
+      import('../contents/common')
+      import('../contents/home/index')
+    }
+
+    if (topicRegex.test(url)) {
+      await import('../contents/topic/index')
+    }
+  })()
+})

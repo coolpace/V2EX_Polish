@@ -2,6 +2,7 @@ import type { StorageKey } from './constants'
 
 declare global {
   interface Window {
+    GM_addStyle?: (style: string) => void
     __V2P_DecodeStatus__?: 'decodeed'
     __V2P_StorageCache?: StorageSettings
   }
