@@ -354,14 +354,15 @@ body {
 
   // https://www.v2ex.com/notes
   form[action='/notes/new'] {
-    .inner.alt {
-      background-color: var(--v2p-color-bg-input);
-      border: 1px solid var(--button-border-color);
-    }
-
     .cell {
       background-color: transparent !important;
     }
+  }
+
+  // 输入框：https://www.v2ex.com/notes ｜ https://www.v2ex.com/t
+  .alt {
+    background-color: var(--v2p-color-bg-input);
+    border: 1px solid var(--button-border-color);
   }
 
   // https://www.v2ex.com/i/about
