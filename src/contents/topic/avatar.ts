@@ -32,7 +32,7 @@ export function processAvatar(params: ProcessAvatar) {
     <div class="v2p-member-card">
       <div class="v2p-info">
         <div class="v2p-info-left">
-          <div class="v2p-avatar-box"></div>
+          <a class="v2p-avatar-box"></a>
         </div>
 
         <div class="v2p-info-right">
@@ -78,6 +78,7 @@ export function processAvatar(params: ProcessAvatar) {
 
         $content
           .find('.v2p-avatar-box')
+          .prop('href', data.url)
           .removeClass('v2p-loading')
           .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
 
@@ -111,17 +112,24 @@ export function processAvatar(params: ProcessAvatar) {
     })()
   }
 
+  let isOver = false
+
   $avatar
     .on('mouseover', () => {
+      isOver = true
       setTimeout(() => {
-        handleOver()
+        if (isOver) {
+          handleOver()
+        }
       }, hoverDelay)
     })
     .on('mouseleave', () => {
+      isOver = false
       setTimeout(() => {
-        if (!popupControl.isOver) {
+        if (!popupControl.isOver && !isOver) {
           popupControl.close()
         }
       }, hoverDelay)
     })
+    .wrap(`<a href="/member/${commentData.memberName}" style="cursor: pointer;">`)
 }

@@ -3,6 +3,7 @@ import type { Options } from '../types'
 import { getOptions } from '../utils'
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
+  // eslint-disable-next-line no-console
   console.log(changes, `Storage namespace "${namespace}" changed.`)
 })
 
@@ -14,6 +15,9 @@ const saveOptions = async () => {
     openInNewTab: $('#openInNewTab').prop('checked'),
     autoCheckIn: {
       enabled: $('#autoCheckIn').prop('checked'),
+    },
+    replyContent: {
+      autoFold: $('#autoFold').prop('checked'),
     },
     nestedReply: {
       display: $('input[name="nestedReplyDisplay"]:checked').prop('value'),
@@ -40,6 +44,7 @@ void (async function init() {
   const options = await getOptions()
   $('#openInNewTab').prop('checked', options.openInNewTab)
   $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
+  $('#autoFold').prop('checked', options.replyContent.autoFold)
   $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
   $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
 })()

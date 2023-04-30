@@ -4,7 +4,7 @@ import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { iconHeart, iconHide, iconReply } from '../../icons'
 import type { Member } from '../../types'
-import { escapeHTML, getStorage } from '../../utils'
+import { escapeHTML, getOptionsSync, getStorage } from '../../utils'
 import {
   $commentBox,
   $commentCells,
@@ -80,7 +80,8 @@ function handlingPopularComments() {
     },
     onOpen: ({ $container }) => {
       $container.find('.cell[id^="r_"]').each((_, cellDom) => {
-        processReplyContent($(cellDom))
+        const options = getOptionsSync()
+        processReplyContent($(cellDom), options.replyContent)
       })
     },
   })
@@ -243,7 +244,7 @@ export async function handlingComments() {
 
       const dataFromIndex = commentDataList.at(i)
 
-      processReplyContent($cellDom)
+      processReplyContent($cellDom, options.replyContent)
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
       const currentComment =

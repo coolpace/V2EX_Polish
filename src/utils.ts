@@ -1,4 +1,4 @@
-import { defaultOptions, StorageKey } from './constants'
+import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
 import { deepMerge } from './deep-merge'
 import type {
   MemberTag,
@@ -131,6 +131,19 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
 export async function getOptions(useCache = true): Promise<Options> {
   const storage = await getStorage(useCache)
   return storage[StorageKey.Options]
+}
+
+/**
+ * 同步获取用户存储的自定义设置。
+ */
+export function getOptionsSync(): Options {
+  const options = window.__V2P_StorageCache?.[StorageKey.Options]
+
+  if (!options) {
+    throw new Error(`${EXTENSION_NAME}: 无可用的 Storage 缓存数据。`)
+  }
+
+  return options
 }
 
 /**

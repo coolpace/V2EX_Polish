@@ -79,6 +79,12 @@ body {
   }
 }
 
+fieldset {
+  > legend {
+    margin-bottom: 8px;
+  }
+}
+
 .actions {
   display: flex;
   justify-content: center;
@@ -98,7 +104,6 @@ body {
   user-select: none;
 
   &.success {
-    color: var(--v2p-color-accent-500);
-    background: var(--v2p-color-accent-100);
+    opacity: 0.8;
   }
 }

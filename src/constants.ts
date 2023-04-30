@@ -141,6 +141,9 @@ export const defaultOptions: Options = {
   autoCheckIn: {
     enabled: true,
   },
+  replyContent: {
+    autoFold: true,
+  },
   nestedReply: {
     display: 'indent',
   },
