@@ -17,6 +17,9 @@ export interface Options {
   autoCheckIn: {
     enabled: boolean
   }
+  replyContent: {
+    autoFold?: boolean
+  }
   nestedReply: {
     display: 'align' | 'indent'
   }

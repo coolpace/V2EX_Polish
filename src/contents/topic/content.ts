@@ -1,7 +1,7 @@
 import { createButton } from '../../components/button'
 import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
-import type { Member, Tag } from '../../types'
+import type { Member, Options, Tag } from '../../types'
 import { getMemberTags, getOptions } from '../../utils'
 import { $commentCells, $topicContentBox } from '../globals'
 import { setMemberTags } from '../helpers'
@@ -49,8 +49,11 @@ export async function handlingContent() {
  * 处理回复内容：
  *  - 过长内容会被折叠。
  */
-export function processReplyContent($cellDom: JQuery) {
-  if ($cellDom.find('.v2p-reply-content').length > 0) {
+export function processReplyContent(
+  $cellDom: JQuery,
+  replyContentOptions: Options['replyContent']
+) {
+  if (!replyContentOptions.autoFold || $cellDom.find('.v2p-reply-content').length > 0) {
     return
   }
 
@@ -131,7 +134,7 @@ export function openTagsSetter(memberName: Member['username']) {
       : undefined
 
     const newTagsValue = window.prompt(
-      '⚠ 用户标签是实验性的功能，后续版本可能会调整，请勿过于依赖。\n设置用户标签，多个标签以逗号（，）分隔。',
+      `对 @${memberName} 设置标签，多个标签以逗号（，）分隔。`,
       tagsValue
     )
 
