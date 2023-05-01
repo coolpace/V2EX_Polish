@@ -10,7 +10,7 @@ import type {
   Topic,
   TopicReply,
 } from './types'
-import { getStorage, isValidSettings } from './utils'
+import { getStorage, isValidSettings, setStorage } from './utils'
 
 // 动态获取 V2EX 的域名，防止跨域。
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
@@ -69,7 +69,7 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
       reset: reset ? Number(reset) : undefined,
       remaining: remaining ? Number(remaining) : undefined,
     }
-    void chrome.storage.sync.set({ [StorageKey.API]: api })
+    void setStorage(StorageKey.API, api)
   }
 
   const resultData: DataWrapper<Data> = await res.json()
@@ -218,5 +218,5 @@ export async function setV2P_Settings(storageSettings: StorageSettings) {
     })
   }
 
-  await chrome.storage.sync.set({ [StorageKey.SyncInfo]: syncInfo })
+  await setStorage(StorageKey.SyncInfo, syncInfo)
 }

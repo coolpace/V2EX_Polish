@@ -26,14 +26,11 @@ export interface Options {
   }
 }
 
-export interface LegacyAPI_Info {
+export interface API_Info {
+  pat?: string
   limit?: number
   reset?: number
   remaining?: number
-}
-
-export interface API_Info extends LegacyAPI_Info {
-  pat?: string
 }
 
 export interface DailyInfo {
@@ -50,7 +47,6 @@ export type MemberTag = Record<Member['username'], { tags?: Tag[] }>
 export interface StorageItems {
   [StorageKey.SyncInfo]?: SettingsSyncInfo
   [StorageKey.Options]?: Options
-  [StorageKey.LegacyAPI]?: LegacyAPI_Info
   [StorageKey.API]?: API_Info
   [StorageKey.Daily]?: DailyInfo
   [StorageKey.MemberTag]?: MemberTag

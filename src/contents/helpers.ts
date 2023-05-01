@@ -1,6 +1,6 @@
 import { StorageKey } from '../constants'
 import type { Member, MemberTag, Tag, V2EX_RequestErrorResponce } from '../types'
-import { getMemberTags, getRunEnv } from '../utils'
+import { getRunEnv, getStorage, setStorage } from '../utils'
 import { replyTextArea } from './globals'
 
 export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorResponce {
@@ -48,27 +48,24 @@ export function insertTextToReplyInput(text: string) {
 }
 
 export async function setMemberTags(memberName: Member['username'], tags: Tag[] | undefined) {
+  const storage = await getStorage(false)
+  const tagData = storage[StorageKey.MemberTag]
+
   const runEnv = getRunEnv()
 
   if (runEnv !== 'chrome') {
     return
   }
 
-  const tagData = await getMemberTags(false)
-
   if (tags && tags.length > 0) {
     const newTagData: MemberTag = { ...tagData, [memberName]: { tags } }
 
-    await chrome.storage.sync.set({
-      [StorageKey.MemberTag]: newTagData,
-    })
+    await setStorage(StorageKey.MemberTag, newTagData)
   } else {
     if (tagData && Reflect.has(tagData, memberName)) {
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete tagData[memberName]
-      await chrome.storage.sync.set({
-        [StorageKey.MemberTag]: tagData,
-      })
+      await setStorage(StorageKey.MemberTag, tagData)
     }
   }
 }

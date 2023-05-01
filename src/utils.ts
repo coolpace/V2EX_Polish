@@ -1,6 +1,6 @@
 import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
 import { deepMerge } from './deep-merge'
-import type { MemberTag, StorageItems, StorageSettings } from './types'
+import type { StorageItems, StorageSettings } from './types'
 
 /**
  * 获取用户的操作系统。
@@ -132,9 +132,22 @@ export function getStorageSync(): StorageSettings {
   return storage
 }
 
-export async function getMemberTags(useCache = true): Promise<MemberTag | undefined> {
-  const storage = await getStorage(useCache)
-  return storage[StorageKey.MemberTag]
+export async function setStorage<T extends StorageKey>(
+  storageKey: T,
+  storageItem: StorageItems[T]
+) {
+  switch (storageKey) {
+    case StorageKey.Options:
+    case StorageKey.API:
+    case StorageKey.Daily:
+    case StorageKey.MemberTag:
+    case StorageKey.SyncInfo:
+      await chrome.storage.sync.set({ [storageKey]: storageItem })
+      break
+
+    default:
+      throw new Error(``)
+  }
 }
 
 /**

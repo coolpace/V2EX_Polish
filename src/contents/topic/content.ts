@@ -2,7 +2,7 @@ import { createButton } from '../../components/button'
 import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
 import type { Member, Options, Tag } from '../../types'
-import { getMemberTags, getStorageSync } from '../../utils'
+import { getStorage, getStorageSync } from '../../utils'
 import { $commentCells, $topicContentBox } from '../globals'
 import { setMemberTags } from '../helpers'
 
@@ -124,7 +124,8 @@ export function updateMemberTag(memberName: Member['username'], tags: Tag[] | un
 
 export function openTagsSetter(memberName: Member['username']) {
   void (async () => {
-    const latestTagsData = await getMemberTags(false)
+    const storage = await getStorage(false)
+    const latestTagsData = storage[StorageKey.MemberTag]
 
     const tagsValue = latestTagsData
       ? Reflect.has(latestTagsData, memberName)
