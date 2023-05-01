@@ -64,6 +64,9 @@ const topicContentData: Record<TabId, RemoteDataStore> = {
 }
 
 function loadSettings() {
+  const storage = getStorageSync()
+  const api = storage[StorageKey.API]
+
   const $patInput = $('#pat')
 
   $patInput.on('change', (ev) => {
@@ -74,9 +77,6 @@ function loadSettings() {
       $patInput.removeClass('has-value')
     }
   })
-
-  const storage = getStorageSync()
-  const api = storage[StorageKey.API]
 
   if (api) {
     if (api.pat) {
@@ -130,32 +130,69 @@ function loadSettings() {
   }
 
   {
+    const syncInfo = storage[StorageKey.SyncInfo]
+    $('#local-version').val(syncInfo?.version ?? defaultValue)
+
     void getV2P_Settings().then((res) => {
       const settings = res?.config
+      const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
 
-      if (settings) {
-        const lastSyncTime = settings[StorageKey.SyncInfo]?.lastSyncTime
+      const version = remoteSyncInfo?.version
+      const lastSyncTime = remoteSyncInfo?.lastSyncTime
 
-        if (lastSyncTime) {
-          const time = formatTimestamp(lastSyncTime, { format: 'YMDHMS' })
-          $('.last-sync-time').text(time)
+      $('#remote-version').val(version ?? defaultValue)
+      $('#last-sync-time').val(
+        lastSyncTime ? formatTimestamp(lastSyncTime, { format: 'YMDHMS' }) : defaultValue
+      )
+
+      const $syncBtn = $('#sync-settings')
+
+      const backupAvailable =
+        syncInfo && remoteSyncInfo && syncInfo.version >= remoteSyncInfo.version
+
+      if (!remoteSyncInfo || backupAvailable) {
+        if (!remoteSyncInfo) {
+          $('.storage-tip').text('未发现远程存储的配置')
+        }
+
+        if (backupAvailable) {
+          $('.storage-tip').text('你可以将目前使用的配置备份到远程')
+        }
+
+        $syncBtn
+          .text('开始备份')
+          .prop('disabled', false)
+          .on('click', () => {
+            void (async () => {
+              const txt = $syncBtn.text()
+              try {
+                $syncBtn.text('备份中...').css('pointer-events', 'none')
+                const storage = await getStorage(false)
+                await setV2P_Settings(storage)
+              } finally {
+                $syncBtn.text(txt).css('pointer-events', 'auto')
+              }
+            })()
+          })
+      } else {
+        if (syncInfo && syncInfo.version < remoteSyncInfo.version) {
+          $('.storage-tip').text('远程备份的版本较新')
+          $syncBtn
+            .text('同步至本地')
+            .prop('disabled', false)
+            .on('click', () => {
+              void (async () => {
+                const txt = $syncBtn.text()
+                try {
+                  $syncBtn.text('同步中...').css('pointer-events', 'none')
+                  await chrome.storage.sync.set(settings)
+                } finally {
+                  $syncBtn.text(txt).css('pointer-events', 'auto')
+                }
+              })()
+            })
         }
       }
-    })
-
-    const $syncBtn = $('#sync-settings')
-
-    $syncBtn.on('click', () => {
-      void (async () => {
-        const txt = $syncBtn.text()
-        try {
-          $syncBtn.text('备份中...').css('pointer-events', 'none')
-          const storage = await getStorage(false)
-          await setV2P_Settings(storage)
-        } finally {
-          $syncBtn.text(txt).css('pointer-events', 'auto')
-        }
-      })()
     })
   }
 }
