@@ -11,12 +11,22 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
+  // {
+  //   injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
+
+  //   window.addEventListener('message', (ev: MessageEvent<MessagePayload>) => {
+  //     if (ev.data.from === MessageFrom.Web) {
+  //       if (ev.data.data === 'loaded') {
+  //         const payload: MessagePayload = { from: MessageFrom.Content, data: '' }
+  //         window.postMessage(payload)
+  //       }
+  //     }
+  //   })
+  // }
+
   {
     if (options.openInNewTab) {
-      $commentTableRows
-        .find('> td:nth-child(3) > strong > a')
-        .prop('target', '_blank')
-        .prop('rel', 'noopener noreferrer')
+      $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
     }
   }
 

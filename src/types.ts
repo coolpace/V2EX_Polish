@@ -1,4 +1,4 @@
-import type { StorageKey } from './constants'
+import type { MessageFrom, StorageKey } from './constants'
 
 declare global {
   interface Window {
@@ -204,4 +204,9 @@ export interface ImgurResponse {
     /** 上传成功后生成的在线链接 */
     link: string
   }
+}
+
+export interface MessagePayload {
+  from: MessageFrom
+  data: string
 }

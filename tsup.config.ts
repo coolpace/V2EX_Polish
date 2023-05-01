@@ -13,6 +13,7 @@ export default defineConfig({
 
     'toggle-icon.min': 'src/background/toggle-icon.ts',
     'background.min': 'src/background/main.ts',
+    'web_accessible_resources.min': 'src/web_accessible_resources.ts',
   },
 
   outDir: './extension/scripts',
