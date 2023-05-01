@@ -224,39 +224,31 @@ body {
     border-bottom: none;
   }
 
-  .page_normal,
-  .page_current {
-    user-select: none;
-
-    &:link,
-    &:visited {
+  :is(.page_normal, .page_current) {
+    &:is(:link, :visited) {
       padding: 6px 9px;
       font-size: 14px;
       border: none;
+      border-radius: 4px;
+      user-select: none;
     }
   }
 
-  .page_normal {
-    &:link,
-    &:visited {
-      font-weight: 500;
-      background-color: var(--v2p-color-bg-content);
-      box-shadow: 0 2px 2px var(--box-background-hover-color);
-      transition: transform 0.25s;
+  .page_normal:is(:link, :visited) {
+    font-weight: 500;
+    background-color: var(--v2p-color-bg-content);
+    box-shadow: 0 2px 2px var(--box-background-hover-color);
+    transition: transform 0.25s;
 
-      &:hover {
-        transform: scale(1.1) translateY(-2px);
-      }
+    &:hover {
+      transform: scale(1.1) translateY(-2px);
     }
   }
 
-  .page_current {
-    &:link,
-    &:visited {
-      font-weight: bold;
-      background-color: var(--box-background-hover-color);
-      box-shadow: none;
-    }
+  .page_current:is(:link, :visited) {
+    font-weight: bold;
+    background-color: var(--box-background-hover-color);
+    box-shadow: none;
   }
 
   .page_input {

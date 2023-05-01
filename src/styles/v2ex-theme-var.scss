@@ -83,6 +83,10 @@
     font-family: system-ui, sans-serif;
     background-color: var(--v2p-color-background);
 
+    #Logo {
+      background-image: url('/static/img/v2ex@2x.png');
+    }
+
     ::selection {
       color: var(--v2p-color-main-100);
       background-color: var(--v2p-color-main-700);
@@ -93,6 +97,7 @@
     }
   }
 
+  &[data-darkreader-scheme='dark'] body,
   body:has(#Wrapper.Night) {
     // 基础色：
     --v2p-color-main-100: #2d333b;
@@ -148,6 +153,10 @@
     --button-foreground-hover-color: var(--v2p-color-foreground);
     --button-border-color: var(--v2p-color-border);
     --button-border-hover-color: #768390;
+
+    #Logo {
+      background-image: url('/static/img/v2ex-alt@2x.png');
+    }
 
     ::selection {
       color: var(--v2p-color-background);
