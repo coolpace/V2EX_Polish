@@ -48,6 +48,13 @@
     "service_worker": "scripts/background.min.js"
   },
 
+  "web_accessible_resources": [
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "resources": ["scripts/web_accessible_resources.min.js"]
+    }
+  ],
+
   "options_page": "pages/options.html",
 
   "action": {

@@ -154,3 +154,8 @@ export const enum MessageKey {
   action = 'action',
   colorScheme = 'colorSchemes',
 }
+
+export const enum MessageFrom {
+  Content,
+  Web,
+}
