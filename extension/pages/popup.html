@@ -202,17 +202,17 @@
                     <h2>API 使用情况</h2>
                     <fieldset>
                       <div class="form-item">
-                        <label for="limit">每小时限制请求</label>
+                        <label>每小时限制请求</label>
                         <input id="limit" readonly />
                       </div>
 
                       <div class="form-item">
-                        <label for="remaining">剩余请求次数</label>
+                        <label>剩余请求次数</label>
                         <input id="remaining" readonly />
                       </div>
 
                       <div class="form-item">
-                        <label for="reset">下次重置时间</label>
+                        <label>下次重置时间</label>
                         <input id="reset" readonly />
                       </div>
                     </fieldset>
@@ -242,12 +242,26 @@
                   >中，方便跨浏览器或跨脚本同步配置。
                 </div>
 
+                <fieldset style="margin-top: 8px">
+                  <div class="form-item">
+                    <label>本地使用版本</label>
+                    <input id="local-version" value="-" readonly />
+                  </div>
+
+                  <div class="form-item">
+                    <label>远程备份版本</label>
+                    <input id="remote-version" value="-" readonly />
+                  </div>
+
+                  <div class="form-item">
+                    <label>上次备份时间</label>
+                    <input id="last-sync-time" value="-" readonly />
+                  </div>
+                </fieldset>
+
                 <span class="storage-data-bar">
-                  <span>
-                    上次备份时间：
-                    <span class="last-sync-time">-</span>
-                  </span>
-                  <button id="sync-settings" type="button">开始备份</button>
+                  <span class="storage-tip">...</span>
+                  <button id="sync-settings" type="button" disabled>备份同步</button>
                 </span>
               </div>
             </div>
