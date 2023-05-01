@@ -18,7 +18,7 @@ import {
   setV2P_Settings,
 } from '../services'
 import type { Topic } from '../types'
-import { escapeHTML, formatTimestamp, getStorage, isSameDay } from '../utils'
+import { escapeHTML, formatTimestamp, getStorage, getStorageSync, isSameDay } from '../utils'
 import { calculateLocalStorageSize, formatSizeUnits, isTabId } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
@@ -68,20 +68,19 @@ function loadSettings() {
     }
   })
 
-  void getStorage().then((storage) => {
-    const api = storage[StorageKey.API]
+  const storage = getStorageSync()
+  const api = storage[StorageKey.API]
 
-    if (api) {
-      if (api.pat) {
-        $patInput.val(api.pat).addClass('has-value')
-      } else {
-        $('.details').prop('open', true)
-      }
-      $('#limit').val(api.limit ?? defaultValue)
-      $('#reset').val(api.reset ? formatTimestamp(api.reset, { format: 'YMDHMS' }) : defaultValue)
-      $('#remaining').val(api.remaining ?? defaultValue)
+  if (api) {
+    if (api.pat) {
+      $patInput.val(api.pat).addClass('has-value')
+    } else {
+      $('.details').prop('open', true)
     }
-  })
+    $('#limit').val(api.limit ?? defaultValue)
+    $('#reset').val(api.reset ? formatTimestamp(api.reset, { format: 'YMDHMS' }) : defaultValue)
+    $('#remaining').val(api.remaining ?? defaultValue)
+  }
 
   $('#settings-form').on('submit', (ev) => {
     ev.preventDefault() // 阻止默认的表单提交行为
@@ -144,7 +143,7 @@ function loadSettings() {
         const txt = $syncBtn.text()
         try {
           $syncBtn.text('备份中...').css('pointer-events', 'none')
-          const storage = await getStorage()
+          const storage = await getStorage(false)
           await setV2P_Settings(storage)
         } finally {
           $syncBtn.text(txt).css('pointer-events', 'auto')
@@ -178,6 +177,8 @@ function initTabs() {
   const storageData = dataString ? (JSON.parse(dataString) as PopupStorageData) : null
 
   const setupTabContent = async ({ tabId }: { tabId: TabId }) => {
+    const storage = getStorageSync()
+
     let topicList: Topic[] | undefined
     let tabContentScrollTop = 0
 
@@ -237,49 +238,46 @@ function initTabs() {
         window.open(`${V2EX.Origin}/mission/daily`)
       })
 
-      void getStorage().then((storage) => {
-        const dailyInfo = storage[StorageKey.Daily]
+      const dailyInfo = storage[StorageKey.Daily]
 
-        if (dailyInfo?.lastCheckInTime) {
-          if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
-            const date = formatTimestamp(dailyInfo.lastCheckInTime, { format: 'YMDHMS' })
-            $checkIn.find('.feature-title').text('✅ 今日已签到')
-            $checkIn
-              .find('.feature-content')
-              .html(
-                `于 ${date} 自动签到${
-                  dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
-                }`
-              )
-          }
-        } else {
-          $checkIn.on('click', () => {
-            void checkIn()
-          })
+      if (dailyInfo?.lastCheckInTime) {
+        if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
+          const date = formatTimestamp(dailyInfo.lastCheckInTime, { format: 'YMDHMS' })
+          $checkIn.find('.feature-title').text('✅ 今日已签到')
+          $checkIn
+            .find('.feature-content')
+            .html(
+              `于 ${date} 自动签到${
+                dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
+              }`
+            )
         }
-      })
+      } else {
+        $checkIn.on('click', () => {
+          void checkIn()
+        })
+      }
     }
 
     if (tabId === TabId.Message) {
-      void getStorage().then((storage) => {
-        const api = storage[StorageKey.API]
+      const api = storage[StorageKey.API]
 
-        if (api?.pat) {
-          const loaded = $tabContent.find('.list').length > 0
+      if (api?.pat) {
+        const loaded = $tabContent.find('.list').length > 0
 
-          if (loaded) {
-            return
-          }
+        if (loaded) {
+          return
+        }
 
-          $tabContent.html(loading)
+        $tabContent.html(loading)
 
-          fetchNotifications()
-            .then(({ result: notifications }) => {
-              if (notifications.length > 0) {
-                const $noticeList = $(`<ul class="list">`).append(
-                  notifications
-                    .map((notice) => {
-                      return `
+        fetchNotifications()
+          .then(({ result: notifications }) => {
+            if (notifications.length > 0) {
+              const $noticeList = $(`<ul class="list">`).append(
+                notifications
+                  .map((notice) => {
+                    return `
                     <li class="notice-item">
                       <div class="notice">
                         ${notice.text}
@@ -287,21 +285,21 @@ function initTabs() {
                       ${notice.payload ? `<div class="payload">${notice.payload}</div>` : ''}
                     </li>
                     `
-                    })
-                    .join('')
-                )
+                  })
+                  .join('')
+              )
 
-                $noticeList.find('.notice-item .notice > a').each((_, a) => {
-                  const link = $(a)
-                  link
-                    .prop('target', '_blank')
-                    .prop('href', `${V2EX.Origin}${link.attr('href') ?? ''}`)
-                })
+              $noticeList.find('.notice-item .notice > a').each((_, a) => {
+                const link = $(a)
+                link
+                  .prop('target', '_blank')
+                  .prop('href', `${V2EX.Origin}${link.attr('href') ?? ''}`)
+              })
 
-                $tabContent
-                  .empty()
-                  .append(
-                    `
+              $tabContent
+                .empty()
+                .append(
+                  `
                     <div class="tab-header">
                       <div class="message-actions">
                         <a class="action-btn" href="${V2EX.Origin}/notifications" target="_blank">
@@ -312,26 +310,25 @@ function initTabs() {
                       <hr />
                     </div>
                    `
-                  )
-                  .append($noticeList)
-              } else {
-                $tabContent.empty().append('<div class="tip">无任何消息</div>')
-              }
-            })
-            .catch(() => {
-              $tabContent.html(errorDisplay)
-            })
-        } else {
-          const $tipBtn = createButton({ children: '去设置' }).on('click', () => {
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            activeTab({ tabId: TabId.Setting })
+                )
+                .append($noticeList)
+            } else {
+              $tabContent.empty().append('<div class="tip">无任何消息</div>')
+            }
           })
-          const $tip = $(
-            '<div class="tip"><p>需要设置您的个人访问令牌才能获取消息通知</p></div>'
-          ).append($tipBtn)
-          $tabContent.empty().append($tip)
-        }
-      })
+          .catch(() => {
+            $tabContent.html(errorDisplay)
+          })
+      } else {
+        const $tipBtn = createButton({ children: '去设置' }).on('click', () => {
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          activeTab({ tabId: TabId.Setting })
+        })
+        const $tip = $(
+          '<div class="tip"><p>需要设置您的个人访问令牌才能获取消息通知</p></div>'
+        ).append($tipBtn)
+        $tabContent.empty().append($tip)
+      }
     }
 
     setTimeout(() => {
@@ -409,5 +406,7 @@ function initTabs() {
 }
 
 window.addEventListener('load', () => {
-  initTabs()
+  void getStorage().then(() => {
+    initTabs()
+  })
 })

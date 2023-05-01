@@ -2,7 +2,7 @@ import { createButton } from '../../components/button'
 import { hoverDelay, type PopupControl } from '../../components/popup'
 import { fetchUserInfo } from '../../services'
 import type { CommentData, Member } from '../../types'
-import { formatTimestamp, getOptions } from '../../utils'
+import { formatTimestamp } from '../../utils'
 
 const memberDataCache = new Map<Member['username'], Member>()
 
@@ -29,20 +29,20 @@ export function processAvatar(params: ProcessAvatar) {
     popupControl.open($avatar)
 
     const $content = $(`
-    <div class="v2p-member-card">
-      <div class="v2p-info">
-        <div class="v2p-info-left">
-          <a class="v2p-avatar-box"></a>
-        </div>
+      <div class="v2p-member-card">
+        <div class="v2p-info">
+          <div class="v2p-info-left">
+            <a class="v2p-avatar-box"></a>
+          </div>
 
-        <div class="v2p-info-right">
-          <div class="v2p-username v2p-loading"></div>
-          <div class="v2p-no v2p-loading"></div>
-          <div class="v2p-created-date v2p-loading"></div>
+          <div class="v2p-info-right">
+            <div class="v2p-username v2p-loading"></div>
+            <div class="v2p-no v2p-loading"></div>
+            <div class="v2p-created-date v2p-loading"></div>
+          </div>
         </div>
       </div>
-    </div>
-  `)
+    `)
 
     popupControl.$content.empty().append($content)
 
@@ -82,11 +82,8 @@ export function processAvatar(params: ProcessAvatar) {
           .removeClass('v2p-loading')
           .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
 
-        const options = await getOptions()
         const $memberName = $(`<a href="${data.url}">${memberName}</a>`)
-        if (options.openInNewTab) {
-          $memberName.prop('target', '_blank')
-        }
+
         $content.find('.v2p-username').removeClass('v2p-loading').append($memberName)
 
         $content.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)

@@ -10,7 +10,7 @@ import type {
   Topic,
   TopicReply,
 } from './types'
-import { getPAT, isValidSettings } from './utils'
+import { getStorage, isValidSettings } from './utils'
 
 // 动态获取 V2EX 的域名，防止跨域。
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
@@ -50,7 +50,8 @@ export function fetchHotTopics(options?: RequestInit) {
 }
 
 async function request<Data>(url: string, options?: RequestInit): Promise<DataWrapper<Data>> {
-  const PAT = await getPAT()
+  const storage = await getStorage()
+  const PAT = storage[StorageKey.API]?.pat
 
   const res = await fetch(url, {
     ...options,

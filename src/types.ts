@@ -196,8 +196,6 @@ export interface CommentData {
   thanked: boolean
 }
 
-export type PersonalAccessToken = string | undefined
-
 export interface ImgurResponse {
   status: number
   success: boolean

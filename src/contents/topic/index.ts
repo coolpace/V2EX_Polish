@@ -1,5 +1,6 @@
+import { StorageKey } from '../../constants'
 import { iconReply, iconScrollTop } from '../../icons'
-import { getOptions } from '../../utils'
+import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox } from '../globals'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
@@ -7,9 +8,10 @@ import { handlingPaging } from './paging'
 import { handleReply } from './reply'
 
 void (async () => {
-  {
-    const options = await getOptions()
+  const storage = await getStorage()
+  const options = storage[StorageKey.Options]
 
+  {
     if (options.openInNewTab) {
       $commentTableRows
         .find('> td:nth-child(3) > strong > a')
@@ -59,7 +61,7 @@ void (async () => {
     })
   }
 
-  await handlingContent()
+  handlingContent()
 
   {
     // 如果是从相同的主题跳转过来的，且含有分页参数，则被认为是执行翻页操作，跳过正文内容直接滚动到评论区。

@@ -112,7 +112,7 @@ body {
   .box {
     background-color: var(--v2p-color-bg-content);
     border: none;
-    border-radius: 10px;
+    border-radius: var(--box-border-radius);
     box-shadow: var(--v2p-box-shadow);
 
     .header {
@@ -864,7 +864,7 @@ body {
       padding: 0 22px;
       overflow: visible;
       border: none;
-      border-radius: 10px;
+      border-radius: var(--box-border-radius);
       outline: 2px solid var(--v2p-color-main-200);
     }
 

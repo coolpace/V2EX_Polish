@@ -1,5 +1,5 @@
-import { Menu, MessageKey } from '../constants'
-import { getOptions } from '../utils'
+import { Menu, MessageKey, StorageKey } from '../constants'
+import { getStorage } from '../utils'
 import { checkIn } from './daily-check-in'
 
 interface Message {
@@ -72,7 +72,9 @@ chrome.alarms.get(checkInAlarmName, (alarm) => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === checkInAlarmName) {
-    void getOptions(false).then((options) => {
+    void getStorage(false).then((storage) => {
+      const options = storage[StorageKey.Options]
+
       if (options.autoCheckIn.enabled) {
         void checkIn()
       }

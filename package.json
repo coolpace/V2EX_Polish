@@ -15,7 +15,8 @@
     "build:style": "sass src/styles:extension/css --no-source-map --style=compressed",
     "watch:ext": "pnpm run build:ext --watch",
     "watch:style": "pnpm run build:style --watch",
-    "lint": "run-p lint:es lint:style lint:prettier",
+    "lint": "run-p lint:ts lint:es lint:style lint:prettier",
+    "lint:ts": "tsc --noEmit --skipLibCheck",
     "lint:es": "eslint **/*.{js,ts}",
     "lint:prettier": "prettier --write **/*.{md,json}",
     "lint:style": "stylelint **/*.{css,scss}"
