@@ -139,6 +139,9 @@ export const defaultOptions: Options = {
   autoCheckIn: {
     enabled: true,
   },
+  theme: {
+    autoSwitch: false,
+  },
   replyContent: {
     autoFold: true,
   },

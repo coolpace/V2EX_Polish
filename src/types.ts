@@ -18,6 +18,9 @@ export interface Options {
   autoCheckIn: {
     enabled: boolean
   }
+  theme: {
+    autoSwitch: boolean
+  }
   replyContent: {
     autoFold?: boolean
   }

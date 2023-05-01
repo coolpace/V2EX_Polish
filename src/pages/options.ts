@@ -11,6 +11,9 @@ const saveOptions = async () => {
     autoCheckIn: {
       enabled: $('#autoCheckIn').prop('checked'),
     },
+    theme: {
+      autoSwitch: $('#autoSwitch').prop('checked'),
+    },
     replyContent: {
       autoFold: $('#autoFold').prop('checked'),
     },
@@ -38,6 +41,7 @@ void (async function init() {
   const options = storage[StorageKey.Options]
   $('#openInNewTab').prop('checked', options.openInNewTab)
   $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
+  $('#autoSwitch').prop('checked', options.theme.autoSwitch)
   $('#autoFold').prop('checked', options.replyContent.autoFold)
   $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
   $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
