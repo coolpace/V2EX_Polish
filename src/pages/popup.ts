@@ -18,7 +18,14 @@ import {
   setV2P_Settings,
 } from '../services'
 import type { Topic } from '../types'
-import { escapeHTML, formatTimestamp, getStorage, getStorageSync, isSameDay } from '../utils'
+import {
+  escapeHTML,
+  formatTimestamp,
+  getStorage,
+  getStorageSync,
+  isSameDay,
+  setStorage,
+} from '../utils'
 import { calculateLocalStorageSize, formatSizeUnits, isTabId } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
@@ -88,7 +95,7 @@ function loadSettings() {
     const PAT = $patInput.val()
 
     if (typeof PAT === 'string') {
-      chrome.storage.sync.set({ [StorageKey.API]: { pat: PAT } }, () => {
+      void setStorage(StorageKey.API, { pat: PAT }).then(() => {
         const $submitBtn = $('.submit-btn')
         const submitText = $submitBtn.text()
         $submitBtn.text('保存成功').prop('disabled', true)

@@ -1,11 +1,6 @@
 import { StorageKey } from '../constants'
 import type { Options } from '../types'
-import { getStorage } from '../utils'
-
-chrome.storage.onChanged.addListener((changes, namespace) => {
-  // eslint-disable-next-line no-console
-  console.log(changes, `Storage namespace "${namespace}" changed.`)
-})
+import { getStorage, setStorage } from '../utils'
 
 const saveOptions = async () => {
   const $save = $('#save')
@@ -24,9 +19,7 @@ const saveOptions = async () => {
     },
   }
 
-  await chrome.storage.sync.set({
-    [StorageKey.Options]: currentOptions,
-  })
+  await setStorage(StorageKey.Options, currentOptions)
 
   $save.addClass('success').text('保存成功')
 
