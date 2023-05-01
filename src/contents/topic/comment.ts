@@ -4,7 +4,7 @@ import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { iconHeart, iconHide, iconReply } from '../../icons'
 import type { Member } from '../../types'
-import { escapeHTML, getOptionsSync, getStorage } from '../../utils'
+import { escapeHTML, getStorage, getStorageSync } from '../../utils'
 import {
   $commentBox,
   $commentCells,
@@ -80,7 +80,8 @@ function handlingPopularComments() {
     },
     onOpen: ({ $container }) => {
       $container.find('.cell[id^="r_"]').each((_, cellDom) => {
-        const options = getOptionsSync()
+        const storage = getStorageSync()
+        const options = storage[StorageKey.Options]
         processReplyContent($(cellDom), options.replyContent)
       })
     },

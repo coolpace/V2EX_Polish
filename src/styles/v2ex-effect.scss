@@ -46,6 +46,18 @@ body {
 }
 
 #Rightbar {
+  .v2p-info-row {
+    display: block;
+    color: var(--v2p-color-accent-500);
+    font-size: 12px;
+    text-align: center;
+
+    &:hover {
+      text-decoration: none;
+      background-color: var(--v2p-color-accent-50);
+    }
+  }
+
   @at-root {
     .v2p-tool-box {
       position: sticky;
@@ -199,7 +211,7 @@ a.v2p-topic-preview-title-link {
   overflow-x: hidden;
   overflow-y: auto;
   background-color: var(--v2p-color-bg-content);
-  border-radius: 10px;
+  border-radius: var(--box-border-radius);
 
   @at-root {
     .v2p-model-header {

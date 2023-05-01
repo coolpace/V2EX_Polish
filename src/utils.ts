@@ -1,12 +1,6 @@
 import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
 import { deepMerge } from './deep-merge'
-import type {
-  MemberTag,
-  Options,
-  PersonalAccessToken,
-  StorageItems,
-  StorageSettings,
-} from './types'
+import type { MemberTag, StorageItems, StorageSettings } from './types'
 
 /**
  * 获取用户的操作系统。
@@ -126,32 +120,16 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
 }
 
 /**
- * 获取用户存储的自定义设置。
+ * 同步获取用户存储的应用数据。
  */
-export async function getOptions(useCache = true): Promise<Options> {
-  const storage = await getStorage(useCache)
-  return storage[StorageKey.Options]
-}
+export function getStorageSync(): StorageSettings {
+  const storage = window.__V2P_StorageCache
 
-/**
- * 同步获取用户存储的自定义设置。
- */
-export function getOptionsSync(): Options {
-  const options = window.__V2P_StorageCache?.[StorageKey.Options]
-
-  if (!options) {
+  if (!storage) {
     throw new Error(`${EXTENSION_NAME}: 无可用的 Storage 缓存数据。`)
   }
 
-  return options
-}
-
-/**
- * 获取用户设置存储的个人访问令牌。
- */
-export async function getPAT(useCache = true): Promise<PersonalAccessToken> {
-  const storage = await getStorage(useCache)
-  return storage[StorageKey.API]?.pat
+  return storage
 }
 
 export async function getMemberTags(useCache = true): Promise<MemberTag | undefined> {

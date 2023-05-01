@@ -1,24 +1,23 @@
 import { createButton } from '../../components/button'
-import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT } from '../../constants'
+import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
 import type { Member, Options, Tag } from '../../types'
-import { getMemberTags, getOptions } from '../../utils'
+import { getMemberTags, getStorageSync } from '../../utils'
 import { $commentCells, $topicContentBox } from '../globals'
 import { setMemberTags } from '../helpers'
 
 /**
  * 处理主题的正文内容。
  */
-export async function handlingContent() {
-  {
-    const options = await getOptions()
+export function handlingContent() {
+  const storage = getStorageSync()
+  const options = storage[StorageKey.Options]
 
-    if (options.openInNewTab) {
-      $topicContentBox
-        .find('.topic_content a[href]')
-        .prop('target', '_blank')
-        .prop('rel', 'noopener noreferrer')
-    }
+  if (options.openInNewTab) {
+    $topicContentBox
+      .find('.topic_content a[href]')
+      .prop('target', '_blank')
+      .prop('rel', 'noopener noreferrer')
   }
 
   {

@@ -1,6 +1,6 @@
 import { StorageKey } from '../constants'
 import type { Options } from '../types'
-import { getOptions } from '../utils'
+import { getStorage } from '../utils'
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   // eslint-disable-next-line no-console
@@ -41,7 +41,8 @@ $('#options-form').on('submit', (ev) => {
 })
 
 void (async function init() {
-  const options = await getOptions()
+  const storage = await getStorage()
+  const options = storage[StorageKey.Options]
   $('#openInNewTab').prop('checked', options.openInNewTab)
   $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
   $('#autoFold').prop('checked', options.replyContent.autoFold)
