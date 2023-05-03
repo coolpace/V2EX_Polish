@@ -8,6 +8,26 @@ import { escapeHTML, formatTimestamp, getRunEnv, getStorageSync } from '../../ut
 import { $topicList } from '../globals'
 import { isV2EX_RequestError } from '../helpers'
 
+const invalidTemplate = (tip: string) => `
+<div class="v2p-no-pat">
+  <div class="v2p-no-pat-title">${tip}</div>
+  <div class="v2p-no-pat-desc">
+    请前往<span class="v2p-no-pat-block"><span class="v2p-icon-logo">${iconLogo}</span> <span style="margin: 0 5px;">></span> 设置</span> 进行设置。
+  </div>
+
+  <div class="v2p-no-pat-steps">
+    <div class="v2p-no-pat-step">
+      <div style="font-weight:bold;margin-bottom:10px;font-size:15px;">1. 在扩展程序列表中找到并点击「V2EX Polish」。</div>
+      <img class="v2p-no-pat-img" src="https://i.imgur.com/UfNkuTF.png">
+    </div>
+    <div class="v2p-no-pat-step">
+      <div style="font-weight:bold;margin-bottom:10px;font-size:15px;">2. 在弹出的小窗口中找到「⚙️ 按钮」，输入 PAT。</div>
+      <img class="v2p-no-pat-img" src="https://i.imgur.com/O6hP86A.png">
+    </div>
+  </div>
+</div>
+`
+
 export function handlingTopicList() {
   const runEnv = getRunEnv()
 
@@ -112,7 +132,9 @@ export function handlingTopicList() {
                       message === RequestMessage.InvalidToken
                       /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
                     ) {
-                      model.$content.empty().append(`<div>${err.cause.message}</div>`)
+                      model.$content
+                        .empty()
+                        .append(invalidTemplate('您的 PAT 已失效，请重新设置。'))
                     }
                   }
                 }
@@ -193,25 +215,7 @@ export function handlingTopicList() {
               }
             })()
           } else {
-            model.$content.empty().append(`
-            <div class="v2p-no-pat">
-              <div class="v2p-no-pat-title">您需要先设置 PAT 才能获取预览内容。</div>
-              <div class="v2p-no-pat-desc">
-                请前往<span class="v2p-no-pat-block"><span class="v2p-icon-logo">${iconLogo}</span> <span style="margin: 0 5px;">></span> 设置</span> 进行设置。
-              </div>
-
-              <div class="v2p-no-pat-steps">
-                <div class="v2p-no-pat-step">
-                  <div style="font-weight:bold;margin-bottom:10px;font-size:15px;">1. 在扩展程序列表中找到并点击「V2EX Polish」。</div>
-                  <img class="v2p-no-pat-img" src="https://i.imgur.com/UfNkuTF.png">
-                </div>
-                <div class="v2p-no-pat-step">
-                  <div style="font-weight:bold;margin-bottom:10px;font-size:15px;">2. 在弹出的小窗口中找到「⚙️ 按钮」，输入 PAT。</div>
-                  <img class="v2p-no-pat-img" src="https://i.imgur.com/O6hP86A.png">
-                </div>
-              </div>
-            </div>
-            `)
+            model.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
           }
         }
       })

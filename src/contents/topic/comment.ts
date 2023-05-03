@@ -186,7 +186,8 @@ export async function handlingComments() {
     const popupControl = createPopup({
       root: $commentBox,
       triggerType: 'hover',
-      offsetOptions: { mainAxis: 10, crossAxis: -4 },
+      placement: 'right-start',
+      offsetOptions: { mainAxis: 8, crossAxis: -4 },
     })
     const membersHasSetTags = new Set<Member['username']>()
 
