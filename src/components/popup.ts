@@ -4,6 +4,7 @@ import {
   flip,
   offset,
   type OffsetOptions,
+  type Placement,
   shift,
 } from '@floating-ui/dom'
 
@@ -37,6 +38,7 @@ interface CreatePopupProps {
   /** Popup 关闭时触发的回调 */
   onClose?: () => void
 
+  placement?: Placement
   offsetOptions?: OffsetOptions
 }
 
@@ -52,6 +54,7 @@ export function createPopup(props: CreatePopupProps): PopupControl {
     options,
     onOpen,
     onClose,
+    placement = 'bottom-start',
     offsetOptions = { mainAxis: 5, crossAxis: 5 },
   } = props
 
@@ -96,7 +99,7 @@ export function createPopup(props: CreatePopupProps): PopupControl {
     const referenceElement = $reference.get(0)!
 
     computePosition(referenceElement, popup, {
-      placement: 'bottom-start',
+      placement,
       middleware: [offset(offsetOptions), flip(), shift({ padding: 8 })],
       ...options,
     })
