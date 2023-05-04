@@ -176,7 +176,7 @@ export interface CommentData {
   /** 回复者昵称 */
   memberName: string
   /** 回复者主页链接 */
-  memberLink: any
+  memberLink: string
   /** 回复者头像 */
   memberAvatar: string
   /** 回复内容 */

@@ -430,6 +430,19 @@ body {
       background-color: var(--v2p-color-main-200);
     }
   }
+
+  .markdown_body table {
+    border-top: 1px solid var(--v2p-color-border-darker);
+    box-shadow: none;
+
+    tr td {
+      border: 1px solid var(--v2p-color-border-darker);
+    }
+
+    tr:nth-child(2n) {
+      background-color: var(--box-background-alt-color);
+    }
+  }
 }
 
 /* ====== 帖子标签 ====== */
@@ -703,7 +716,7 @@ body {
         padding: 15px 0 0 15px;
         border: none;
         border-radius: 0;
-        box-shadow: -2.4px 0 var(--v2p-color-border-reply);
+        box-shadow: -2.4px 0 var(--v2p-color-border-darker);
 
         /* 多层嵌套 */
         .cell[id^='r'] {
@@ -712,7 +725,7 @@ body {
 
           &.v2p-indent {
             padding-left: 15px; /* 取消靠左对齐，逐层缩进 */
-            border-left: 1px solid var(--v2p-color-border-reply);
+            border-left: 1px solid var(--v2p-color-border-darker);
           }
         }
 
