@@ -169,7 +169,7 @@ export function handlingTopicList() {
 
                 if (topic.content_rendered) {
                   $topicPreview.append(
-                    `<div class="v2p-topic-preview-content">${topic.content_rendered}</div>`
+                    `<div class="v2p-topic-preview-content markdown_body">${topic.content_rendered}</div>`
                   )
                 } else {
                   $topicPreview.append(`

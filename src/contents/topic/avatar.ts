@@ -20,6 +20,8 @@ interface ProcessAvatar {
 export function processAvatar(params: ProcessAvatar) {
   const { $cellDom, popupControl, commentData, onSetTagsClick: onSetTags } = params
 
+  const { memberName, memberAvatar, memberLink } = commentData
+
   let abortController: AbortController | null = null
 
   const $avatar = $cellDom.find('.avatar')
@@ -32,23 +34,37 @@ export function processAvatar(params: ProcessAvatar) {
       <div class="v2p-member-card">
         <div class="v2p-info">
           <div class="v2p-info-left">
-            <a class="v2p-avatar-box"></a>
+            <a class="v2p-avatar-box" href="${memberLink}">
+              <img class="v2p-avatar" src="${memberAvatar}">
+            </a>
           </div>
 
           <div class="v2p-info-right">
-            <div class="v2p-username v2p-loading"></div>
+            <div class="v2p-username">
+              <a href="${memberLink}">${memberName}</a>
+            </div>
             <div class="v2p-no v2p-loading"></div>
             <div class="v2p-created-date v2p-loading"></div>
           </div>
-        </div>
+
+          </div>
+
+          <div class="v2p-bio" style="disply:none;"></div>
+
+          <div class="v2p-member-card-actions"></div>
       </div>
     `)
 
     popupControl.$content.empty().append($content)
 
-    void (async () => {
-      const memberName = commentData.memberName
+    createButton({ children: '添加用户标签' })
+      .on('click', () => {
+        popupControl.close()
+        onSetTags?.()
+      })
+      .appendTo($('.v2p-member-card-actions'))
 
+    void (async () => {
       // 缓存用户卡片的信息，只有在无缓存时才请求远程数据。
       if (!memberDataCache.has(memberName)) {
         abortController = new AbortController()
@@ -74,18 +90,6 @@ export function processAvatar(params: ProcessAvatar) {
       const data = memberDataCache.get(memberName)
 
       if (data) {
-        const memberName = data.username
-
-        $content
-          .find('.v2p-avatar-box')
-          .prop('href', data.url)
-          .removeClass('v2p-loading')
-          .append(`<img class="v2p-avatar" src="${data.avatar_large}">`)
-
-        const $memberName = $(`<a href="${data.url}">${memberName}</a>`)
-
-        $content.find('.v2p-username').removeClass('v2p-loading').append($memberName)
-
         $content.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)
 
         $content
@@ -94,17 +98,8 @@ export function processAvatar(params: ProcessAvatar) {
           .text(`加入于 ${formatTimestamp(data.created)}`)
 
         if (data.bio && data.bio.trim().length > 0) {
-          $content.append(`<div class="v2p-bio">${data.bio}</div>`)
+          $content.find('.v2p-bio').css('disply', 'block').text(data.bio)
         }
-
-        const $actions = $('<div class="v2p-member-card-actions">')
-        createButton({ children: '添加用户标签' })
-          .on('click', () => {
-            popupControl.close()
-            onSetTags?.()
-          })
-          .appendTo($actions)
-        $content.append($actions)
       }
     })()
   }

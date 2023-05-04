@@ -21,7 +21,7 @@ function handlingReplyActions() {
     $replyBtn.text('提交回复中...').prop('disabled', true)
 
     setTimeout(() => {
-      $replyBtn.text(replyBtnText).prop('disabled', false)
+      $replyBtn.html(replyBtnText).prop('disabled', false)
     }, 5000)
   })
 
