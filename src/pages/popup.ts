@@ -176,7 +176,7 @@ function loadSettings() {
             })()
           })
       } else {
-        if (syncInfo && syncInfo.version < remoteSyncInfo.version) {
+        if (!syncInfo || syncInfo.version < remoteSyncInfo.version) {
           $('.storage-tip').text('远程备份的版本较新')
           $syncBtn
             .text('同步至本地')
