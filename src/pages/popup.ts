@@ -9,6 +9,7 @@
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
+import { deepMerge } from '../deep-merge'
 import { iconChat, iconLoading } from '../icons'
 import {
   fetchHotTopics,
@@ -185,7 +186,14 @@ function loadSettings() {
                 const txt = $syncBtn.text()
                 try {
                   $syncBtn.text('同步中...').css('pointer-events', 'none')
-                  await chrome.storage.sync.set(settings)
+                  await new Promise((resolve) =>
+                    setTimeout(() => {
+                      resolve(undefined)
+                    }, 1000)
+                  )
+                  const storage = await getStorage(false)
+                  await chrome.storage.sync.set(deepMerge(storage, settings))
+                  $('#local-version').val(settings[StorageKey.SyncInfo]?.version ?? defaultValue)
                 } finally {
                   $syncBtn.text(txt).css('pointer-events', 'auto')
                 }
