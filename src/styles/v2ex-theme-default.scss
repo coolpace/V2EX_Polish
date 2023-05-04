@@ -101,10 +101,25 @@ body {
     #search-result {
       top: 42px;
       z-index: var(--zidx-serach);
-      box-shadow: 0 0 15px 5px var(--box-background-hover-color);
+      color: var(--v2p-color-main-600);
+      font-size: 14px;
+      background: var(--v2p-color-bg-widget);
+      border: 1px solid var(--box-border-color);
+      box-shadow: var(--v2p-widget-shadow);
+      backdrop-filter: blur(16px);
+
+      .fade {
+        color: var(--v2p-color-main-600);
+      }
 
       .search-item {
-        color: var(--color-gray);
+        color: var(--v2p-color-foreground);
+        font-weight: bold;
+        border-radius: 5px;
+
+        &.active {
+          color: var(--v2p-color-foreground);
+        }
       }
     }
   }
