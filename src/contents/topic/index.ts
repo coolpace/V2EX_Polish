@@ -24,10 +24,8 @@ void (async () => {
   //   })
   // }
 
-  {
-    if (options.openInNewTab) {
-      $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
-    }
+  if (options.openInNewTab) {
+    $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
   }
 
   {
@@ -73,20 +71,18 @@ void (async () => {
 
   handlingContent()
 
-  {
-    // 如果是从相同的主题跳转过来的，且含有分页参数，则被认为是执行翻页操作，跳过正文内容直接滚动到评论区。
-    if (document.referrer !== '') {
-      if (document.referrer.includes(document.location.pathname)) {
-        const url = new URL(document.location.href)
-        const page = url.searchParams.get('p')
-        if (page && page !== '1') {
-          document.querySelector('.topic_buttons')?.scrollIntoView({ behavior: 'smooth' })
-        }
+  // 如果是从相同的主题跳转过来的，且含有分页参数，则被认为是执行翻页操作，跳过正文内容直接滚动到评论区。
+  if (document.referrer !== '') {
+    if (document.referrer.includes(document.location.pathname)) {
+      const url = new URL(document.location.href)
+      const page = url.searchParams.get('p')
+      if (page && page !== '1') {
+        document.querySelector('.topic_buttons')?.scrollIntoView({ behavior: 'smooth' })
       }
     }
   }
 
-  await handlingComments()
+  handlingComments()
   handlingPaging()
   handleReply()
 })()

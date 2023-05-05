@@ -40,12 +40,10 @@ export function fetchUserInfo(memberName: Member['username'], options?: RequestI
 }
 
 export function fetchLatestTopics(options?: RequestInit) {
-  // return Promise.resolve(mockTopics)
   return legacyRequest<Topic[]>(`${V2EX_LEGACY_API}/topics/latest.json`, options)
 }
 
 export function fetchHotTopics(options?: RequestInit) {
-  // return Promise.resolve(mockTopics)
   return legacyRequest<Topic[]>(`${V2EX_LEGACY_API}/topics/hot.json`, options)
 }
 
