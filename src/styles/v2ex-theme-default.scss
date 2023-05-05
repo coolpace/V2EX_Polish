@@ -425,6 +425,7 @@ body {
   // 提示回复没有内容。
   .problem {
     color: currentColor;
+    color: var(--v2p-color-orange-400);
     background-color: var(--v2p-color-orange-50);
     border-color: var(--v2p-color-orange-400);
     border-bottom: none;
