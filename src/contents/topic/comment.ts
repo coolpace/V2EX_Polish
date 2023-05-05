@@ -4,7 +4,7 @@ import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { iconHeart, iconHide, iconReply } from '../../icons'
 import type { Member } from '../../types'
-import { escapeHTML, getStorage, getStorageSync } from '../../utils'
+import { escapeHTML, getStorageSync } from '../../utils'
 import {
   $commentBox,
   $commentCells,
@@ -174,8 +174,8 @@ function handlingControls() {
   })
 }
 
-export async function handlingComments() {
-  const storage = await getStorage()
+export function handlingComments() {
+  const storage = getStorageSync()
 
   const tagData = storage[StorageKey.MemberTag]
   const options = storage[StorageKey.Options]
