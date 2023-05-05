@@ -431,9 +431,20 @@ body {
   }
 
   // 正文内容的表格。
-  .markdown_body table tr th {
-    color: currentColor;
-    border: 1px solid var(--v2p-color-border);
+  .markdown_body table {
+    border-top: 1px solid var(--v2p-color-border-darker);
+    box-shadow: none;
+
+    tr {
+      th,
+      td {
+        border: 1px solid var(--v2p-color-border-darker);
+      }
+    }
+
+    tr:nth-child(2n) {
+      background-color: var(--box-background-alt-color);
+    }
   }
 
   // 个人页的链接。
@@ -446,17 +457,8 @@ body {
     }
   }
 
-  .markdown_body table {
-    border-top: 1px solid var(--v2p-color-border-darker);
-    box-shadow: none;
-
-    tr td {
-      border: 1px solid var(--v2p-color-border-darker);
-    }
-
-    tr:nth-child(2n) {
-      background-color: var(--box-background-alt-color);
-    }
+  .green {
+    color: var(--v2p-color-accent-500);
   }
 }
 
