@@ -417,7 +417,7 @@ function initTabs() {
     } else if (tabEle) {
       toggleActiveTab(tabEle)
     } else {
-      toggleActiveTab($('.tabs > li:first-child'))
+      toggleActiveTab($('nav > .tabs > li:first-child'))
     }
   }
 
