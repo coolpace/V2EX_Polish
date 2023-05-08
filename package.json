@@ -8,7 +8,7 @@
     "dev": "run-p watch:style watch:ext",
     "dev:site": "live-server --entry-file=website/index.html --no-browser",
     "build": "run-p build:style build:ext build:userscript",
-    "output:userscript": "tsup src/user-scripts/index.ts --outDir dist",
+    "output:userscript": "tsup src/user-scripts/index.ts --no-minify --outDir dist",
     "output:css": "node src/user-scripts/write-style.mjs",
     "build:userscript": "run-s output:css output:userscript",
     "build:ext": "tsup",
