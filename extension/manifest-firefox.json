@@ -1,0 +1,70 @@
+{
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "leokudev@gmail.com"
+    }
+  },
+
+  "manifest_version": 3,
+
+  "name": "V2EX Polish",
+
+  "version": "1.3.6",
+
+  "description": "专为 V2EX 用户设计，提供了丰富的扩展功能。",
+
+  "permissions": ["scripting", "contextMenus", "storage", "alarms"],
+
+  "host_permissions": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+
+  "icons": {
+    "16": "images/icon-16.png",
+    "32": "images/icon-32.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "css": ["css/v2ex-theme-var.css", "css/v2ex-theme-default.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "css": ["css/v2ex-effect.css"],
+      "js": ["scripts/jquery.min.js", "scripts/common.min.js"]
+    },
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings"],
+      "js": ["scripts/v2ex-home.min.js"]
+    },
+    {
+      "matches": ["https://v2ex.com/t/*", "https://www.v2ex.com/t/*"],
+      "js": ["scripts/v2ex-topic.min.js"]
+    },
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "js": ["scripts/toggle-icon.min.js"]
+    }
+  ],
+
+  "background": {
+    "scripts": ["scripts/background.min.js"]
+  },
+
+  "web_accessible_resources": [
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "resources": ["scripts/web_accessible_resources.min.js"]
+    }
+  ],
+
+  "options_page": "pages/options.html",
+
+  "action": {
+    "default_title": "V2EX Polish 用户面板",
+    "default_popup": "pages/popup.html"
+  }
+}
