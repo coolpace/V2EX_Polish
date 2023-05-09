@@ -4,7 +4,7 @@ import { emoticons } from '../../constants'
 import { iconEmoji, iconTool } from '../../icons'
 import { uploadImage } from '../../services'
 import { getOS } from '../../utils'
-import { $replyBox, $replyForm, replyTextArea } from '../globals'
+import { $replyBox, $replyForm, $replyTextArea, replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 
 function handlingReplyActions() {
@@ -148,14 +148,27 @@ export function handleReply() {
   const $uploadBar = $(`<div class="v2p-reply-upload-bar">${uploadTip}</div>`)
 
   const handleUploadImage = (file: File) => {
+    const placeholder = '[上传图片中...]'
+    insertTextToReplyInput(` ${placeholder} `)
     $uploadBar.addClass('v2p-reply-upload-bar-disabled').text('正在上传图片...')
+
+    const replacePlaceholder = (imgLink: string) => {
+      const val = $replyTextArea.val()
+
+      if (typeof val === 'string') {
+        const newVal = val.replace(placeholder, imgLink)
+        $replyTextArea.val(newVal).trigger('focus')
+      }
+    }
 
     uploadImage(file)
       .then((imgLink) => {
-        insertTextToReplyInput(imgLink)
+        replacePlaceholder(imgLink)
       })
       .catch(() => {
-        window.alert('上传图片失败')
+        replacePlaceholder('')
+
+        window.alert('上传图片失败，请打开控制台查看原因')
       })
       .finally(() => {
         $uploadBar.removeClass('v2p-reply-upload-bar-disabled').text(uploadTip)
@@ -227,9 +240,7 @@ export function handleReply() {
     }
   })
 
-  $('#reply_content')
-    .wrap('<div class="v2p-reply-wrap">')
-    .attr('placeholder', '留下对他人有帮助的回复')
+  $replyTextArea.wrap('<div class="v2p-reply-wrap">').attr('placeholder', '留下对他人有帮助的回复')
 
   $('.flex-one-row:last-of-type > .gray').text('')
 

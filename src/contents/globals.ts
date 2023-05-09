@@ -29,6 +29,7 @@ export const $replyForm = $replyBox.find('form[action^="/t"]')
 export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'
 
 /** 主题回复输入框 */
+export const $replyTextArea = $('#reply_content')
 export const replyTextArea = document.querySelector('#reply_content')
 
 /** 每一页的回复列表数据 */
