@@ -92,30 +92,34 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
     const runEnv = getRunEnv()
 
     if (runEnv !== 'chrome') {
-      return resolve({ [StorageKey.Options]: defaultOptions })
+      const data: StorageSettings = { [StorageKey.Options]: defaultOptions }
+      if (typeof window !== 'undefined') {
+        window.__V2P_StorageCache = data
+      }
+      resolve(data)
+    } else {
+      chrome.storage.sync
+        .get()
+        .then((items: StorageItems) => {
+          let data: StorageSettings
+
+          const options = items[StorageKey.Options]
+
+          if (options) {
+            data = { ...items, [StorageKey.Options]: deepMerge(defaultOptions, options) }
+          } else {
+            data = { ...items, [StorageKey.Options]: defaultOptions }
+          }
+
+          if (typeof window !== 'undefined') {
+            window.__V2P_StorageCache = data
+          }
+          resolve(data)
+        })
+        .catch((err) => {
+          reject(err)
+        })
     }
-
-    chrome.storage.sync
-      .get()
-      .then((items: StorageItems) => {
-        let data: StorageSettings
-
-        const options = items[StorageKey.Options]
-
-        if (options) {
-          data = { ...items, [StorageKey.Options]: deepMerge(defaultOptions, options) }
-        } else {
-          data = { ...items, [StorageKey.Options]: defaultOptions }
-        }
-
-        if (typeof window !== 'undefined') {
-          window.__V2P_StorageCache = data
-        }
-        resolve(data)
-      })
-      .catch((err) => {
-        reject(err)
-      })
   })
 }
 
