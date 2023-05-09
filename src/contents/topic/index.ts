@@ -1,7 +1,7 @@
 import { StorageKey } from '../../constants'
 import { iconReply, iconScrollTop } from '../../icons'
 import { getStorage } from '../../utils'
-import { $commentTableRows, $replyBox } from '../globals'
+import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -41,7 +41,7 @@ void (async () => {
     `)
 
     $tools.find('.v2p-tool-reply').on('click', () => {
-      $replyBox.find('#reply_content').trigger('focus')
+      $replyTextArea.trigger('focus')
     })
 
     $tools.find('.v2p-tool-scroll-top').on('click', () => {
