@@ -310,6 +310,8 @@ body {
 
   .item_hot_topic_title {
     @include share.line-clamp(2);
+
+    text-shadow: none;
   }
 
   form {
@@ -460,6 +462,12 @@ body {
 
   .green {
     color: var(--v2p-color-accent-500);
+  }
+
+  .message {
+    color: var(--v2p-color-orange-400);
+    background-color: var(--v2p-color-orange-50);
+    border: none;
   }
 }
 
@@ -865,6 +873,7 @@ body {
   }
 
   .tab {
+    color: var(--v2p-color-foreground);
     background-color: transparent;
     user-select: none;
 
