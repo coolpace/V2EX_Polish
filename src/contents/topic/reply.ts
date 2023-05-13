@@ -1,5 +1,6 @@
 import { createButton } from '../../components/button'
 import { createPopup } from '../../components/popup'
+import { createToast } from '../../components/toast'
 import { emoticons } from '../../constants'
 import { iconEmoji, iconTool } from '../../icons'
 import { uploadImage } from '../../services'
@@ -137,8 +138,12 @@ export function handleReply() {
       const inputText = window.prompt('输入要加密的字符串，完成后将填写到回复框中：')
 
       if (inputText) {
-        const encodedText = window.btoa(inputText)
-        insertTextToReplyInput(encodedText)
+        try {
+          const encodedText = window.btoa(inputText)
+          insertTextToReplyInput(encodedText)
+        } catch (err) {
+          createToast({ message: '该文本无法编码为 Base64' })
+        }
       }
     })
   })
