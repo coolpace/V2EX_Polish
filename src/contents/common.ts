@@ -30,16 +30,39 @@ void (async () => {
   {
     const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
     const $toggleImg = $toggle.find('> img')
+    const alt = $toggleImg.prop('alt')
 
-    if ($toggleImg.prop('alt') === 'Light') {
+    if (alt === 'Light') {
       $toggle.prop('title', '使用深色主题')
       $toggleImg.replaceWith(iconDark)
-    }
-
-    if ($toggleImg.prop('alt') === 'Dark') {
+    } else if (alt === 'Dark') {
       $toggle.prop('title', '使用浅色主题')
       $toggleImg.replaceWith(iconLight)
     }
+  }
+
+  {
+    // 增加 SOV2EX 作为搜索引擎选项。
+    const $searchItem = $('<a class="search-item cell" target="_blank">')
+
+    $searchItem
+      .on('mouseover', () => {
+        $('#search-result .search-item.active').addClass('v2p-no-active')
+        $searchItem.addClass('active')
+      })
+      .on('mouseleave', () => {
+        $('#search-result .search-item.active').removeClass('v2p-no-active')
+        $searchItem.removeClass('active')
+      })
+
+    const $search = $('#search')
+
+    $search.on('input', (ev) => {
+      const value = (ev.target as HTMLInputElement).value
+      const $searchGroup = $('#search-result .search-item-group:last-of-type')
+      $searchItem.text(`SOV2EX ${value}`).prop('href', `https://www.sov2ex.com/?q=${value}`)
+      $searchGroup.append($searchItem)
+    })
   }
 
   {
