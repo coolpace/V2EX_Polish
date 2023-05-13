@@ -59,7 +59,7 @@ if (window.__V2P_DecodeStatus__ === 'decodeed') {
     }
 
     try {
-      const decodedStr = window.atob(text)
+      const decodedStr = window.decodeURIComponent(window.atob(text))
       count += 1
       return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
     } catch {

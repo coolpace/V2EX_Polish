@@ -139,7 +139,7 @@ export function handleReply() {
 
       if (inputText) {
         try {
-          const encodedText = window.btoa(inputText)
+          const encodedText = window.btoa(window.encodeURIComponent(inputText))
           insertTextToReplyInput(encodedText)
         } catch (err) {
           createToast({ message: '该文本无法编码为 Base64' })
