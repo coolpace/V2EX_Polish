@@ -1,6 +1,7 @@
 import { Links, StorageKey } from '../constants'
+import { deepMerge } from '../deep-merge'
 import { iconChromeWebStore, iconDark, iconGitHub, iconLight, iconLogo } from '../icons'
-import { getStorage } from '../utils'
+import { getStorage, setStorage } from '../utils'
 
 void (async () => {
   const storage = await getStorage()
@@ -28,7 +29,11 @@ void (async () => {
   }
 
   {
-    const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
+    const $toggle = $('#Rightbar .light-toggle')
+      .addClass('v2p-color-mode-toggle')
+      .on('click', () => {
+        void setStorage(StorageKey.Options, deepMerge(options, { theme: { autoSwitch: false } }))
+      })
     const $toggleImg = $toggle.find('> img')
     const alt = $toggleImg.prop('alt')
 
