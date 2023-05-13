@@ -119,6 +119,10 @@ body {
 
         &.active {
           color: var(--v2p-color-foreground);
+
+          &.v2p-no-active {
+            background-color: transparent;
+          }
         }
       }
     }
