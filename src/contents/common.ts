@@ -7,33 +7,9 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  if (options.theme.autoSwitch) {
-    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
-
-    if (perfersDark.matches) {
-      $('#Wrapper').addClass('Night')
-    }
-
-    perfersDark.addEventListener('change', ({ matches }) => {
-      if (matches) {
-        $('#Wrapper').addClass('Night')
-      } else {
-        $('#Wrapper').removeClass('Night')
-      }
-    })
-  }
-
   {
-    // 为顶部导航栏的按钮添加 hover 效果。
-    $('#Top .site-nav .tools > .top').addClass('v2p-hover-btn')
-  }
+    const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
-  {
-    const $toggle = $('#Rightbar .light-toggle')
-      .addClass('v2p-color-mode-toggle')
-      .on('click', () => {
-        void setStorage(StorageKey.Options, deepMerge(options, { theme: { autoSwitch: false } }))
-      })
     const $toggleImg = $toggle.find('> img')
     const alt = $toggleImg.prop('alt')
 
@@ -44,6 +20,32 @@ void (async () => {
       $toggle.prop('title', '使用浅色主题')
       $toggleImg.replaceWith(iconLight)
     }
+
+    if (options.theme.autoSwitch) {
+      const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+      if (perfersDark.matches) {
+        $('#Wrapper').addClass('Night')
+      }
+
+      perfersDark.addEventListener('change', ({ matches }) => {
+        if (matches) {
+          $('#Wrapper').addClass('Night')
+        } else {
+          $('#Wrapper').removeClass('Night')
+        }
+      })
+
+      $toggle.on('click', () => {
+        // 当用户主动设置颜色主题后，取消自动跟随系统。
+        void setStorage(StorageKey.Options, deepMerge(options, { theme: { autoSwitch: false } }))
+      })
+    }
+  }
+
+  {
+    // 为顶部导航栏的按钮添加 hover 效果。
+    $('#Top .site-nav .tools > .top').addClass('v2p-hover-btn')
   }
 
   {
