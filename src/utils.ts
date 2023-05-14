@@ -70,9 +70,13 @@ export function isSameDay(timestamp1: number, timestamp2: number): boolean {
 /**
  * 检查运行在哪个扩展中。
  */
-export function getRunEnv(): 'chrome' | null {
-  if (typeof chrome !== 'undefined' && typeof chrome.extension !== 'undefined') {
+export function getRunEnv(): 'chrome' | 'web-ext' | null {
+  if (typeof chrome === 'object' && typeof chrome.extension !== 'undefined') {
     return 'chrome'
+  }
+
+  if (typeof browser === 'object' && typeof browser.extension !== 'undefined') {
+    return 'web-ext'
   }
 
   return null
@@ -91,7 +95,7 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
 
     const runEnv = getRunEnv()
 
-    if (runEnv !== 'chrome') {
+    if (!(runEnv === 'chrome' || runEnv === 'web-ext')) {
       const data: StorageSettings = { [StorageKey.Options]: defaultOptions }
       if (typeof window !== 'undefined') {
         window.__V2P_StorageCache = data
