@@ -33,7 +33,7 @@ export const $replyTextArea = $('#reply_content')
 export const replyTextArea = document.querySelector('#reply_content')
 
 /** 每一页的回复列表数据 */
-export const commentDataList: CommentData[] = $commentTableRows
+export const commentDataList: readonly CommentData[] = $commentTableRows
   .map<CommentData>((idx, tr) => {
     const id = $commentCells[idx].id
 
