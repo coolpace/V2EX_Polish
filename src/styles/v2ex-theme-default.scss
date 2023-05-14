@@ -473,6 +473,22 @@ body {
     background-color: var(--v2p-color-orange-50);
     border: none;
   }
+
+  // 账户余额。
+  .balance_area,
+  a.balance_area:is(:link, :visited) {
+    display: inline-flex;
+    gap: 3px;
+    align-items: center;
+    color: var(--v2p-color-foreground);
+    font-weight: 600;
+    text-shadow: none;
+    background: var(--v2p-color-main-100);
+
+    &:hover {
+      background: var(--v2p-color-main-200);
+    }
+  }
 }
 
 /* ====== 帖子标签 ====== */
@@ -994,22 +1010,6 @@ body {
 /* ================================================================ */
 
 #Rightbar {
-  #money {
-    a.balance_area:is(:link, :visited) {
-      display: flex;
-      gap: 3px;
-      align-items: center;
-      color: var(--v2p-color-foreground);
-      font-weight: 600;
-      text-shadow: none;
-      background: var(--v2p-color-main-100);
-
-      &:hover {
-        background: var(--v2p-color-main-200);
-      }
-    }
-  }
-
   .cell:has(.light-toggle) {
     font-size: 13px;
   }
