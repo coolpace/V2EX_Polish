@@ -9,10 +9,12 @@ import {
   $commentBox,
   $commentCells,
   $commentTableRows,
+  $replyTextArea,
   commentDataList,
   loginName,
   topicOwnerName,
 } from '../globals'
+import { insertTextToReplyInput } from '../helpers'
 import { processAvatar } from './avatar'
 import { openTagsSetter, processReplyContent, updateMemberTag } from './content'
 
@@ -169,6 +171,29 @@ function handlingControls() {
     thankArea.remove()
 
     const floorNum = ctrlArea.find('.no').clone()
+
+    // 当要回复的用户在本页已有多条回复时，在输入框中添加指定楼层，这样可以减少楼层错乱的情况。
+    $reply.on('click', () => {
+      const replyVal = $replyTextArea.val()
+
+      if (typeof replyVal === 'string' && replyVal.length > 0) {
+        const floor = floorNum.text()
+
+        const replyComment = commentDataList.find((it) => it.floor === floor)
+
+        if (replyComment) {
+          const replyMemberName = replyComment.memberName
+          const moreThanOneReply =
+            commentDataList.findIndex(
+              (it) => it.memberName === replyMemberName && it.floor !== floor
+            ) !== -1
+
+          if (moreThanOneReply) {
+            insertTextToReplyInput(`#${floor} `)
+          }
+        }
+      }
+    })
 
     ctrlArea.empty().append($controls, floorNum)
   })
