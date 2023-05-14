@@ -55,7 +55,10 @@
     }
   ],
 
-  "options_page": "pages/options.html",
+  "options_ui": {
+    "page": "pages/options.html",
+    "open_in_tab": true
+  },
 
   "action": {
     "default_title": "V2EX Polish 用户面板",
