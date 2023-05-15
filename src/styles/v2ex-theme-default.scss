@@ -403,9 +403,10 @@ body {
       }
     }
 
-    // 主题链接
+    // 站内链接
     a[href*='v2ex.com/t'],
-    a[href^='/t'] {
+    a[href^='/t'],
+    a[href^='/go'] {
       @include share.link;
 
       color: var(--v2p-color-accent-500);
@@ -559,9 +560,19 @@ body {
   > .box {
     padding: 0 12px;
 
+    &.node-header {
+      > .cell {
+        margin: 0 -12px;
+      }
+    }
+
     .cell {
       padding: 20px 10px;
       background-image: none !important;
+    }
+
+    .cell_ops {
+      padding: 15px 5px;
     }
   }
 
