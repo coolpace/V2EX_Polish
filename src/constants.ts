@@ -8,6 +8,7 @@ export const enum StorageKey {
   API = 'api',
   Daily = 'daily',
   MemberTag = 'member-tag',
+  ReadingList = 'reading-list',
 }
 
 export const enum V2EX {
@@ -18,6 +19,7 @@ export const enum V2EX {
 export const enum Menu {
   Root = 'menu',
   Decode = 'menu/decode',
+  Reading = 'menu/reading',
 }
 
 /** 表情数据 */
