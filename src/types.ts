@@ -47,12 +47,20 @@ export interface Tag {
 
 export type MemberTag = Record<Member['username'], { tags?: Tag[] }>
 
+export interface ReadingItem {
+  title: Topic['title']
+  desc: string
+}
+
 export interface StorageItems {
   [StorageKey.SyncInfo]?: SettingsSyncInfo
   [StorageKey.Options]?: Options
   [StorageKey.API]?: API_Info
   [StorageKey.Daily]?: DailyInfo
   [StorageKey.MemberTag]?: MemberTag
+  [StorageKey.ReadingList]?: {
+    data: ReadingItem[]
+  }
 }
 
 export interface StorageSettings extends StorageItems {

@@ -51,13 +51,32 @@ chrome.contextMenus.removeAll(() => {
     parentId: Menu.Root,
   })
 
+  chrome.contextMenus.create({
+    documentUrlPatterns: ['https://v2ex.com/t/*', 'https://www.v2ex.com/t/*'],
+    contexts: ['page'],
+    title: '添加进稍后阅读',
+    id: Menu.Reading,
+    parentId: Menu.Root,
+  })
+
   chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === Menu.Decode) {
-      if (tab?.id) {
-        void chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ['scripts/decode-base64.min.js'],
-        })
+    if (tab?.id) {
+      switch (info.menuItemId) {
+        case Menu.Decode: {
+          void chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ['scripts/decode-base64.min.js'],
+          })
+          break
+        }
+
+        case Menu.Reading: {
+          void chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ['scripts/reading-list.min.js'],
+          })
+          break
+        }
       }
     }
   })

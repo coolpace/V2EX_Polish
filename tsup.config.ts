@@ -7,6 +7,7 @@ export default defineConfig({
     'v2ex-home.min': 'src/contents/home/index.ts',
     'v2ex-topic.min': 'src/contents/topic/index.ts',
     'decode-base64.min': 'src/contents/decode-base64.ts',
+    'reading-list.min': 'src/contents/reading-list.ts',
 
     'popup.min': 'src/pages/popup.ts',
     'options.min': 'src/pages/options.ts',
