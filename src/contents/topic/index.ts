@@ -82,7 +82,7 @@ void (async () => {
     }
   }
 
-  handlingComments()
   handlingPaging()
+  void handlingComments()
   handleReply()
 })()

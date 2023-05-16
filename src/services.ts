@@ -218,3 +218,9 @@ export async function setV2P_Settings(storageSettings: StorageSettings) {
 
   await setStorage(StorageKey.SyncInfo, syncInfo)
 }
+
+export async function fetchTopicPage(path: string, page: string) {
+  const res = await fetch(`${V2EX.Origin}${path}?p=${page}`)
+  const htmlText = await res.text()
+  return htmlText
+}
