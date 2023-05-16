@@ -150,6 +150,8 @@ button {
   }
 
   .topic-item {
+    position: relative;
+
     > a {
       display: block;
       padding: 20px 15px;
@@ -175,6 +177,28 @@ button {
         color: var(--v2p-color-main-600);
         font-size: 13px;
       }
+    }
+
+    .topic-item-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-flex;
+      background: var(--v2p-color-bg-widget);
+      opacity: 0;
+      backdrop-filter: blur(16px);
+    }
+
+    &:hover {
+      .topic-item-actions {
+        opacity: 1;
+      }
+    }
+
+    .topic-item-action-remove {
+      padding: 5px 10px;
+      color: #ef4444;
+      background-color: #fee2e2;
     }
   }
 

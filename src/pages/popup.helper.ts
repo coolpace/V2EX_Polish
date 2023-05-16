@@ -1,9 +1,12 @@
+import type { ReadingItem, Topic } from '../types'
+import { escapeHTML } from '../utils'
 import { TabId } from './popup.var'
 
 export function isTabId(tabId: any): tabId is TabId {
   if (typeof tabId === 'string') {
     if (
       /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+      tabId === TabId.Reading ||
       tabId === TabId.Hot ||
       tabId === TabId.Latest ||
       tabId === TabId.Message ||
@@ -15,6 +18,40 @@ export function isTabId(tabId: any): tabId is TabId {
     }
   }
   return false
+}
+
+export const generateReadingItmes = (items: ReadingItem[]) => {
+  return items
+    .map((topic) => {
+      return `
+        <li class="topic-item">
+          <a href="${topic.url}" target="_blank">
+            <span class="title">${escapeHTML(topic.title)}</span>
+            <span class="content">${topic.content.replace(/<[^>]*>/g, '')}</span>
+
+            <div class="topic-item-actions">
+              <button class="topic-item-action-remove" data-url="${topic.url}">移除</button>
+            </div>
+          </a>
+        </li>
+      `
+    })
+    .join('')
+}
+
+export const generateTopicItmes = (topics: Topic[]) => {
+  return topics
+    .map((topic) => {
+      return `
+        <li class="topic-item">
+          <a href="${topic.url}" target="_blank">
+            <span class="title">${escapeHTML(topic.title)}</span>
+            <span class="content">${topic.content.replace(/<[^>]*>/g, '')}</span>
+          </a>
+        </li>
+        `
+    })
+    .join('')
 }
 
 /**

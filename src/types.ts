@@ -47,9 +47,9 @@ export interface Tag {
 
 export type MemberTag = Record<Member['username'], { tags?: Tag[] }>
 
-export interface ReadingItem {
-  title: Topic['title']
-  desc: string
+export interface ReadingItem extends Pick<Topic, 'url' | 'title' | 'content'> {
+  addedTime: number
+  read?: boolean
 }
 
 export interface StorageItems {
@@ -59,7 +59,7 @@ export interface StorageItems {
   [StorageKey.Daily]?: DailyInfo
   [StorageKey.MemberTag]?: MemberTag
   [StorageKey.ReadingList]?: {
-    data: ReadingItem[]
+    data?: ReadingItem[]
   }
 }
 
