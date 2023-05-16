@@ -112,7 +112,7 @@ export function createPopup(props: CreatePopupProps): PopupControl {
       })
       .catch(() => {
         handlePopupClose()
-        createToast({ message: 'Popup 渲染失败' })
+        createToast({ message: '❌ Popup 渲染失败' })
       })
 
     onOpen?.()

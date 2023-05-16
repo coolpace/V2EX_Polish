@@ -19,15 +19,14 @@ import {
   setV2P_Settings,
 } from '../services'
 import type { Topic } from '../types'
+import { formatTimestamp, getStorage, getStorageSync, isSameDay, setStorage } from '../utils'
 import {
-  escapeHTML,
-  formatTimestamp,
-  getStorage,
-  getStorageSync,
-  isSameDay,
-  setStorage,
-} from '../utils'
-import { calculateLocalStorageSize, formatSizeUnits, isTabId } from './popup.helper'
+  calculateLocalStorageSize,
+  formatSizeUnits,
+  generateReadingItmes,
+  generateTopicItmes,
+  isTabId,
+} from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
 
@@ -46,6 +45,7 @@ const errorDisplay = `
 `
 
 const topicContentData: Record<TabId, RemoteDataStore> = {
+  [TabId.Reading]: {},
   [TabId.Hot]: {
     data: undefined,
     lastFetchTime: undefined,
@@ -206,21 +206,6 @@ function loadSettings() {
 }
 
 function initTabs() {
-  const generateTopicItmes = (topics: Topic[]) => {
-    return topics
-      .map((topic) => {
-        return `
-          <li class="topic-item">
-            <a href="${topic.url}" target="_blank">
-              <span class="title">${escapeHTML(topic.title)}</span>
-              <span class="content">${topic.content.replace(/<[^>]*>/g, '')}</span>
-            </a>
-          </li>
-          `
-      })
-      .join('')
-  }
-
   const getCurrentActiveTab = () => {
     return $('.tabs > li.active')
   }
@@ -235,6 +220,34 @@ function initTabs() {
     let tabContentScrollTop = 0
 
     const $tabContent = $(`#${tabId}`)
+
+    if (tabId === TabId.Reading) {
+      const readingData = storage[StorageKey.ReadingList]?.data
+      if (readingData) {
+        const $readingList = $(`<ul class="list">`).append(generateReadingItmes(readingData))
+
+        $tabContent.empty().append($readingList)
+
+        $('.topic-item-action-remove').on('click', (ev) => {
+          ev.preventDefault()
+          ev.stopPropagation()
+
+          const url = ev.target.dataset.url
+
+          if (url) {
+            const newReadingData = readingData.filter((it) => it.url !== url)
+
+            void setStorage(StorageKey.ReadingList, { data: newReadingData })
+
+            $tabContent
+              .find(`.topic-item:has(.topic-item-action-remove[data-url="${url}"])`)
+              .remove()
+          }
+        })
+      } else {
+        $tabContent.empty().append('<div>暂未添加稍后阅读</div>')
+      }
+    }
 
     if (tabId === TabId.Hot || tabId === TabId.Latest) {
       const loaded = $tabContent.find('.list').length > 0

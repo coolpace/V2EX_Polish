@@ -173,7 +173,7 @@ export function handleReply() {
       .catch(() => {
         replacePlaceholder('')
 
-        window.alert('上传图片失败，请打开控制台查看原因')
+        window.alert('❌ 上传图片失败，请打开控制台查看原因')
       })
       .finally(() => {
         $uploadBar.removeClass('v2p-reply-upload-bar-disabled').text(uploadTip)

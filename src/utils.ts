@@ -134,7 +134,7 @@ export function getStorageSync(): StorageSettings {
   const storage = window.__V2P_StorageCache
 
   if (!storage) {
-    throw new Error(`${EXTENSION_NAME}: 无可用的 Storage 缓存数据。`)
+    throw new Error(`${EXTENSION_NAME}: 无可用的 Storage 缓存数据`)
   }
 
   return storage
@@ -150,11 +150,12 @@ export async function setStorage<T extends StorageKey>(
     case StorageKey.Daily:
     case StorageKey.MemberTag:
     case StorageKey.SyncInfo:
+    case StorageKey.ReadingList:
       await chrome.storage.sync.set({ [storageKey]: storageItem })
       break
 
     default:
-      throw new Error(``)
+      throw new Error(`未知的 storageKey： ${storageKey}`)
   }
 }
 
