@@ -1,13 +1,15 @@
 import { $commentBox } from '../globals'
 
 export function handlingPaging() {
-  const notCommentCells = $commentBox.find('> .cell:not([id^="r_"])')
+  const $notCommentCells = $commentBox.find('> .cell:not([id^="r_"])')
 
-  if (notCommentCells.length <= 1) {
+  if ($notCommentCells.length <= 1) {
     return
   }
 
-  const pagingCells = notCommentCells.slice(1).addClass('v2p-paging')
+  // $notCommentCells 的第一个为 “xxx 条回复”
+  const pagingCells = $notCommentCells.slice(1).addClass('v2p-paging')
+
   const pageBtns = pagingCells.find('.super.button')
   pageBtns.eq(0).addClass('v2p-prev-btn')
   pageBtns.eq(1).addClass('v2p-next-btn')

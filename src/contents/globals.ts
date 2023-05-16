@@ -1,5 +1,3 @@
-import type { CommentData } from '../types'
-
 /** 登录人的昵称 */
 export const loginName = $('#Top .tools > a[href^="/member"]').text()
 
@@ -17,9 +15,14 @@ export const $topicContentBox = $('#Main .box:has(.topic_content)')
 export const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
 
 /** 评论区的回复 */
-export const $commentCells = $commentBox.find('.cell[id^="r_"]')
+export let $commentCells = $commentBox.find('.cell[id^="r_"]')
 
-export const $commentTableRows = $commentCells.find('> table > tbody > tr')
+export let $commentTableRows = $commentCells.find('> table > tbody > tr')
+
+export function updateCommentCells() {
+  $commentCells = $commentBox.find('.cell[id^="r_"]')
+  $commentTableRows = $commentCells.find('> table > tbody > tr')
+}
 
 /** 回复输入控件 */
 export const $replyBox = $('#reply-box')
@@ -31,54 +34,3 @@ export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'
 /** 主题回复输入框 */
 export const $replyTextArea = $('#reply_content')
 export const replyTextArea = document.querySelector('#reply_content')
-
-/** 每一页的回复列表数据 */
-export const commentDataList: readonly CommentData[] = $commentTableRows
-  .map<CommentData>((idx, tr) => {
-    const id = $commentCells[idx].id
-
-    const $tr = $(tr)
-    const $td = $tr.find('> td:nth-child(3)')
-
-    const thanked = $tr.find('> td:last-of-type > .fr').find('> .thank_area').hasClass('thanked')
-
-    const $member = $td.find('> strong > a')
-    const memberName = $member.text()
-    const memberLink = $member.prop('href')
-    const memberAvatar = $tr.find('.avatar').prop('src')
-
-    const content = $td.find('> .reply_content').text()
-    const likes = Number($td.find('span.small').text())
-    const floor = $td.find('span.no').text()
-
-    const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9]+)/g))
-    const refMemberNames =
-      memberNameMatches.length > 0
-        ? memberNameMatches.map(([, name]) => {
-            return name
-          })
-        : undefined
-
-    const floorNumberMatches = Array.from(content.matchAll(/#(\d+)/g))
-    const refFloors =
-      floorNumberMatches.length > 0
-        ? floorNumberMatches.map(([, floor]) => {
-            return floor
-          })
-        : undefined
-
-    return {
-      id,
-      memberName,
-      memberLink,
-      memberAvatar,
-      content,
-      likes,
-      floor,
-      index: idx,
-      refMemberNames,
-      refFloors,
-      thanked,
-    }
-  })
-  .get()

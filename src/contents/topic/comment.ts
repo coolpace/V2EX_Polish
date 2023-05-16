@@ -3,20 +3,24 @@ import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { iconHeart, iconHide, iconReply } from '../../icons'
-import type { Member } from '../../types'
+import { fetchTopicPage } from '../../services'
+import type { CommentData, Member } from '../../types'
 import { escapeHTML, getStorageSync } from '../../utils'
 import {
   $commentBox,
   $commentCells,
   $commentTableRows,
   $replyTextArea,
-  commentDataList,
   loginName,
   topicOwnerName,
+  updateCommentCells,
 } from '../globals'
 import { insertTextToReplyInput } from '../helpers'
 import { processAvatar } from './avatar'
 import { openTagsSetter, processReplyContent, updateMemberTag } from './content'
+
+/** 每一页的回复列表数据 */
+let commentDataList: readonly CommentData[] = []
 
 /**
  * 设置热门回复。
@@ -199,7 +203,89 @@ function handlingControls() {
   })
 }
 
-export function handlingComments() {
+export async function handlingComments() {
+  if (false) {
+    const $paging = $('.v2p-paging')
+    const $pagingTop = $paging.eq(0)
+    const $pagingBottom = $paging.eq(1)
+
+    const $pageCurrent = $pagingTop.find('.page_current')
+    const currentPage = $pageCurrent.text()
+
+    if (currentPage === '1') {
+      const $pageNormal = $pagingTop.find('.page_normal')
+      const pages: string[] = []
+      $pageNormal.each((_, ele) => {
+        if (ele.textContent) {
+          ele.classList.add('page_current')
+          pages.push(ele.textContent)
+        }
+      })
+
+      if (pages.length > 0) {
+        const pagesText = await Promise.all(
+          pages.map((p) => fetchTopicPage(window.location.pathname, p))
+        )
+
+        pagesText.map((pageText) => {
+          $pagingBottom.before($(pageText).find('.cell[id^="r_"]'))
+        })
+      }
+
+      updateCommentCells()
+    }
+  }
+
+  commentDataList = $commentTableRows
+    .map<CommentData>((idx, tr) => {
+      const id = $commentCells[idx].id
+
+      const $tr = $(tr)
+      const $td = $tr.find('> td:nth-child(3)')
+
+      const thanked = $tr.find('> td:last-of-type > .fr').find('> .thank_area').hasClass('thanked')
+
+      const $member = $td.find('> strong > a')
+      const memberName = $member.text()
+      const memberLink = $member.prop('href')
+      const memberAvatar = $tr.find('.avatar').prop('src')
+
+      const content = $td.find('> .reply_content').text()
+      const likes = Number($td.find('span.small').text())
+      const floor = $td.find('span.no').text()
+
+      const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9]+)/g))
+      const refMemberNames =
+        memberNameMatches.length > 0
+          ? memberNameMatches.map(([, name]) => {
+              return name
+            })
+          : undefined
+
+      const floorNumberMatches = Array.from(content.matchAll(/#(\d+)/g))
+      const refFloors =
+        floorNumberMatches.length > 0
+          ? floorNumberMatches.map(([, floor]) => {
+              return floor
+            })
+          : undefined
+
+      return {
+        id,
+        memberName,
+        memberLink,
+        memberAvatar,
+        content,
+        likes,
+        floor,
+        index: idx,
+        refMemberNames,
+        refFloors,
+        thanked,
+      }
+    })
+    .get()
+
   const storage = getStorageSync()
 
   const tagData = storage[StorageKey.MemberTag]
