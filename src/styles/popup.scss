@@ -184,9 +184,9 @@ button {
       top: 0;
       right: 0;
       display: inline-flex;
-      background: var(--v2p-color-bg-widget);
+      gap: 10px;
+      padding: 4px 8px;
       opacity: 0;
-      backdrop-filter: blur(16px);
     }
 
     &:hover {
@@ -196,9 +196,16 @@ button {
     }
 
     .topic-item-action-remove {
-      padding: 5px 10px;
-      color: #ef4444;
-      background-color: #fee2e2;
+      padding: 1px 6px;
+      color: var(--v2p-color-main-800);
+      background-color: var(--v2p-color-main-300);
+      border-radius: 2px;
+      box-shadow: var(--v2p-box-shadow);
+
+      &:hover {
+        color: #ef4444;
+        background-color: #fee2e2;
+      }
     }
   }
 
