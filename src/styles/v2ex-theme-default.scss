@@ -998,6 +998,10 @@ body {
         color: var(--v2p-color-foreground);
         background-color: var(--v2p-color-main-100);
       }
+
+      .topic-link:visited {
+        color: var(--v2p-color-foreground);
+      }
     }
   }
 
