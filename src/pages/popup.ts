@@ -230,6 +230,13 @@ function initTabs() {
           <div class="empty-emoji">¯\\_(ツ)_/¯</div>
           <div class="empty-text">暂未发现阅读列表</div>
           <div class="empty-text">添加感兴趣的主题，方便日后阅读</div>
+          <div class="empty-img-block">
+            <img
+              alt="在主题页的空白处右键菜单，选择“添加进稍后阅读”"
+              class="empty-img"
+              src="https://imgur.com/Qw6SCVV.png">
+            <div class="empty-img-caption">在主题页的空白处右键菜单，选择“添加进稍后阅读”</div>
+          </div>
         </div>
         `)
       }

@@ -504,7 +504,6 @@ a {
 
 .empty-block {
   padding: 40px 20px;
-  color: var(--v2p-color-main-600);
   font-size: 14px;
   text-align: center;
 }
@@ -519,4 +518,22 @@ a {
   & ~ & {
     margin-top: 5px;
   }
+}
+
+.empty-img-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-img {
+  width: 300px;
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+.empty-img-caption {
+  margin-top: 5px;
+  color: var(--v2p-color-main-600);
+  font-size: 12px;
 }
