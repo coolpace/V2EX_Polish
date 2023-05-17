@@ -76,7 +76,7 @@ export function handlingTopicList() {
     $('<button class="v2p-topic-preview-btn">预览</button>')
       .on('click', () => {
         const linkHref = $topicItem.find('.topic-link').attr('href')
-        const match = linkHref?.match(/\/(\d+)#/)
+        const match = linkHref?.match(/\/t\/(\d+)/)
         const topicId = match?.at(1)
 
         if (topicId) {
