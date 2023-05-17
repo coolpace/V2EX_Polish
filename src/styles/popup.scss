@@ -501,3 +501,22 @@ a {
     margin-top: 10px;
   }
 }
+
+.empty-block {
+  padding: 40px 20px;
+  color: var(--v2p-color-main-600);
+  font-size: 14px;
+  text-align: center;
+}
+
+.empty-emoji {
+  font-size: 20px;
+}
+
+.empty-text {
+  margin-top: 10px;
+
+  & ~ & {
+    margin-top: 5px;
+  }
+}
