@@ -99,8 +99,7 @@
     }
   }
 
-  &[data-darkreader-scheme='dark'] body,
-  body:has(#Wrapper.Night) {
+  @mixin dark-mode {
     // 基础色：
     --v2p-color-main-100: #2d333b;
     --v2p-color-main-200: #374151;
@@ -168,6 +167,17 @@
 
     img::selection {
       background-color: var(--v2p-color-foreground);
+    }
+  }
+
+  body.v2p-theme-dark,
+  &[data-darkreader-scheme='dark'] body {
+    @include dark-mode;
+  }
+
+  @supports selector(:has(*)) {
+    body:has(#Wrapper.Night) {
+      @include dark-mode;
     }
   }
 }
