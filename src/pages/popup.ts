@@ -223,7 +223,18 @@ function initTabs() {
 
     if (tabId === TabId.Reading) {
       const readingData = storage[StorageKey.ReadingList]?.data
-      if (readingData) {
+
+      const displayEmpty = () => {
+        $tabContent.empty().append(`
+        <div class="empty-block">
+          <div class="empty-emoji">¯\\_(ツ)_/¯</div>
+          <div class="empty-text">暂未发现阅读列表</div>
+          <div class="empty-text">添加感兴趣的主题，方便日后阅读</div>
+        </div>
+        `)
+      }
+
+      if (readingData && readingData.length > 0) {
         const $readingList = $(`<ul class="list">`).append(generateReadingItmes(readingData))
 
         $tabContent.empty().append($readingList)
@@ -239,13 +250,17 @@ function initTabs() {
 
             void setStorage(StorageKey.ReadingList, { data: newReadingData })
 
-            $tabContent
-              .find(`.topic-item:has(.topic-item-action-remove[data-url="${url}"])`)
-              .remove()
+            if (newReadingData.length > 0) {
+              $tabContent
+                .find(`.topic-item:has(.topic-item-action-remove[data-url="${url}"])`)
+                .remove()
+            } else {
+              displayEmpty()
+            }
           }
         })
       } else {
-        $tabContent.empty().append('<div>暂未添加稍后阅读</div>')
+        displayEmpty()
       }
     }
 
