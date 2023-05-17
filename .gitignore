@@ -10,3 +10,4 @@ node_modules
 /extension/css/*
 /extension/scripts/*
 !/extension/scripts/jquery.min.js
+!/extension/scripts/firefox-polyfill.js

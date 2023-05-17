@@ -32,6 +32,11 @@
     },
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "js": ["scripts/firefox-polyfill.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "css": ["css/v2ex-effect.css"],
       "js": ["scripts/jquery.min.js", "scripts/common.min.js"]
     },
