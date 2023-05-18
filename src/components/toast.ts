@@ -3,7 +3,11 @@ interface CreateToastProps {
   duration?: number
 }
 
-export function createToast(props: CreateToastProps) {
+interface ToastControl {
+  clear: () => void
+}
+
+export function createToast(props: CreateToastProps): ToastControl {
   const { message, duration = 3000 } = props
 
   const $existTosat = $('.v2p-toast')
@@ -18,9 +22,17 @@ export function createToast(props: CreateToastProps) {
 
   $toast.fadeIn('fast')
 
-  setTimeout(() => {
-    $toast.fadeOut('fast', () => {
+  if (duration !== 0) {
+    setTimeout(() => {
+      $toast.fadeOut('fast', () => {
+        $toast.remove()
+      })
+    }, duration)
+  }
+
+  return {
+    clear() {
       $toast.remove()
-    })
-  }, duration)
+    },
+  }
 }

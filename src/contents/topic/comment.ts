@@ -204,35 +204,52 @@ function handlingControls() {
 }
 
 export async function handlingComments() {
-  if (false) {
-    const $paging = $('.v2p-paging')
-    const $pagingTop = $paging.eq(0)
-    const $pagingBottom = $paging.eq(1)
+  const storage = getStorageSync()
 
-    const $pageCurrent = $pagingTop.find('.page_current')
-    const currentPage = $pageCurrent.text()
+  const tagData = storage[StorageKey.MemberTag]
+  const options = storage[StorageKey.Options]
 
-    if (currentPage === '1') {
-      const $pageNormal = $pagingTop.find('.page_normal')
-      const pages: string[] = []
-      $pageNormal.each((_, ele) => {
-        if (ele.textContent) {
-          ele.classList.add('page_current')
-          pages.push(ele.textContent)
-        }
-      })
+  if (options.reply.preload !== 'off') {
+    const toastControl = createToast({ message: '正在加载回复，请稍候...', duration: 0 })
 
-      if (pages.length > 0) {
-        const pagesText = await Promise.all(
-          pages.map((p) => fetchTopicPage(window.location.pathname, p))
-        )
+    try {
+      const $paging = $('.v2p-paging')
+      const $pagingTop = $paging.eq(0)
+      const $pagingBottom = $paging.eq(1)
+      const $pagingBottomNormal = $pagingBottom.find('.page_normal')
 
-        pagesText.map((pageText) => {
-          $pagingBottom.before($(pageText).find('.cell[id^="r_"]'))
+      const $pageCurrent = $pagingTop.find('.page_current')
+      const currentPage = $pageCurrent.text()
+
+      if (currentPage === '1') {
+        const $pageNormal = $pagingTop.find('.page_normal')
+        const pages: string[] = []
+
+        $pageNormal.each((i, ele) => {
+          if (ele.textContent) {
+            ele.classList.add('page_current')
+            ele.classList.remove('page_normal')
+            $pagingBottomNormal.eq(i).addClass('page_current').removeClass('page_normal')
+            pages.push(ele.textContent)
+          }
         })
+
+        if (pages.length > 0) {
+          const pagesText = await Promise.all(
+            pages.map((p) => fetchTopicPage(window.location.pathname, p))
+          )
+
+          pagesText.map((pageText) => {
+            $pagingBottom.before($(pageText).find('.cell[id^="r_"]'))
+          })
+        }
+
+        updateCommentCells()
       }
 
-      updateCommentCells()
+      toastControl.clear()
+    } catch {
+      createToast({ message: '❌ 加载多页回复失败' })
     }
   }
 
@@ -285,11 +302,6 @@ export async function handlingComments() {
       }
     })
     .get()
-
-  const storage = getStorageSync()
-
-  const tagData = storage[StorageKey.MemberTag]
-  const options = storage[StorageKey.Options]
 
   {
     // 此区块的逻辑需要在处理嵌套评论前执行。

@@ -41,6 +41,35 @@
           </fieldset>
 
           <fieldset>
+            <legend>预加载多页回复<sup>实验性</sup></legend>
+            <div class="form-radio">
+              <input
+                type="radio"
+                id="reply_preload_off"
+                name="reply.preload.off"
+                value="off"
+                checked="false"
+              />
+              <div class="combo">
+                <label for="reply_preload_off">关闭</label>
+              </div>
+            </div>
+            <div class="form-radio">
+              <input
+                type="radio"
+                id="reply_preload_auto"
+                name="reply.preload.auto"
+                value="off"
+                checked="false"
+              />
+              <div class="combo">
+                <label for="reply_preload_auto">自动预加载</label>
+                <p>抓取多页回复后在同一页中展示</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
             <legend>回复内容处理</legend>
             <div class="form-checkbox">
               <input type="checkbox" id="autoFold" checked="false" />

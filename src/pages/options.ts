@@ -14,6 +14,22 @@ const saveOptions = async () => {
     theme: {
       autoSwitch: $('#autoSwitch').prop('checked'),
     },
+    reply: {
+      preload: (() => {
+        const off = $('#reply_preload_off').prop('checked')
+        const auto = $('#reply_preload_auto').prop('checked')
+
+        if (off) {
+          return 'off' as const
+        }
+
+        if (auto) {
+          return 'auto' as const
+        }
+
+        return undefined
+      })(),
+    },
     replyContent: {
       autoFold: $('#autoFold').prop('checked'),
     },
@@ -43,6 +59,10 @@ void (async function init() {
   $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
   $('#autoSwitch').prop('checked', options.theme.autoSwitch)
   $('#autoFold').prop('checked', options.replyContent.autoFold)
+
   $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
   $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
+
+  $('#reply_preload_off').prop('checked', options.reply.preload === 'off')
+  $('#reply_preload_auto').prop('checked', options.reply.preload === 'auto')
 })()

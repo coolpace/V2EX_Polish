@@ -21,6 +21,9 @@ export interface Options {
   theme: {
     autoSwitch: boolean
   }
+  reply: {
+    preload?: 'off' | 'auto'
+  }
   replyContent: {
     autoFold?: boolean
   }
