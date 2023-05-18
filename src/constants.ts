@@ -144,6 +144,9 @@ export const defaultOptions: Options = {
   theme: {
     autoSwitch: false,
   },
+  reply: {
+    preload: 'off',
+  },
   replyContent: {
     autoFold: true,
   },

@@ -268,6 +268,7 @@ body {
     font-weight: bold;
     background-color: var(--box-background-hover-color);
     box-shadow: none;
+    pointer-events: none;
   }
 
   .page_input {

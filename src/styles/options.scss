@@ -75,6 +75,10 @@ body {
     label[for] {
       font-weight: bold;
       font-size: 15px;
+
+      + p {
+        font-size: 13px;
+      }
     }
   }
 }
@@ -82,6 +86,17 @@ body {
 fieldset {
   > legend {
     margin-bottom: 8px;
+  }
+
+  sup {
+    margin-left: 5px;
+    padding: 2px 4px;
+    color: var(--v2p-color-orange-400);
+    font-weight: normal;
+    line-height: 1;
+    background-color: var(--v2p-color-orange-100);
+    border: 1px solid currentColor;
+    border-radius: 4px;
   }
 }
 
