@@ -213,11 +213,11 @@ export async function handlingComments() {
     const $paging = $('.v2p-paging')
 
     if ($paging.length > 0) {
-      const toastControl = createToast({ message: '正在加载回复，请稍候...', duration: 0 })
+      const $pagingTop = $paging.eq(0)
+      const $pagingBottom = $paging.eq(1)
+      const toastControl = createToast({ message: '正在预加载回复，请稍候...', duration: 0 })
 
       try {
-        const $pagingTop = $paging.eq(0)
-        const $pagingBottom = $paging.eq(1)
         const $pagingBottomNormal = $pagingBottom.find('.page_normal')
 
         const $pageCurrent = $pagingTop.find('.page_current')
@@ -228,11 +228,13 @@ export async function handlingComments() {
           const pages: string[] = []
 
           $pageNormal.each((i, ele) => {
-            if (ele.textContent) {
-              ele.classList.add('page_current')
-              ele.classList.remove('page_normal')
-              $pagingBottomNormal.eq(i).addClass('page_current').removeClass('page_normal')
-              pages.push(ele.textContent)
+            if (i <= 1 /** 基于性能考虑，限制最多加载 3 页回复 */) {
+              if (ele.textContent) {
+                ele.classList.add('page_current')
+                ele.classList.remove('page_normal')
+                $pagingBottomNormal.eq(i).addClass('page_current').removeClass('page_normal')
+                pages.push(ele.textContent)
+              }
             }
           })
 
