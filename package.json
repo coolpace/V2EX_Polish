@@ -5,8 +5,8 @@
   "license": "UNLICENSED",
   "author": "LeoKu (https://github.com/Codennnn)",
   "scripts": {
-    "dev": "run-p watch:style watch:ext run:chrome",
-    "dev:ext": "run-p watch:style watch:ext run:firefox",
+    "dev": "run-p watch run:chrome",
+    "dev:firefox": "run-p watch run:firefox",
     "dev:site": "live-server --entry-file=website/index.html --no-browser",
     "run:chrome": "web-ext run -t chromium --source-dir ./extension",
     "run:firefox": "web-ext run --source-dir ./extension",
@@ -16,6 +16,7 @@
     "build:userscript": "run-s output:css output:userscript",
     "build:ext": "tsup",
     "build:style": "sass src/styles:extension/css --no-source-map --style=compressed",
+    "watch": "run-p watch:style watch:ext",
     "watch:ext": "pnpm run build:ext --watch",
     "watch:style": "pnpm run build:style --watch",
     "lint": "run-p lint:ts lint:es lint:style lint:prettier",
