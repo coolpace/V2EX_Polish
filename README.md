@@ -50,6 +50,12 @@
 
 - 支持自动跟随系统切换浅色/深色主题。
 
+- 支持 SOV2EX 作为搜索选项。
+
+- 支持预加载多页回复，让嵌套回复更完美。
+
+- “稍后阅读”功能：添加感兴趣的主题，方便日后浏览。
+
 - ...... _更多功能等你一探究竟！_
 
 ## 为什么选择 V2EX Polish？
@@ -110,5 +116,6 @@ PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获
 
 - [V2EX 超强浏览器扩展：体验更先进的 V2EX](https://www.v2ex.com/t/930155#reply379)
 - [V2EX Polish 大量功能更新，即刻体验更好用的 V2EX](https://www.v2ex.com/t/935916#reply154)
+- [关于 V2EX Polish 意外从 Chrome 应用商店下架的说明](https://www.v2ex.com/t/940580#reply57)
 
 **喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰**
