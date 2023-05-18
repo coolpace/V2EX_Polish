@@ -1,4 +1,5 @@
 import { EXTENSION_NAME, imgurClientIdPool, StorageKey, V2EX } from './constants'
+import { isValidSettings } from './helpers'
 import type {
   API_Info,
   DataWrapper,
@@ -10,7 +11,7 @@ import type {
   Topic,
   TopicReply,
 } from './types'
-import { getStorage, isValidSettings, setStorage } from './utils'
+import { getStorage, setStorage } from './utils'
 
 // 动态获取 V2EX 的域名，防止跨域。
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
