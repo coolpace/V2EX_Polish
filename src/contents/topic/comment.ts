@@ -210,46 +210,49 @@ export async function handlingComments() {
   const options = storage[StorageKey.Options]
 
   if (options.reply.preload !== 'off') {
-    const toastControl = createToast({ message: '正在加载回复，请稍候...', duration: 0 })
+    const $paging = $('.v2p-paging')
 
-    try {
-      const $paging = $('.v2p-paging')
-      const $pagingTop = $paging.eq(0)
-      const $pagingBottom = $paging.eq(1)
-      const $pagingBottomNormal = $pagingBottom.find('.page_normal')
+    if ($paging.length > 0) {
+      const toastControl = createToast({ message: '正在加载回复，请稍候...', duration: 0 })
 
-      const $pageCurrent = $pagingTop.find('.page_current')
-      const currentPage = $pageCurrent.text()
+      try {
+        const $pagingTop = $paging.eq(0)
+        const $pagingBottom = $paging.eq(1)
+        const $pagingBottomNormal = $pagingBottom.find('.page_normal')
 
-      if (currentPage === '1') {
-        const $pageNormal = $pagingTop.find('.page_normal')
-        const pages: string[] = []
+        const $pageCurrent = $pagingTop.find('.page_current')
+        const currentPage = $pageCurrent.text()
 
-        $pageNormal.each((i, ele) => {
-          if (ele.textContent) {
-            ele.classList.add('page_current')
-            ele.classList.remove('page_normal')
-            $pagingBottomNormal.eq(i).addClass('page_current').removeClass('page_normal')
-            pages.push(ele.textContent)
-          }
-        })
+        if (currentPage === '1') {
+          const $pageNormal = $pagingTop.find('.page_normal')
+          const pages: string[] = []
 
-        if (pages.length > 0) {
-          const pagesText = await Promise.all(
-            pages.map((p) => fetchTopicPage(window.location.pathname, p))
-          )
-
-          pagesText.map((pageText) => {
-            $pagingBottom.before($(pageText).find('.cell[id^="r_"]'))
+          $pageNormal.each((i, ele) => {
+            if (ele.textContent) {
+              ele.classList.add('page_current')
+              ele.classList.remove('page_normal')
+              $pagingBottomNormal.eq(i).addClass('page_current').removeClass('page_normal')
+              pages.push(ele.textContent)
+            }
           })
+
+          if (pages.length > 0) {
+            const pagesText = await Promise.all(
+              pages.map((p) => fetchTopicPage(window.location.pathname, p))
+            )
+
+            pagesText.map((pageText) => {
+              $pagingBottom.before($(pageText).find('.cell[id^="r_"]'))
+            })
+          }
+
+          updateCommentCells()
         }
 
-        updateCommentCells()
+        toastControl.clear()
+      } catch {
+        createToast({ message: '❌ 加载多页回复失败' })
       }
-
-      toastControl.clear()
-    } catch {
-      createToast({ message: '❌ 加载多页回复失败' })
     }
   }
 
