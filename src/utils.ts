@@ -181,10 +181,6 @@ export function escapeHTML(htmlString: string): string {
   })
 }
 
-export function isValidSettings(settings: any): settings is StorageSettings {
-  return !!settings && typeof settings === 'object' && StorageKey.Options in settings
-}
-
 /**
  * 向 HTML body 下动态插入脚本。
  */

@@ -109,16 +109,34 @@ body {
   line-height: 1.4;
 
   @at-root {
-    .v2p-tp-info {
+    .v2p-tp-info-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .v2p-tp-info,
+    .v2p-tp-read {
       display: inline-flex;
       gap: 20px;
       align-items: center;
-      margin-bottom: 10px;
       padding: 5px 10px;
       overflow: hidden;
       font-size: 13px;
       background-color: var(--v2p-color-main-200);
       border-radius: 5px;
+    }
+
+    .v2p-tp-read {
+      gap: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .v2p-tp-read-icon {
+      width: 16px;
+      height: 16px;
     }
 
     .v2p-tp-member {

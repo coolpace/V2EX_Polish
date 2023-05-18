@@ -1,7 +1,8 @@
 import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
 import { RequestMessage, StorageKey } from '../../constants'
-import { iconLoading, iconLogo } from '../../icons'
+import { addToReadingList } from '../../helpers'
+import { iconBookMark, iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import type { Topic, TopicReply } from '../../types'
 import { escapeHTML, formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
@@ -151,19 +152,33 @@ export function handlingTopicList() {
                 }
 
                 const $infoBar = $(`
-                  <div class="v2p-tp-info">
-                    <a class="v2p-tp-member" href="${topic.member.url}">
-                      <img class="v2p-tp-avatar" src="${topic.member.avatar}">
-                      <span>${topic.member.username}</span>
-                    </a>
+                  <div class="v2p-tp-info-bar">
+                    <div class="v2p-tp-info">
+                      <a class="v2p-tp-member" href="${topic.member.url}">
+                        <img class="v2p-tp-avatar" src="${topic.member.avatar}">
+                        <span>${topic.member.username}</span>
+                      </a>
 
-                    <span>
-                      ${formatTimestamp(topic.created, { format: 'YMDHMS' })}
-                    </span>
+                      <span>
+                        ${formatTimestamp(topic.created, { format: 'YMDHMS' })}
+                      </span>
 
-                    <span>${topic.replies} 条回复</span>
+                      <span>${topic.replies} 条回复</span>
+                    </div>
                   </div>
                 `)
+
+                $(`
+                <div class="v2p-tp-read"><span class="v2p-tp-read-icon">${iconBookMark}</span>稍后阅读</div>
+                `)
+                  .on('click', () => {
+                    void addToReadingList({
+                      url: topic.url,
+                      title: topic.title,
+                      content: topic.content,
+                    })
+                  })
+                  .appendTo($infoBar)
 
                 $topicPreview.append($infoBar)
 
