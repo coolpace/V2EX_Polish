@@ -1,5 +1,6 @@
+import { createToast } from '../components/toast'
 import { StorageKey } from '../constants'
-import type { Member, MemberTag, Tag, V2EX_RequestErrorResponce } from '../types'
+import type { Member, MemberTag, ReadingItem, Tag, V2EX_RequestErrorResponce } from '../types'
 import { getRunEnv, getStorage, setStorage } from '../utils'
 import { replyTextArea } from './globals'
 
@@ -67,5 +68,33 @@ export async function setMemberTags(memberName: Member['username'], tags: Tag[] 
       delete tagData[memberName]
       await setStorage(StorageKey.MemberTag, tagData)
     }
+  }
+}
+
+export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title' | 'content'>) {
+  const { url, title, content } = params
+
+  if (!(typeof url === 'string' || typeof title === 'string' || typeof content === 'string')) {
+    const message = '无法识别将该主题的元数据'
+    createToast({ message })
+    throw new Error(message)
+  }
+
+  const storage = await getStorage()
+
+  const currentData = storage[StorageKey.ReadingList]?.data || []
+  const exist = currentData.findIndex((it) => it.url === url) !== -1
+
+  if (exist) {
+    createToast({ message: '该主题已存在于稍后阅读' })
+  } else {
+    await setStorage(StorageKey.ReadingList, {
+      data: [
+        { url, title: title.replace(' - V2EX', ''), content, addedTime: Date.now() },
+        ...currentData,
+      ],
+    })
+
+    createToast({ message: '📖 已添加进稍后阅读' })
   }
 }

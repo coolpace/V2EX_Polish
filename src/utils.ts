@@ -190,3 +190,7 @@ export function injectScript(scriptSrc: string) {
   script.setAttribute('src', scriptSrc)
   document.body.appendChild(script)
 }
+
+export function isValidSettings(settings: any): settings is StorageSettings {
+  return !!settings && typeof settings === 'object' && StorageKey.Options in settings
+}

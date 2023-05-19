@@ -1,13 +1,12 @@
 import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
 import { RequestMessage, StorageKey } from '../../constants'
-import { addToReadingList } from '../../helpers'
 import { iconBookMark, iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import type { Topic, TopicReply } from '../../types'
 import { escapeHTML, formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
 import { $topicList } from '../globals'
-import { isV2EX_RequestError } from '../helpers'
+import { addToReadingList, isV2EX_RequestError } from '../helpers'
 
 const invalidTemplate = (tip: string) => `
 <div class="v2p-no-pat">
