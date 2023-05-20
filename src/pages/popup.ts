@@ -10,7 +10,7 @@ import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
 import { deepMerge } from '../deep-merge'
-import { iconChat, iconLoading } from '../icons'
+import { iconArrowUp, iconChat, iconLoading } from '../icons'
 import {
   fetchHotTopics,
   fetchLatestTopics,
@@ -232,6 +232,29 @@ function initTabs() {
       if (readingData && readingData.length > 0) {
         const $readingList = $(`<ul class="list">`).append(generateReadingItmes(readingData))
 
+        let currentReadingData = readingData
+
+        $('<hr />').prependTo($readingList)
+
+        $(`
+        <button id="open-options" class="action-btn" style="margin: var(--common-padding) 0 0 var(--common-padding);">
+          <span class="action-icon">
+            ${iconArrowUp}
+          </span>
+          在浏览器中打开全部
+        </button>
+        `)
+          .on('click', () => {
+            void (async () => {
+              const tabs = await Promise.all(
+                currentReadingData.map((it) => chrome.tabs.create({ url: it.url, active: false }))
+              )
+              const groupId = await chrome.tabs.group({ tabIds: tabs.map((it) => it.id!) })
+              await chrome.tabGroups.update(groupId, { title: 'V2EX', color: 'grey' })
+            })()
+          })
+          .prependTo($readingList)
+
         $tabContent.empty().append($readingList)
 
         $('.topic-item-action-remove').on('click', (ev) => {
@@ -241,11 +264,11 @@ function initTabs() {
           const url = ev.target.dataset.url
 
           if (url) {
-            const newReadingData = readingData.filter((it) => it.url !== url)
+            currentReadingData = currentReadingData.filter((it) => it.url !== url)
 
-            void setStorage(StorageKey.ReadingList, { data: newReadingData })
+            void setStorage(StorageKey.ReadingList, { data: currentReadingData })
 
-            if (newReadingData.length > 0) {
+            if (currentReadingData.length > 0) {
               $tabContent
                 .find(`.topic-item:has(.topic-item-action-remove[data-url="${url}"])`)
                 .remove()

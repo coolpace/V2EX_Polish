@@ -1,5 +1,5 @@
 import { createToast } from '../components/toast'
-import { StorageKey } from '../constants'
+import { READING_CONTENT_LIMIT, StorageKey } from '../constants'
 import type { Member, MemberTag, ReadingItem, Tag, V2EX_RequestErrorResponce } from '../types'
 import { getRunEnv, getStorage, setStorage, sleep } from '../utils'
 import { replyTextArea } from './globals'
@@ -100,12 +100,20 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
       try {
         await setStorage(StorageKey.ReadingList, {
           data: [
-            { url, title: title.replace(' - V2EX', ''), content, addedTime: Date.now() },
+            {
+              url,
+              title: title.replace(' - V2EX', ''),
+              content:
+                content.length > READING_CONTENT_LIMIT
+                  ? content.substring(0, READING_CONTENT_LIMIT) + '...'
+                  : content,
+              addedTime: Date.now(),
+            },
             ...currentData,
           ],
         })
 
-        createToast({ message: '📖 已添加进稍后阅读' })
+        createToast({ message: '✅ 已添加进稍后阅读' })
 
         // 加入延时等待，防止连续触发添加操作。
         await sleep(500)

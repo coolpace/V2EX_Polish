@@ -110,6 +110,8 @@ export const enum Links {
 export const READABLE_CONTENT_HEIGHT = 250
 export const MAX_CONTENT_HEIGHT = 550
 
+export const READING_CONTENT_LIMIT = 150
+
 /** Popup 中缓存的主题列表数据的过期时间 */
 export const dataExpiryTime = 60 * 60 * 1000
 
