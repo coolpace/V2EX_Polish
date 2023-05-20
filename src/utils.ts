@@ -1,3 +1,4 @@
+import { createToast } from './components/toast'
 import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
 import { deepMerge } from './deep-merge'
 import type { StorageItems, StorageSettings } from './types'
@@ -151,7 +152,17 @@ export async function setStorage<T extends StorageKey>(
     case StorageKey.MemberTag:
     case StorageKey.SyncInfo:
     case StorageKey.ReadingList:
-      await chrome.storage.sync.set({ [storageKey]: storageItem })
+      try {
+        await chrome.storage.sync.set({ [storageKey]: storageItem })
+      } catch (err) {
+        if (String(err).includes('QUOTA_BYTES_PER_ITEM quota exceeded')) {
+          console.error(
+            `${EXTENSION_NAME}: 无法设置 ${storageKey}， 单个 item 不能超出 8 KB，详情查看：https://developer.chrome.com/docs/extensions/reference/storage/#storage-areas`
+          )
+          createToast({ message: '❌ 用户数据超出存储空间限制' })
+        }
+        throw new Error(`❌ 无法设置：${storageKey}`)
+      }
       break
 
     default:
