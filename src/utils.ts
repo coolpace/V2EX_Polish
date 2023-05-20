@@ -191,6 +191,13 @@ export function injectScript(scriptSrc: string) {
   document.body.appendChild(script)
 }
 
+/**
+ * 简单地校验数据类型，更好的做法是使用 zod、yup 等库，但在此插件没必要。
+ */
 export function isValidSettings(settings: any): settings is StorageSettings {
   return !!settings && typeof settings === 'object' && StorageKey.Options in settings
+}
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
