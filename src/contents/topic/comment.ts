@@ -210,11 +210,15 @@ export async function handlingComments() {
   const options = storage[StorageKey.Options]
 
   if (options.reply.preload !== 'off') {
+    // 预价值多页回复，然后在同一页中显示，优化多页回复产生的楼中楼。
+
     const $paging = $('.v2p-paging')
 
     if ($paging.length > 0) {
       const $pagingTop = $paging.eq(0)
       const $pagingBottom = $paging.eq(1)
+      const $pageNormal = $pagingTop.find('.page_normal')
+
       const toastControl = createToast({ message: '正在预加载回复，请稍候...', duration: 0 })
 
       try {
@@ -224,7 +228,6 @@ export async function handlingComments() {
         const currentPage = $pageCurrent.text()
 
         if (currentPage === '1') {
-          const $pageNormal = $pagingTop.find('.page_normal')
           const pages: string[] = []
 
           $pageNormal.each((i, ele) => {
@@ -254,6 +257,7 @@ export async function handlingComments() {
         toastControl.clear()
       } catch {
         createToast({ message: '❌ 加载多页回复失败' })
+        $pageNormal.removeClass('page_current').addClass('page_normal')
       }
     }
   }
