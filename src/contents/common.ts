@@ -8,6 +8,8 @@ void (async () => {
   const options = storage[StorageKey.Options]
 
   {
+    // 更换主题颜色切换的按钮。
+
     const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
     const $toggleImg = $toggle.find('> img')
