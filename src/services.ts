@@ -9,6 +9,7 @@ import type {
   StorageSettings,
   Topic,
   TopicReply,
+  V2EX_Response,
 } from './types'
 import { getStorage, isValidSettings, setStorage } from './utils'
 
@@ -180,7 +181,7 @@ export async function getV2P_Settings(): Promise<
 /**
  * 将个人配置备份存储。
  */
-export async function setV2P_Settings(storageSettings: StorageSettings) {
+export async function setV2P_Settings(storageSettings: StorageSettings): Promise<void> {
   const data = await getV2P_Settings()
 
   const updating = !!data
@@ -219,7 +220,51 @@ export async function setV2P_Settings(storageSettings: StorageSettings) {
   await setStorage(StorageKey.SyncInfo, syncInfo)
 }
 
-export async function fetchTopicPage(path: string, page: string) {
+// ==================== 以下为非官方提供的接口 ====================
+
+/**
+ * 获取最新的金币，返回 HTML 字符串。
+ */
+async function refreshMoney(): Promise<void> {
+  const res = await fetch('/ajax/money', { method: 'POST' })
+  const data = await res.text()
+  $('#money').html(data)
+}
+
+/**
+ * 获取最新的金币，返回 HTML 字符串。
+ */
+export async function thankReply(replyId: string): Promise<void> {
+  const res = await fetch(`/thank/reply/${replyId}?once=${window.once}`, { method: 'POST' })
+  const data: V2EX_Response & { once: string } = await res.json()
+  console.log({ data })
+
+  if (data.success) {
+    window.once = data.once
+    $('#thank_area_' + replyId)
+      .addClass('thanked')
+      .html('感谢已发送')
+    await refreshMoney()
+  } else {
+    alert(data.message)
+    window.once = data.once
+  }
+  //   $.post('/thank/reply/' + replyId + "?once=" + once, function(data) {
+  //     if (data.success) {
+  //         once = data.once;
+  //         $('#thank_area_' + replyId).addClass("thanked").html("感谢已发送");
+  //         refreshMoney();
+  //     } else {
+  //         alert(data.message);
+  //         once = data.once;
+  //     }
+  // });
+}
+
+/**
+ * 爬取主题内容页。
+ */
+export async function crawalTopicPage(path: string, page: string): Promise<string> {
   const res = await fetch(`${V2EX.Origin}${path}?p=${page}`)
   const htmlText = await res.text()
   return htmlText

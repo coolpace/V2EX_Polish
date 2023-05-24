@@ -1,6 +1,7 @@
-import { StorageKey } from '../../constants'
+import { MessageFrom, StorageKey } from '../../constants'
 import { iconReply, iconScrollTop } from '../../icons'
-import { getStorage } from '../../utils'
+import type { MessageData } from '../../types'
+import { getStorage, injectScript } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
@@ -11,18 +12,19 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  // {
-  //   injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
+  {
+    injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
 
-  //   window.addEventListener('message', (ev: MessageEvent<MessagePayload>) => {
-  //     if (ev.data.from === MessageFrom.Web) {
-  //       if (ev.data.data === 'loaded') {
-  //         const payload: MessagePayload = { from: MessageFrom.Content, data: '' }
-  //         window.postMessage(payload)
-  //       }
-  //     }
-  //   })
-  // }
+    window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
+      if (ev.data.from === MessageFrom.Web) {
+        const payload = ev.data.payload
+
+        if (payload?.once) {
+          window.once = payload.once
+        }
+      }
+    })
+  }
 
   if (options.openInNewTab) {
     $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')

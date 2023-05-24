@@ -218,7 +218,14 @@ export interface ImgurResponse {
   }
 }
 
-export interface MessagePayload {
+export interface V2EX_Response {
+  success: boolean
+  message?: string
+}
+
+export interface MessageData {
   from: MessageFrom
-  data: string
+  payload?: {
+    once?: string
+  }
 }
