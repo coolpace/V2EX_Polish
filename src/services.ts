@@ -1,9 +1,10 @@
-import { EXTENSION_NAME, imgurClientIdPool, StorageKey, V2EX } from './constants'
+import { EXTENSION_NAME, imgurClientIdPool, MessageFrom, StorageKey, V2EX } from './constants'
 import type {
   API_Info,
   DataWrapper,
   ImgurResponse,
   Member,
+  MessageData,
   Notification,
   StorageItems,
   StorageSettings,
@@ -234,31 +235,35 @@ async function refreshMoney(): Promise<void> {
 /**
  * 获取最新的金币，返回 HTML 字符串。
  */
-export async function thankReply(replyId: string): Promise<void> {
-  const res = await fetch(`/thank/reply/${replyId}?once=${window.once}`, { method: 'POST' })
-  const data: V2EX_Response & { once: string } = await res.json()
-  console.log({ data })
+export async function thankReply(params: {
+  replyId: string
+  onSuccess?: () => void
+  onFail?: () => void
+}): Promise<void> {
+  try {
+    const res = await fetch(`/thank/reply/${params.replyId}?once=${window.once}`, {
+      method: 'POST',
+    })
+    const data: V2EX_Response & { once: string } = await res.json()
+    window.once = data.once
 
-  if (data.success) {
-    window.once = data.once
-    $('#thank_area_' + replyId)
-      .addClass('thanked')
-      .html('感谢已发送')
-    await refreshMoney()
-  } else {
-    alert(data.message)
-    window.once = data.once
+    const messageData: MessageData = { from: MessageFrom.Content, payload: { once: data.once } }
+    window.postMessage(messageData)
+
+    if (data.success) {
+      $('#thank_area_' + params.replyId)
+        .addClass('thanked')
+        .html('感谢已发送')
+
+      params.onSuccess?.()
+
+      await refreshMoney()
+    } else {
+      alert(data.message)
+    }
+  } catch {
+    params.onFail?.()
   }
-  //   $.post('/thank/reply/' + replyId + "?once=" + once, function(data) {
-  //     if (data.success) {
-  //         once = data.once;
-  //         $('#thank_area_' + replyId).addClass("thanked").html("感谢已发送");
-  //         refreshMoney();
-  //     } else {
-  //         alert(data.message);
-  //         once = data.once;
-  //     }
-  // });
 }
 
 /**
