@@ -113,7 +113,7 @@ function handlingPopularComments() {
 function handlingControls(commentDataList: readonly CommentData[]) {
   const actionAreas = $commentTableRows.find('> td:last-of-type > .fr')
 
-  actionAreas.each((_, el) => {
+  actionAreas.each((i, el) => {
     const ctrlArea = $(el)
 
     const $controls = $('<span class="v2p-controls">')
@@ -133,38 +133,55 @@ function handlingControls(commentDataList: readonly CommentData[]) {
 
       $hide.html(`<span class="v2p-control v2p-hover-btn v2p-control-hide">${iconHide}</span>`)
 
-      $thankIcon.addClass('v2p-hover-btn')
-      $thank.empty().append($thankIcon)
+      $thankIcon.addClass('v2p-hover-btn').replaceAll($thank)
 
-      $thank.on('click', (ev) => {
+      $thankIcon.on('click', (ev) => {
         ev.stopPropagation()
-        console.log(window.once)
-        thankReply('')
-        // const $cell = ctrlArea.closest('.cell[id^="r_"]')
-        // const $likesBox = $cell.find('> table .v2p-likes-box')
-        // const likes = Number($likesBox.text())
-        // const $clonedIconHeart = $likesBox.find('.v2p-icon-heart').clone()
+        const data = commentDataList.at(i)
 
-        // if (likes > 0) {
-        //   $likesBox
-        //     .addClass('v2p-thanked')
-        //     .empty()
-        //     .append($clonedIconHeart, ` ${likes + 1}`)
-        // } else {
-        //   $(`
-        //     <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
-        //       &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
-        //     </span>
-        //     `).insertAfter($cell.find('> table .ago'))
-        // }
+        if (data) {
+          if (confirm(`确认花费 10 个铜币向 @${data.memberName} 的这条回复发送感谢？`)) {
+            const replyId = data.id.split('_').at(1)
 
-        // $thankIcon.addClass('v2p-thanked')
-        // $hide.hide()
-        // $thank.off('click')
-        // createToast({ message: '❤️ 已感谢回复' })
+            if (replyId) {
+              void thankReply({
+                replyId,
+
+                onSuccess: () => {
+                  const $cell = ctrlArea.closest('.cell[id^="r_"]')
+                  const $likesBox = $cell.find('> table .v2p-likes-box')
+                  const likes = Number($likesBox.text())
+                  const $clonedIconHeart = $likesBox.find('.v2p-icon-heart').clone()
+
+                  if (likes > 0) {
+                    $likesBox
+                      .addClass('v2p-thanked')
+                      .empty()
+                      .append($clonedIconHeart, ` ${likes + 1}`)
+                  } else {
+                    $(`
+                    <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
+                      &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
+                    </span>
+                    `).insertAfter($cell.find('> table .ago'))
+                  }
+
+                  $thankIcon.addClass('v2p-thanked')
+                  $hide.hide()
+                  $thankIcon.off('click')
+                  createToast({ message: `❤️ 已感谢 @${data.memberName} 的回复` })
+                },
+
+                onFail: () => {
+                  createToast({ message: '❌ 感谢回复失败' })
+                },
+              })
+            }
+          }
+        }
       })
 
-      $controls.append($hide).append($thank)
+      $controls.append($hide).append($thankIcon)
     }
 
     const $reply = ctrlArea.find('a:last-of-type')

@@ -1,7 +1,7 @@
 import { MessageFrom, StorageKey } from '../../constants'
 import { iconReply, iconScrollTop } from '../../icons'
 import type { MessageData } from '../../types'
-import { getStorage, injectScript } from '../../utils'
+import { getRunEnv, getStorage, injectScript } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
@@ -11,8 +11,9 @@ import { handleReply } from './reply'
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
+  const runEnv = getRunEnv()
 
-  {
+  if (runEnv === 'chrome' || runEnv === 'web-ext') {
     injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
 
     window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
@@ -20,7 +21,7 @@ void (async () => {
         const payload = ev.data.payload
 
         if (payload?.once) {
-          window.once = payload.once
+          window.once = payload.once // 从 Web 页获取到 once 这个 V2EX 的“神秘”变量，请求接口时会用到。
         }
       }
     })

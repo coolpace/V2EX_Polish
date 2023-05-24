@@ -35,6 +35,10 @@ body {
     }
   }
 
+  pre {
+    word-break: break-all; // 防止代码块不换行导致 Main 容器突破宽度。
+  }
+
   #Top {
     height: 55px;
     background-color: var(--v2p-color-bg-content);
@@ -72,7 +76,6 @@ body {
     order: 2;
     max-width: 85vw;
     margin: 0;
-    overflow: auto;
   }
 
   #Rightbar {
