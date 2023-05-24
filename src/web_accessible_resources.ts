@@ -1,18 +1,13 @@
 import { MessageFrom } from './constants'
-import type { MessagePayload } from './types'
+import type { MessageData } from './types'
 
 declare global {
   interface Window {
     thankReply: () => void
+    once: string
   }
 }
 
-window.addEventListener('message', (ev: MessageEvent<MessagePayload>) => {
-  if (ev.data.from === MessageFrom.Content) {
-    // console.log(111, window, window.thankReply)
-  }
-})
+const messageData: MessageData = { from: MessageFrom.Web, payload: { once: window.once } }
 
-const payload: MessagePayload = { from: MessageFrom.Web, data: 'loaded' }
-
-window.postMessage(payload)
+window.postMessage(messageData)

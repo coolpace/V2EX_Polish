@@ -3,7 +3,7 @@ import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { iconHeart, iconHide, iconReply } from '../../icons'
-import { fetchTopicPage } from '../../services'
+import { crawalTopicPage, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { escapeHTML, getStorageSync } from '../../utils'
 import {
@@ -110,22 +110,22 @@ function handlingPopularComments() {
 /**
  * 设置回复的操作。
  */
-function handlingControls() {
-  const crtlAreas = $commentTableRows.find('> td:last-of-type > .fr')
+function handlingControls(commentDataList: readonly CommentData[]) {
+  const actionAreas = $commentTableRows.find('> td:last-of-type > .fr')
 
-  crtlAreas.each((_, el) => {
+  actionAreas.each((_, el) => {
     const ctrlArea = $(el)
 
     const $controls = $('<span class="v2p-controls">')
 
-    const thankIcon = $(`<span class="v2p-control v2p-control-thank">${iconHeart}</span>`)
+    const $thankIcon = $(`<span class="v2p-control v2p-control-thank">${iconHeart}</span>`)
 
     const thankArea = ctrlArea.find('> .thank_area')
     const thanked = thankArea.hasClass('thanked')
 
     if (thanked) {
-      thankIcon.addClass('v2p-thanked')
-      $controls.append($('<a>').append(thankIcon))
+      $thankIcon.addClass('v2p-thanked')
+      $controls.append($('<a>').append($thankIcon))
     } else {
       const thankEle = thankArea.find('> .thank')
       const $hide = thankEle.eq(0).removeClass('thank')
@@ -133,32 +133,35 @@ function handlingControls() {
 
       $hide.html(`<span class="v2p-control v2p-hover-btn v2p-control-hide">${iconHide}</span>`)
 
-      thankIcon.addClass('v2p-hover-btn')
-      $thank.empty().append(thankIcon)
+      $thankIcon.addClass('v2p-hover-btn')
+      $thank.empty().append($thankIcon)
 
-      $thank.on('click', () => {
-        const $cell = ctrlArea.closest('.cell[id^="r_"]')
-        const $likesBox = $cell.find('> table .v2p-likes-box')
-        const likes = Number($likesBox.text())
-        const $clonedIconHeart = $likesBox.find('.v2p-icon-heart').clone()
+      $thank.on('click', (ev) => {
+        ev.stopPropagation()
+        console.log(window.once)
+        thankReply('')
+        // const $cell = ctrlArea.closest('.cell[id^="r_"]')
+        // const $likesBox = $cell.find('> table .v2p-likes-box')
+        // const likes = Number($likesBox.text())
+        // const $clonedIconHeart = $likesBox.find('.v2p-icon-heart').clone()
 
-        if (likes > 0) {
-          $likesBox
-            .addClass('v2p-thanked')
-            .empty()
-            .append($clonedIconHeart, ` ${likes + 1}`)
-        } else {
-          $(`
-            <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
-              &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
-            </span>
-            `).insertAfter($cell.find('> table .ago'))
-        }
+        // if (likes > 0) {
+        //   $likesBox
+        //     .addClass('v2p-thanked')
+        //     .empty()
+        //     .append($clonedIconHeart, ` ${likes + 1}`)
+        // } else {
+        //   $(`
+        //     <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
+        //       &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
+        //     </span>
+        //     `).insertAfter($cell.find('> table .ago'))
+        // }
 
-        thankIcon.addClass('v2p-thanked')
-        $hide.hide()
-        $thank.off('click')
-        createToast({ message: '❤️ 已感谢回复' })
+        // $thankIcon.addClass('v2p-thanked')
+        // $hide.hide()
+        // $thank.off('click')
+        // createToast({ message: '❤️ 已感谢回复' })
       })
 
       $controls.append($hide).append($thank)
@@ -243,7 +246,7 @@ export async function handlingComments() {
 
           if (pages.length > 0) {
             const pagesText = await Promise.all(
-              pages.map((p) => fetchTopicPage(window.location.pathname, p))
+              pages.map((p) => crawalTopicPage(window.location.pathname, p))
             )
 
             pagesText.map((pageText) => {
@@ -366,7 +369,7 @@ export async function handlingComments() {
       }
     })
 
-    handlingControls()
+    handlingControls(commentDataList)
     handlingPopularComments()
   }
 
