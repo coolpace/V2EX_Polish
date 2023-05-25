@@ -22,25 +22,30 @@
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "css": ["css/v2ex-theme-var.css", "css/v2ex-theme-default.css"],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "all_frames": true
     },
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "css": ["css/v2ex-effect.css"],
-      "js": ["scripts/jquery.min.js", "scripts/common.min.js"]
+      "js": ["scripts/jquery.min.js", "scripts/common.min.js"],
+      "all_frames": true
     },
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings"],
-      "js": ["scripts/v2ex-home.min.js"]
+      "js": ["scripts/v2ex-home.min.js"],
+      "all_frames": true
     },
     {
       "matches": ["https://v2ex.com/t/*", "https://www.v2ex.com/t/*"],
-      "js": ["scripts/v2ex-topic.min.js"]
+      "js": ["scripts/v2ex-topic.min.js"],
+      "all_frames": true
     },
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
-      "js": ["scripts/toggle-icon.min.js"]
+      "js": ["scripts/toggle-icon.min.js"],
+      "all_frames": true
     }
   ],
 
