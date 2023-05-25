@@ -620,7 +620,7 @@ body {
       }
 
       &:hover:not(.v2p-hover-btn) {
-        color: currentcolor;
+        color: currentColor;
         background: var(--v2p-color-main-100);
       }
     }
@@ -890,6 +890,7 @@ body {
 
   .topic_content,
   .reply_content {
+    color: currentColor;
     font-size: 15.4px;
 
     // 被 @ 的用户
