@@ -21,7 +21,7 @@ void (async () => {
         const payload = ev.data.payload
 
         if (payload?.once) {
-          window.once = payload.once // 从 Web 页获取到 once 这个 V2EX 的“神秘”变量，请求接口时会用到。
+          window.once = payload.once // 从 Web 页获取到 once 变量（与 CSRF 有关），请求接口时会用到。
         }
       }
     })

@@ -247,6 +247,7 @@ export async function thankReply(params: {
     const data: V2EX_Response & { once: string } = await res.json()
     window.once = data.once
 
+    // 从接口获取到最新的 once 后需要更新回 Web 页。
     const messageData: MessageData = { from: MessageFrom.Content, payload: { once: data.once } }
     window.postMessage(messageData)
 
