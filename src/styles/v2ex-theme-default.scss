@@ -36,7 +36,9 @@ body {
   }
 
   pre {
-    word-break: break-all; // 防止代码块不换行导致 Main 容器突破宽度。
+    // 防止代码块不换行导致 Main 容器突破宽度。
+    // .content: 1100px | #RightBar: 270px
+    max-width: calc(1100px - 270px - 2 * var(--v2p-layout-gap) - 2 * 12px);
   }
 
   #Top {
@@ -62,7 +64,7 @@ body {
 
     .content {
       display: flex;
-      gap: 25px;
+      gap: var(--v2p-layout-gap);
     }
   }
 
