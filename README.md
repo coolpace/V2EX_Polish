@@ -117,5 +117,6 @@ PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获
 - [V2EX 超强浏览器扩展：体验更先进的 V2EX](https://www.v2ex.com/t/930155#reply379)
 - [V2EX Polish 大量功能更新，即刻体验更好用的 V2EX](https://www.v2ex.com/t/935916#reply154)
 - [关于 V2EX Polish 意外从 Chrome 应用商店下架的说明](https://www.v2ex.com/t/940580#reply57)
+- [V2EX Polish 在 5 月份更新了什么？](https://www.v2ex.com/t/942786#reply55)
 
 **喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰**
