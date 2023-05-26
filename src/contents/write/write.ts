@@ -18,7 +18,6 @@ export function handlerWrite() {
 
       void hostCall(`
       editor.setValue(editor.getValue().replace("${find}", "${replace}"));
-      editor.focus();
       const doc = editor.getDoc(); 
       const lastLine = doc.lastLine(); 
       const lastChar = doc.getLine(lastLine).length; 
