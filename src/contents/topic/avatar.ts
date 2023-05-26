@@ -15,7 +15,7 @@ interface ProcessAvatar {
 
 /**
  * 处理用户头像元素：
- *  - 点击头像会展示该用户的信息。
+ *  - 鼠标悬浮头像会展示该用户的信息。
  */
 export function processAvatar(params: ProcessAvatar) {
   const { $cellDom, popupControl, commentData, onSetTagsClick: onSetTags } = params
