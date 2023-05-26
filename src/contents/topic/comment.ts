@@ -409,7 +409,7 @@ export async function handlingComments() {
       if (currentComment) {
         const { refMemberNames, refFloors } = currentComment
 
-        if (!refMemberNames || refMemberNames.length === 0) {
+        if (!refMemberNames || refMemberNames.length === 0 || refMemberNames.length > 1) {
           return
         }
 
