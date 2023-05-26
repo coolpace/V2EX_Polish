@@ -226,6 +226,10 @@ export interface V2EX_Response {
 export interface MessageData {
   from: MessageFrom
   payload?: {
-    once?: string
+    call?: {
+      id: string
+      exp: string
+      ret?: any
+    }
   }
 }

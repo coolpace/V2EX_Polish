@@ -6,6 +6,7 @@ export default defineConfig({
     'common.min': 'src/contents/common.ts',
     'v2ex-home.min': 'src/contents/home/index.ts',
     'v2ex-topic.min': 'src/contents/topic/index.ts',
+    'v2ex-write.min': 'src/contents/write/index.ts',
     'decode-base64.min': 'src/contents/decode-base64.ts',
     'reading-list.min': 'src/contents/reading-list.ts',
 
