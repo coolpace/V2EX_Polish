@@ -33,13 +33,18 @@
     },
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
-      "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings"],
+      "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings", "*://*/write"],
       "js": ["scripts/v2ex-home.min.js"],
       "all_frames": true
     },
     {
       "matches": ["https://v2ex.com/t/*", "https://www.v2ex.com/t/*"],
       "js": ["scripts/v2ex-topic.min.js"],
+      "all_frames": true
+    },
+    {
+      "matches": ["https://v2ex.com/write", "https://www.v2ex.com/write"],
+      "js": ["scripts/v2ex-write.min.js"],
       "all_frames": true
     },
     {

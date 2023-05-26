@@ -1,6 +1,13 @@
 import { createToast } from '../components/toast'
-import { READING_CONTENT_LIMIT, StorageKey } from '../constants'
-import type { Member, MemberTag, ReadingItem, Tag, V2EX_RequestErrorResponce } from '../types'
+import { MessageFrom, READING_CONTENT_LIMIT, StorageKey } from '../constants'
+import type {
+  Member,
+  MemberTag,
+  MessageData,
+  ReadingItem,
+  Tag,
+  V2EX_RequestErrorResponce,
+} from '../types'
 import { getRunEnv, getStorage, setStorage, sleep } from '../utils'
 import { replyTextArea } from './globals'
 
@@ -228,4 +235,40 @@ export function decodeBase64TopicPage() {
       })
     })
   }
+}
+
+const execResolveMap = new Map<string, (value: unknown) => void>()
+window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
+  if (ev.data.from === MessageFrom.Web) {
+    const payload = ev.data.payload
+
+    if (payload?.call?.id) {
+      const resolve = execResolveMap.get(payload.call.id)
+      resolve!(payload.call.ret)
+      execResolveMap.delete(payload.call.id)
+    }
+  }
+})
+
+/**
+ * 在宿主环境中执行脚本，通过eval()执行，并返回执行结果
+ * 注入web_accessible_resources.min.js脚本之后才能生效
+ * @param exp  脚本内容
+ * @returns
+ */
+export function hostCall(exp: string): Promise<any> {
+  return new Promise((resolve) => {
+    const id = new Date().getTime().toString()
+    const messageData: MessageData = {
+      from: MessageFrom.Content,
+      payload: {
+        call: {
+          id,
+          exp,
+        },
+      },
+    }
+    execResolveMap.set(id, resolve)
+    window.postMessage(messageData)
+  })
 }

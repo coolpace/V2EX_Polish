@@ -195,11 +195,16 @@ export function escapeHTML(htmlString: string): string {
 /**
  * 向 HTML body 下动态插入脚本。
  */
-export function injectScript(scriptSrc: string) {
-  const script = document.createElement('script')
-  script.setAttribute('type', 'text/javascript')
-  script.setAttribute('src', scriptSrc)
-  document.body.appendChild(script)
+export function injectScript(scriptSrc: string): Promise<void> {
+  return new Promise((resolve) => {
+    const script = document.createElement('script')
+    script.setAttribute('type', 'text/javascript')
+    script.setAttribute('src', scriptSrc)
+    script.onload = () => {
+      resolve()
+    }
+    document.body.appendChild(script)
+  })
 }
 
 /**
