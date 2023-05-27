@@ -1,15 +1,23 @@
 import { uploadImage } from '../services'
 
 interface ImageUploadProps {
-  $el: JQuery
-  insertText: (text: string) => void // 插入文本的实现
-  replaceText: (find: string, replace: string) => void // 替换文本的实现，当 replace 为非空字符串时，表示图片上传成功，参数值为图片链接。
+  $wrapper: JQuery
+  $input?: JQuery
+  /** 向文本输入框中插入占位文本。 */
+  insertText: (text: string) => void
+  /** 替换占位文本，当 replace 为非空字符串时，表示图片上传成功，参数值为图片链接。 */
+  replaceText: (find: string, replace: string) => void
 }
 
 const uploadTip = '选择、粘贴、拖放上传图片。'
 
-export function bindImageUpload(props: ImageUploadProps) {
-  const { $el, insertText, replaceText } = props
+interface ImageUploadControl {
+  uploadBar: JQuery
+}
+
+export function bindImageUpload(props: ImageUploadProps): ImageUploadControl {
+  const { $wrapper, $input, insertText, replaceText } = props
+
   const $uploadBar = $(`<div class="v2p-reply-upload-bar">${uploadTip}</div>`)
 
   const handleUploadImage = (file: File) => {
@@ -51,7 +59,11 @@ export function bindImageUpload(props: ImageUploadProps) {
 
   // 粘贴图片并上传的功能。
   document.addEventListener('paste', (ev) => {
-    if (!(ev instanceof ClipboardEvent) || !$el.get(0)?.matches(':focus')) {
+    if (!(ev instanceof ClipboardEvent)) {
+      return
+    }
+
+    if ($input && !$input.get(0)?.matches(':focus')) {
       return
     }
 
@@ -61,7 +73,7 @@ export function bindImageUpload(props: ImageUploadProps) {
       return
     }
 
-    // 查找图像类型的数据项
+    // 查找属于图像类型的数据项。
     const imageItem = Array.from(items).find((item) => item.type.includes('image'))
 
     if (imageItem) {
@@ -73,7 +85,7 @@ export function bindImageUpload(props: ImageUploadProps) {
     }
   })
 
-  $el.get(0)?.addEventListener('drop', (ev) => {
+  $wrapper.get(0)?.addEventListener('drop', (ev) => {
     ev.preventDefault()
 
     if (!(ev instanceof DragEvent)) {
@@ -95,5 +107,9 @@ export function bindImageUpload(props: ImageUploadProps) {
     }
   })
 
-  $el.append($uploadBar)
+  $wrapper.append($uploadBar)
+
+  return {
+    uploadBar: $uploadBar,
+  }
 }

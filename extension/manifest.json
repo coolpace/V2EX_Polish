@@ -43,7 +43,7 @@
       "all_frames": true
     },
     {
-      "matches": ["https://v2ex.com/write", "https://www.v2ex.com/write"],
+      "matches": ["https://v2ex.com/write*", "https://www.v2ex.com/write*"],
       "js": ["scripts/v2ex-write.min.js"],
       "all_frames": true
     },

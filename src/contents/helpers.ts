@@ -237,38 +237,22 @@ export function decodeBase64TopicPage() {
   }
 }
 
-const execResolveMap = new Map<string, (value: unknown) => void>()
-window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
-  if (ev.data.from === MessageFrom.Web) {
-    const payload = ev.data.payload
-
-    if (payload?.call?.id) {
-      const resolve = execResolveMap.get(payload.call.id)
-      resolve!(payload.call.ret)
-      execResolveMap.delete(payload.call.id)
+/**
+ * 发送任务脚本到原 Web 页中执行，并返回执行结果。
+ */
+export function postTask(expression: string, callback?: (result: unknown) => void) {
+  if (callback) {
+    if (window.__V2P_Tasks) {
+      window.__V2P_Tasks.set(Date.now(), callback)
+    } else {
+      window.__V2P_Tasks = new Map([[Date.now(), callback]])
     }
   }
-})
 
-/**
- * 在宿主环境中执行脚本，通过eval()执行，并返回执行结果
- * 注入web_accessible_resources.min.js脚本之后才能生效
- * @param exp  脚本内容
- * @returns
- */
-export function hostCall(exp: string): Promise<any> {
-  return new Promise((resolve) => {
-    const id = new Date().getTime().toString()
-    const messageData: MessageData = {
-      from: MessageFrom.Content,
-      payload: {
-        call: {
-          id,
-          exp,
-        },
-      },
-    }
-    execResolveMap.set(id, resolve)
-    window.postMessage(messageData)
-  })
+  const messageData: MessageData = {
+    from: MessageFrom.Content,
+    payload: { task: { id: Date.now(), expression } },
+  }
+
+  window.postMessage(messageData)
 }

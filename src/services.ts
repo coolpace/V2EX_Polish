@@ -1,11 +1,12 @@
-import { EXTENSION_NAME, imgurClientIdPool, MessageFrom, StorageKey, V2EX } from './constants'
+import { EXTENSION_NAME, imgurClientIdPool, StorageKey, V2EX } from './constants'
+import { postTask } from './contents/helpers'
 import type {
   API_Info,
   DataWrapper,
   ImgurResponse,
   Member,
-  MessageData,
   Notification,
+  Once,
   StorageItems,
   StorageSettings,
   Topic,
@@ -105,6 +106,13 @@ export function deleteNotification(notification_id: string) {
 }
 
 export async function uploadImage(file: File): Promise<string> {
+  // Test:
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     resolve(`https://xxx.com/${file.name}`)
+  //   }, 1000)
+  // })
+
   const formData = new FormData()
   formData.append('image', file)
 
@@ -244,12 +252,11 @@ export async function thankReply(params: {
     const res = await fetch(`/thank/reply/${params.replyId}?once=${window.once}`, {
       method: 'POST',
     })
-    const data: V2EX_Response & { once: string } = await res.json()
-    window.once = data.once
+    const data: V2EX_Response & { once: Once } = await res.json()
 
     // 从接口获取到最新的 once 后需要更新回 Web 页。
-    const messageData: MessageData = { from: MessageFrom.Content, payload: { once: data.once } }
-    window.postMessage(messageData)
+    postTask(`window.once = ${data.once}`)
+    window.once = data.once
 
     if (data.success) {
       $('#thank_area_' + params.replyId)
