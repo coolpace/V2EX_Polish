@@ -1,22 +1,23 @@
 import { bindImageUpload } from '../../components/image-upload'
-import { hostCall } from '../helpers'
+import { postTask } from '../helpers'
 
-export function handlerWrite() {
+export function handlingWrite() {
   bindImageUpload({
-    $el: $('#workspace'),
+    $wrapper: $('#workspace'),
     insertText: (text: string) => {
-      void hostCall(`editor.getDoc().replaceRange("${text}", editor.getCursor())`)
+      postTask(`editor.getDoc().replaceRange("${text}", editor.getCursor())`)
     },
     replaceText: (find: string, replace: string) => {
       if (replace) {
-        // 特殊处理markdown模式下的图片插入格式
         const mode = $('input[name=syntax]:checked').val()
+
+        // 特殊处理markdown模式下的图片插入格式。
         if (mode === 'markdown') {
           replace = `![](${replace})`
         }
       }
 
-      void hostCall(`
+      postTask(`
       editor.setValue(editor.getValue().replace("${find}", "${replace}"));
       const doc = editor.getDoc(); 
       const lastLine = doc.lastLine(); 

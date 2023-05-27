@@ -1,7 +1,8 @@
-import { Links, StorageKey } from '../constants'
-import { deepMerge } from '../deep-merge'
+import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconChromeWebStore, iconDark, iconGitHub, iconLight, iconLogo } from '../icons'
-import { getStorage, setStorage } from '../utils'
+import type { MessageData } from '../types'
+import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
+import { postTask } from './helpers'
 
 void (async () => {
   const storage = await getStorage()
@@ -72,6 +73,33 @@ void (async () => {
       $searchItem.text(`SOV2EX ${value}`).prop('href', `https://www.sov2ex.com/?q=${value}`)
       $searchGroup.append($searchItem)
     })
+  }
+
+  {
+    const runEnv = getRunEnv()
+
+    if (runEnv === 'chrome' || runEnv === 'web-ext') {
+      injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
+
+      window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
+        if (ev.data.from === MessageFrom.Web) {
+          const payload = ev.data.payload
+          const task = payload?.task
+
+          if (payload?.status === 'ready') {
+            postTask('if (typeof window.once === "string") { return window.once; }', (result) => {
+              if (typeof result === 'string') {
+                window.once = result
+              }
+            })
+          }
+
+          if (task) {
+            window.__V2P_Tasks?.get(task.id)?.(task.result)
+          }
+        }
+      })
+    }
   }
 
   {

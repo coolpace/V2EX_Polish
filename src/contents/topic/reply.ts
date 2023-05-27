@@ -108,6 +108,24 @@ function handlingReplyActions() {
 }
 
 export function handleReply() {
+  $replyTextArea.attr('placeholder', '留下对他人有帮助的回复').wrap('<div class="v2p-reply-wrap">')
+
+  const { uploadBar } = bindImageUpload({
+    $wrapper: $('.v2p-reply-wrap'),
+    $input: $replyTextArea,
+    insertText: (text: string) => {
+      insertTextToReplyInput(text)
+    },
+    replaceText: (find: string, replace: string) => {
+      const val = $replyTextArea.val()
+
+      if (typeof val === 'string') {
+        const newVal = val.replace(find, replace)
+        $replyTextArea.val(newVal).trigger('focus')
+      }
+    },
+  })
+
   const $tools = $(`
   <div class="v2p-reply-tools-box v2p-hover-btn">
     <span class="v2p-reply-tools-icon">${iconTool}</span>
@@ -148,27 +166,14 @@ export function handleReply() {
     })
   })
 
-  $replyTextArea.wrap('<div class="v2p-reply-wrap">').attr('placeholder', '留下对他人有帮助的回复')
   $toolContent.find('.v2p-reply-tool-img').on('click', () => {
-    $('.v2p-reply-upload-bar').trigger('click')
+    uploadBar.trigger('click')
   })
+
   $replyBox.find('> .flex-row-end').prepend($tools)
+
+  // 移除原站的“请尽量让自己的回复能够对别人有帮助”。
   $('.flex-one-row:last-of-type > .gray').text('')
-
-  bindImageUpload({
-    $el: $('.v2p-reply-wrap'),
-    insertText: (text: string) => {
-      insertTextToReplyInput(text)
-    },
-    replaceText: (find: string, replace: string) => {
-      const val = $replyTextArea.val()
-
-      if (typeof val === 'string') {
-        const newVal = val.replace(find, replace)
-        $replyTextArea.val(newVal).trigger('focus')
-      }
-    },
-  })
 
   handlingReplyActions()
 }

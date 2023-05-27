@@ -1,8 +1,7 @@
 import { StorageKey } from '../../constants'
 import { iconReply, iconScrollTop } from '../../icons'
-import { getRunEnv, getStorage, injectScript } from '../../utils'
+import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
-import { hostCall } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -11,12 +10,6 @@ import { handleReply } from './reply'
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
-  const runEnv = getRunEnv()
-
-  if (runEnv === 'chrome' || runEnv === 'web-ext') {
-    await injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
-    window.once = await hostCall('window.once')
-  }
 
   if (options.openInNewTab) {
     $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')

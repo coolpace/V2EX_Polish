@@ -6,6 +6,7 @@ declare global {
     __V2P_AddingReading?: boolean
     __V2P_DecodeStatus?: 'decodeed'
     __V2P_StorageCache?: StorageSettings
+    __V2P_Tasks?: Map<TaskId, (result: unknown) => void>
   }
 }
 
@@ -182,6 +183,11 @@ export interface V2EX_RequestErrorResponce {
   }
 }
 
+export interface V2EX_Response {
+  success: boolean
+  message?: string
+}
+
 export interface CommentData {
   /** HTML 元素上的 id */
   id: string
@@ -218,18 +224,28 @@ export interface ImgurResponse {
   }
 }
 
-export interface V2EX_Response {
-  success: boolean
-  message?: string
-}
+/** CSRF 字符串，通常在请求 V2EX API 时需要传递它。 */
+export type Once = string
 
-export interface MessageData {
-  from: MessageFrom
-  payload?: {
-    call?: {
-      id: string
-      exp: string
-      ret?: any
+export type TaskId = string | number
+
+export type MessageData =
+  | {
+      from: MessageFrom.Content
+      payload?: {
+        task?: {
+          id: TaskId
+          expression: string
+        }
+      }
     }
-  }
-}
+  | {
+      from: MessageFrom.Web
+      payload?: {
+        status?: 'ready'
+        task?: {
+          id: TaskId
+          result: unknown
+        }
+      }
+    }

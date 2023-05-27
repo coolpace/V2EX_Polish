@@ -9,7 +9,6 @@
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
-import { deepMerge } from '../deep-merge'
 import { iconArrowUp, iconChat, iconLoading } from '../icons'
 import {
   fetchHotTopics,
@@ -19,7 +18,14 @@ import {
   setV2P_Settings,
 } from '../services'
 import type { Topic } from '../types'
-import { formatTimestamp, getStorage, getStorageSync, isSameDay, setStorage } from '../utils'
+import {
+  deepMerge,
+  formatTimestamp,
+  getStorage,
+  getStorageSync,
+  isSameDay,
+  setStorage,
+} from '../utils'
 import {
   calculateLocalStorageSize,
   formatSizeUnits,

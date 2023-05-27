@@ -20,11 +20,7 @@ export default defineConfig({
 
   outDir: './extension/scripts',
 
-  minify: true,
-
-  define: {
-    'process.env.NODE_ENV': '"production"',
-  },
+  minify: false,
 
   noExternal: ['@floating-ui/dom', 'webext-patterns'],
 
