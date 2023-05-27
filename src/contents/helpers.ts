@@ -64,13 +64,12 @@ export async function setMemberTags(memberName: Member['username'], tags: Tag[] 
 
   const runEnv = getRunEnv()
 
-  if (runEnv !== 'chrome') {
+  if (!(runEnv === 'chrome' || runEnv === 'web-ext')) {
     return
   }
 
   if (tags && tags.length > 0) {
     const newTagData: MemberTag = { ...tagData, [memberName]: { tags } }
-
     await setStorage(StorageKey.MemberTag, newTagData)
   } else {
     if (tagData && Reflect.has(tagData, memberName)) {
@@ -241,18 +240,26 @@ export function decodeBase64TopicPage() {
  * 发送任务脚本到原 Web 页中执行，并返回执行结果。
  */
 export function postTask(expression: string, callback?: (result: unknown) => void) {
-  if (callback) {
-    if (window.__V2P_Tasks) {
-      window.__V2P_Tasks.set(Date.now(), callback)
-    } else {
-      window.__V2P_Tasks = new Map([[Date.now(), callback]])
+  const runEnv = getRunEnv()
+
+  if (!runEnv) {
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const result = Function(`"use strict"; ${expression}`)()
+    callback?.(result)
+  } else {
+    if (callback) {
+      if (window.__V2P_Tasks) {
+        window.__V2P_Tasks.set(Date.now(), callback)
+      } else {
+        window.__V2P_Tasks = new Map([[Date.now(), callback]])
+      }
     }
-  }
 
-  const messageData: MessageData = {
-    from: MessageFrom.Content,
-    payload: { task: { id: Date.now(), expression } },
-  }
+    const messageData: MessageData = {
+      from: MessageFrom.Content,
+      payload: { task: { id: Date.now(), expression } },
+    }
 
-  window.postMessage(messageData)
+    window.postMessage(messageData)
+  }
 }
