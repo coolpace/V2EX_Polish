@@ -1,8 +1,8 @@
-import { MessageFrom, StorageKey } from '../../constants'
+import { StorageKey } from '../../constants'
 import { iconReply, iconScrollTop } from '../../icons'
-import type { MessageData } from '../../types'
 import { getRunEnv, getStorage, injectScript } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
+import { hostCall } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -14,17 +14,8 @@ void (async () => {
   const runEnv = getRunEnv()
 
   if (runEnv === 'chrome' || runEnv === 'web-ext') {
-    injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
-
-    window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
-      if (ev.data.from === MessageFrom.Web) {
-        const payload = ev.data.payload
-
-        if (payload?.once) {
-          window.once = payload.once // 从 Web 页获取到 once 变量（与 CSRF 有关），请求接口时会用到。
-        }
-      }
-    })
+    await injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
+    window.once = await hostCall('window.once')
   }
 
   if (options.openInNewTab) {
