@@ -1,11 +1,11 @@
 import { createButton } from '../../components/button'
+import { bindImageUpload } from '../../components/image-upload'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { emoticons } from '../../constants'
 import { iconEmoji, iconTool } from '../../icons'
-import { uploadImage } from '../../services'
 import { getOS } from '../../utils'
-import { $replyBox, $replyForm, $replyTextArea, replyTextArea } from '../globals'
+import { $replyBox, $replyForm, $replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
 
 function handlingReplyActions() {
@@ -148,114 +148,27 @@ export function handleReply() {
     })
   })
 
-  const uploadTip = '选择、粘贴、拖放上传图片。'
+  $replyTextArea.wrap('<div class="v2p-reply-wrap">').attr('placeholder', '留下对他人有帮助的回复')
+  $toolContent.find('.v2p-reply-tool-img').on('click', () => {
+    $('.v2p-reply-upload-bar').trigger('click')
+  })
+  $replyBox.find('> .flex-row-end').prepend($tools)
+  $('.flex-one-row:last-of-type > .gray').text('')
 
-  const $uploadBar = $(`<div class="v2p-reply-upload-bar">${uploadTip}</div>`)
-
-  const handleUploadImage = (file: File) => {
-    const placeholder = '[上传图片中...]'
-    insertTextToReplyInput(` ${placeholder} `)
-    $uploadBar.addClass('v2p-reply-upload-bar-disabled').text('正在上传图片...')
-
-    const replacePlaceholder = (imgLink: string) => {
+  bindImageUpload({
+    $el: $('.v2p-reply-wrap'),
+    insertText: (text: string) => {
+      insertTextToReplyInput(text)
+    },
+    replaceText: (find: string, replace: string) => {
       const val = $replyTextArea.val()
 
       if (typeof val === 'string') {
-        const newVal = val.replace(placeholder, imgLink)
+        const newVal = val.replace(find, replace)
         $replyTextArea.val(newVal).trigger('focus')
       }
-    }
-
-    uploadImage(file)
-      .then((imgLink) => {
-        replacePlaceholder(imgLink)
-      })
-      .catch(() => {
-        replacePlaceholder('')
-
-        window.alert('❌ 上传图片失败，请打开控制台查看原因')
-      })
-      .finally(() => {
-        $uploadBar.removeClass('v2p-reply-upload-bar-disabled').text(uploadTip)
-      })
-  }
-
-  const handleClickUploadImage = () => {
-    focusReplyInput()
-    toolsPopup.close()
-
-    const imgInput = document.createElement('input')
-
-    imgInput.style.display = 'none'
-    imgInput.type = 'file'
-    imgInput.accept = 'image/*'
-
-    imgInput.addEventListener('change', () => {
-      const selectedFile = imgInput.files?.[0]
-
-      if (selectedFile) {
-        handleUploadImage(selectedFile)
-      }
-    })
-
-    imgInput.click()
-  }
-
-  $toolContent.find('.v2p-reply-tool-img').on('click', () => {
-    handleClickUploadImage()
+    },
   })
-
-  $replyBox.find('> .flex-row-end').prepend($tools)
-
-  // 粘贴图片并上传的功能。
-  document.addEventListener('paste', (ev) => {
-    if (!(ev instanceof ClipboardEvent) || !replyTextArea?.matches(':focus')) {
-      return
-    }
-
-    const items = ev.clipboardData?.items
-
-    if (!items) {
-      return
-    }
-
-    // 查找图像类型的数据项
-    const imageItem = Array.from(items).find((item) => item.type.includes('image'))
-
-    if (imageItem) {
-      const file = imageItem.getAsFile()
-
-      if (file) {
-        handleUploadImage(file)
-      }
-    }
-  })
-
-  replyTextArea?.addEventListener('drop', (ev) => {
-    ev.preventDefault()
-
-    if (!(ev instanceof DragEvent)) {
-      return
-    }
-
-    const file = ev.dataTransfer?.files[0]
-
-    if (file) {
-      handleUploadImage(file)
-    }
-  })
-
-  $replyTextArea.wrap('<div class="v2p-reply-wrap">').attr('placeholder', '留下对他人有帮助的回复')
-
-  $('.flex-one-row:last-of-type > .gray').text('')
-
-  $uploadBar.on('click', () => {
-    if (!$uploadBar.hasClass('v2p-reply-upload-bar-disabled')) {
-      handleClickUploadImage()
-    }
-  })
-
-  $('.v2p-reply-wrap').append($uploadBar)
 
   handlingReplyActions()
 }
