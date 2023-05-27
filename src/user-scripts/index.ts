@@ -14,17 +14,22 @@ if (typeof window.GM_addStyle !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
   const commonRegex = patternToRegex('https://v2ex.com/*', 'https://www.v2ex.com/*')
   const topicRegex = patternToRegex('https://v2ex.com/t/*', 'https://www.v2ex.com/t/*')
+  const writeRegex = patternToRegex('https://v2ex.com/write*', 'https://www.v2ex.com/write*')
 
   const url = window.location.href
 
   void (async () => {
     if (commonRegex.test(url)) {
-      import('../contents/common')
-      import('../contents/home/index')
+      await import('../contents/common')
+      await import('../contents/home/index')
     }
 
     if (topicRegex.test(url)) {
       await import('../contents/topic/index')
+    }
+
+    if (writeRegex.test(url)) {
+      await import('../contents/write/index')
     }
   })()
 })
