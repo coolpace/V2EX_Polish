@@ -27,7 +27,6 @@ module.exports = {
       },
       extends: [require.resolve('prefer-code-style/eslint/rules/typescript-prefer-strict')],
       rules: {
-        'no-console': [1, { allow: ['warn', 'error'] }],
         '@typescript-eslint/prefer-readonly-parameter-types': 0,
       },
     },
