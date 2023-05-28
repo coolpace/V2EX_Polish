@@ -154,6 +154,7 @@ export const defaultOptions: Options = {
   },
   nestedReply: {
     display: 'indent',
+    multipleInsideOne: 'nested',
   },
 }
 

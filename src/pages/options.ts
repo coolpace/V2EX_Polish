@@ -33,9 +33,12 @@ const saveOptions = async () => {
     replyContent: {
       autoFold: $('#autoFold').prop('checked'),
     },
-    nestedReply: {
-      display: $('input[name="nestedReplyDisplay"]:checked').prop('value'),
-    },
+    nestedReply: (() => {
+      return {
+        display: $('input[name="nestedReplyDisplay"]:checked').prop('value'),
+        multipleInsideOne: $('#nestedReply_multipleInsideOne').prop('checked') ? 'nested' : 'off',
+      }
+    })(),
   }
 
   await setStorage(StorageKey.Options, currentOptions)
@@ -62,6 +65,10 @@ void (async function init() {
 
   $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
   $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
+  $('#nestedReply_multipleInsideOne').prop(
+    'checked',
+    options.nestedReply.multipleInsideOne === 'nested'
+  )
 
   $('#reply_preload_off').prop('checked', options.reply.preload === 'off')
   $('#reply_preload_auto').prop('checked', options.reply.preload === 'auto')
