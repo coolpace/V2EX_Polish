@@ -417,7 +417,11 @@ export async function handlingComments() {
       if (currentComment) {
         const { refMemberNames, refFloors } = currentComment
 
-        if (!refMemberNames || refMemberNames.length === 0 || refMemberNames.length > 1) {
+        if (!refMemberNames || refMemberNames.length === 0) {
+          return
+        }
+
+        if (options.nestedReply.multipleInsideOne === 'off' && refMemberNames.length > 1) {
           return
         }
 

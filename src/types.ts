@@ -31,6 +31,7 @@ export interface Options {
   }
   nestedReply: {
     display: 'align' | 'indent'
+    multipleInsideOne?: 'nested' | 'off'
   }
 }
 
