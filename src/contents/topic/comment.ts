@@ -212,11 +212,16 @@ function handlingControls(commentDataList: readonly CommentData[]) {
               (it) => it.memberName === replyMemberName && it.floor !== floor
             ) !== -1
 
-          const $page = $('.v2p-paging').eq(0).find('.page_normal, .page_current')
-          const onLastPage = $page.length > 1 && $page.last().hasClass('page_current')
-
-          if (moreThanOneReply || !onLastPage) {
+          if (moreThanOneReply) {
             insertTextToReplyInput(`#${floor} `)
+          } else {
+            const $page = $('.v2p-paging').eq(0).find('.page_normal, .page_current')
+            if ($page.length > 1) {
+              const onLastPage = $page.last().hasClass('page_current')
+              if (!onLastPage) {
+                insertTextToReplyInput(`#${floor} `)
+              }
+            }
           }
         }
       }
