@@ -181,4 +181,10 @@
       @include dark-mode;
     }
   }
+
+  @supports not selector(:has(*)) {
+    #Wrapper.Night {
+      @include dark-mode;
+    }
+  }
 }
