@@ -27,6 +27,12 @@
     },
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
+      "js": ["scripts/polyfill.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    },
+    {
+      "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*"],
       "css": ["css/v2ex-effect.css"],
       "js": ["scripts/jquery.min.js", "scripts/common.min.js"],
       "all_frames": true

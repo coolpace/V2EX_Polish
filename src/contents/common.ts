@@ -4,15 +4,6 @@ import type { MessageData } from '../types'
 import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
 import { postTask } from './helpers'
 
-try {
-  document.querySelector(':has(*)')
-} catch {
-  // 检测到浏览器不支持 :has() 选择器，使用后备方案能切换至深色模式。
-  if (document.querySelector('#Wrapper')?.classList.contains('Night')) {
-    document.body.classList.add('v2p-theme-dark')
-  }
-}
-
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
