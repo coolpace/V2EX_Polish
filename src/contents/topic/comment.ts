@@ -431,7 +431,8 @@ export async function handlingComments() {
             const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
 
             if (compareName === refName) {
-              let refCommentIdx = j;
+              let refCommentIdx = j
+
               const firstRefFloor = refFloors?.at(0)
 
               // 找到了指定回复的用户后，发现跟指定楼层对不上，则继续寻找。
@@ -442,7 +443,7 @@ export async function handlingComments() {
                   .findIndex((data) => data.floor === firstRefFloor && data.memberName === refName)
 
                 if (targetIdx >= 0) {
-                  refCommentIdx = targetIdx;
+                  refCommentIdx = targetIdx
                 }
               }
 
