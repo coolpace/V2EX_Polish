@@ -443,7 +443,7 @@ hr {
   summary:hover {
     .summary-text {
       text-decoration: underline dashed;
-      text-underline-offset: 0.5ex;
+      text-underline-offset: var(--v2p-underline-offset);
     }
   }
 
@@ -457,12 +457,12 @@ hr {
 
 a {
   &:hover {
-    text-underline-offset: 0.5ex;
+    text-underline-offset: var(--v2p-underline-offset);
     text-decoration: underline;
   }
 
   &.link {
-    text-underline-offset: 0.5ex;
+    text-underline-offset: var(--v2p-underline-offset);
     text-decoration: underline dashed;
 
     &:hover {

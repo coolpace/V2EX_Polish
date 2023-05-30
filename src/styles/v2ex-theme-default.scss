@@ -31,7 +31,7 @@ body {
 
     &:hover {
       text-decoration: underline 1px;
-      text-underline-offset: 0.5ex;
+      text-underline-offset: var(--v2p-underline-offset);
     }
   }
 
@@ -322,6 +322,7 @@ body {
   .item_hot_topic_title {
     @include share.line-clamp(2);
 
+    padding: var(--v2p-underline-offset) 0;
     text-shadow: none;
   }
 
@@ -666,10 +667,7 @@ body {
 
       &::after {
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: -6px;
-        left: 0;
+        inset: 0 0 -6px;
         z-index: 1;
         background-color: var(--v2p-color-bg-content);
         content: '';
