@@ -62,21 +62,19 @@
 
       body {
         width: 100vw;
-        height: 100vh;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
         color: var(--color-main);
         font-family: system-ui, sans-serif;
         background-image: linear-gradient(to bottom, rgb(30 41 59 / 10%), transparent);
       }
 
       main {
+        min-height: 100vh;
+        padding: 50px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 50px;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
       }
 
       .hero {
