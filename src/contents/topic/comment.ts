@@ -238,7 +238,7 @@ export async function handlingComments() {
   const options = storage[StorageKey.Options]
 
   if (options.reply.preload !== 'off') {
-    // 预价值多页回复，然后在同一页中显示，优化多页回复产生的楼中楼。
+    // 预加载多页回复，然后在同一页中显示，优化多页回复产生的楼中楼。
 
     const $paging = $('.v2p-paging')
 
@@ -431,6 +431,7 @@ export async function handlingComments() {
             const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
 
             if (compareName === refName) {
+              let refCommentIdx = j;
               const firstRefFloor = refFloors?.at(0)
 
               // 找到了指定回复的用户后，发现跟指定楼层对不上，则继续寻找。
@@ -441,8 +442,7 @@ export async function handlingComments() {
                   .findIndex((data) => data.floor === firstRefFloor && data.memberName === refName)
 
                 if (targetIdx >= 0) {
-                  $commentCells.eq(targetIdx).append(cellDom)
-                  return
+                  refCommentIdx = targetIdx;
                 }
               }
 
@@ -450,7 +450,7 @@ export async function handlingComments() {
                 cellDom.classList.add('v2p-indent')
               }
 
-              $commentCells.eq(j).append(cellDom)
+              $commentCells.eq(refCommentIdx).append(cellDom)
               return
             }
           }
