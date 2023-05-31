@@ -320,10 +320,16 @@ body {
   }
 
   .item_hot_topic_title {
+    --offset: 3px;
+
     @include share.line-clamp(2);
 
-    padding: var(--v2p-underline-offset) 0;
+    padding: var(--offset) 0;
     text-shadow: none;
+
+    > a:hover {
+      text-underline-offset: var(--offset);
+    }
   }
 
   form {

@@ -85,10 +85,7 @@
 
   &::before {
     position: absolute;
-    top: 0;
-    right: -5px;
-    bottom: 0;
-    left: -5px;
+    inset: 0 -5px;
     z-index: -1;
     background-color: var(--v2p-color-bg-hover-btn);
     border-radius: 5px;
