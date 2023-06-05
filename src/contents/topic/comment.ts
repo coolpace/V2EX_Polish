@@ -245,7 +245,8 @@ export async function handlingComments() {
     if ($paging.length > 0) {
       const $pagingTop = $paging.eq(0)
       const $pagingBottom = $paging.eq(1)
-      const $pageNormal = $pagingTop.find('.page_normal')
+      const $pageNormal = $paging.find('.page_normal')
+      const $pagingTopNormal = $pagingTop.find('.page_normal')
 
       const toastControl = createToast({ message: '正在预加载回复，请稍候...', duration: 0 })
 
@@ -258,7 +259,7 @@ export async function handlingComments() {
         if (currentPage === '1') {
           const pages: string[] = []
 
-          $pageNormal.each((i, ele) => {
+          $pagingTopNormal.each((i, ele) => {
             if (i <= 1 /** 基于性能考虑，限制最多加载 3 页回复 */) {
               if (ele.textContent) {
                 ele.classList.add('page_current')
