@@ -1,4 +1,5 @@
 import { createButton } from '../../components/button'
+import { createToast } from '../../components/toast'
 import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import { iconIgnore, iconLove, iconStar, iconTwitter } from '../../icons'
 import type { Member, Options, Tag } from '../../types'
@@ -37,10 +38,42 @@ export function handlingContent() {
 
   {
     const topicBtn = $('.topic_buttons .tb').addClass('v2p-tb v2p-hover-btn')
-    topicBtn.eq(0).append(`<span class="v2p-tb-icon">${iconStar}</span>`)
+    const $favoriteBtn = topicBtn.eq(0)
+    $favoriteBtn.append(`<span class="v2p-tb-icon">${iconStar}</span>`)
     topicBtn.eq(1).append(`<span class="v2p-tb-icon">${iconTwitter}</span>`)
     topicBtn.eq(2).append(`<span class="v2p-tb-icon">${iconIgnore}</span>`)
     topicBtn.eq(3).append(`<span class="v2p-tb-icon">${iconLove}</span>`)
+
+    const url = $favoriteBtn.attr('href')
+
+    // 在不刷新页面下执行主题的收藏操作。
+    if (typeof url === 'string') {
+      let hasFavorited = !url.startsWith('/favorite')
+
+      $favoriteBtn.attr('href', 'javascript:').on('click', () => {
+        void (async () => {
+          createToast({ message: hasFavorited ? '正在取消收藏...' : '正在加入收藏...' })
+          $favoriteBtn.css('pointer-events', 'none')
+          try {
+            const res = await fetch(hasFavorited ? url.replace('/favorite', '/unfavorite') : url)
+            if (res.redirected) {
+              const htmlText = await res.text()
+              if (!hasFavorited && htmlText.includes('取消收藏')) {
+                $favoriteBtn.html($favoriteBtn.html().replace('加入收藏', '取消收藏'))
+                hasFavorited = true
+              } else if (hasFavorited && htmlText.includes('加入收藏')) {
+                $favoriteBtn.html($favoriteBtn.html().replace('取消收藏', '加入收藏'))
+                hasFavorited = false
+              }
+            }
+          } catch {
+            createToast({ message: '❌ 加入收藏失败' })
+          } finally {
+            $favoriteBtn.css('pointer-events', 'auto')
+          }
+        })()
+      })
+    }
   }
 }
 
