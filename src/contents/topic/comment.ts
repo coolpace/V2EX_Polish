@@ -49,7 +49,7 @@ function handlingPopularComments() {
       const $template = $('<div>')
 
       popularCommentData.forEach(({ index, refMemberNames }) => {
-        const $clonedCells = $commentCells.eq(index).clone()
+        const $clonedCells = $commentCells.eq(index).clone(true, true)
 
         // 查看热门回复时，禁用回复操作和楼层锚点。
         $clonedCells.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
@@ -110,125 +110,83 @@ function handlingPopularComments() {
 /**
  * 设置回复的操作。
  */
-function handlingControls(commentDataList: readonly CommentData[]) {
-  const actionAreas = $commentTableRows.find('> td:last-of-type > .fr')
+function processActions($cellDom: JQuery, data: CommentData) {
+  const $actions = $cellDom.find('> table > tbody > tr > td:last-of-type > .fr')
 
-  actionAreas.each((i, el) => {
-    const ctrlArea = $(el)
+  const $controls = $('<span class="v2p-controls">')
 
-    const $controls = $('<span class="v2p-controls">')
+  const $thankIcon = $(
+    `<span
+      class="v2p-control v2p-control-thank"
+      data-id="${data.id}"
+      data-member-name="${data.memberName}"
+     >
+        ${iconHeart}
+     </span>`
+  )
 
-    const $thankIcon = $(`<span class="v2p-control v2p-control-thank">${iconHeart}</span>`)
+  const thankArea = $actions.find('> .thank_area')
+  const thanked = thankArea.hasClass('thanked')
 
-    const thankArea = ctrlArea.find('> .thank_area')
-    const thanked = thankArea.hasClass('thanked')
+  if (thanked) {
+    $thankIcon.addClass('v2p-thanked')
+    $controls.append($('<a>').append($thankIcon))
+  } else {
+    const thankEle = thankArea.find('> .thank')
+    const $hide = thankEle.eq(0).removeClass('thank')
+    const $thank = thankEle.eq(1).removeClass('thank')
 
-    if (thanked) {
-      $thankIcon.addClass('v2p-thanked')
-      $controls.append($('<a>').append($thankIcon))
-    } else {
-      const thankEle = thankArea.find('> .thank')
-      const $hide = thankEle.eq(0).removeClass('thank')
-      const $thank = thankEle.eq(1).removeClass('thank')
+    $hide.html(`<span class="v2p-control v2p-hover-btn v2p-control-hide">${iconHide}</span>`)
 
-      $hide.html(`<span class="v2p-control v2p-hover-btn v2p-control-hide">${iconHide}</span>`)
+    $thankIcon.addClass('v2p-hover-btn').replaceAll($thank)
 
-      $thankIcon.addClass('v2p-hover-btn').replaceAll($thank)
+    $controls.append($hide).append($thankIcon)
+  }
 
-      $thankIcon.on('click', (ev) => {
-        ev.stopPropagation()
-        const data = commentDataList.at(i)
+  const $reply = $actions.find('a:last-of-type')
 
-        if (data) {
-          if (confirm(`确认花费 10 个铜币向 @${data.memberName} 的这条回复发送感谢？`)) {
-            const replyId = data.id.split('_').at(1)
+  $reply
+    .find('> img[alt="Reply"]')
+    .replaceWith(`<span class="v2p-control v2p-hover-btn v2p-control-reply">${iconReply}</span>`)
 
-            if (replyId) {
-              void thankReply({
-                replyId,
+  $controls.append($reply)
 
-                onSuccess: () => {
-                  const $cell = ctrlArea.closest('.cell[id^="r_"]')
-                  const $likesBox = $cell.find('> table .v2p-likes-box')
-                  const likes = Number($likesBox.text())
-                  const $clonedIconHeart = $likesBox.find('.v2p-icon-heart').clone()
+  thankArea.remove()
 
-                  if (likes > 0) {
-                    $likesBox
-                      .addClass('v2p-thanked')
-                      .empty()
-                      .append($clonedIconHeart, ` ${likes + 1}`)
-                  } else {
-                    $(`
-                    <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
-                      &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
-                    </span>
-                    `).insertAfter($cell.find('> table .ago'))
-                  }
+  const floorNum = $actions.find('.no').clone()
 
-                  $thankIcon.addClass('v2p-thanked')
-                  $hide.hide()
-                  $thankIcon.off('click')
-                  createToast({ message: `❤️ 已感谢 @${data.memberName} 的回复` })
-                },
+  // 当要回复的用户在本页已有多条回复时，在输入框中添加指定楼层，这样可以减少楼层错乱的情况。
+  $reply.on('click', () => {
+    const replyVal = $replyTextArea.val()
 
-                onFail: () => {
-                  createToast({ message: '❌ 感谢回复失败' })
-                },
-              })
-            }
-          }
-        }
-      })
+    if (typeof replyVal === 'string' && replyVal.length > 0) {
+      const floor = floorNum.text()
 
-      $controls.append($hide).append($thankIcon)
-    }
+      const replyComment = commentDataList.find((it) => it.floor === floor)
 
-    const $reply = ctrlArea.find('a:last-of-type')
+      if (replyComment) {
+        const replyMemberName = replyComment.memberName
+        const moreThanOneReply =
+          commentDataList.findIndex(
+            (it) => it.memberName === replyMemberName && it.floor !== floor
+          ) !== -1
 
-    $reply
-      .find('> img[alt="Reply"]')
-      .replaceWith(`<span class="v2p-control v2p-hover-btn v2p-control-reply">${iconReply}</span>`)
-
-    $controls.append($reply)
-
-    thankArea.remove()
-
-    const floorNum = ctrlArea.find('.no').clone()
-
-    // 当要回复的用户在本页已有多条回复时，在输入框中添加指定楼层，这样可以减少楼层错乱的情况。
-    $reply.on('click', () => {
-      const replyVal = $replyTextArea.val()
-
-      if (typeof replyVal === 'string' && replyVal.length > 0) {
-        const floor = floorNum.text()
-
-        const replyComment = commentDataList.find((it) => it.floor === floor)
-
-        if (replyComment) {
-          const replyMemberName = replyComment.memberName
-          const moreThanOneReply =
-            commentDataList.findIndex(
-              (it) => it.memberName === replyMemberName && it.floor !== floor
-            ) !== -1
-
-          if (moreThanOneReply) {
-            insertTextToReplyInput(`#${floor} `)
-          } else {
-            const $page = $('.v2p-paging').eq(0).find('.page_normal, .page_current')
-            if ($page.length > 1) {
-              const onLastPage = $page.last().hasClass('page_current')
-              if (!onLastPage) {
-                insertTextToReplyInput(`#${floor} `)
-              }
+        if (moreThanOneReply) {
+          insertTextToReplyInput(`#${floor} `)
+        } else {
+          const $page = $('.v2p-paging').eq(0).find('.page_normal, .page_current')
+          if ($page.length > 1) {
+            const onLastPage = $page.last().hasClass('page_current')
+            if (!onLastPage) {
+              insertTextToReplyInput(`#${floor} `)
             }
           }
         }
       }
-    })
-
-    ctrlArea.empty().append($controls, floorNum)
+    }
   })
+
+  $actions.empty().append($controls, floorNum)
 }
 
 export async function handlingComments() {
@@ -393,10 +351,63 @@ export async function handlingComments() {
         updateMemberTag(memberName, tagData[memberName].tags)
         membersHasSetTags.add(memberName)
       }
+
+      processActions($cellDom, currentComment)
     })
 
-    handlingControls(commentDataList)
+    updateCommentCells()
     handlingPopularComments()
+
+    // 处理「点击感谢回复」的逻辑。
+    $('.v2p-control-thank').on('click', (ev) => {
+      ev.stopPropagation()
+
+      const id = ev.currentTarget.dataset.id
+      const memberName = ev.currentTarget.dataset.memberName
+
+      if (typeof id === 'string' && typeof memberName === 'string') {
+        if (confirm(`确认花费 10 个铜币向 @${memberName} 的这条回复发送感谢？`)) {
+          const replyId = id.split('_').at(1)
+
+          if (replyId) {
+            void thankReply({
+              replyId,
+
+              onSuccess: () => {
+                const $cell = $(`.cell[id="r_${replyId}"]`)
+                const $tableInCell = $cell.find('> table')
+                const $likesBox = $tableInCell.find('.v2p-likes-box')
+                const $firstLikesBox = $likesBox.eq(0)
+                const likes = Number($firstLikesBox.text())
+                const $clonedIconHeart = $firstLikesBox.find('.v2p-icon-heart').clone()
+
+                if (likes > 0) {
+                  $likesBox
+                    .addClass('v2p-thanked')
+                    .empty()
+                    .append($clonedIconHeart, ` ${likes + 1}`)
+                } else {
+                  $(`
+                      <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
+                        &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
+                      </span>
+                      `).insertAfter($tableInCell.find('.ago'))
+                }
+
+                const $thankAction = $tableInCell.find('.v2p-control-thank')
+                $thankAction.addClass('v2p-thanked').off('click')
+                $thankAction.siblings().find('.v2p-control-hide').hide()
+                createToast({ message: `❤️ 已感谢 @${memberName} 的回复` })
+              },
+
+              onFail: () => {
+                createToast({ message: '❌ 感谢回复失败' })
+              },
+            })
+          }
+        }
+      }
+    })
   }
 
   {
