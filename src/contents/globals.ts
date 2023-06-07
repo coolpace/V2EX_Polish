@@ -19,6 +19,7 @@ export let $commentCells = $commentBox.find('.cell[id^="r_"]')
 
 export let $commentTableRows = $commentCells.find('> table > tbody > tr')
 
+/** 当元素发生改变时，需要更新以选择到最新的元素 */
 export function updateCommentCells() {
   $commentCells = $commentBox.find('.cell[id^="r_"]')
   $commentTableRows = $commentCells.find('> table > tbody > tr')
