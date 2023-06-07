@@ -199,7 +199,8 @@ function loadSettings() {
                   )
                   const storage = await getStorage(false)
                   await chrome.storage.sync.set(deepMerge(storage, settings))
-                  $('#local-version').val(settings[StorageKey.SyncInfo]?.version ?? defaultValue)
+                  await getStorage(false)
+                  loadSettings() // 同步配置后重新加载以应用最新配置。
                 } finally {
                   $syncBtn.text(txt).css('pointer-events', 'auto')
                 }
