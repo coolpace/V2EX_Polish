@@ -2,7 +2,7 @@ import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
-import { iconHeart, iconHide, iconReply } from '../../icons'
+import { iconHeart, iconHide, iconReply, iconTime } from '../../icons'
 import { crawalTopicPage, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { escapeHTML, getStorageSync } from '../../utils'
@@ -49,7 +49,7 @@ function handlingPopularComments() {
       const $template = $('<div>')
 
       popularCommentData.forEach(({ index, refMemberNames }) => {
-        const $clonedCells = $commentCells.eq(index).clone(true, true)
+        const $clonedCells = $commentCells.eq(index).clone()
 
         // 查看热门回复时，禁用回复操作和楼层锚点。
         $clonedCells.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
@@ -93,18 +93,92 @@ function handlingPopularComments() {
     },
   })
 
+  $popularBtn.on('click', () => {
+    model.open()
+  })
+
   {
     const commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
     const countText = commentBoxCount.text()
     const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
     const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>${popularCount} 条热门回复`
-
-    $popularBtn.on('click', () => {
-      model.open()
-    })
-
     commentBoxCount.empty().append(countTextSpan)
   }
+}
+
+/**
+ * 设置最近回复。
+ */
+function handlingRecentComments() {
+  if (commentDataList.length <= 5) {
+    return
+  }
+
+  const len = commentDataList.length
+  const displayNum =
+    len <= 10 ? 5 : len <= 30 ? 10 : len <= 60 ? 20 : len <= 100 ? 40 : len <= 200 ? 60 : 90
+
+  const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
+
+  const $recentBtn = $(
+    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon">${iconTime}</span>最近回复</span>`
+  )
+  $('.v2p-tools').prepend($recentBtn)
+
+  const model = createModel({
+    root: $commentBox,
+    title: `最近 ${displayNum} 条回复`,
+    onMount: ({ $content }) => {
+      const $template = $('<div>')
+
+      recentCommentData.forEach(({ index, refMemberNames }) => {
+        const $clonedCells = $commentCells.eq(index).clone()
+
+        // 查看热门回复时，禁用回复操作和楼层锚点。
+        $clonedCells.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+        $clonedCells.find('.no').css('pointer-events', 'none')
+
+        const firstRefMember = refMemberNames?.at(0)
+        if (firstRefMember) {
+          // 找出回复的是哪一条回复。
+          const replyMember = commentDataList.findLast(
+            (it, idx) => idx < index && it.memberName === firstRefMember
+          )
+          if (replyMember) {
+            const $refCell = $(`
+              <div class="v2p-topic-reply-ref">
+                <div class="v2p-topic-reply">
+                  <div class="v2p-topic-reply-member">
+                    <a href="${replyMember.memberAvatar}">
+                      <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
+                      <span>${replyMember.memberName}</span>
+                    </a>：
+                  </div>
+                  <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
+                </div>
+              </div>
+            `)
+            $clonedCells.prepend($refCell)
+          }
+        }
+
+        $template.append($clonedCells)
+      })
+
+      $content.css({ padding: '0 20px' }).append($template.html())
+    },
+    onOpen: ({ $container }) => {
+      $container.find('.cell[id^="r_"]').each((_, cellDom) => {
+        const storage = getStorageSync()
+        const options = storage[StorageKey.Options]
+        processReplyContent($(cellDom), options.replyContent)
+      })
+    },
+  })
+
+  $recentBtn.on('click', () => {
+    model.open()
+  })
 }
 
 /**
@@ -356,6 +430,7 @@ export async function handlingComments() {
     })
 
     updateCommentCells()
+    handlingRecentComments()
     handlingPopularComments()
 
     // 处理「点击感谢回复」的逻辑。
