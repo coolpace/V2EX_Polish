@@ -40,7 +40,7 @@ export async function checkIn() {
   const targetTextFragment = '/mission/daily/redeem'
   const targetUrl = `${V2EX.Origin}${targetTextFragment}`
 
-  const res = await fetch(targetUrl)
+  const res = await fetch(targetUrl, { headers: { Referer: V2EX.Origin } })
   const htmlPlainText = await res.text()
 
   const startIndex = htmlPlainText.indexOf(targetTextFragment)
