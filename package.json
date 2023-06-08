@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.1.2",
-    "@types/chrome": "^0.0.217",
+    "@types/chrome": "^0.0.237",
     "@types/firefox-webext-browser": "^111.0.1",
     "@types/jquery": "^3.5.16",
     "esbuild-minify-templates": "^0.10.0",

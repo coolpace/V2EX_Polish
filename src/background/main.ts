@@ -82,6 +82,33 @@ chrome.contextMenus.removeAll(() => {
   })
 })
 
+chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
+  if (!('sidePanel' in chrome)) {
+    return
+  }
+
+  void (async () => {
+    if (!tab.url) {
+      return
+    }
+
+    const url = new URL(tab.url)
+
+    if (url.origin === 'https://www.v2ex.com' || url.origin === 'https://v2ex.com') {
+      await chrome.sidePanel.setOptions({
+        tabId,
+        path: 'pages/options.html',
+        enabled: true,
+      })
+    } else {
+      await chrome.sidePanel.setOptions({
+        tabId,
+        enabled: false,
+      })
+    }
+  })()
+})
+
 const checkInAlarmName = 'dailyCheckIn'
 
 chrome.alarms.get(checkInAlarmName, (alarm) => {
