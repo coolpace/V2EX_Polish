@@ -4,5 +4,13 @@
     "extension/**/{*.min.js}": true,
     "extension/**/{*.min.css}": true,
     "extension/css/**/*.css": true
+  },
+  "files.readonlyInclude": {
+    "dist/**/*": true,
+    "extension/css/*": true,
+    "extension/scripts/*": true
+  },
+  "files.readonlyExclude": {
+    "extension/scripts/polyfill.js": true
   }
 }
