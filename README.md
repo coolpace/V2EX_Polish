@@ -2,7 +2,7 @@
 
 ![V2EX Polish 宣传封面图](https://cdn.jsdelivr.net/gh/Codennnn/static/preview/V2EX_Polish.jpg)
 
-一款专为 V2EX 用户设计的轻量浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！
+一款专为 V2EX 用户设计的轻量浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！✨
 
 ## 安装使用
 
