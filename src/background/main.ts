@@ -114,7 +114,7 @@ const checkInAlarmName = 'dailyCheckIn'
 chrome.alarms.get(checkInAlarmName, (alarm) => {
   if (typeof alarm === 'undefined') {
     // background 脚本无法持久运行，在 Chrome 中 5 分钟内会关闭连接，所以需要使用 alarm 来保持定时任务。
-    chrome.alarms.create(checkInAlarmName, {
+    void chrome.alarms.create(checkInAlarmName, {
       periodInMinutes: 4.9,
     })
   }
