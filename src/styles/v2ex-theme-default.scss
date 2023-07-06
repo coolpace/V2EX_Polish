@@ -135,6 +135,7 @@ body {
   }
 
   .box {
+    color: var(--box-foreground-color);
     background-color: var(--v2p-color-bg-content);
     border: none;
     border-radius: var(--box-border-radius);
