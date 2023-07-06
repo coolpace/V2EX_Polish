@@ -1,7 +1,8 @@
 import { StorageKey } from '../../constants'
-import { iconReply, iconScrollTop } from '../../icons'
+import { iconBookMark, iconReply, iconScrollTop } from '../../icons'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
+import { addToReadingList } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -21,6 +22,9 @@ void (async () => {
         <span class="v2p-tool v2p-hover-btn v2p-tool-reply">
           <span class="v2p-tool-icon">${iconReply}</span>回复主题
         </span>
+        <span class="v2p-tool v2p-hover-btn v2p-tool-reading">
+          <span class="v2p-tool-icon">${iconBookMark}</span>稍后阅读
+        </span>
         <span class="v2p-tool v2p-hover-btn v2p-tool-scroll-top">
           <span class="v2p-tool-icon">${iconScrollTop}</span>回到顶部
         </span>
@@ -29,6 +33,14 @@ void (async () => {
 
     $tools.find('.v2p-tool-reply').on('click', () => {
       $replyTextArea.trigger('focus')
+    })
+
+    $tools.find('.v2p-tool-reading').on('click', () => {
+      void addToReadingList({
+        url: window.location.href,
+        title: document.title.replace(' - V2EX', ''),
+        content: String($('head meta[property="og:description"]').prop('content')),
+      })
     })
 
     $tools.find('.v2p-tool-scroll-top').on('click', () => {
