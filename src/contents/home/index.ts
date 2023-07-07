@@ -1,5 +1,6 @@
 import { StorageKey } from '../../constants'
 import { getStorage, isSameDay } from '../../utils'
+import { initIcons } from '../helpers'
 import { handlingTopicList } from './topic-list'
 
 void (async () => {
@@ -34,4 +35,8 @@ void (async () => {
       }
     }
   }
+
+  setTimeout(() => {
+    initIcons()
+  }, 0)
 })()

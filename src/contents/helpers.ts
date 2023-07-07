@@ -1,3 +1,19 @@
+import {
+  BookOpenCheck,
+  ChevronsUp,
+  createIcons,
+  EyeOff,
+  Heart,
+  MessageSquare,
+  MessageSquarePlus,
+  Moon,
+  PackagePlus,
+  Smile,
+  Star,
+  Sun,
+  Twitter,
+} from 'lucide'
+
 import { createToast } from '../components/toast'
 import { MessageFrom, READING_CONTENT_LIMIT, StorageKey } from '../constants'
 import type {
@@ -262,4 +278,27 @@ export function postTask(expression: string, callback?: (result: unknown) => voi
 
     window.postMessage(messageData)
   }
+}
+
+export function initIcons() {
+  createIcons({
+    attrs: {
+      width: '100%',
+      height: '100%',
+    },
+    icons: {
+      MessageSquarePlus,
+      MessageSquare,
+      BookOpenCheck,
+      ChevronsUp,
+      Heart,
+      EyeOff,
+      Sun,
+      Moon,
+      Smile,
+      PackagePlus,
+      Star,
+      Twitter,
+    },
+  })
 }

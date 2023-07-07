@@ -1,47 +1,8 @@
-import {
-  BookOpenCheck,
-  ChevronsUp,
-  createIcons,
-  EyeOff,
-  Heart,
-  MessageSquare,
-  MessageSquarePlus,
-  Moon,
-  PackagePlus,
-  Smile,
-  Star,
-  Sun,
-  Twitter,
-} from 'lucide'
-
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconChromeWebStore, iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
 import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
 import { postTask } from './helpers'
-
-const initIcnos = () => {
-  createIcons({
-    attrs: {
-      width: '100%',
-      height: '100%',
-    },
-    icons: {
-      MessageSquarePlus,
-      MessageSquare,
-      BookOpenCheck,
-      ChevronsUp,
-      Heart,
-      EyeOff,
-      Sun,
-      Moon,
-      Smile,
-      PackagePlus,
-      Star,
-      Twitter,
-    },
-  })
-}
 
 void (async () => {
   const storage = await getStorage()
@@ -179,8 +140,4 @@ void (async () => {
 
     $('#Bottom .content').append($extraFooter)
   }
-
-  setTimeout(() => {
-    initIcnos()
-  }, 0)
 })()
