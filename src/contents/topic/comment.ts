@@ -2,7 +2,6 @@ import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
-import { iconHeart, iconHide, iconReply, iconTime } from '../../icons'
 import { crawalTopicPage, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { escapeHTML, getStorageSync } from '../../utils'
@@ -33,7 +32,7 @@ function handlingPopularComments() {
   const popularCount = popularCommentData.length
 
   const $popularBtn = $(
-    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon">${iconHeart}</span>热门回复</span>`
+    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"><i data-lucide="heart"></i></span>热门回复</span>`
   )
   $('.v2p-tools').prepend($popularBtn)
 
@@ -121,7 +120,7 @@ function handlingRecentComments() {
   const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
 
   const $recentBtn = $(
-    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon">${iconTime}</span>最近回复</span>`
+    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"><i data-lucide="clock-4"></i></span>最近回复</span>`
   )
   $('.v2p-tools').prepend($recentBtn)
 
@@ -195,7 +194,7 @@ function processActions($cellDom: JQuery, data: CommentData) {
       data-id="${data.id}"
       data-member-name="${data.memberName}"
      >
-        ${iconHeart}
+        <i data-lucide="heart"></i>
      </span>`
   )
 
@@ -210,7 +209,9 @@ function processActions($cellDom: JQuery, data: CommentData) {
     const $hide = thankEle.eq(0).removeClass('thank')
     const $thank = thankEle.eq(1).removeClass('thank')
 
-    $hide.html(`<span class="v2p-control v2p-hover-btn v2p-control-hide">${iconHide}</span>`)
+    $hide.html(
+      `<span class="v2p-control v2p-hover-btn v2p-control-hide"><i data-lucide="eye-off"></i></span>`
+    )
 
     $thankIcon.addClass('v2p-hover-btn').replaceAll($thank)
 
@@ -221,7 +222,9 @@ function processActions($cellDom: JQuery, data: CommentData) {
 
   $reply
     .find('> img[alt="Reply"]')
-    .replaceWith(`<span class="v2p-control v2p-hover-btn v2p-control-reply">${iconReply}</span>`)
+    .replaceWith(
+      `<span class="v2p-control v2p-hover-btn v2p-control-reply"><i data-lucide="message-square"></i></span>`
+    )
 
   $controls.append($reply)
 
@@ -415,7 +418,7 @@ export async function handlingComments() {
 
       $likesBox
         .find('img[alt="❤️"]')
-        .replaceWith(`<span class="v2p-icon-heart">${iconHeart}</span>`)
+        .replaceWith(`<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>`)
 
       if (thanked) {
         $likesBox.addClass('v2p-thanked')
@@ -464,7 +467,7 @@ export async function handlingComments() {
                 } else {
                   $(`
                       <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
-                        &nbsp;&nbsp;<span class="v2p-icon-heart">${iconHeart}</span>1
+                        &nbsp;&nbsp;<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>1
                       </span>
                       `).insertAfter($tableInCell.find('.ago'))
                 }

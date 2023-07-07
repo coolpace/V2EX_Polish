@@ -22,7 +22,7 @@ export default defineConfig({
 
   minify: false,
 
-  noExternal: ['@floating-ui/dom', 'webext-patterns'],
+  noExternal: ['@floating-ui/dom', 'webext-patterns', 'lucide'],
 
   esbuildPlugins: [minifyTemplates(), writeFiles()],
 

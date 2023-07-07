@@ -1,8 +1,41 @@
+import {
+  BookOpenCheck,
+  ChevronsUp,
+  Clock4,
+  createIcons,
+  EyeOff,
+  Heart,
+  MessageSquare,
+  MessageSquarePlus,
+  Moon,
+  Sun,
+} from 'lucide'
+
 import { Links, MessageFrom, StorageKey } from '../constants'
-import { iconChromeWebStore, iconDark, iconGitHub, iconLight, iconLogo } from '../icons'
+import { iconChromeWebStore, iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
 import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
 import { postTask } from './helpers'
+
+const initIcnos = () => {
+  createIcons({
+    attrs: {
+      width: '100%',
+      height: '100%',
+    },
+    icons: {
+      MessageSquarePlus,
+      MessageSquare,
+      BookOpenCheck,
+      ChevronsUp,
+      Clock4,
+      Heart,
+      EyeOff,
+      Sun,
+      Moon,
+    },
+  })
+}
 
 void (async () => {
   const storage = await getStorage()
@@ -18,10 +51,10 @@ void (async () => {
 
     if (alt === 'Light') {
       $toggle.prop('title', '使用深色主题')
-      $toggleImg.replaceWith(iconDark)
+      $toggleImg.replaceWith('<i data-lucide="moon"></i>')
     } else if (alt === 'Dark') {
       $toggle.prop('title', '使用浅色主题')
-      $toggleImg.replaceWith(iconLight)
+      $toggleImg.replaceWith(`<i data-lucide="sun"></i>`)
     }
 
     if (options.theme.autoSwitch) {
@@ -140,4 +173,8 @@ void (async () => {
 
     $('#Bottom .content').append($extraFooter)
   }
+
+  setTimeout(() => {
+    initIcnos()
+  }, 0)
 })()
