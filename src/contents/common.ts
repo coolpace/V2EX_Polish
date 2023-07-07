@@ -1,14 +1,17 @@
 import {
   BookOpenCheck,
   ChevronsUp,
-  Clock4,
   createIcons,
   EyeOff,
   Heart,
   MessageSquare,
   MessageSquarePlus,
   Moon,
+  PackagePlus,
+  Smile,
+  Star,
   Sun,
+  Twitter,
 } from 'lucide'
 
 import { Links, MessageFrom, StorageKey } from '../constants'
@@ -28,11 +31,14 @@ const initIcnos = () => {
       MessageSquare,
       BookOpenCheck,
       ChevronsUp,
-      Clock4,
       Heart,
       EyeOff,
       Sun,
       Moon,
+      Smile,
+      PackagePlus,
+      Star,
+      Twitter,
     },
   })
 }
