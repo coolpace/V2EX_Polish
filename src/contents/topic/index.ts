@@ -1,5 +1,4 @@
 import { StorageKey } from '../../constants'
-import { iconBookMark, iconReply, iconScrollTop } from '../../icons'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
 import { addToReadingList } from '../helpers'
@@ -20,13 +19,13 @@ void (async () => {
     const $tools = $(`
       <div class="cell v2p-tools">
         <span class="v2p-tool v2p-hover-btn v2p-tool-reply">
-          <span class="v2p-tool-icon">${iconReply}</span>回复主题
+          <span class="v2p-tool-icon"><i data-lucide="message-square-plus"></i></span>回复主题
         </span>
         <span class="v2p-tool v2p-hover-btn v2p-tool-reading">
-          <span class="v2p-tool-icon">${iconBookMark}</span>稍后阅读
+          <span class="v2p-tool-icon"><i data-lucide="book-open-check"></i></span>稍后阅读
         </span>
         <span class="v2p-tool v2p-hover-btn v2p-tool-scroll-top">
-          <span class="v2p-tool-icon">${iconScrollTop}</span>回到顶部
+          <span class="v2p-tool-icon"><i data-lucide="chevrons-up"></i></span>回到顶部
         </span>
       </div>
     `)

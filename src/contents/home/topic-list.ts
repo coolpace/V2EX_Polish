@@ -221,7 +221,19 @@ export function handlingTopicList() {
 
                   $('<div class="v2p-topic-reply-box">')
                     .append($template.html())
-                    .append(`<div class="v2p-more-reply-tip">在主题内查看完整评论...</div>`)
+                    .append(
+                      `
+                      <div class="v2p-more-reply-tip">
+                        <a
+                          href="${linkHref || ''}"
+                          style="color: currentColor;"
+                          target="${options.openInNewTab ? '_blank' : '_self'}"
+                        >
+                            查看在主题内查看完整评论...
+                        </a>
+                      </div>
+                      `
+                    )
                     .appendTo($topicPreview)
                 }
 

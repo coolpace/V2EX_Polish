@@ -8,6 +8,9 @@ dependencies:
   '@floating-ui/dom':
     specifier: ^1.2.1
     version: 1.2.1
+  lucide:
+    specifier: ^0.258.0
+    version: 0.258.0
   webext-patterns:
     specifier: ^1.3.0
     version: 1.3.0
@@ -4991,6 +4994,10 @@ packages:
     resolution: {integrity: sha512-65/Jky17UwSb0BuB9V+MyDpsOtXKmYwzhyl+cOa9XUiI4uV2Ouy/2voFP3+al0BjZbJgMBD8FojMpAf+Z+qn4A==}
     engines: {node: 14 || >=16.14}
     dev: true
+
+  /lucide@0.258.0:
+    resolution: {integrity: sha512-DHoTn6h0NCCcRXCJhyWKMGU79goNfkmb54/CahAV3YtE2jtME4vFHE/BzwIxS9JKCkMIdfqrtQZHUqjgOvgmPw==}
+    dev: false
 
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
