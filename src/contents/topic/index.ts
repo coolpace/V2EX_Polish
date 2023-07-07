@@ -1,7 +1,7 @@
 import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
-import { addToReadingList } from '../helpers'
+import { addToReadingList, initIcons } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -81,6 +81,10 @@ void (async () => {
   }
 
   handlingPaging()
-  void handlingComments()
+  await handlingComments()
   handleReply()
+
+  setTimeout(() => {
+    initIcons()
+  }, 0)
 })()
