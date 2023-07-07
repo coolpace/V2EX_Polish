@@ -1,7 +1,9 @@
+import { BookOpenCheck, createElement } from 'lucide'
+
 import { createButton } from '../../components/button'
 import { createModel } from '../../components/model'
 import { RequestMessage, StorageKey } from '../../constants'
-import { iconBookMark, iconLoading, iconLogo } from '../../icons'
+import { iconLoading, iconLogo } from '../../icons'
 import { fetchTopic, fetchTopicReplies } from '../../services'
 import type { Topic, TopicReply } from '../../types'
 import { escapeHTML, formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
@@ -167,9 +169,15 @@ export function handlingTopicList() {
                   </div>
                 `)
 
-                $(`
-                <div class="v2p-tp-read"><span class="v2p-tp-read-icon">${iconBookMark}</span>稍后阅读</div>
+                const iconBook = createElement(BookOpenCheck)
+                iconBook.setAttribute('width', '100%')
+                iconBook.setAttribute('height', '100%')
+
+                const $readingBtn = $(`
+                <div class="v2p-tp-read"><span class="v2p-tp-read-icon"></span>稍后阅读</div>
                 `)
+                $readingBtn.find('.v2p-tp-read-icon').append(iconBook)
+                $readingBtn
                   .on('click', () => {
                     void addToReadingList({
                       url: topic.url,

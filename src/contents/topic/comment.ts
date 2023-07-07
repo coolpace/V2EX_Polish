@@ -1,3 +1,5 @@
+import { Clock4, createElement, Heart } from 'lucide'
+
 import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
@@ -31,9 +33,15 @@ function handlingPopularComments() {
 
   const popularCount = popularCommentData.length
 
+  const iconHeart = createElement(Heart)
+  iconHeart.setAttribute('width', '100%')
+  iconHeart.setAttribute('height', '100%')
+
   const $popularBtn = $(
-    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"><i data-lucide="heart"></i></span>热门回复</span>`
+    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"></span>热门回复</span>`
   )
+  $popularBtn.find('.v2p-tool-icon').append(iconHeart)
+
   $('.v2p-tools').prepend($popularBtn)
 
   if (popularCount <= 0) {
@@ -119,9 +127,15 @@ function handlingRecentComments() {
 
   const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
 
+  const iconClock = createElement(Clock4)
+  iconClock.setAttribute('width', '100%')
+  iconClock.setAttribute('height', '100%')
+
   const $recentBtn = $(
-    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"><i data-lucide="clock-4"></i></span>最近回复</span>`
+    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"></span>最近回复</span>`
   )
+  $recentBtn.find('.v2p-tool-icon').append(iconClock)
+
   $('.v2p-tools').prepend($recentBtn)
 
   const model = createModel({

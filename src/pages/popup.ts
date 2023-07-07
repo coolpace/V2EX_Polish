@@ -6,10 +6,12 @@
  * 4. 来回切换 tab 时，应当保持 tab 的滚动位置。
  */
 
+import { ArrowUpRightFromCircle, AtSign, createElement } from 'lucide'
+
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
-import { iconArrowUp, iconChat, iconLoading } from '../icons'
+import { iconLoading } from '../icons'
 import {
   fetchHotTopics,
   fetchLatestTopics,
@@ -243,14 +245,19 @@ function initTabs() {
 
         $('<hr />').prependTo($readingList)
 
-        $(`
+        const iconOpen = createElement(ArrowUpRightFromCircle)
+        iconOpen.setAttribute('width', '100%')
+        iconOpen.setAttribute('height', '100%')
+
+        const $openFrom = $(`
         <button id="open-options" class="action-btn" style="margin: var(--common-padding) 0 0 var(--common-padding);">
-          <span class="action-icon">
-            ${iconArrowUp}
-          </span>
+          <span class="action-icon"></span>
           在浏览器中打开全部
         </button>
         `)
+        $openFrom.find('.action-icon').append(iconOpen)
+
+        $openFrom
           .on('click', () => {
             void (async () => {
               const tabs = await Promise.all(
@@ -401,22 +408,24 @@ function initTabs() {
                   .prop('href', `${V2EX.Origin}${link.attr('href') ?? ''}`)
               })
 
-              $tabContent
-                .empty()
-                .append(
-                  `
-                    <div class="tab-header">
-                      <div class="message-actions">
-                        <a class="action-btn" href="${V2EX.Origin}/notifications" target="_blank">
-                          <span class="action-icon">${iconChat}</span>
-                          查看所有消息
-                        </a>
-                      </div>
-                      <hr />
-                    </div>
-                   `
-                )
-                .append($noticeList)
+              const iconAtSign = createElement(AtSign)
+              iconAtSign.setAttribute('width', '100%')
+              iconAtSign.setAttribute('height', '100%')
+
+              const $tabHeader = $(`
+              <div class="tab-header">
+                <div class="message-actions">
+                  <a class="action-btn" href="${V2EX.Origin}/notifications" target="_blank">
+                    <span class="action-icon"></span>
+                    查看所有消息
+                  </a>
+                </div>
+                <hr />
+              </div>
+             `)
+              $tabHeader.find('.action-icon').append(iconAtSign)
+
+              $tabContent.empty().append($tabHeader).append($noticeList)
             } else {
               $tabContent.empty().append('<div class="tip">无任何消息</div>')
             }

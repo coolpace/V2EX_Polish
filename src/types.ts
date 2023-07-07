@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-export interface SettingsSyncInfo {
+interface SettingsSyncInfo {
   version: number
   lastSyncTime: number
 }
@@ -228,7 +228,7 @@ export interface ImgurResponse {
 /** CSRF 字符串，通常在请求 V2EX API 时需要传递它。 */
 export type Once = string
 
-export type TaskId = string | number
+type TaskId = string | number
 
 export type MessageData =
   | {

@@ -3,7 +3,6 @@ import { bindImageUpload } from '../../components/image-upload'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { emoticons } from '../../constants'
-import { iconEmoji, iconTool } from '../../icons'
 import { getOS } from '../../utils'
 import { $replyBox, $replyForm, $replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
@@ -63,7 +62,9 @@ function handlingReplyActions() {
 
     const emoticonsBox = $('<div class="v2p-emoticons-box">').append(groups)
 
-    const $emojiBtn = createButton({ children: iconEmoji }).insertAfter($replyBtn)
+    const $emojiBtn = createButton({
+      children: '<span style="width:18px; height:18px;"><i data-lucide="smile"></i></span>',
+    }).insertAfter($replyBtn)
 
     const $emojiContent = $('<div class="v2p-emoji-container">')
       .append(emoticonsBox)
@@ -128,7 +129,7 @@ export function handleReply() {
 
   const $tools = $(`
   <div class="v2p-reply-tools-box v2p-hover-btn">
-    <span class="v2p-reply-tools-icon">${iconTool}</span>
+    <span class="v2p-reply-tools-icon"><i data-lucide="package-plus"></i></span>
     工具箱
   </div>
   `)
