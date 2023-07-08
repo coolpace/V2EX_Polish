@@ -3,6 +3,4 @@ import { handlingWrite } from './write'
 
 handlingWrite()
 
-setTimeout(() => {
-  initIcons()
-}, 0)
+initIcons()

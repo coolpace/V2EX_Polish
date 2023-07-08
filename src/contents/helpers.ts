@@ -281,24 +281,26 @@ export function postTask(expression: string, callback?: (result: unknown) => voi
 }
 
 export function initIcons() {
-  createIcons({
-    attrs: {
-      width: '100%',
-      height: '100%',
-    },
-    icons: {
-      MessageSquarePlus,
-      MessageSquare,
-      BookOpenCheck,
-      ChevronsUp,
-      Heart,
-      EyeOff,
-      Sun,
-      Moon,
-      Smile,
-      PackagePlus,
-      Star,
-      Twitter,
-    },
-  })
+  setTimeout(() => {
+    createIcons({
+      attrs: {
+        width: '100%',
+        height: '100%',
+      },
+      icons: {
+        MessageSquarePlus,
+        MessageSquare,
+        BookOpenCheck,
+        ChevronsUp,
+        Heart,
+        EyeOff,
+        Sun,
+        Moon,
+        Smile,
+        PackagePlus,
+        Star,
+        Twitter,
+      },
+    })
+  }, 0)
 }

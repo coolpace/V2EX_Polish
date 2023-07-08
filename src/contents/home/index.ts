@@ -36,7 +36,5 @@ void (async () => {
     }
   }
 
-  setTimeout(() => {
-    initIcons()
-  }, 0)
+  initIcons()
 })()
