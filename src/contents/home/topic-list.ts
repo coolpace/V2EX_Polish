@@ -237,7 +237,7 @@ export function handlingTopicList() {
                           style="color: currentColor;"
                           target="${options.openInNewTab ? '_blank' : '_self'}"
                         >
-                            查看在主题内查看完整评论...
+                            在主题内查看完整评论...
                         </a>
                       </div>
                       `
