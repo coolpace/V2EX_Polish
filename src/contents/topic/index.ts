@@ -84,7 +84,5 @@ void (async () => {
   await handlingComments()
   handleReply()
 
-  setTimeout(() => {
-    initIcons()
-  }, 0)
+  initIcons()
 })()
