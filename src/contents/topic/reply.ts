@@ -162,7 +162,7 @@ export function handleReply() {
         try {
           if (typeof window.encodeURIComponent === 'undefined') {
             // 在 Firefox 扩展中找不到 window.encodeURIComponent，原因未知。
-            encodedText = window.atob(inputText)
+            encodedText = window.btoa(inputText)
           } else {
             encodedText = window.btoa(window.encodeURIComponent(inputText))
           }
