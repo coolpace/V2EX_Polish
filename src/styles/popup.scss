@@ -17,6 +17,7 @@ body {
   height: 600px;
   color: var(--v2p-color-foreground);
   font-size: 12px;
+  background-color: var(--v2p-color-bg-content);
 
   .lucide-sun {
     display: none;
@@ -28,6 +29,7 @@ body {
 }
 
 body.v2p-theme-dark {
+  border: 2px solid var(--v2p-color-foreground);
   color-scheme: dark;
 
   .lucide-sun {
