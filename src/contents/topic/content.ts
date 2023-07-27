@@ -4,7 +4,7 @@ import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../c
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
 import { $commentCells, $topicContentBox } from '../globals'
-import { setMemberTags } from '../helpers'
+import { loadIcons, setMemberTags } from '../helpers'
 
 /**
  * 处理主题的正文内容。
@@ -42,6 +42,7 @@ export function handlingContent() {
     topicBtn.eq(1).append(`<span class="v2p-tb-icon"><i data-lucide="twitter"></i></span>`)
     topicBtn.eq(2).append(`<span class="v2p-tb-icon"><i data-lucide="eye-off"></i></span>`)
     topicBtn.eq(3).append(`<span class="v2p-tb-icon"><i data-lucide="heart"></i></span>`)
+    loadIcons()
 
     const url = $favoriteBtn.attr('href')
 

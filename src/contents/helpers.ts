@@ -280,7 +280,7 @@ export function postTask(expression: string, callback?: (result: unknown) => voi
   }
 }
 
-export function initIcons() {
+export function loadIcons() {
   setTimeout(() => {
     createIcons({
       attrs: {

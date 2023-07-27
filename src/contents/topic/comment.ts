@@ -16,7 +16,7 @@ import {
   topicOwnerName,
   updateCommentCells,
 } from '../globals'
-import { insertTextToReplyInput } from '../helpers'
+import { insertTextToReplyInput, loadIcons } from '../helpers'
 import { processAvatar } from './avatar'
 import { openTagsSetter, processReplyContent, updateMemberTag } from './content'
 
@@ -484,6 +484,7 @@ export async function handlingComments() {
                         &nbsp;&nbsp;<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>1
                       </span>
                       `).insertAfter($tableInCell.find('.ago'))
+                  loadIcons()
                 }
 
                 const $thankAction = $tableInCell.find('.v2p-control-thank')
