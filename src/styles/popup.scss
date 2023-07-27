@@ -321,6 +321,10 @@ button {
         border: none;
         outline: none;
 
+        &::placeholder {
+          color: var(--v2p-color-main-600);
+        }
+
         &.has-value {
           opacity: 0.6;
           filter: blur(6px);
@@ -360,6 +364,10 @@ button {
         color: var(--v2p-color-main-600);
         font-weight: normal;
         font-size: inherit;
+      }
+
+      > input {
+        background-color: transparent;
       }
     }
   }
