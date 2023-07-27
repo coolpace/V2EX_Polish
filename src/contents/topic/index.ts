@@ -1,7 +1,7 @@
 import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
-import { addToReadingList, initIcons } from '../helpers'
+import { addToReadingList, loadIcons } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -47,6 +47,7 @@ void (async () => {
     })
 
     $('#Rightbar > .box:has("#member-activity")').addClass('v2p-tool-box').append($tools)
+    loadIcons()
   }
 
   {
@@ -84,5 +85,5 @@ void (async () => {
   await handlingComments()
   handleReply()
 
-  initIcons()
+  loadIcons()
 })()
