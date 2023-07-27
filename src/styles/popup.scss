@@ -17,6 +17,26 @@ body {
   height: 600px;
   color: var(--v2p-color-foreground);
   font-size: 12px;
+
+  .lucide-sun {
+    display: none;
+  }
+
+  .lucide-moon-star {
+    display: block;
+  }
+}
+
+body.v2p-theme-dark {
+  color-scheme: dark;
+
+  .lucide-sun {
+    display: block;
+  }
+
+  .lucide-moon-star {
+    display: none;
+  }
 }
 
 main {
@@ -253,6 +273,15 @@ button {
           background-color: var(--v2p-color-orange-100);
           border: 1px solid currentColor;
           border-radius: 4px;
+        }
+      }
+
+      .settings-top {
+        display: flex;
+        align-items: center;
+
+        #theme-trigger {
+          margin-left: auto;
         }
       }
 
@@ -576,6 +605,7 @@ a {
   .active-item {
     position: relative;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     margin: var(--gap) -5px;
     padding: 1px 5px;

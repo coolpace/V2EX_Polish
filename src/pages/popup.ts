@@ -6,7 +6,18 @@
  * 4. 来回切换 tab 时，应当保持 tab 的滚动位置。
  */
 
-import { ArrowUpRightFromCircle, AtSign, createElement } from 'lucide'
+import {
+  ArrowUpRightFromCircle,
+  AtSign,
+  Check,
+  ChevronRight,
+  createElement,
+  createIcons,
+  MoonStar,
+  Settings,
+  Shapes,
+  Sun,
+} from 'lucide'
 
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
@@ -37,6 +48,37 @@ import {
 } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
+
+function loadIcons() {
+  createIcons({
+    attrs: {
+      width: '100%',
+      height: '100%',
+    },
+    icons: {
+      Check,
+      ChevronRight,
+      Shapes,
+      Settings,
+      Sun,
+      MoonStar,
+    },
+  })
+}
+
+function toggleTheme(initial?: boolean) {
+  const $body = $(document.body)
+
+  const shouldDark = initial ?? !$body.hasClass('v2p-theme-dark')
+
+  if (shouldDark) {
+    $body.addClass('v2p-theme-dark')
+  } else {
+    $body.removeClass('v2p-theme-dark')
+  }
+
+  window.localStorage.setItem('v2p_popup_theme', shouldDark ? 'dark' : 'light')
+}
 
 const loading = `
 <div class="tab-loading">
@@ -135,6 +177,10 @@ function loadSettings() {
   {
     $('#open-options').on('click', () => {
       chrome.runtime.openOptionsPage()
+    })
+
+    $('#theme-trigger').on('click', () => {
+      toggleTheme()
     })
   }
 
@@ -236,6 +282,7 @@ function initTabs() {
       const displayEmpty = () => {
         const $emptyTemp = $('#reading-empty')
         $tabContent.empty().append($emptyTemp.html())
+        loadIcons()
       }
 
       if (readingData && readingData.length > 0) {
@@ -523,4 +570,7 @@ window.addEventListener('load', () => {
   void getStorage().then(() => {
     initTabs()
   })
+
+  toggleTheme(window.localStorage.getItem('v2p_popup_theme') === 'dark')
+  loadIcons()
 })
