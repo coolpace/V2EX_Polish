@@ -1,5 +1,5 @@
 import { Menu, MessageKey, StorageKey } from '../constants'
-import { getStorage } from '../utils'
+import { getRunEnv, getStorage } from '../utils'
 import { checkIn } from './daily-check-in'
 
 interface Message {
@@ -35,6 +35,8 @@ chrome.runtime.onMessage.addListener((message: Message) => {
 })
 
 chrome.contextMenus.removeAll(() => {
+  const runEnv = getRunEnv()
+
   chrome.contextMenus.create({
     documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*'],
     contexts: ['page'],
@@ -43,7 +45,7 @@ chrome.contextMenus.removeAll(() => {
     id: Menu.Root,
   })
 
-  if (typeof chrome.sidePanel.open === 'function') {
+  if (runEnv === 'chrome' && typeof chrome.sidePanel.open === 'function') {
     chrome.contextMenus.create({
       documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*'],
       contexts: ['page'],
