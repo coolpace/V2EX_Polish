@@ -20,6 +20,7 @@ export const enum Menu {
   Root = 'menu',
   Decode = 'menu/decode',
   Reading = 'menu/reading',
+  Options = 'menu/options',
 }
 
 /** 表情数据 */
