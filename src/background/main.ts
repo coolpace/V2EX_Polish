@@ -43,6 +43,16 @@ chrome.contextMenus.removeAll(() => {
     id: Menu.Root,
   })
 
+  if (typeof chrome.sidePanel.open === 'function') {
+    chrome.contextMenus.create({
+      documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*'],
+      contexts: ['page'],
+      title: '选项设置',
+      id: Menu.Options,
+      parentId: Menu.Root,
+    })
+  }
+
   chrome.contextMenus.create({
     documentUrlPatterns: ['https://v2ex.com/t/*', 'https://www.v2ex.com/t/*'],
     contexts: ['page'],
@@ -62,6 +72,11 @@ chrome.contextMenus.removeAll(() => {
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (tab?.id) {
       switch (info.menuItemId) {
+        case Menu.Options: {
+          chrome.sidePanel.open({ windowId: tab.windowId })
+          break
+        }
+
         case Menu.Decode: {
           void chrome.scripting.executeScript({
             target: { tabId: tab.id },
