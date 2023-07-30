@@ -4,6 +4,11 @@
 
 一款专为 V2EX 用户设计的轻量浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！✨
 
+[![Chrome Web Store Version]][Chrome Web Store]
+[![Chrome Web Store Downloads]][Chrome Web Store]
+[![Chrome Web Store Rating]][Chrome Web Store]
+[![Chrome Web Store Rating Count]][Chrome Web Store]
+
 ## 安装使用
 
 - Chrome 和 Edge 用户请在 [Chrome 商店中安装](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
@@ -121,3 +126,14 @@ PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获
 - [V2EX Polish 在 5 月份更新了什么？](https://www.v2ex.com/t/942786#reply55)
 
 **喜欢我们的扩展吗？请在[应用商店](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews)给我们好评！🥰**
+
+<!--------[Badges]-------->
+
+[Chrome Web Store Version]: https://img.shields.io/chrome-web-store/v/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=最新发布版本
+[Chrome Web Store Downloads]: https://img.shields.io/chrome-web-store/d/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=用户量
+[Chrome Web Store Rating]: https://img.shields.io/chrome-web-store/rating/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=评分
+[Chrome Web Store Rating Count]: https://img.shields.io/chrome-web-store/rating-count/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=评价数
+
+<!--------[Internal]-------->
+
+[Chrome Web Store]: https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm
