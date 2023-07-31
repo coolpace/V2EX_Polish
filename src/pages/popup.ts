@@ -66,18 +66,14 @@ function loadIcons() {
   })
 }
 
-function toggleTheme(initial?: boolean) {
+function toggleTheme(mode?: 'dark' | 'light') {
   const $body = $(document.body)
 
-  const shouldDark = initial ?? !$body.hasClass('v2p-theme-dark')
-
-  if (shouldDark) {
+  if (mode === 'dark') {
     $body.addClass('v2p-theme-dark')
   } else {
     $body.removeClass('v2p-theme-dark')
   }
-
-  window.localStorage.setItem('v2p_popup_theme', shouldDark ? 'dark' : 'light')
 }
 
 const loading = `
@@ -180,7 +176,10 @@ function loadSettings() {
     })
 
     $('#theme-trigger').on('click', () => {
-      toggleTheme()
+      const shouldDark = !$(document.body).hasClass('v2p-theme-dark')
+      const themeMode = shouldDark ? 'dark' : 'light'
+      window.localStorage.setItem('v2p_popup_theme', themeMode)
+      toggleTheme(themeMode)
     })
   }
 
@@ -571,6 +570,17 @@ window.addEventListener('load', () => {
     initTabs()
   })
 
-  toggleTheme(window.localStorage.getItem('v2p_popup_theme') === 'dark')
+  const themeMode = window.localStorage.getItem('v2p_popup_theme')
+
+  if (themeMode === 'dark' || themeMode === 'light') {
+    toggleTheme(themeMode)
+  } else {
+    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+    perfersDark.addEventListener('change', ({ matches }) => {
+      toggleTheme(matches ? 'dark' : 'light')
+    })
+    toggleTheme(perfersDark.matches ? 'dark' : 'light')
+  }
+
   loadIcons()
 })
