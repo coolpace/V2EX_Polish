@@ -1,4 +1,5 @@
 import { type Metadata } from 'next'
+import { Noto_Sans } from 'next/font/google'
 import {
   AppWindowIcon,
   BookMarkedIcon,
@@ -14,6 +15,8 @@ import {
 import { Button } from '~/components/Button'
 import { Button2 } from '~/components/Button2'
 import { Feature } from '~/components/Feature'
+import { Introduction } from '~/components/Introduction'
+import { QA } from '~/components/QA'
 import { getPageTitle } from '~/utils'
 
 const logo = (
@@ -43,16 +46,22 @@ export const metadata: Metadata = {
   title: getPageTitle(),
 }
 
+const notoSans = Noto_Sans({
+  weight: '900',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export default function Page() {
   return (
     <div>
       <section>
         <div className="flex flex-col items-center">
-          <div className="hero-title flex items-center justify-center gap-7 font-black">
-            <div className="hero-logo h-[70px] w-[70px]">{logo}</div>
-            <h1 className="text-7xl">
+          <div className="hero-title flex items-center justify-center gap-7">
+            <div className="h-[70px] w-[70px]">{logo}</div>
+            <h1 className={`text-7xl font-bold ${notoSans.className}`}>
               V2EX
-              <span className="text-border">Polish</span>
+              <span className="text-polish ml-4">Polish</span>
             </h1>
           </div>
 
@@ -63,6 +72,12 @@ export default function Page() {
           <div className="flex select-none gap-x-6 gap-y-2">
             <Button2 />
             <Button />
+          </div>
+
+          <div className="mt-8 grid grid-cols-3 gap-x-12">
+            <Introduction content=" ━ 不收集任何用户数据。" title="尊重用户隐私" />
+            <Introduction content=" ━ 自定义配置你的偏好。" title="功能丰富" />
+            <Introduction content=" ━ 代码开源，所有功能免费使用。" title="功能免费" />
           </div>
         </div>
       </section>
@@ -110,6 +125,29 @@ export default function Page() {
             title="“稍后阅读”功能"
           />
           <Feature description="快速标记各类用户。" icon={<TagsIcon />} title="用户标签设置" />
+        </div>
+      </section>
+
+      <section className="p-3 md:p-24">
+        <h3>常见问题</h3>
+
+        <div className="mt-8 grid grid-cols-2 gap-12">
+          <QA
+            a="浏览器扩展支持全部功能，并且经过了更多的测试。为了达到最佳的功能体验，我们更推荐你安装扩展。所有个性化设置"
+            q="使用油猴脚本和浏览器扩展有什么区别？"
+          />
+          <QA
+            a="如果你使用了其他与 V2EX 相关的插件，那么很可能会引发功能冲突，从而导致页面异常，建议关闭其他插件以排查问题。"
+            q="为什么我的页面内容有误、样式异常？"
+          />
+          <QA
+            a="由于 V2EX 的原回复并没有记录回复的楼层，本扩展只能根据被回复的用户去寻找此用户的最近一条回复，然后嵌入到这后面去，这种方法并不能保证正确识别用户真正要回复的是哪一个楼层。"
+            q="为什么有的「楼中楼」回复的楼层不正确？"
+          />
+          <QA
+            a="PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获取消息通知 等功能时才需要设置，它是用来访问 V2EX 开放 API 的。如果你还没有，请前往这里创建。"
+            q="为什么需要设置「个人访问令牌（PAT）」？"
+          />
         </div>
       </section>
     </div>

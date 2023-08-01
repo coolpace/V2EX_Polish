@@ -1,4 +1,5 @@
 import { type Metadata } from 'next'
+import { Noto_Sans } from 'next/font/google'
 
 import { getPageTitle } from '../utils'
 
@@ -24,9 +25,15 @@ export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
 }
 
+const notoSans = Noto_Sans({
+  weight: ['400'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
-    <html className="h-full" lang="zh-Hans-CN">
+    <html className={notoSans.className} lang="zh-Hans-CN">
       <body className="text-main m-0 h-full">
         <main className="h-full p-12">{props.children}</main>
       </body>
