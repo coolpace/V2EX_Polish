@@ -1,17 +1,20 @@
 import { type Metadata } from 'next'
 import {
   AppWindowIcon,
+  BookMarkedIcon,
+  BookOpenCheckIcon,
   FlameIcon,
   FoldVerticalIcon,
   LaughIcon,
   ListTreeIcon,
   SparklesIcon,
+  TagsIcon,
 } from 'lucide-react'
 
 import { Button } from '~/components/Button'
+import { Button2 } from '~/components/Button2'
+import { Feature } from '~/components/Feature'
 import { getPageTitle } from '~/utils'
-
-import { Feature } from '../components/Feature'
 
 const logo = (
   <svg fill="none" version="1.1" viewBox="0 0 80 80">
@@ -57,23 +60,15 @@ export default function Page() {
             专为 V2EX 用户设计的浏览器插件，丰富的扩展功能为你带来出色的体验
           </p>
 
-          <div className="actions">
-            <a
-              className="action"
-              href="https://github.com/coolpace/V2EX_Polish"
-              rel="noreferrer"
-              target="_blank"
-            >
-              GitHub 开源
-            </a>
-
+          <div className="flex select-none gap-x-6 gap-y-2">
+            <Button2 />
             <Button />
           </div>
         </div>
       </section>
 
       <section className="p-3 md:p-24">
-        <div className="grid w-full grid-cols-3 content-center gap-x-12 gap-y-16">
+        <div className="grid w-full grid-cols-3 content-center gap-x-14 gap-y-16">
           <Feature
             description="UI 设计更现代化，为你带来愉悦的视觉体验。"
             icon={<SparklesIcon />}
@@ -104,6 +99,17 @@ export default function Page() {
             icon={<AppWindowIcon />}
             title="内置主题列表"
           />
+          <Feature
+            description="自动领取每日签到奖励。"
+            icon={<BookOpenCheckIcon />}
+            title="自动每日签到"
+          />
+          <Feature
+            description="添加感兴趣的主题，方便日后浏览。"
+            icon={<BookMarkedIcon />}
+            title="“稍后阅读”功能"
+          />
+          <Feature description="快速标记各类用户。" icon={<TagsIcon />} title="用户标签设置" />
         </div>
       </section>
     </div>
