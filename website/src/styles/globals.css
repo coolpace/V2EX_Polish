@@ -7,3 +7,14 @@
   --color-fade: #cbd5e1;
   --color-background: #fff;
 }
+
+.hero-title {
+  text-shadow: 0 4px 0 var(--color-fade);
+}
+
+.hero-title .text-polish {
+  -webkit-text-fill-color: var(--color-background);
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: var(--color-main);
+  text-shadow: 0 4px 0 var(--color-main);
+}
