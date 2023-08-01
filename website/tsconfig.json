@@ -1,0 +1,17 @@
+{
+  "extends": "@codennnn/tsconfig/next.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
+  },
+  "include": ["next-env.d.ts", "src/**/*", ".next/types/**/*.ts", "./tailwind.config.ts"],
+  "exclude": ["node_modules", "**/.*/", ".git"]
+}

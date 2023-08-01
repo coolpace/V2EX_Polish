@@ -1,0 +1,35 @@
+{
+  "name": "v2ex-polish-website",
+  "private": true,
+  "description": "Official homepage of the V2EX Polish extension.",
+  "license": "UNLECENSED",
+  "scripts": {
+    "build": "next build",
+    "deps": "pnpm up --interactive --latest",
+    "dev": "next dev",
+    "lint": "run-p lint:ts lint:es lint:css",
+    "lint:css": "stylelint **/*.css",
+    "lint:es": "eslint **/*.{ts,tsx}",
+    "lint:ts": "tsc --noEmit --skipLibCheck",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^13.4.7",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.4.4",
+    "@types/react": "18.2.15",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.27",
+    "prefer-code-style": "1.4.0",
+    "stylelint": "^15.10.2",
+    "tailwindcss": "^3.3.3",
+    "typescript": "5.1.6"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": "^8"
+  }
+}
