@@ -5,7 +5,10 @@ export default {
 
   theme: {
     extend: {
-      colors: {},
+      colors: {
+        main: '#1e293b',
+        fade: '#cbd5e1',
+      },
     },
   },
 } satisfies Config
