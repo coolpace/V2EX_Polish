@@ -21,7 +21,7 @@ const iconChrome = (
 export function Button() {
   return (
     <a
-      className="gap-x group flex cursor-pointer gap-y-3 overflow-hidden rounded-[8px] border-2 border-solid border-current px-9 py-4 font-bold text-inherit shadow-[0_5px_0_-2px_var(--color-fade)] hover:bg-[rgb(229_229_229)]"
+      className="gap-x hover:bg-main/5 group flex cursor-pointer gap-y-3 overflow-hidden rounded-[8px] border-2 border-solid border-current px-9 py-4 font-bold text-inherit shadow-[0_5px_0_-2px_var(--color-fade)]"
       href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm?hl=zh-CN&authuser=0"
       rel="noreferrer"
       target="_blank"
