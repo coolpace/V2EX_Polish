@@ -35,7 +35,7 @@ export default function RootLayout(props: React.PropsWithChildren) {
   return (
     <html className={notoSans.className} lang="zh-Hans-CN">
       <body className="text-main m-0 h-full">
-        <main className="h-full p-12">{props.children}</main>
+        <main className="h-full px-2 py-6 md:p-12">{props.children}</main>
       </body>
     </html>
   )

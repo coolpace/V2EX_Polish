@@ -18,7 +18,7 @@ const iconChrome = (
   </svg>
 )
 
-export function Button() {
+export function InstallButton() {
   return (
     <a
       className="gap-x hover:bg-main/5 group flex cursor-pointer gap-y-3 overflow-hidden rounded-[8px] border-2 border-solid border-current px-8 py-3 font-bold text-inherit shadow-[0_5px_0_-2px_var(--color-fade)]"
