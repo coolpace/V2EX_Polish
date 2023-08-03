@@ -23,3 +23,7 @@
   -webkit-text-stroke-color: var(--color-main);
   text-shadow: 0 4px 0 var(--color-main);
 }
+
+.screenshot {
+  --color-content: #fff;
+}

@@ -8,6 +8,7 @@ export default {
       colors: {
         main: '#1e293b',
         fade: '#cbd5e1',
+        content: 'var(--color-content)',
       },
     },
   },
