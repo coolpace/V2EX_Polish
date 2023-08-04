@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 }
 
 const notoSans = Noto_Sans({
-  weight: ['500'],
+  weight: ['400'],
   subsets: ['latin'],
   display: 'swap',
 })
