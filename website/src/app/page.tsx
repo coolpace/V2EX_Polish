@@ -1,5 +1,4 @@
 import { type Metadata } from 'next'
-import { Noto_Sans } from 'next/font/google'
 import {
   AppWindowIcon,
   BookMarkedIcon,
@@ -21,28 +20,23 @@ import { InstallButton } from '~/components/InstallButton'
 import { Introduction } from '~/components/Introduction'
 import { Logo } from '~/components/Logo'
 import { QA } from '~/components/QA'
+import { Screenshot } from '~/components/Screenshot'
 import { getPageTitle } from '~/utils'
 
 export const metadata: Metadata = {
   title: getPageTitle(),
 }
 
-const notoSans = Noto_Sans({
-  weight: '900',
-  subsets: ['latin'],
-  display: 'swap',
-})
-
 export default function Page() {
   return (
-    <div>
-      <section>
+    <div className="mx-auto max-w-7xl">
+      <section className="py-8">
         <div className="flex flex-col items-center">
           <div className="hero-title flex items-center justify-center gap-7">
             <div className="hidden h-[70px] w-[70px] md:block">
               <Logo />
             </div>
-            <h1 className={`text-5xl font-bold lg:text-7xl ${notoSans.className}`}>
+            <h1 className="text-5xl font-black lg:text-7xl">
               V2EX
               <span className="text-polish ml-2 md:ml-3 lg:ml-4">Polish</span>
             </h1>
@@ -65,7 +59,13 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="py-8 md:p-24">
+      <section className="py-8">
+        <div className="outline-main-100 overflow-hidden rounded outline outline-8">
+          <Screenshot />
+        </div>
+      </section>
+
+      <section className="py-8 md:px-24 md:pb-24">
         <div className="grid w-full grid-cols-1 content-center gap-y-10 px-8 md:grid-cols-2 md:gap-x-14 md:gap-y-16 md:px-0 lg:grid-cols-3">
           <Feature
             description="UI 设计更现代化，为你带来愉悦的视觉体验"
@@ -122,10 +122,10 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="bg-main/5 p-3 md:p-8 lg:p-24">
-        <h3 className="text-3xl font-bold">常见问题</h3>
+      <section className="bg-main-100 p-3 md:p-8 lg:p-24">
+        <h3 className="text-xl font-bold md:text-3xl">常见问题</h3>
 
-        <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
+        <div className="mt-5 grid grid-cols-1 gap-8 md:mt-8 md:grid-cols-2 md:gap-12 lg:gap-16">
           <QA
             a="油猴脚本不支持个性化设置、右键功能菜单、用户标签设置。浏览器扩展支持全部功能，并且经过了更多的测试。为了达到最佳的功能体验，我们更推荐你安装扩展。"
             q="使用油猴脚本和浏览器扩展有什么区别？"

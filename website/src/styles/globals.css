@@ -3,9 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --color-main: #1e293b;
-  --color-fade: #cbd5e1;
   --color-background: #fff;
+  --v2p-color-main-50: #f7f9fb;
+  --v2p-color-main-100: #f1f5f9;
+  --v2p-color-main-200: #e2e8f0;
+  --v2p-color-main-300: #cbd5e1;
+  --v2p-color-main-350: #94a3b8cc;
+  --v2p-color-main-400: #94a3b8;
+  --v2p-color-main-500: #64748b;
+  --v2p-color-main-600: #475569;
+  --v2p-color-main-700: #334155;
+  --v2p-color-main-800: #1e293b;
+
+  background-color: var(--color-background);
 }
 
 ::selection {
@@ -14,7 +24,7 @@
 }
 
 .hero-title {
-  text-shadow: 0 4px 0 var(--color-fade);
+  text-shadow: 0 4px 0 var(--v2p-color-main-300);
 }
 
 .hero-title .text-polish {
