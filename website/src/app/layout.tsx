@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 }
 
 const notoSans = Noto_Sans({
-  weight: ['400'],
+  weight: ['500'],
   subsets: ['latin'],
   display: 'swap',
 })
@@ -34,8 +34,8 @@ const notoSans = Noto_Sans({
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
     <html className={notoSans.className} lang="zh-Hans-CN">
-      <body className="text-main m-0 h-full">
-        <main className="h-full px-2 py-6 md:p-12">{props.children}</main>
+      <body className="text-main-800 m-0 h-full">
+        <main className="h-full px-4 py-6 md:p-12">{props.children}</main>
       </body>
     </html>
   )
