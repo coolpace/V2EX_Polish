@@ -10,8 +10,8 @@ function TopicItem() {
       <div className="bg-main-100 mr-7 h-12 w-12 rounded" />
       <div>
         <div className="text-lg font-semibold">xxxxxxxxxxxxxxxxx</div>
-        <div className="flex items-center gap-x-5">
-          <div className="bg-main-100 text-main-500 rounded px-2 py-[1px]">旅行</div>
+        <div className="text-main-500 flex items-center gap-x-3 text-[13px]">
+          <div className="bg-main-100 rounded px-[6px] py-[1px]">旅行</div>
           <span>xxxxx</span>
           <span>xxxxx</span>
         </div>
@@ -27,6 +27,16 @@ function TopicItem2() {
       <div className="bg-main-100 mr-2 h-6 w-6 rounded" />
       <div className="line-clamp-2">xxxxxxxxxxxxxxxxx</div>
     </div>
+  )
+}
+
+function Coin(props: { className?: string }) {
+  return (
+    <span
+      className={`mx-1 inline-block h-3 w-3 rounded-full last-of-type:mr-0 ${
+        props.className ?? ''
+      }`}
+    />
   )
 }
 
@@ -49,9 +59,9 @@ export function Screenshot(props: { className?: string }) {
         </div>
       </div>
 
-      <div className="py-5">
-        <div className="mx-auto flex w-full max-w-5xl gap-x-6 overflow-hidden">
-          <Container className="flex-1 px-2">
+      <div className="px-4 py-5">
+        <div className="mx-auto flex w-full max-w-5xl items-start gap-x-6 overflow-hidden">
+          <Container className="flex-1 px-3">
             <div className="flex items-center gap-x-5 whitespace-nowrap px-4 py-3 text-sm">
               <span>技术</span>
               <span>创意</span>
@@ -90,7 +100,7 @@ export function Screenshot(props: { className?: string }) {
             </div>
           </Container>
 
-          <div className="flex basis-[270px] flex-col gap-y-6 text-sm">
+          <div className="basis-[270px] flex-col gap-y-6 text-sm md:hidden lg:flex">
             <Container>
               <div className="flex gap-x-4 px-4 py-3">
                 <div className="bg-main-200 h-12 w-12 rounded" />
@@ -125,8 +135,13 @@ export function Screenshot(props: { className?: string }) {
               <div className="border-main-200 border-t border-solid px-3 py-2">创作主题</div>
               <div className="border-main-200 flex items-center justify-between border-t border-solid px-3 py-2">
                 <span>0 条未读提醒</span>
-                <div className="bg-main-100 rounded-full px-3 py-[2px] font-semibold">
-                  1235346456
+                <div className="bg-main-100 flex items-center rounded-full px-3 py-[2px] font-semibold">
+                  12
+                  <Coin className="bg-yellow-400" />
+                  35
+                  <Coin className="bg-zinc-300" />
+                  464
+                  <Coin className="bg-amber-600" />
                 </div>
               </div>
               <div className="border-main-200 border-t border-solid py-3 text-center text-green-500">
@@ -136,6 +151,7 @@ export function Screenshot(props: { className?: string }) {
 
             <Container className="text-sm">
               <div className="text-main-500 p-2">今日热议主题</div>
+              <TopicItem2 />
               <TopicItem2 />
               <TopicItem2 />
             </Container>
