@@ -61,7 +61,7 @@ export default function Page() {
       </section>
 
       {/* Screenshot */}
-      <section className="py-8">
+      <section className="hidden md:block md:py-10 lg:py-16">
         <div className="md:shadow-main-100 lg:shadow-main-100 overflow-hidden md:rounded-md md:shadow-[0_0_0_20px] lg:rounded-lg lg:shadow-[0_0_0_40px]">
           <Screenshot className="overflow-hidden md:rounded-md lg:rounded-lg" />
         </div>
