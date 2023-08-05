@@ -112,7 +112,7 @@ export function handlingTopicList() {
 
                   const promises = [
                     fetchTopic(topicId, { signal: abortController.signal }),
-                    fetchTopicReplies(topicId),
+                    fetchTopicReplies(topicId, { signal: abortController.signal }),
                   ] as const
 
                   const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
