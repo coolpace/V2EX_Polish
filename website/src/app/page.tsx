@@ -30,6 +30,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className="mx-auto max-w-7xl">
+      {/* Hero */}
       <section className="py-8">
         <div className="flex flex-col items-center">
           <div className="hero-title flex items-center justify-center gap-7">
@@ -59,12 +60,14 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Screenshot */}
       <section className="py-8">
-        <div className="outline-main-100 overflow-hidden rounded outline outline-8">
-          <Screenshot />
+        <div className="md:shadow-main-100 lg:shadow-main-100 overflow-hidden md:rounded-md md:shadow-[0_0_0_20px] lg:rounded-lg lg:shadow-[0_0_0_40px]">
+          <Screenshot className="overflow-hidden md:rounded-md lg:rounded-lg" />
         </div>
       </section>
 
+      {/* Features */}
       <section className="py-8 md:px-24 md:pb-24">
         <div className="grid w-full grid-cols-1 content-center gap-y-10 px-8 md:grid-cols-2 md:gap-x-14 md:gap-y-16 md:px-0 lg:grid-cols-3">
           <Feature
@@ -122,6 +125,7 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Q&A */}
       <section className="bg-main-100 p-3 md:p-8 lg:p-24">
         <h3 className="text-xl font-bold md:text-3xl">常见问题</h3>
 
