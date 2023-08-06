@@ -1,6 +1,5 @@
 import { type Metadata } from 'next'
 import {
-  AppWindowIcon,
   BookMarkedIcon,
   BookOpenCheckIcon,
   FlameIcon,
@@ -9,6 +8,7 @@ import {
   LaughIcon,
   ListTreeIcon,
   NewspaperIcon,
+  PaletteIcon,
   SparklesIcon,
   TagsIcon,
   ViewIcon,
@@ -62,8 +62,8 @@ export default function Page() {
 
       {/* Screenshot */}
       <section className="hidden md:block md:py-10 lg:py-16">
-        <div className="md:shadow-main-100 lg:shadow-main-100 overflow-hidden md:rounded-md md:shadow-[0_0_0_20px] lg:rounded-lg lg:shadow-[0_0_0_40px]">
-          <Screenshot className="overflow-hidden md:rounded-md lg:rounded-lg" />
+        <div className="md:shadow-main-100  lg:shadow-main-100 overflow-hidden md:rounded-md md:shadow-[0_0_0_20px] lg:rounded-lg lg:shadow-[0_0_0_40px]">
+          <Screenshot className="group overflow-hidden md:rounded-md lg:rounded-lg" />
         </div>
       </section>
 
@@ -97,7 +97,7 @@ export default function Page() {
           />
           <Feature
             description="无需打开网页，插件内即可快速获取最热、最新的主题列表和消息通知"
-            icon={<AppWindowIcon />}
+            icon={<NewspaperIcon />}
             title="内置主题列表"
           />
           <Feature
@@ -118,15 +118,15 @@ export default function Page() {
             title="主题内容预览"
           />
           <Feature
-            description="无需打开网页，插件内即可快速获取最热、最新的主题列表和消息通知"
-            icon={<NewspaperIcon />}
-            title="内置主题列表"
+            description="自动跟随系统切换浅色/深色主题"
+            icon={<PaletteIcon />}
+            title="智能感应主题"
           />
         </div>
       </section>
 
       {/* Q&A */}
-      <section className="bg-main-100 p-3 md:p-8 lg:p-24">
+      <section className="bg-main-100 rounded-md p-3 md:rounded-xl md:p-8 lg:p-24">
         <h3 className="text-xl font-bold md:text-3xl">常见问题</h3>
 
         <div className="mt-5 grid grid-cols-1 gap-8 md:mt-8 md:grid-cols-2 md:gap-12 lg:gap-16">

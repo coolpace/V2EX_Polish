@@ -1,29 +1,48 @@
 import { MoonStarIcon, SearchIcon } from 'lucide-react'
 
 function Container(props: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={`bg-content rounded-lg ${props.className ?? ''}`}>{props.children}</div>
+  return (
+    <div
+      className={`bg-content shadow-box group-[.theme-dark]:border-main-350 rounded-lg border border-solid border-transparent ${
+        props.className ?? ''
+      }`}
+    >
+      {props.children}
+    </div>
+  )
 }
 
-function TopicItem() {
+function TopicItem(props: {
+  title: string
+  tag: string
+  name: string
+  time: string
+  num: string
+  avatar: string
+}) {
   return (
-    <div className="flex items-center border-b border-solid px-4 py-6 text-sm last-of-type:border-none">
-      <div className="bg-main-100 mr-7 h-12 w-12 rounded" />
-      <div>
-        <div className="text-lg font-semibold">xxxxxxxxxxxxxxxxx</div>
-        <div className="text-main-500 flex items-center gap-x-3 text-[13px]">
-          <div className="bg-main-100 rounded px-[6px] py-[1px]">旅行</div>
-          <span>xxxxx</span>
-          <span>xxxxx</span>
+    <div className="border-main-200 flex items-center border-b border-solid px-4 py-6 text-sm last-of-type:border-none">
+      <div
+        className={`mr-6 mt-[3px] h-12 w-12 shrink-0 self-start rounded bg-gradient-to-br ${props.avatar}`}
+      />
+      <div className="mr-7">
+        <div className="text-base font-semibold">{props.title}</div>
+        <div className="text-main-500 mt-1 flex items-center gap-x-3 text-[13px]">
+          <div className="bg-main-100 rounded px-[6px] py-[1px]">{props.tag}</div>
+          <span>{props.name}</span>
+          <span>{props.time}</span>
         </div>
       </div>
-      <span className="bg-main-200 text-main-500 ml-auto rounded-md px-3 py-[2px] text-sm">38</span>
+      <span className="bg-main-200 text-main-500 ml-auto whitespace-nowrap rounded-md px-2 py-[2px] text-sm">
+        {props.num}
+      </span>
     </div>
   )
 }
 
 function TopicItem2() {
   return (
-    <div className="flex items-center border-t border-solid p-2 text-sm">
+    <div className="border-main-200 flex items-center border-t border-solid p-2 text-sm">
       <div className="bg-main-100 mr-2 h-6 w-6 rounded" />
       <div className="line-clamp-2">xxxxxxxxxxxxxxxxx</div>
     </div>
@@ -42,7 +61,9 @@ function Coin(props: { className?: string }) {
 
 export function Screenshot(props: { className?: string }) {
   return (
-    <div className={`screenshot bg-main-50 select-none ${props.className}`}>
+    <div
+      className={`bg-main-50 text-main-800 [&.theme-dark]:text-main-700 cursor-default select-none ${props.className}`}
+    >
       <div className="bg-content h-14 w-full px-4">
         <div className="mx-auto flex h-full w-full max-w-5xl items-center">
           <div className="bg-main-100 inline-flex h-8 w-52 items-center rounded-md px-2">
@@ -59,7 +80,7 @@ export function Screenshot(props: { className?: string }) {
         </div>
       </div>
 
-      <div className="px-4 py-5">
+      <div className="px-4 py-6">
         <div className="mx-auto flex w-full max-w-5xl items-start gap-x-6 overflow-hidden">
           <Container className="flex-1 px-3">
             <div className="flex items-center gap-x-5 whitespace-nowrap px-4 py-3 text-sm">
@@ -93,22 +114,50 @@ export function Screenshot(props: { className?: string }) {
             </div>
 
             <div>
-              <TopicItem />
-              <TopicItem />
-              <TopicItem />
-              <TopicItem />
+              <TopicItem
+                avatar="from-indigo-400 to-cyan-400"
+                name="godlucky"
+                num="38"
+                tag="问与答"
+                time="2 天前"
+                title="大家好，我是一个新人，也是一名独立开发者，海内存知己，天涯若比邻，很高兴能认识大家"
+              />
+              <TopicItem
+                avatar="from-emerald-400 to-cyan-400"
+                name="hardman"
+                num="129"
+                tag="生活"
+                time="48 天前"
+                title="目前在吉隆坡，下周去新加坡，请 V 友推荐玩的地方"
+              />
+              <TopicItem
+                avatar="from-teal-400 to-yellow-200"
+                name="moonrailgun"
+                num="86"
+                tag="程序员"
+                time="1 小时 50 分钟前"
+                title="为了更加科学的发帖，我统计了过去几周的 V2EX 的在线人数"
+              />
+              <TopicItem
+                avatar="from-violet-200 to-pink-200"
+                name="djyde"
+                num="162"
+                tag="分享创造"
+                time="10 天前"
+                title="开发一个浏览器插件在第三天卖出 1000 元"
+              />
             </div>
           </Container>
 
           <div className="basis-[270px] flex-col gap-y-6 text-sm md:hidden lg:flex">
             <Container>
               <div className="flex gap-x-4 px-4 py-3">
-                <div className="bg-main-200 h-12 w-12 rounded" />
+                <div className="h-12 w-12 rounded bg-gradient-to-r from-amber-200 to-yellow-500" />
                 <div>
                   <div className="text-base">coolpace</div>
                   <div className="text-main-500 mt-1 text-[13px]">不要去追一匹马</div>
                 </div>
-                <div className="ml-auto">
+                <div className="text-main-600 ml-auto">
                   <MoonStarIcon height={22} width={22} />
                 </div>
               </div>
@@ -136,11 +185,11 @@ export function Screenshot(props: { className?: string }) {
               <div className="border-main-200 flex items-center justify-between border-t border-solid px-3 py-2">
                 <span>0 条未读提醒</span>
                 <div className="bg-main-100 flex items-center rounded-full px-3 py-[2px] font-semibold">
-                  12
+                  4
                   <Coin className="bg-yellow-400" />
-                  35
+                  32
                   <Coin className="bg-zinc-300" />
-                  464
+                  11
                   <Coin className="bg-amber-600" />
                 </div>
               </div>
