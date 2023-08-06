@@ -22,6 +22,7 @@ export function ScreenshotWrapper(props: React.PropsWithChildren) {
           <span>切换至{isDarkTheme ? '浅色' : '深色'}主题</span>
         </span>
       </div>
+
       {props.children}
     </div>
   )
