@@ -40,11 +40,16 @@ function TopicItem(props: {
   )
 }
 
-function TopicItem2() {
+function TopicItem2(props: { long?: boolean }) {
   return (
     <div className="border-main-200 flex items-center border-t border-solid p-2 text-sm">
-      <div className="bg-main-100 mr-2 h-6 w-6 rounded" />
-      <div className="line-clamp-2">xxxxxxxxxxxxxxxxx</div>
+      <div className="from-main-200 to-main-100 mr-2 h-6 w-6 shrink-0 rounded bg-gradient-to-b" />
+      <div className="flex-1">
+        <div className="from-main-200 to-main-100 h-3 flex-1 rounded-sm bg-gradient-to-b" />
+        {props.long && (
+          <div className="from-main-200 to-main-100 mt-[6px] h-3 w-2/3 rounded-sm bg-gradient-to-b" />
+        )}
+      </div>
     </div>
   )
 }
@@ -184,13 +189,13 @@ export function Screenshot(props: { className?: string }) {
               <div className="border-main-200 border-t border-solid px-3 py-2">创作主题</div>
               <div className="border-main-200 flex items-center justify-between border-t border-solid px-3 py-2">
                 <span>0 条未读提醒</span>
-                <div className="bg-main-100 flex items-center rounded-full px-3 py-[2px] font-semibold">
+                <div className="bg-main-100 flex items-center rounded-full px-3 py-[3px] text-xs font-semibold">
                   4
-                  <Coin className="bg-yellow-400" />
+                  <Coin className="bg-gradient-to-r from-amber-200 to-yellow-500" />
                   32
-                  <Coin className="bg-zinc-300" />
+                  <Coin className="bg-gradient-to-r from-zinc-300 to-zinc-400" />
                   11
-                  <Coin className="bg-amber-600" />
+                  <Coin className="bg-gradient-to-r from-amber-400 to-amber-600" />
                 </div>
               </div>
               <div className="border-main-200 border-t border-solid py-3 text-center text-green-500">
@@ -198,11 +203,11 @@ export function Screenshot(props: { className?: string }) {
               </div>
             </Container>
 
-            <Container className="text-sm">
-              <div className="text-main-500 p-2">今日热议主题</div>
+            <Container className="text-[13PX]">
+              <div className="text-main-500 p-2 text-sm">今日热议主题</div>
               <TopicItem2 />
               <TopicItem2 />
-              <TopicItem2 />
+              <TopicItem2 long />
             </Container>
           </div>
         </div>

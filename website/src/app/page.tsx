@@ -23,6 +23,8 @@ import { QA } from '~/components/QA'
 import { Screenshot } from '~/components/Screenshot'
 import { getPageTitle } from '~/utils'
 
+import { ScreenshotWrapper } from '../components/ScreenshotWrapper'
+
 export const metadata: Metadata = {
   title: getPageTitle(),
 }
@@ -61,9 +63,11 @@ export default function Page() {
       </section>
 
       {/* Screenshot */}
-      <section className="hidden md:block md:py-10 lg:py-16">
+      <section className="mx-auto hidden max-w-6xl md:block md:py-10 lg:py-16">
         <div className="md:shadow-main-100  lg:shadow-main-100 overflow-hidden md:rounded-md md:shadow-[0_0_0_20px] lg:rounded-lg lg:shadow-[0_0_0_40px]">
-          <Screenshot className="group overflow-hidden md:rounded-md lg:rounded-lg" />
+          <ScreenshotWrapper>
+            <Screenshot />
+          </ScreenshotWrapper>
         </div>
       </section>
 
