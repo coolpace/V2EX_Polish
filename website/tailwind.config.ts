@@ -18,7 +18,10 @@ export default {
           700: 'var(--v2p-color-main-700)',
           800: 'var(--v2p-color-main-800)',
         },
-        content: 'var(--color-content)',
+        content: 'var(--v2p-color-content)',
+      },
+      boxShadow: {
+        box: 'var(--v2p-box-shadow)',
       },
     },
   },

@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --color-background: #fff;
   --v2p-color-main-50: #f7f9fb;
   --v2p-color-main-100: #f1f5f9;
   --v2p-color-main-200: #e2e8f0;
@@ -14,8 +13,25 @@
   --v2p-color-main-600: #475569;
   --v2p-color-main-700: #334155;
   --v2p-color-main-800: #1e293b;
+  --v2p-color-content: #fff;
+  --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
 
-  background-color: var(--color-background);
+  color: var(--v2p-color-main-800);
+  background-color: #fff;
+}
+
+.theme-dark {
+  --v2p-color-main-50: #1c2127;
+  --v2p-color-main-100: #2d333b;
+  --v2p-color-main-200: #374151;
+  --v2p-color-main-300: #374151;
+  --v2p-color-main-350: #6b7280cc;
+  --v2p-color-main-400: #6b7280;
+  --v2p-color-main-500: #9ca3af;
+  --v2p-color-main-600: #9ca3af;
+  --v2p-color-main-700: #d1d5db;
+  --v2p-color-main-800: #e5e7eb;
+  --v2p-color-content: #22272e;
 }
 
 ::selection {
@@ -24,16 +40,11 @@
 }
 
 .hero-title {
-  text-shadow: 0 4px 0 var(--v2p-color-main-300);
+  text-shadow: 2px 4px 0 var(--v2p-color-main-300);
 }
 
 .hero-title .text-polish {
-  -webkit-text-fill-color: var(--color-background);
+  -webkit-text-fill-color: #fff;
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: var(--color-main);
-  text-shadow: 0 4px 0 var(--color-main);
-}
-
-.screenshot {
-  --color-content: #fff;
+  -webkit-text-stroke-color: var(--v2p-color-main-800);
 }
