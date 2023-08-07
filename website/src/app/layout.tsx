@@ -1,7 +1,7 @@
 import { type Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
 
-import { getPageTitle } from '../utils'
+import { getPageTitle } from '~/utils'
 
 import '~/styles/globals.css'
 

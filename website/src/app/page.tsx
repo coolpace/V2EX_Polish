@@ -21,9 +21,8 @@ import { Introduction } from '~/components/Introduction'
 import { Logo } from '~/components/Logo'
 import { QA } from '~/components/QA'
 import { Screenshot } from '~/components/Screenshot'
+import { ScreenshotWrapper } from '~/components/ScreenshotWrapper'
 import { getPageTitle } from '~/utils'
-
-import { ScreenshotWrapper } from '../components/ScreenshotWrapper'
 
 export const metadata: Metadata = {
   title: getPageTitle(),

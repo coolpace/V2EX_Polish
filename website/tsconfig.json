@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "contentlayer/generated": ["./.contentlayer/generated"]
     },
     "plugins": [
       {
@@ -12,6 +13,13 @@
     ],
     "strictNullChecks": true
   },
-  "include": ["next-env.d.ts", "src/**/*", ".next/types/**/*.ts", "./tailwind.config.ts"],
+  "include": [
+    "next-env.d.ts",
+    "src/**/*",
+    ".next/types/**/*.ts",
+    "./tailwind.config.ts",
+    "./contentlayer.config.ts",
+    ".contentlayer/generated"
+  ],
   "exclude": ["node_modules", "**/.*/", ".git"]
 }
