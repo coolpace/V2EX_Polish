@@ -1,6 +1,7 @@
 ---
 title: ✨ V2EX 超强浏览器插件：体验更先进的 V2EX！
 date: 2023-04-06
+author: LeoKu
 ---
 
 ![V2EX Polish 的宣传图片](https://i.imgur.com/vdYuBpY.jpg)

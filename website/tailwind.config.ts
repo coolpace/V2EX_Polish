@@ -5,6 +5,9 @@ export default {
 
   theme: {
     extend: {
+      maxWidth: {
+        container: '1280px',
+      },
       colors: {
         main: {
           50: 'var(--v2p-color-main-50)',
