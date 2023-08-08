@@ -1,6 +1,7 @@
 ---
 title: ▲ V2EX Polish 在 5 月份更新了什么？🟢
 date: 2023-05-25
+author: LeoKu
 ---
 
 **V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX 页面焕然一新 ！**

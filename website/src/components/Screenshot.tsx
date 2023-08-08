@@ -28,7 +28,7 @@ function TopicItem(props: {
       <div className="mr-7">
         <div className="text-base font-semibold">{props.title}</div>
         <div className="text-main-500 mt-1 flex items-center gap-x-3 text-[13px]">
-          <div className="bg-main-100 rounded px-[6px] py-[1px]">{props.tag}</div>
+          <div className="bg-main-100 rounded px-[6px] py-px">{props.tag}</div>
           <span>{props.name}</span>
           <span>{props.time}</span>
         </div>

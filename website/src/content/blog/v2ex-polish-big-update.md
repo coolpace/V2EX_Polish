@@ -1,6 +1,7 @@
 ---
 title: V2EX Polish 大量功能更新，即刻体验更好用的 V2EX！🥰
 date: 2023-04-25
+author: LeoKu
 ---
 
 **V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX 页面焕然一新 ！**

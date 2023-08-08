@@ -6,6 +6,7 @@ export const Blog = defineDocumentType(() => ({
   fields: {
     title: { type: 'string', required: true },
     date: { type: 'date', required: true },
+    author: { type: 'string', required: true },
   },
   computedFields: {
     slug: {
@@ -15,4 +16,15 @@ export const Blog = defineDocumentType(() => ({
   },
 }))
 
-export default makeSource({ contentDirPath: 'src/content', documentTypes: [Blog] })
+export const Changelog = defineDocumentType(() => ({
+  name: 'Changelog',
+  filePathPattern: `changelog.md`,
+  computedFields: {
+    slug: {
+      type: 'string',
+      resolve: (blog) => `${blog._raw.sourceFileName.replace(/\.md$/, '')}`,
+    },
+  },
+}))
+
+export default makeSource({ contentDirPath: 'src/content', documentTypes: [Blog, Changelog] })
