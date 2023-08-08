@@ -1,5 +1,6 @@
 import { type Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
+import Link from 'next/link'
 
 import { Logo } from '~/components/Logo'
 import { Nav } from '~/components/Nav'
@@ -46,7 +47,7 @@ export default function RootLayout(props: React.PropsWithChildren) {
 
         <main className="px-4 py-6 md:p-12">{props.children}</main>
 
-        <footer className="px-4 md:px-12">
+        <footer className="px-4 py-5 md:px-12">
           <div className="max-w-container mx-auto md:px-5">
             <div className="my-8 h-px bg-gradient-to-r from-slate-600/0 via-slate-600/40 to-slate-600/0 md:my-14" />
 
@@ -55,10 +56,21 @@ export default function RootLayout(props: React.PropsWithChildren) {
                 <div className="h-5 w-5">
                   <Logo />
                 </div>
-                <span className="ml-2 font-semibold">V2EX Polish</span>
+                <span className="ml-2 text-base/none font-semibold">V2EX Polish</span>
               </div>
 
-              <div></div>
+              <div className="text-main-600 inline-flex items-center gap-x-3 text-sm">
+                <Link href="https://github.com/coolpace/V2EX_Polish/discussions/1" target="_blank">
+                  使用反馈
+                </Link>
+                <span className="text-main-400 text-xl font-bold">·</span>
+                <Link
+                  href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
+                  target="_blank"
+                >
+                  应用商店
+                </Link>
+              </div>
             </div>
           </div>
         </footer>
