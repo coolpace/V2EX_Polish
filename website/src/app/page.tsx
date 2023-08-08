@@ -19,6 +19,7 @@ import { GitHubButton } from '~/components/GitHubButton'
 import { InstallButton } from '~/components/InstallButton'
 import { Introduction } from '~/components/Introduction'
 import { Logo } from '~/components/Logo'
+import { PageContainer } from '~/components/PageContainer'
 import { QA } from '~/components/QA'
 import { Screenshot } from '~/components/Screenshot'
 import { ScreenshotWrapper } from '~/components/ScreenshotWrapper'
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="mx-auto max-w-7xl">
+    <PageContainer className="mx-auto max-w-7xl">
       {/* Hero */}
       <section className="py-8">
         <div className="flex flex-col items-center">
@@ -151,6 +152,6 @@ export default function Page() {
           />
         </div>
       </section>
-    </div>
+    </PageContainer>
   )
 }
