@@ -1,5 +1,6 @@
 import { type Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
+import Link from 'next/link'
 
 import { getPageTitle } from '~/utils'
 
@@ -33,9 +34,22 @@ const notoSans = Noto_Sans({
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
-    <html className={notoSans.className} lang="zh-Hans-CN">
-      <body className="text-main-800 m-0 h-full">
-        <main className="h-full px-4 py-6 md:p-12">{props.children}</main>
+    <html
+      className={`text-main-800 h-full overflow-hidden bg-white ${notoSans.className}`}
+      lang="zh-Hans-CN"
+    >
+      <body className="m-0 h-full overflow-y-auto">
+        <header className="flex justify-center py-4 md:px-4 md:py-6">
+          <nav className="text-main-500 flex items-center gap-x-8 gap-y-5 font-semibold">
+            <Link href="/">Home</Link>
+            <Link href="/blog">Blog</Link>
+            <Link href="/github" target="_blank">
+              GitHub
+            </Link>
+          </nav>
+        </header>
+
+        <main className="px-4 py-6 md:p-12">{props.children}</main>
       </body>
     </html>
   )

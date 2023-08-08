@@ -4,4 +4,14 @@ import { withContentlayer } from 'next-contentlayer'
 
 export default withContentlayer({
   reactStrictMode: true,
+
+  async redirects() {
+    return [
+      {
+        source: '/github',
+        destination: 'https://github.com/coolpace/V2EX_Polish',
+        permanent: true,
+      },
+    ]
+  },
 })

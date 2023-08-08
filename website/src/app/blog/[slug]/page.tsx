@@ -1,4 +1,3 @@
-import { getMDXComponent } from 'next-contentlayer/hooks'
 import { allBlogs } from 'contentlayer/generated'
 
 export const generateStaticParams = () => {
@@ -8,7 +7,7 @@ export const generateStaticParams = () => {
 }
 
 export const generateMetadata = ({ params }: { params: { slug: string } }) => {
-  const blog = allBlogs.find((blog) => blog._raw.flattenedPath === params.slug)
+  const blog = allBlogs.find((blog) => blog.slug === params.slug)
   return { title: blog?.title }
 }
 
@@ -29,6 +28,11 @@ export default function BlogPage({ params }: { params: { slug: string } }) {
         </time>
         <h1>{blog.title}</h1>
       </div>
+
+      <div
+        dangerouslySetInnerHTML={{ __html: blog.body.html }}
+        className="text-sm [&>*:last-child]:mb-0 [&>*]:mb-3"
+      />
       {/* <Content /> */}
     </article>
   )
