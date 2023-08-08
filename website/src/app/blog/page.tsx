@@ -8,7 +8,7 @@ import { PageHeaderTitle } from '~/components/PageHeaderTitle'
 import { getPageTitle } from '~/utils'
 
 export const metadata: Metadata = {
-  title: getPageTitle('博客'),
+  title: getPageTitle('Blog'),
 }
 
 export default function BlogIndexPage() {
