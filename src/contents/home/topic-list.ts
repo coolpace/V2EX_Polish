@@ -202,6 +202,25 @@ export function handlingTopicList() {
                     `)
                 }
 
+                if (topic.supplements && topic.supplements.length > 0) {
+                  $topicPreview.append(
+                    `
+                    <div class="v2p-topic-preview-addons">
+                      ${topic.supplements
+                        .map((addon, idx) => {
+                          return `
+                          <div class="v2p-topic-preview-addon subtle">
+                            <div class="fade" style="margin-bottom:10px;">附言 ${idx + 1}：</div>
+                            <div class="topic_content markdown_body">${addon.content_rendered}</div>
+                          </div>
+                          `
+                        })
+                        .join('')}
+                    </div>
+                    `
+                  )
+                }
+
                 if (topicReplies.length > 0) {
                   const $template = $('<div>')
 
