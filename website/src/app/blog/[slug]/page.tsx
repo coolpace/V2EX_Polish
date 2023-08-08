@@ -1,4 +1,7 @@
 import { allBlogs } from 'contentlayer/generated'
+import { format, parseISO } from 'date-fns'
+
+import { PageContainer } from '~/components/PageContainer'
 
 export const generateStaticParams = () => {
   return allBlogs.map((blog) => ({
@@ -18,22 +21,25 @@ export default function BlogPage({ params }: { params: { slug: string } }) {
     return
   }
 
-  // const Content = getMDXComponent(blog.body?.raw)
-
   return (
-    <article className="mx-auto max-w-xl py-8">
-      <div className="mb-8 text-center">
-        <time className="mb-1 text-xs text-gray-600" dateTime={blog.date}>
-          {/* {format(parseISO(post.date), 'LLLL d, yyyy')} */}
-        </time>
-        <h1>{blog.title}</h1>
-      </div>
+    <PageContainer>
+      <article className="mx-auto max-w-xl py-8">
+        <div className="mb-8">
+          <h1 className="text-lg font-bold lg:text-2xl">{blog.title}</h1>
 
-      <div
-        dangerouslySetInnerHTML={{ __html: blog.body.html }}
-        className="text-sm [&>*:last-child]:mb-0 [&>*]:mb-3"
-      />
-      {/* <Content /> */}
-    </article>
+          <div className="mt-2 flex items-center gap-x-3 text-sm">
+            <span>{blog.author}</span>
+            <time className="text-main-600" dateTime={blog.date}>
+              {format(parseISO(blog.date), 'yyyy-MM-dd')}
+            </time>
+          </div>
+        </div>
+
+        <div
+          dangerouslySetInnerHTML={{ __html: blog.body.html }}
+          className="text-sm [&>*:last-child]:mb-0 [&>*]:mb-3"
+        />
+      </article>
+    </PageContainer>
   )
 }
