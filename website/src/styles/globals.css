@@ -36,11 +36,11 @@
   background-color: rgb(30 41 59 / 10%);
 }
 
-.hero-title {
+.text-with-shadow {
   text-shadow: 2px 4px 0 var(--v2p-color-main-300);
 }
 
-.hero-title .text-polish {
+.text-polish {
   -webkit-text-fill-color: #fff;
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: var(--v2p-color-main-800);

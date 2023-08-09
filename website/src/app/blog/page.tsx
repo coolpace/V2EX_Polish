@@ -24,10 +24,11 @@ export default function BlogIndexPage() {
             return (
               <Link
                 key={blog.title}
-                className="mt-8 block first-of-type:mt-0 md:mt-14"
+                className="hover:bg-main-50 mt-6 block rounded p-2 first-of-type:mt-0 md:mt-14"
                 href={`/blog/${blog.slug}`}
               >
-                <h2 className="text-xl font-semibold">{blog.title}</h2>
+                <h2 className="text-lg font-semibold md:text-xl">{blog.title}</h2>
+
                 <span className="mt-2 flex items-center gap-x-2 text-sm">
                   <span>{blog.author}</span>
                   <time className="text-main-400" dateTime={blog.date}>

@@ -48,18 +48,19 @@ export default function RootLayout(props: React.PropsWithChildren) {
         <main className="px-4 py-6 md:p-12">{props.children}</main>
 
         <footer className="px-4 py-5 md:px-12">
-          <div className="max-w-container mx-auto md:px-5">
-            <div className="my-8 h-px bg-gradient-to-r from-slate-600/0 via-slate-600/40 to-slate-600/0 md:my-14" />
-
+          <div className="my-8 h-px bg-gradient-to-r from-slate-600/0 via-slate-600/40 to-slate-600/0 md:my-14" />
+          <div className="max-w-container mx-auto md:px-36">
             <div className="flex justify-between">
               <div className="inline-flex items-center">
-                <div className="h-5 w-5">
+                <div className="h-3 w-3 md:h-4 md:w-4">
                   <Logo />
                 </div>
-                <span className="ml-2 text-base/none font-semibold">V2EX Polish</span>
+                <span className="ml-2 text-sm/none font-semibold md:text-base/none">
+                  V2EX Polish
+                </span>
               </div>
 
-              <div className="text-main-600 inline-flex items-center gap-x-3 text-sm">
+              <div className="text-main-600 inline-flex items-center gap-x-3 text-xs md:text-sm">
                 <Link href="https://github.com/coolpace/V2EX_Polish/discussions/1" target="_blank">
                   使用反馈
                 </Link>
