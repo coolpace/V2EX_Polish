@@ -1,4 +1,4 @@
-import { MoonStarIcon, SearchIcon } from 'lucide-react'
+import { MoonStarIcon, SearchIcon, SunIcon } from 'lucide-react'
 
 function Container(props: React.PropsWithChildren<{ className?: string }>) {
   return (
@@ -162,8 +162,17 @@ export function Screenshot(props: { className?: string }) {
                   <div className="text-base">coolpace</div>
                   <div className="text-main-500 mt-1 text-[13px]">不要去追一匹马</div>
                 </div>
-                <div className="text-main-600 ml-auto">
-                  <MoonStarIcon height={22} width={22} />
+                <div className="text-main-600 relative ml-auto h-[22px] w-[22px]">
+                  <SunIcon
+                    className="absolute left-0 top-0 hidden group-[.theme-dark]:inline-block"
+                    height={22}
+                    width={22}
+                  />
+                  <MoonStarIcon
+                    className="absolute left-0 top-0 inline-block group-[.theme-dark]:hidden"
+                    height={22}
+                    width={22}
+                  />
                 </div>
               </div>
 

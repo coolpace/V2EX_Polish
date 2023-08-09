@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 
 import { Feature } from '~/components/Feature'
-import { GitHubButton } from '~/components/GitHubButton'
 import { InstallButton } from '~/components/InstallButton'
 import { Introduction } from '~/components/Introduction'
 import { Logo } from '~/components/Logo'
@@ -35,11 +34,11 @@ export default function Page() {
       {/* Hero */}
       <section className="py-8">
         <div className="flex flex-col items-center">
-          <div className="hero-title flex items-center justify-center gap-7">
-            <div className="hidden h-[70px] w-[70px] md:block">
+          <div className="text-with-shadow flex items-center justify-center md:gap-6 lg:gap-7">
+            <div className="hidden md:block md:h-[60px] md:w-[60px] lg:h-[70px] lg:w-[70px]">
               <Logo />
             </div>
-            <h1 className="text-5xl font-black lg:text-7xl">
+            <h1 className="text-5xl font-black md:text-6xl lg:text-7xl">
               V2EX
               <span className="text-polish ml-2 md:ml-3 lg:ml-4">Polish</span>
             </h1>
@@ -50,11 +49,10 @@ export default function Page() {
           </p>
 
           <div className="flex select-none gap-x-6 gap-y-2">
-            <GitHubButton />
             <InstallButton />
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-2 gap-x-12 md:grid-cols-3 md:px-4">
+          <div className="mt-10 grid grid-cols-1 gap-2 gap-x-12 md:grid-cols-3 md:px-4">
             <Introduction content=" ━ 绝不私自收集任何用户数据，安全可靠" title="尊重用户隐私" />
             <Introduction content=" ━ 包含 20 多个功能，给你前所未有的体验" title="功能丰富" />
             <Introduction content=" ━ 代码开源，所有功能均免费使用" title="免费使用" />

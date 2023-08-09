@@ -23,9 +23,9 @@ export default function BlogPage({ params }: { params: { slug: string } }) {
 
   return (
     <PageContainer>
-      <article className="mx-auto max-w-xl py-8">
+      <article className="prose lg:prose-xl mx-auto max-w-xl py-8">
         <div className="mb-8">
-          <h1 className="text-lg font-bold lg:text-2xl">{blog.title}</h1>
+          <h1 className="text-xl font-bold lg:text-3xl">{blog.title}</h1>
 
           <div className="mt-2 flex items-center gap-x-3 text-sm">
             <span>{blog.author}</span>

@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.1.3",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/react": "18.2.18",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",
