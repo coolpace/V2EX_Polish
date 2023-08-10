@@ -37,7 +37,13 @@
 }
 
 .text-with-shadow {
-  text-shadow: 2px 4px 0 var(--v2p-color-main-300);
+  text-shadow: 2px 2px 0 var(--v2p-color-main-300);
+}
+
+@media (width >= 768px) {
+  .text-with-shadow {
+    text-shadow: 2px 4px 0 var(--v2p-color-main-300);
+  }
 }
 
 .text-polish {
