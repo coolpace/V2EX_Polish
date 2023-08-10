@@ -7,7 +7,7 @@ module.exports = {
   extends: [require.resolve('prefer-code-style/eslint/preset/next')],
 
   rules: {
-    'import/no-unresolved': [2, { ignore: ['^\\~/', '^(contentlayer|next-contentlayer)'] }],
+    'import/no-unresolved': [2, { ignore: ['^\\~/', '^(contentlayer|next-contentlayer|/public)'] }],
   },
 
   overrides: [
