@@ -129,10 +129,10 @@ PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获
 
 <!--------[Badges]-------->
 
-[Chrome Web Store Version]: https://img.shields.io/chrome-web-store/v/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=最新发布版本
-[Chrome Web Store Downloads]: https://img.shields.io/chrome-web-store/users/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=用户量
-[Chrome Web Store Rating]: https://img.shields.io/chrome-web-store/rating/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=评分
-[Chrome Web Store Rating Count]: https://img.shields.io/chrome-web-store/rating-count/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat-square&label=评价数
+[Chrome Web Store Version]: https://img.shields.io/chrome-web-store/v/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=最新版本&logo=hackthebox&logoColor=eeeeee
+[Chrome Web Store Downloads]: https://img.shields.io/chrome-web-store/users/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=用户量
+[Chrome Web Store Rating]: https://img.shields.io/chrome-web-store/rating/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=评分
+[Chrome Web Store Rating Count]: https://img.shields.io/chrome-web-store/rating-count/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=评价数
 
 <!--------[Internal]-------->
 
