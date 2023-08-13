@@ -38,7 +38,7 @@ chrome.contextMenus.removeAll(() => {
   const runEnv = getRunEnv()
 
   chrome.contextMenus.create({
-    documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*'],
+    documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*', 'https://cn.v2ex.com/*'],
     contexts: ['page'],
     title: 'V2EX Polish',
     visible: true,
@@ -47,7 +47,11 @@ chrome.contextMenus.removeAll(() => {
 
   if (runEnv === 'chrome' && typeof chrome.sidePanel.open === 'function') {
     chrome.contextMenus.create({
-      documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*'],
+      documentUrlPatterns: [
+        'https://v2ex.com/*',
+        'https://www.v2ex.com/*',
+        'https://cn.v2ex.com/*',
+      ],
       contexts: ['page'],
       title: '选项设置',
       id: Menu.Options,
@@ -56,7 +60,11 @@ chrome.contextMenus.removeAll(() => {
   }
 
   chrome.contextMenus.create({
-    documentUrlPatterns: ['https://v2ex.com/t/*', 'https://www.v2ex.com/t/*'],
+    documentUrlPatterns: [
+      'https://v2ex.com/t/*',
+      'https://www.v2ex.com/t/*',
+      'https://cn.v2ex.com/t/*',
+    ],
     contexts: ['page'],
     title: '解析本页 Base64',
     id: Menu.Decode,
@@ -64,7 +72,11 @@ chrome.contextMenus.removeAll(() => {
   })
 
   chrome.contextMenus.create({
-    documentUrlPatterns: ['https://v2ex.com/t/*', 'https://www.v2ex.com/t/*'],
+    documentUrlPatterns: [
+      'https://v2ex.com/t/*',
+      'https://www.v2ex.com/t/*',
+      'https://cn.v2ex.com/t/*',
+    ],
     contexts: ['page'],
     title: '添加进稍后阅读',
     id: Menu.Reading,
@@ -111,7 +123,11 @@ chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
 
     const url = new URL(tab.url)
 
-    if (url.origin === 'https://www.v2ex.com' || url.origin === 'https://v2ex.com') {
+    if (
+      url.origin === 'https://www.v2ex.com' ||
+      url.origin === 'https://v2ex.com' ||
+      url.origin === 'https://cn.v2ex.com'
+    ) {
       await chrome.sidePanel.setOptions({
         tabId,
         path: 'pages/options.html',
