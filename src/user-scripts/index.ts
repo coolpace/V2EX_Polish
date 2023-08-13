@@ -12,9 +12,21 @@ if (typeof window.GM_addStyle !== 'undefined') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const commonRegex = patternToRegex('https://v2ex.com/*', 'https://www.v2ex.com/*')
-  const topicRegex = patternToRegex('https://v2ex.com/t/*', 'https://www.v2ex.com/t/*')
-  const writeRegex = patternToRegex('https://v2ex.com/write*', 'https://www.v2ex.com/write*')
+  const commonRegex = patternToRegex(
+    'https://v2ex.com/*',
+    'https://www.v2ex.com/*',
+    'https://cn.v2ex.com/*'
+  )
+  const topicRegex = patternToRegex(
+    'https://v2ex.com/t/*',
+    'https://www.v2ex.com/t/*',
+    'https://cn.v2ex.com/t/*'
+  )
+  const writeRegex = patternToRegex(
+    'https://v2ex.com/write*',
+    'https://www.v2ex.com/write*',
+    'https://cn.v2ex.com/write*'
+  )
 
   const url = window.location.href
 
