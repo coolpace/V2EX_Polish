@@ -17,7 +17,12 @@ module.exports = {
     require.resolve('prefer-code-style/eslint/typescript'),
   ],
 
-  ignorePatterns: ['dist/**/*', 'extension/scripts/**/*.min.js', 'src/user-scripts/style.ts'],
+  ignorePatterns: [
+    'dist/**/*',
+    'extension/scripts/**/*.min.js',
+    'src/user-scripts/style.ts',
+    'website/**/*',
+  ],
 
   overrides: [
     {
