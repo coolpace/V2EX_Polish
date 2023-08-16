@@ -5,8 +5,8 @@ interface IntroductionProps {
 
 export function Introduction(props: IntroductionProps) {
   return (
-    <div className="text-main-600 text-sm md:text-center">
-      <strong className="text-main-800 font-semibold">{props.title}</strong>
+    <div className="text-sm text-main-600 md:text-center">
+      <strong className="font-semibold text-main-800">{props.title}</strong>
       {props.content}
     </div>
   )
