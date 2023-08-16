@@ -128,7 +128,11 @@ export function processReplyContent(
 /**
  * 根据用户的昵称设置用户的标签。
  */
-export function updateMemberTag(memberName: Member['username'], tags: Tag[] | undefined) {
+export function updateMemberTag(
+  memberName: Member['username'],
+  tags: Tag[] | undefined,
+  options: Options
+) {
   const $v2pTags = $(`.v2p-tags-${memberName}`)
 
   const tagsValue = tags?.map((it) => it.name).join('，')
@@ -141,16 +145,30 @@ export function updateMemberTag(memberName: Member['username'], tags: Tag[] | un
     }
   } else {
     if (tagsValue) {
-      $(`<div class="v2p-reply-tags v2p-tags-${memberName}"><b>#</b>&nbsp;${tagsValue}</div>`)
-        .on('click', () => {
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          openTagsSetter(memberName)
-        })
-        .insertBefore(
+      const $tags = $(
+        `<div class="v2p-reply-tags v2p-tags-${memberName}" title="${tagsValue}"><b>#</b>&nbsp;${tagsValue}</div>`
+      )
+
+      $tags.on('click', () => {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        openTagsSetter(memberName)
+      })
+
+      if (options.userTag.display === 'inline') {
+        $tags
+          .addClass('v2p-reply-tags-inline')
+          .insertBefore(
+            $commentCells
+              .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
+              .find('> table .badges')
+          )
+      } else {
+        $tags.insertBefore(
           $commentCells
             .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
             .find('> table .reply_content')
         )
+      }
     }
   }
 }
@@ -159,6 +177,7 @@ export function openTagsSetter(memberName: Member['username']) {
   void (async () => {
     const storage = await getStorage(false)
     const latestTagsData = storage[StorageKey.MemberTag]
+    const options = storage[StorageKey.Options]
 
     const tagsValue = latestTagsData
       ? Reflect.has(latestTagsData, memberName)
@@ -179,7 +198,7 @@ export function openTagsSetter(memberName: Member['username']) {
 
       await setMemberTags(memberName, tags)
 
-      updateMemberTag(memberName, tags)
+      updateMemberTag(memberName, tags, options)
     }
   })()
 }

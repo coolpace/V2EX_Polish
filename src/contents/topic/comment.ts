@@ -439,7 +439,7 @@ export async function handlingComments() {
       }
 
       if (tagData && Reflect.has(tagData, memberName) && !membersHasSetTags.has(memberName)) {
-        updateMemberTag(memberName, tagData[memberName].tags)
+        updateMemberTag(memberName, tagData[memberName].tags, options)
         membersHasSetTags.add(memberName)
       }
 
