@@ -15,6 +15,7 @@
   --v2p-color-main-800: #1e293b;
   --v2p-color-content: #fff;
   --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
+  --v2p-color-foreground: var(--v2p-color-main-800);
 }
 
 .theme-dark {
@@ -29,6 +30,7 @@
   --v2p-color-main-700: #d1d5db;
   --v2p-color-main-800: #e5e7eb;
   --v2p-color-content: #22272e;
+  --v2p-color-foreground: #adbac7;
 }
 
 ::selection {
