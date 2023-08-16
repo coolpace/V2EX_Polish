@@ -1,6 +1,7 @@
 import { type Metadata } from 'next'
 import { allChangelogs } from 'contentlayer/generated'
 
+import { Article } from '~/components/Article'
 import { PageContainer } from '~/components/PageContainer'
 import { PageHeaderTitle } from '~/components/PageHeaderTitle'
 import { getPageTitle } from '~/utils'
@@ -18,14 +19,14 @@ export default function ChangelogPage() {
 
   return (
     <PageContainer className="py-5 md:py-8">
-      <article className="prose lg:prose-xl px-2 lg:px-60">
+      <Article>
         <PageHeaderTitle>Changelog</PageHeaderTitle>
 
         <div
           dangerouslySetInnerHTML={{ __html: changelog.body.html }}
           className="text-sm [&>*:last-child]:mb-0 [&>*]:mb-3 [&>h2]:text-2xl [&>h2]:font-bold [&>h3]:text-xl [&>h3]:font-medium"
         />
-      </article>
+      </Article>
     </PageContainer>
   )
 }

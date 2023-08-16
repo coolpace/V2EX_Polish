@@ -1,20 +1,4 @@
-const iconChrome = (
-  <svg
-    className="mr-1 w-5 opacity-100 transition-all md:w-6 md:group-hover:mr-0 md:group-hover:w-0 md:group-hover:opacity-0"
-    fill="none"
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-  >
-    <circle cx="12" cy="12" r="10"></circle>
-    <circle cx="12" cy="12" r="4"></circle>
-    <line x1="21.17" x2="12" y1="8" y2="8"></line>
-    <line x1="3.95" x2="8.54" y1="6.06" y2="14"></line>
-    <line x1="10.88" x2="15.46" y1="21.94" y2="14"></line>
-  </svg>
-)
+import { ChromeIcon } from '~/components/icons/ChromeIcon'
 
 export function InstallButton() {
   return (
@@ -24,10 +8,12 @@ export function InstallButton() {
       rel="noreferrer"
       target="_blank"
     >
-      {iconChrome}
+      <span className="mr-2 w-5 opacity-100 transition-all md:w-6 md:group-hover:mr-0 md:group-hover:w-0 md:group-hover:opacity-0">
+        <ChromeIcon />
+      </span>
       安装至 Chrome
       <svg
-        className="ml-0 w-0 rotate-[-0.25turn] opacity-0 transition-all md:group-hover:ml-1 md:group-hover:w-6 md:group-hover:opacity-100"
+        className="ml-0 w-0 rotate-[-0.25turn] opacity-0 transition-all md:group-hover:ml-2 md:group-hover:w-6 md:group-hover:opacity-100"
         viewBox="0 0 24 24"
       >
         <path
