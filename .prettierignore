@@ -1,3 +1,4 @@
 dist
 asset
+website
 **/*.min.js
