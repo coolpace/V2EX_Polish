@@ -1,4 +1,5 @@
 import { type Metadata } from 'next'
+import Link from 'next/link'
 import {
   BookMarkedIcon,
   BookOpenCheckIcon,
@@ -15,13 +16,16 @@ import {
 } from 'lucide-react'
 
 import { Feature } from '~/components/Feature'
+import { HoverButton } from '~/components/HoverButton'
+import { EdgeIcon } from '~/components/icons/EdgeIcon'
+import { FirefoxIcon } from '~/components/icons/FirefoxIcon'
+import { TampermonkeyIcon } from '~/components/icons/TampermonkeyIcon'
 import { InstallButton } from '~/components/InstallButton'
 import { Introduction } from '~/components/Introduction'
 import { Logo } from '~/components/Logo'
 import { PageContainer } from '~/components/PageContainer'
 import { QA } from '~/components/QA'
 import { Screenshot } from '~/components/Screenshot'
-import { ScreenshotWrapper } from '~/components/ScreenshotWrapper'
 import { getPageTitle } from '~/utils'
 
 export const metadata: Metadata = {
@@ -52,9 +56,58 @@ export default function Page() {
             <InstallButton />
           </div>
 
+          <div className="mt-6 flex items-center gap-6 text-xs text-main-500 md:text-sm">
+            <HoverButton>
+              <Link
+                className="flex items-center gap-2"
+                href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
+                target="_blank"
+              >
+                <span className="inline-block h-6 w-6">
+                  <EdgeIcon />
+                </span>
+                <span className="break-all">
+                  <span className="whitespace-nowrap">Edge</span>
+                  <span className="ml-1 whitespace-nowrap">可用</span>
+                </span>
+              </Link>
+            </HoverButton>
+
+            <HoverButton>
+              <Link
+                className="flex items-center gap-2"
+                href="https://addons.mozilla.org/zh-CN/firefox/addon/v2ex-polish/"
+                target="_blank"
+              >
+                <span className="inline-block h-6 w-6">
+                  <FirefoxIcon />
+                </span>
+                <span className="break-all">
+                  <span className="whitespace-nowrap">Firefox</span>
+                  <span className="ml-1 whitespace-nowrap">可用</span>
+                </span>
+              </Link>
+            </HoverButton>
+
+            <HoverButton>
+              <Link
+                className="flex items-center gap-2"
+                href="https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex"
+                target="_blank"
+              >
+                <span className="inline-flex h-6 w-6 items-center">
+                  <span className="h-5 w-5">
+                    <TampermonkeyIcon />
+                  </span>
+                </span>
+                油猴脚本可用
+              </Link>
+            </HoverButton>
+          </div>
+
           <div className="mt-10 grid grid-cols-1 gap-2 gap-x-12 md:grid-cols-3 md:px-4">
             <Introduction content=" ━ 绝不私自收集任何用户数据，安全可靠" title="尊重用户隐私" />
-            <Introduction content=" ━ 包含 20 多个功能，给你前所未有的体验" title="功能丰富" />
+            <Introduction content=" ━ 安装体积小于 0.18M，即装即用" title="轻量便捷" />
             <Introduction content=" ━ 代码开源，所有功能均免费使用" title="免费使用" />
           </div>
         </div>
@@ -62,15 +115,15 @@ export default function Page() {
 
       {/* Screenshot */}
       <section className="mx-auto hidden max-w-6xl md:block md:py-10 lg:py-16">
-        <div className="md:shadow-main-100  lg:shadow-main-100 overflow-hidden md:rounded-md md:shadow-[0_0_0_20px] lg:rounded-lg lg:shadow-[0_0_0_40px]">
-          <ScreenshotWrapper>
-            <Screenshot />
-          </ScreenshotWrapper>
-        </div>
+        <Screenshot />
       </section>
 
       {/* Features */}
       <section className="py-8 md:px-24 md:pb-24">
+        <h2 className="mb-3 text-center text-xl font-bold md:text-3xl">这些功能，深受用户喜爱</h2>
+        <p className="mb-14 text-center text-sm text-main-600 md:text-base">
+          超过 20 多个功能扩展，给予你现代化的网页体验
+        </p>
         <div className="grid w-full grid-cols-1 content-center gap-y-10 px-8 md:grid-cols-2 md:gap-x-14 md:gap-y-16 md:px-0 lg:grid-cols-3">
           <Feature
             description="UI 设计更现代化，为你带来愉悦的视觉体验"
@@ -128,7 +181,7 @@ export default function Page() {
       </section>
 
       {/* Q&A */}
-      <section className="bg-main-100 rounded-md p-3 md:rounded-xl md:p-8 lg:p-24">
+      <section className="rounded-md bg-main-100 p-3 md:rounded-xl md:p-8 lg:p-24">
         <h3 className="text-xl font-bold md:text-3xl">常见问题</h3>
 
         <div className="mt-5 grid grid-cols-1 gap-8 md:mt-8 md:grid-cols-2 md:gap-12 lg:gap-16">

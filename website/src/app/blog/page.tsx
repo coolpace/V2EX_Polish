@@ -8,8 +8,6 @@ import { PageContainer } from '~/components/PageContainer'
 import { PageHeaderTitle } from '~/components/PageHeaderTitle'
 import { getPageTitle } from '~/utils'
 
-import picAuthor from '/public/LeoKu.jpg'
-
 export const metadata: Metadata = {
   title: getPageTitle('Blog'),
 }
@@ -27,7 +25,7 @@ export default function BlogIndexPage() {
             return (
               <Link
                 key={blog.title}
-                className="hover:bg-main-50 mt-6 block rounded p-2 first-of-type:mt-0 md:mt-14"
+                className="mt-6 block rounded p-2 first-of-type:mt-0 hover:bg-main-50 md:mt-14"
                 href={`/blog/${blog.slug}`}
               >
                 <h2 className="text-lg font-semibold md:text-xl">{blog.title}</h2>
@@ -35,9 +33,10 @@ export default function BlogIndexPage() {
                 <span className="mt-2 flex items-center gap-x-2 pl-px text-sm">
                   <Image
                     alt="作者头像"
-                    className="h-6 w-6 overflow-hidden rounded-full"
-                    placeholder="blur"
-                    src={picAuthor}
+                    className="overflow-hidden rounded-full"
+                    height={24}
+                    src="/LeoKu.jpg"
+                    width={24}
                   />
                   <span>{blog.author}</span>
                   <time className="text-main-400" dateTime={blog.date}>

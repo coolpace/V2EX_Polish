@@ -18,6 +18,7 @@ next-env.d.ts
 
 # misc
 .DS_Store
+.idea
 *.pem
 
 # debug

@@ -1,6 +1,8 @@
+import { type Metadata } from 'next'
 import { allBlogs } from 'contentlayer/generated'
 import { format, parseISO } from 'date-fns'
 
+import { Article } from '~/components/Article'
 import { PageContainer } from '~/components/PageContainer'
 
 export const generateStaticParams = () => {
@@ -9,9 +11,23 @@ export const generateStaticParams = () => {
   }))
 }
 
-export const generateMetadata = ({ params }: { params: { slug: string } }) => {
+export const generateMetadata = ({ params }: { params: { slug: string } }): Metadata => {
   const blog = allBlogs.find((blog) => blog.slug === params.slug)
-  return { title: blog?.title }
+
+  if (blog) {
+    return {
+      title: blog.title,
+      // openGraph: {
+      //   type: 'article',
+      //   title: blog.title,
+      //   description: '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。',
+      //   url: 'https://v2p.app',
+      //   images: `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog?title=${blog.title}`,
+      // },
+    }
+  }
+
+  return {}
 }
 
 export default function BlogPage({ params }: { params: { slug: string } }) {
@@ -23,7 +39,7 @@ export default function BlogPage({ params }: { params: { slug: string } }) {
 
   return (
     <PageContainer>
-      <article className="prose lg:prose-xl mx-auto max-w-xl py-8">
+      <Article>
         <div className="mb-8">
           <h1 className="text-xl font-bold lg:text-3xl">{blog.title}</h1>
 
@@ -39,7 +55,7 @@ export default function BlogPage({ params }: { params: { slug: string } }) {
           dangerouslySetInnerHTML={{ __html: blog.body.html }}
           className="text-sm [&>*:last-child]:mb-0 [&>*]:mb-3"
         />
-      </article>
+      </Article>
     </PageContainer>
   )
 }
