@@ -157,6 +157,9 @@ export const defaultOptions: Options = {
     display: 'indent',
     multipleInsideOne: 'nested',
   },
+  userTag: {
+    display: 'inline',
+  },
 }
 
 export const enum MessageKey {

@@ -39,6 +39,9 @@ const saveOptions = async () => {
         multipleInsideOne: $('#nestedReply_multipleInsideOne').prop('checked') ? 'nested' : 'off',
       }
     })(),
+    userTag: {
+      display: $('input[name="userTag.display"]:checked').prop('value'),
+    },
   }
 
   await setStorage(StorageKey.Options, currentOptions)
@@ -72,4 +75,7 @@ void (async function init() {
 
   $('#reply_preload_off').prop('checked', options.reply.preload === 'off')
   $('#reply_preload_auto').prop('checked', options.reply.preload === 'auto')
+
+  $('#userTagDisplayInline').prop('checked', options.userTag.display === 'inline')
+  $('#userTagDisplayBlock').prop('checked', options.userTag.display === 'block')
 })()

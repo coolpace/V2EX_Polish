@@ -522,13 +522,21 @@ a.v2p-topic-preview-title-link {
 }
 
 .v2p-reply-tags {
-  display: inline-block;
-  margin-bottom: 2px;
+  display: inline-flex;
+  margin: 0 0 2px;
   padding: 0 3px;
   font-size: 12px;
   background-color: var(--v2p-color-main-200);
   border-radius: 3px;
   cursor: pointer;
+}
+
+.v2p-reply-tags-inline {
+  max-width: 300px;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .v2p-emoticons-box {

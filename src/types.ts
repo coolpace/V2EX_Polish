@@ -16,22 +16,39 @@ interface SettingsSyncInfo {
 }
 
 export interface Options {
+  /** 是否在新标签页打开主题。 */
   openInNewTab: boolean
+  /** 自动签到设置。 */
   autoCheckIn: {
+    /** 是否启用自动签到。 */
     enabled: boolean
   }
+  /** 颜色主题设置。 */
   theme: {
+    /** 是否自动跟随系统切换主题。 */
     autoSwitch: boolean
   }
+  /** 主题回复设置。 */
   reply: {
+    /** 是否预加载回复内容。 */
     preload?: 'off' | 'auto'
   }
+  /** 回复内容设置。 */
   replyContent: {
+    /** 是否自动折叠回复内容。 */
     autoFold?: boolean
   }
+  /** 嵌套回复设置。 */
   nestedReply: {
+    /** 嵌套回复展示形式。 */
     display: 'align' | 'indent'
+    /** 当一条回复中指定了多个用户时，是否参与嵌套。 */
     multipleInsideOne?: 'nested' | 'off'
+  }
+  /** 用户标签设置。 */
+  userTag: {
+    /** 用户标签展示形式。 */
+    display: 'inline' | 'block'
   }
 }
 
