@@ -35,7 +35,7 @@ const saveOptions = async () => {
     },
     nestedReply: (() => {
       return {
-        display: $('input[name="nestedReplyDisplay"]:checked').prop('value'),
+        display: $('input[name="nestedReply.display"]:checked').prop('value'),
         multipleInsideOne: $('#nestedReply_multipleInsideOne').prop('checked') ? 'nested' : 'off',
       }
     })(),
@@ -68,6 +68,7 @@ void (async function init() {
 
   $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
   $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
+  $('#displayOff').prop('checked', options.nestedReply.display === 'off')
   $('#nestedReply_multipleInsideOne').prop(
     'checked',
     options.nestedReply.multipleInsideOne === 'nested'

@@ -41,7 +41,7 @@ export interface Options {
   /** 嵌套回复设置。 */
   nestedReply: {
     /** 嵌套回复展示形式。 */
-    display: 'align' | 'indent'
+    display: 'align' | 'indent' | 'off'
     /** 当一条回复中指定了多个用户时，是否参与嵌套。 */
     multipleInsideOne?: 'nested' | 'off'
   }
