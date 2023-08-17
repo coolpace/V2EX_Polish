@@ -506,62 +506,66 @@ export async function handlingComments() {
   {
     const display = options.nestedReply.display
 
-    $commentCells.each((i, cellDom) => {
-      const $cellDom = $(cellDom)
+    if (display !== 'off') {
+      $commentCells.each((i, cellDom) => {
+        const $cellDom = $(cellDom)
 
-      const dataFromIndex = commentDataList.at(i)
+        const dataFromIndex = commentDataList.at(i)
 
-      processReplyContent($cellDom, options.replyContent)
+        processReplyContent($cellDom, options.replyContent)
 
-      // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
-      const currentComment =
-        dataFromIndex?.id === cellDom.id
-          ? dataFromIndex
-          : commentDataList.find((data) => data.id === cellDom.id)
+        // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
+        const currentComment =
+          dataFromIndex?.id === cellDom.id
+            ? dataFromIndex
+            : commentDataList.find((data) => data.id === cellDom.id)
 
-      if (currentComment) {
-        const { refMemberNames, refFloors } = currentComment
+        if (currentComment) {
+          const { refMemberNames, refFloors } = currentComment
 
-        if (!refMemberNames || refMemberNames.length === 0) {
-          return
-        }
+          if (!refMemberNames || refMemberNames.length === 0) {
+            return
+          }
 
-        if (options.nestedReply.multipleInsideOne === 'off' && refMemberNames.length > 1) {
-          return
-        }
+          if (options.nestedReply.multipleInsideOne === 'off' && refMemberNames.length > 1) {
+            return
+          }
 
-        for (const refName of refMemberNames) {
-          // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
-          for (let j = i - 1; j >= 0; j--) {
-            const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
+          for (const refName of refMemberNames) {
+            // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
+            for (let j = i - 1; j >= 0; j--) {
+              const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
 
-            if (compareName === refName) {
-              let refCommentIdx = j
+              if (compareName === refName) {
+                let refCommentIdx = j
 
-              const firstRefFloor = refFloors?.at(0)
+                const firstRefFloor = refFloors?.at(0)
 
-              // 找到了指定回复的用户后，发现跟指定楼层对不上，则继续寻找。
-              // 如果手动指定了楼层，那么就以指定的楼层为准（一般来说，由用户指定会更精确），否则就以第一个引用的用户的评论的楼层为准。
-              if (firstRefFloor && firstRefFloor !== eachFloor) {
-                const targetIdx = commentDataList
-                  .slice(0, j)
-                  .findIndex((data) => data.floor === firstRefFloor && data.memberName === refName)
+                // 找到了指定回复的用户后，发现跟指定楼层对不上，则继续寻找。
+                // 如果手动指定了楼层，那么就以指定的楼层为准（一般来说，由用户指定会更精确），否则就以第一个引用的用户的评论的楼层为准。
+                if (firstRefFloor && firstRefFloor !== eachFloor) {
+                  const targetIdx = commentDataList
+                    .slice(0, j)
+                    .findIndex(
+                      (data) => data.floor === firstRefFloor && data.memberName === refName
+                    )
 
-                if (targetIdx >= 0) {
-                  refCommentIdx = targetIdx
+                  if (targetIdx >= 0) {
+                    refCommentIdx = targetIdx
+                  }
                 }
-              }
 
-              if (display === 'indent') {
-                cellDom.classList.add('v2p-indent')
-              }
+                if (display === 'indent') {
+                  cellDom.classList.add('v2p-indent')
+                }
 
-              $commentCells.eq(refCommentIdx).append(cellDom)
-              return
+                $commentCells.eq(refCommentIdx).append(cellDom)
+                return
+              }
             }
           }
         }
-      }
-    })
+      })
+    }
   }
 }
