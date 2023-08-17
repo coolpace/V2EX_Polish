@@ -37,7 +37,7 @@
     "@types/firefox-webext-browser": "^111.0.1",
     "@types/jquery": "^3.5.16",
     "npm-run-all": "^4.1.5",
-    "prefer-code-style": "^1.4.1",
+    "prefer-code-style": "^1.4.4",
     "sass": "^1.65.1",
     "stylelint": "^15.10.2",
     "tsup": "^7.2.0",
