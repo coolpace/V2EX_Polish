@@ -1,7 +1,7 @@
 import { Clock4, createElement, Heart } from 'lucide'
 
 import { createModel } from '../../components/model'
-import { createPopup } from '../../components/popup'
+import { popupControl } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { crawalTopicPage, thankReply } from '../../services'
@@ -12,6 +12,7 @@ import {
   $commentCells,
   $commentTableRows,
   $replyTextArea,
+  $topicHeader,
   loginName,
   topicOwnerName,
   updateCommentCells,
@@ -393,12 +394,6 @@ export async function handlingComments() {
   {
     // 此区块的逻辑需要在处理嵌套评论前执行。
 
-    const popupControl = createPopup({
-      root: $commentBox,
-      triggerType: 'hover',
-      placement: 'right-start',
-      offsetOptions: { mainAxis: 8, crossAxis: -4 },
-    })
     const membersHasSetTags = new Set<Member['username']>()
 
     $commentCells.each((i, cellDom) => {
@@ -413,7 +408,7 @@ export async function handlingComments() {
       const { memberName, thanked } = currentComment
 
       processAvatar({
-        $cellDom,
+        $avatar: $cellDom.find('.avatar'),
         popupControl,
         commentData: currentComment,
         onSetTagsClick: () => {
@@ -565,6 +560,28 @@ export async function handlingComments() {
             }
           }
         }
+      })
+    }
+  }
+
+  {
+    const $opAvatar = $topicHeader.find('.avatar')
+    const memberName = $opAvatar.prop('alt')
+    const memberAvatar = $opAvatar.prop('src')
+    const memberLink = $topicHeader.find('.fr > a').prop('href')
+
+    if (
+      typeof memberName === 'string' &&
+      typeof memberAvatar === 'string' &&
+      typeof memberLink === 'string'
+    ) {
+      processAvatar({
+        $avatar: $opAvatar,
+        popupControl,
+        commentData: { memberName, memberAvatar, memberLink },
+        onSetTagsClick: () => {
+          openTagsSetter(memberName)
+        },
       })
     }
   }

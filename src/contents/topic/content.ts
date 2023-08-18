@@ -3,7 +3,7 @@ import { createToast } from '../../components/toast'
 import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
-import { $commentCells, $topicContentBox } from '../globals'
+import { $commentCells, $topicContentBox, $topicHeader, topicOwnerName } from '../globals'
 import { loadIcons, setMemberTags } from '../helpers'
 
 /**
@@ -153,6 +153,10 @@ export function updateMemberTag(
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         openTagsSetter(memberName)
       })
+
+      if (memberName === topicOwnerName) {
+        $topicHeader.append($tags.clone(true))
+      }
 
       if (options.userTag.display === 'inline') {
         $tags
