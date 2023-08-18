@@ -4,9 +4,9 @@
 
 一款专为 V2EX 用户设计的轻量浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！✨
 
-[![Chrome Web Store Version]][Chrome Web Store]
-[![Chrome Web Store Downloads]][Chrome Web Store]
-[![Chrome Web Store Rating]][Chrome Web Store]
+[![Chrome Web Store Version]][Chrome Web Store] ·
+[![Chrome Web Store Downloads]][Chrome Web Store] ·
+[![Chrome Web Store Rating]][Chrome Web Store] ·
 [![Chrome Web Store Rating Count]][Chrome Web Store]
 
 ## 安装使用
