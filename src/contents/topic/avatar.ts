@@ -7,9 +7,9 @@ import { formatTimestamp } from '../../utils'
 const memberDataCache = new Map<Member['username'], Member>()
 
 interface ProcessAvatar {
-  $cellDom: JQuery
+  $avatar: JQuery
   popupControl: PopupControl
-  commentData: CommentData
+  commentData: Pick<CommentData, 'memberName' | 'memberAvatar' | 'memberLink'>
   onSetTagsClick?: () => void
 }
 
@@ -18,13 +18,11 @@ interface ProcessAvatar {
  *  - 鼠标悬浮头像会展示该用户的信息。
  */
 export function processAvatar(params: ProcessAvatar) {
-  const { $cellDom, popupControl, commentData, onSetTagsClick: onSetTags } = params
+  const { $avatar, popupControl, commentData, onSetTagsClick: onSetTags } = params
 
   const { memberName, memberAvatar, memberLink } = commentData
 
   let abortController: AbortController | null = null
-
-  const $avatar = $cellDom.find('.avatar')
 
   const handleOver = () => {
     popupControl.close()

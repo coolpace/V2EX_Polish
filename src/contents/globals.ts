@@ -8,6 +8,9 @@ export const $topicList = $(
   '#Main #Tabs ~ .cell.item, #Main #TopicsNode > .cell, #Main .cell.item:has(.item_title > .topic-link)'
 )
 
+/** 主题头部 */
+export const $topicHeader = $('#Main .header')
+
 /** 主题内容区 */
 export const $topicContentBox = $('#Main .box:has(.topic_content)')
 

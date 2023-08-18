@@ -8,6 +8,7 @@ import {
   shift,
 } from '@floating-ui/dom'
 
+import { $commentBox } from '../contents/globals'
 import { createToast } from './toast'
 
 export const hoverDelay = 350
@@ -154,3 +155,10 @@ export function createPopup(props: CreatePopupProps): PopupControl {
 
   return popupControl
 }
+
+export const popupControl = createPopup({
+  root: $commentBox,
+  triggerType: 'hover',
+  placement: 'right-start',
+  offsetOptions: { mainAxis: 8, crossAxis: -4 },
+})
