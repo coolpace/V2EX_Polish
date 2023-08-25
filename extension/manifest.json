@@ -3,7 +3,7 @@
 
   "name": "V2EX Polish",
 
-  "version": "1.6.6",
+  "version": "1.6.7",
 
   "description": "专为 V2EX 用户设计，提供了丰富的扩展功能。",
 
@@ -31,6 +31,7 @@
       "run_at": "document_end",
       "all_frames": true
     },
+
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*", "https://cn.v2ex.com/*"],
       "css": ["css/v2ex-effect.css"],
@@ -40,12 +41,12 @@
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*", "https://cn.v2ex.com/*"],
       "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings", "*://*/write"],
-      "js": ["scripts/v2ex-home.min.js"],
+      "js": ["scripts/jquery.min.js", "scripts/v2ex-home.min.js"],
       "all_frames": true
     },
     {
       "matches": ["https://v2ex.com/t/*", "https://www.v2ex.com/t/*", "https://cn.v2ex.com/t/*"],
-      "js": ["scripts/v2ex-topic.min.js"],
+      "js": ["scripts/jquery.min.js", "scripts/v2ex-topic.min.js"],
       "all_frames": true
     },
     {
@@ -54,9 +55,10 @@
         "https://www.v2ex.com/write*",
         "https://cn.v2ex.com/write*"
       ],
-      "js": ["scripts/v2ex-write.min.js"],
+      "js": ["scripts/jquery.min.js", "scripts/v2ex-write.min.js"],
       "all_frames": true
     },
+
     {
       "matches": ["https://v2ex.com/*", "https://www.v2ex.com/*", "https://cn.v2ex.com/*"],
       "js": ["scripts/toggle-icon.min.js"],
