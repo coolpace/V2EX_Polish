@@ -240,9 +240,6 @@ async function refreshMoney(): Promise<void> {
   $('#money').html(data)
 }
 
-/**
- * 获取最新的金币，返回 HTML 字符串。
- */
 export async function thankReply(params: {
   replyId: string
   onSuccess?: () => void
@@ -281,4 +278,32 @@ export async function crawalTopicPage(path: string, page: string): Promise<strin
   const res = await fetch(`${V2EX.Origin}${path}?p=${page}`)
   const htmlText = await res.text()
   return htmlText
+}
+
+export async function addFavorite(url: string): Promise<void> {
+  const res = await fetch(url)
+
+  if (res.redirected) {
+    const htmlText = await res.text()
+
+    if (htmlText.includes('取消收藏')) {
+      return
+    }
+  }
+
+  throw new Error('加入收藏失败')
+}
+
+export async function unfavorite(url: string): Promise<void> {
+  const res = await fetch(url)
+
+  if (res.redirected) {
+    const htmlText = await res.text()
+
+    if (htmlText.includes('加入收藏')) {
+      return
+    }
+  }
+
+  throw new Error('取消收藏失败')
 }
