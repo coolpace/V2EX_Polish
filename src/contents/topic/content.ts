@@ -1,6 +1,7 @@
 import { createButton } from '../../components/button'
 import { createToast } from '../../components/toast'
 import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
+import { addFavorite, unfavorite } from '../../services'
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
 import { $commentCells, $topicContentBox, $topicHeader, topicOwnerName } from '../globals'
@@ -54,20 +55,25 @@ export function handlingContent() {
         void (async () => {
           createToast({ message: hasFavorited ? '正在取消收藏...' : '正在加入收藏...' })
           $favoriteBtn.css('pointer-events', 'none')
+          const originalContent = $favoriteBtn.html()
+
           try {
-            const res = await fetch(hasFavorited ? url.replace('/favorite', '/unfavorite') : url)
-            if (res.redirected) {
-              const htmlText = await res.text()
-              if (!hasFavorited && htmlText.includes('取消收藏')) {
-                $favoriteBtn.html($favoriteBtn.html().replace('加入收藏', '取消收藏'))
-                hasFavorited = true
-              } else if (hasFavorited && htmlText.includes('加入收藏')) {
-                $favoriteBtn.html($favoriteBtn.html().replace('取消收藏', '加入收藏'))
-                hasFavorited = false
-              }
+            if (hasFavorited) {
+              $favoriteBtn.html($favoriteBtn.html().replace('取消收藏', '取消中...'))
+              await unfavorite(url.replace('/favorite', '/unfavorite'))
+              $favoriteBtn.html($favoriteBtn.html().replace('取消中...', '加入收藏'))
+              hasFavorited = false
+            } else {
+              $favoriteBtn.html($favoriteBtn.html().replace('加入收藏', '收藏中...'))
+              await addFavorite(url)
+              $favoriteBtn.html($favoriteBtn.html().replace('收藏中...', '取消收藏'))
+              hasFavorited = true
             }
-          } catch {
-            createToast({ message: '❌ 加入收藏失败' })
+          } catch (err) {
+            $favoriteBtn.html(originalContent)
+            if (err instanceof Error) {
+              createToast({ message: `❌ ${err.message}` })
+            }
           } finally {
             $favoriteBtn.css('pointer-events', 'auto')
           }
