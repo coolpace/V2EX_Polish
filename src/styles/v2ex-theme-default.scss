@@ -325,6 +325,7 @@ body {
 
     @include share.line-clamp(2);
 
+    position: relative;
     padding: var(--offset) 0;
     text-shadow: none;
 

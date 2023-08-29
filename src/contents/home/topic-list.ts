@@ -71,207 +71,232 @@ export function handlingTopicList() {
     { topic: Topic; topicReplies: TopicReply[]; cacheTime: number }
   >()
 
+  const handlePreview = (params: { topicId?: string; topicTitle?: string; linkHref?: string }) => {
+    const { topicId, topicTitle, linkHref } = params
+
+    if (topicId) {
+      model.open()
+
+      $detailBtn.prop('href', linkHref)
+
+      const $titleLink = $(
+        `<a class="v2p-topic-preview-title-link" title="${topicTitle}">${topicTitle}</a>`
+      )
+
+      model.$title.empty().append($titleLink)
+
+      if (PAT) {
+        void (async () => {
+          let cacheData = topicDataCache.get(topicId)
+
+          if (
+            !cacheData ||
+            Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 缓存超时时间为十分钟
+          ) {
+            try {
+              abortController = new AbortController()
+
+              model.$content.empty().append(`
+                    <div class="v2p-model-loading">
+                      <div class="v2p-icon-loading">${iconLoading}</div>
+                    </div>
+                    `)
+
+              const promises = [
+                fetchTopic(topicId, { signal: abortController.signal }),
+                fetchTopicReplies(topicId, { signal: abortController.signal }),
+              ] as const
+
+              const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
+
+              const data = {
+                topic,
+                topicReplies,
+                cacheTime: Date.now(),
+              }
+
+              topicDataCache.set(topicId, data)
+              cacheData = data
+            } catch (err) {
+              if (isV2EX_RequestError(err)) {
+                const message = err.cause.message
+                if (
+                  /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+                  message === RequestMessage.TokenExpired ||
+                  message === RequestMessage.InvalidToken
+                  /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
+                ) {
+                  model.$content.empty().append(invalidTemplate('您的 PAT 已失效，请重新设置。'))
+                }
+              }
+            }
+          }
+
+          if (cacheData) {
+            const { topic, topicReplies } = cacheData
+
+            const $topicPreview = $('<div class="v2p-topic-preview">')
+
+            $titleLink.prop('href', topic.url)
+            if (options.openInNewTab) {
+              $titleLink.prop('target', '_blank')
+            }
+
+            const $infoBar = $(`
+              <div class="v2p-tp-info-bar">
+                <div class="v2p-tp-info">
+                  <a class="v2p-tp-member" href="${topic.member.url}">
+                    <img class="v2p-tp-avatar" src="${topic.member.avatar}">
+                    <span>${topic.member.username}</span>
+                  </a>
+
+                  <span>
+                    ${formatTimestamp(topic.created, { format: 'YMDHMS' })}
+                  </span>
+
+                  <span>${topic.replies} 条回复</span>
+                </div>
+              </div>
+            `)
+
+            const iconBook = createElement(BookOpenCheck)
+            iconBook.setAttribute('width', '100%')
+            iconBook.setAttribute('height', '100%')
+
+            const $readingBtn = $(`
+                  <div class="v2p-tp-read"><span class="v2p-tp-read-icon"></span>稍后阅读</div>
+                  `)
+            $readingBtn.find('.v2p-tp-read-icon').append(iconBook)
+            $readingBtn
+              .on('click', () => {
+                void addToReadingList({
+                  url: topic.url,
+                  title: topic.title,
+                  content: topic.content,
+                })
+              })
+              .appendTo($infoBar)
+
+            $topicPreview.append($infoBar)
+
+            if (topic.content_rendered) {
+              $topicPreview.append(
+                `<div class="v2p-topic-preview-content markdown_body">${topic.content_rendered}</div>`
+              )
+            } else {
+              $topicPreview.append(`
+                <div class="v2p-empty-content">
+                  <div class="v2p-text-emoji">¯\\_(ツ)_/¯</div>
+                  <p>该主题没有正文内容</p>
+                </div>
+              `)
+            }
+
+            if (topic.supplements && topic.supplements.length > 0) {
+              $topicPreview.append(`
+                <div class="v2p-topic-preview-addons">
+                  ${topic.supplements
+                    .map((addon, idx) => {
+                      return `
+                      <div class="v2p-topic-preview-addon subtle">
+                        <div class="fade" style="margin-bottom:10px;">附言 ${idx + 1}：</div>
+                        <div class="topic_content markdown_body">${addon.content_rendered}</div>
+                      </div>
+                      `
+                    })
+                    .join('')}
+                </div>
+              `)
+            }
+
+            if (topicReplies.length > 0) {
+              const $template = $('<div>')
+
+              const op = topic.member.username
+
+              topicReplies.forEach((r) => {
+                $template.append(`
+                  <div class="v2p-topic-reply">
+                    <div class="v2p-topic-reply-member">
+                      <a href="${r.member.url}">
+                        <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
+                        <span>${r.member.username}</span>
+                        <span style="
+                          display: ${op === r.member.username ? 'unset' : 'none'};
+                          margin-left:${op === r.member.username ? '3px' : '0'};
+                        ">
+                          <span class="badge op mini">OP</span>
+                        </span>
+                      </a>：
+                    </div>
+                    <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
+                  </div>
+                `)
+              })
+
+              $('<div class="v2p-topic-reply-box">')
+                .append($template.html())
+                .append(
+                  `
+                  <div class="v2p-more-reply-tip">
+                    <a
+                      href="${linkHref || ''}"
+                      style="color: currentColor;"
+                      target="${options.openInNewTab ? '_blank' : '_self'}"
+                    >
+                        在主题内查看完整评论...
+                    </a>
+                  </div>
+                  `
+                )
+                .appendTo($topicPreview)
+            }
+
+            model.$content.empty().append($topicPreview)
+          }
+        })()
+      } else {
+        model.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
+      }
+    }
+  }
+
+  const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
+
   $topicList.each((_, topicItem) => {
     const $topicItem = $(topicItem)
     const $itemTitle = $topicItem.find('.item_title')
+    const topicTitle = $itemTitle.find('.topic-link').text()
 
-    $('<button class="v2p-topic-preview-btn">预览</button>')
+    $previewBtn
+      .clone()
       .on('click', () => {
         const linkHref = $topicItem.find('.topic-link').attr('href')
         const match = linkHref?.match(/\/t\/(\d+)/)
         const topicId = match?.at(1)
 
-        if (topicId) {
-          model.open()
-
-          $detailBtn.prop('href', linkHref)
-
-          const topicTitle = $itemTitle.find('.topic-link').text()
-          const $titleLink = $(
-            `<a class="v2p-topic-preview-title-link" title="${topicTitle}">${topicTitle}</a>`
-          )
-
-          model.$title.empty().append($titleLink)
-
-          if (PAT) {
-            void (async () => {
-              let cacheData = topicDataCache.get(topicId)
-
-              if (
-                !cacheData ||
-                Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 缓存超时时间为十分钟
-              ) {
-                try {
-                  abortController = new AbortController()
-
-                  model.$content.empty().append(`
-                  <div class="v2p-model-loading">
-                    <div class="v2p-icon-loading">${iconLoading}</div>
-                  </div>
-                  `)
-
-                  const promises = [
-                    fetchTopic(topicId, { signal: abortController.signal }),
-                    fetchTopicReplies(topicId, { signal: abortController.signal }),
-                  ] as const
-
-                  const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
-
-                  const data = {
-                    topic,
-                    topicReplies,
-                    cacheTime: Date.now(),
-                  }
-
-                  topicDataCache.set(topicId, data)
-                  cacheData = data
-                } catch (err) {
-                  if (isV2EX_RequestError(err)) {
-                    const message = err.cause.message
-                    if (
-                      /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-                      message === RequestMessage.TokenExpired ||
-                      message === RequestMessage.InvalidToken
-                      /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
-                    ) {
-                      model.$content
-                        .empty()
-                        .append(invalidTemplate('您的 PAT 已失效，请重新设置。'))
-                    }
-                  }
-                }
-              }
-
-              if (cacheData) {
-                const { topic, topicReplies } = cacheData
-
-                const $topicPreview = $('<div class="v2p-topic-preview">')
-
-                $titleLink.prop('href', topic.url)
-                if (options.openInNewTab) {
-                  $titleLink.prop('target', '_blank')
-                }
-
-                const $infoBar = $(`
-                  <div class="v2p-tp-info-bar">
-                    <div class="v2p-tp-info">
-                      <a class="v2p-tp-member" href="${topic.member.url}">
-                        <img class="v2p-tp-avatar" src="${topic.member.avatar}">
-                        <span>${topic.member.username}</span>
-                      </a>
-
-                      <span>
-                        ${formatTimestamp(topic.created, { format: 'YMDHMS' })}
-                      </span>
-
-                      <span>${topic.replies} 条回复</span>
-                    </div>
-                  </div>
-                `)
-
-                const iconBook = createElement(BookOpenCheck)
-                iconBook.setAttribute('width', '100%')
-                iconBook.setAttribute('height', '100%')
-
-                const $readingBtn = $(`
-                <div class="v2p-tp-read"><span class="v2p-tp-read-icon"></span>稍后阅读</div>
-                `)
-                $readingBtn.find('.v2p-tp-read-icon').append(iconBook)
-                $readingBtn
-                  .on('click', () => {
-                    void addToReadingList({
-                      url: topic.url,
-                      title: topic.title,
-                      content: topic.content,
-                    })
-                  })
-                  .appendTo($infoBar)
-
-                $topicPreview.append($infoBar)
-
-                if (topic.content_rendered) {
-                  $topicPreview.append(
-                    `<div class="v2p-topic-preview-content markdown_body">${topic.content_rendered}</div>`
-                  )
-                } else {
-                  $topicPreview.append(`
-                    <div class="v2p-empty-content">
-                      <div class="v2p-text-emoji">¯\\_(ツ)_/¯</div>
-                      <p>该主题没有正文内容</p>
-                    </div>
-                    `)
-                }
-
-                if (topic.supplements && topic.supplements.length > 0) {
-                  $topicPreview.append(
-                    `
-                    <div class="v2p-topic-preview-addons">
-                      ${topic.supplements
-                        .map((addon, idx) => {
-                          return `
-                          <div class="v2p-topic-preview-addon subtle">
-                            <div class="fade" style="margin-bottom:10px;">附言 ${idx + 1}：</div>
-                            <div class="topic_content markdown_body">${addon.content_rendered}</div>
-                          </div>
-                          `
-                        })
-                        .join('')}
-                    </div>
-                    `
-                  )
-                }
-
-                if (topicReplies.length > 0) {
-                  const $template = $('<div>')
-
-                  const op = topic.member.username
-
-                  topicReplies.forEach((r) => {
-                    $template.append(`
-                      <div class="v2p-topic-reply">
-                        <div class="v2p-topic-reply-member">
-                          <a href="${r.member.url}">
-                            <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
-                            <span>${r.member.username}</span>
-                            <span style="
-                              display: ${op === r.member.username ? 'unset' : 'none'};
-                              margin-left:${op === r.member.username ? '3px' : '0'};
-                            ">
-                              <span class="badge op mini">OP</span>
-                            </span>
-                          </a>：
-                        </div>
-                        <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
-                      </div>
-                      `)
-                  })
-
-                  $('<div class="v2p-topic-reply-box">')
-                    .append($template.html())
-                    .append(
-                      `
-                      <div class="v2p-more-reply-tip">
-                        <a
-                          href="${linkHref || ''}"
-                          style="color: currentColor;"
-                          target="${options.openInNewTab ? '_blank' : '_self'}"
-                        >
-                            在主题内查看完整评论...
-                        </a>
-                      </div>
-                      `
-                    )
-                    .appendTo($topicPreview)
-                }
-
-                model.$content.empty().append($topicPreview)
-              }
-            })()
-          } else {
-            model.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
-          }
-        }
+        handlePreview({ topicId, topicTitle, linkHref })
       })
       .appendTo($itemTitle)
   })
+
+  if (PAT) {
+    $('#TopicsHot')
+      .find('.cell .item_hot_topic_title')
+      .each((_, topicTitle) => {
+        const $topicItem = $(topicTitle)
+        $previewBtn
+          .clone()
+          .on('click', () => {
+            const $link = $topicItem.find('> a')
+            const linkHref = $link.attr('href')
+            const match = linkHref?.match(/\/t\/(\d+)/)
+            const topicId = match?.at(1)
+            const topicTitle = $link.text()
+
+            handlePreview({ topicId, topicTitle, linkHref })
+          })
+          .appendTo($topicItem)
+      })
+  }
 }
