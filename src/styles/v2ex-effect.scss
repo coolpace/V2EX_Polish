@@ -35,7 +35,8 @@ body {
   }
 }
 
-#Main {
+#Main,
+#Rightbar {
   .cell {
     &:hover {
       .v2p-topic-preview-btn {
@@ -56,6 +57,15 @@ body {
       text-decoration: none;
       background-color: var(--v2p-color-accent-50);
     }
+  }
+
+  .v2p-topic-preview-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 20px;
+    font-size: 12px;
+    box-shadow: 0 0 0 3px var(--v2p-color-bg-content);
   }
 
   @at-root {
