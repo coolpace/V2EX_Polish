@@ -434,7 +434,9 @@ hr {
       padding: 0 5px;
       background-color: var(--v2p-color-main-200);
       border-radius: 3px;
-      transition: background-color 0.2s, color 0.2s;
+      transition:
+        background-color 0.2s,
+        color 0.2s;
     }
 
     #clear-storage {
