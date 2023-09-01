@@ -28,13 +28,16 @@ void (async () => {
       const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
       if (perfersDark.matches) {
+        $('body').addClass('v2p-theme-dark')
         $('#Wrapper').addClass('Night')
       }
 
       perfersDark.addEventListener('change', ({ matches }) => {
         if (matches) {
+          $('body').addClass('v2p-theme-dark')
           $('#Wrapper').addClass('Night')
         } else {
+          $('body').removeClass('v2p-theme-dark')
           $('#Wrapper').removeClass('Night')
         }
       })
