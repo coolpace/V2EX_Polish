@@ -79,7 +79,7 @@ function isObject(value: any): value is Record<string, any> {
  */
 export function deepMerge<
   T extends Record<string, any> = Record<string, any>,
-  U extends Record<string, any> = Record<string, any>
+  U extends Record<string, any> = Record<string, any>,
 >(target: T, source: U): T & U {
   const result = {} as Record<string, any>
 
@@ -130,7 +130,7 @@ export function getRunEnv(): 'chrome' | 'web-ext' | null {
 export function getStorage(useCache = true): Promise<StorageSettings> {
   return new Promise((resolve, reject) => {
     if (useCache) {
-      if (typeof window !== 'undefined' && window.__V2P_StorageCache) {
+      if (window.__V2P_StorageCache) {
         resolve(window.__V2P_StorageCache)
       }
     }
