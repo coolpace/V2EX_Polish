@@ -208,7 +208,7 @@ export function decodeBase64TopicPage() {
       }
 
       try {
-        const decodedStr = window.decodeURIComponent(window.atob(text))
+        const decodedStr = decodeURIComponent(window.atob(text))
         count += 1
         return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
       } catch {

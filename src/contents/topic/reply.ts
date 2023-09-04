@@ -160,12 +160,7 @@ export function handleReply() {
         let encodedText: string | undefined
 
         try {
-          if (typeof window.encodeURIComponent === 'undefined') {
-            // 在 Firefox 扩展中找不到 window.encodeURIComponent，原因未知。
-            encodedText = window.btoa(inputText)
-          } else {
-            encodedText = window.btoa(window.encodeURIComponent(inputText))
-          }
+          encodedText = window.btoa(encodeURIComponent(inputText))
         } catch (err) {
           console.error(err, '可能的错误原因：文本包含中文。')
           createToast({ message: '该文本无法编码为 Base64' })
