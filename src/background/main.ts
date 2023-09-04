@@ -45,7 +45,7 @@ chrome.contextMenus.removeAll(() => {
     id: Menu.Root,
   })
 
-  if (runEnv === 'chrome' && typeof chrome.sidePanel.open === 'function') {
+  if (runEnv === 'chrome' && 'sidePanel' in chrome && typeof chrome.sidePanel.open === 'function') {
     chrome.contextMenus.create({
       documentUrlPatterns: [
         'https://v2ex.com/*',
