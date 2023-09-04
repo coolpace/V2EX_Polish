@@ -1,7 +1,10 @@
 {
   "extends": "@codennnn/tsconfig/esm.json",
   "compilerOptions": {
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "verbatimModuleSyntax": false
   },
   "include": ["./tsup.config.ts", "src/**/*"]
 }
