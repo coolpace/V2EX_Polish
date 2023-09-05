@@ -19,6 +19,7 @@
 │   ├── services # API 服务
 │   ├── types.ts # TS 类型定义
 │   └── utils.ts # 工具函数
+├── website # 官网
 └── tsup.config.ts # tsup 配置
 ```
 
@@ -45,6 +46,12 @@ pnpm build:userscript # 构建油猴脚本
 2. 点击右上角的开发者模式，然后点击 `加载已解压的扩展程序`，选择 `extension` 文件夹。
 3. 在 `src` 文件夹中修改代码，保存后会自动编译。
 4. 在扩展程序页面中，点击刷新按钮（如上所述，如果使用了 web-ext，这一步可省略），接着再刷新页面查看效果。
+
+### 运行官网
+
+```bash
+pnpm install && pnpm dev
+```
 
 ## 提交问题和请求功能
 

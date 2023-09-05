@@ -1,4 +1,4 @@
-import { type Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   BookMarkedIcon,
@@ -22,7 +22,6 @@ import { FirefoxIcon } from '~/components/icons/FirefoxIcon'
 import { TampermonkeyIcon } from '~/components/icons/TampermonkeyIcon'
 import { InstallButton } from '~/components/InstallButton'
 import { Introduction } from '~/components/Introduction'
-import { Logo } from '~/components/Logo'
 import { PageContainer } from '~/components/PageContainer'
 import { QA } from '~/components/QA'
 import { Screenshot } from '~/components/Screenshot'
@@ -39,9 +38,6 @@ export default function Page() {
       <section className="py-8">
         <div className="flex flex-col items-center">
           <div className="text-with-shadow flex items-center justify-center md:gap-6 lg:gap-7">
-            <div className="hidden md:block md:h-[60px] md:w-[60px] lg:h-[70px] lg:w-[70px]">
-              <Logo />
-            </div>
             <h1 className="text-5xl font-black md:text-6xl lg:text-7xl">
               V2EX
               <span className="text-polish ml-2 md:ml-3 lg:ml-4">Polish</span>
@@ -56,7 +52,7 @@ export default function Page() {
             <InstallButton />
           </div>
 
-          <div className="mt-6 flex items-center gap-6 text-xs text-main-500 md:text-sm">
+          <div className="mt-6 flex flex-col gap-6 text-xs text-main-500 md:flex-row md:items-center md:text-sm">
             <HoverButton>
               <Link
                 className="flex items-center gap-2"

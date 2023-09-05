@@ -1,4 +1,4 @@
-import { type Metadata } from 'next'
+import type { Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
 import Link from 'next/link'
 import { Analytics } from '@vercel/analytics/react'
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: 'V2EX Polish - 浏览器插件',
     description: '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。',
-    url: 'https://v2p.app',
+    url: 'https://www.v2p.app',
     images: 'https://i.imgur.com/q2minty.png',
   },
   authors: [{ name: '陈梓聪 LeoKu', url: 'https://github.com/Codennnn' }],
@@ -41,15 +41,14 @@ export default function RootLayout(props: React.PropsWithChildren) {
       className={`h-full overflow-hidden bg-white text-main-800 ${notoSans.className}`}
       lang="zh-Hans-CN"
     >
-      <body className="m-0 h-full overflow-y-auto">
-        <header className="flex justify-center py-4 md:px-4 md:py-6">
+      <body className="relative m-0 h-full overflow-y-auto">
+        <header className="relative z-50 flex justify-center py-4 md:px-4 md:py-6">
           <Nav />
         </header>
 
         <main className="px-4 py-6 md:p-12">{props.children}</main>
 
-        <footer className="sticky top-full">
-          <div className="h-px bg-gradient-to-r from-slate-600/0 via-slate-600/40 to-slate-600/0" />
+        <footer className="sticky top-full border-t border-solid border-main-200">
           <div className="px-4 pt-5 md:px-12">
             <div className="mx-auto max-w-container md:px-36">
               <div className="flex justify-between py-3 md:py-8">

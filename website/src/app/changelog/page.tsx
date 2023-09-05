@@ -1,4 +1,4 @@
-import { type Metadata } from 'next'
+import type { Metadata } from 'next'
 import { allChangelogs } from 'contentlayer/generated'
 
 import { Article } from '~/components/Article'
