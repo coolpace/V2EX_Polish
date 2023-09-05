@@ -1,4 +1,3 @@
-const { resolve } = require('path')
 const { TYPESCRIPT_FILES } = require('prefer-code-style/constants')
 
 module.exports = {
@@ -20,7 +19,8 @@ module.exports = {
         '@typescript-eslint/no-unsafe-enum-comparison': 0,
       },
       parserOptions: {
-        project: resolve(__dirname, 'tsconfig.json'),
+        project: true,
+        tsconfigRootDir: __dirname,
       },
     },
     {
@@ -29,7 +29,8 @@ module.exports = {
         'react/no-unknown-property': [2, { ignore: ['tw'] }],
       },
       parserOptions: {
-        project: resolve(__dirname, 'tsconfig.json'),
+        project: true,
+        tsconfigRootDir: __dirname,
       },
     },
   ],

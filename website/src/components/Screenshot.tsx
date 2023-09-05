@@ -65,7 +65,9 @@ export function Screenshot() {
             className={`h-2 w-6 rounded transition-colors ${
               page === name ? 'bg-main-800 shadow-lg' : 'bg-main-350'
             }`}
-            onClick={() => setPage(name)}
+            onClick={() => {
+              setPage(name)
+            }}
           />
         ))}
       </div>

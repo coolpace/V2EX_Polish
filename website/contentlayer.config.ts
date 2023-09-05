@@ -1,28 +1,37 @@
-import { defineDocumentType, makeSource } from 'contentlayer/source-files'
+import { defineDocumentType, defineNestedType, makeSource } from 'contentlayer/source-files'
+
+const Author = defineNestedType(() => ({
+  name: 'Author',
+  fields: {
+    name: { type: 'string', required: true },
+    avatar: { type: 'string', required: true },
+    link: { type: 'string', required: true },
+  },
+}))
 
 export const Blog = defineDocumentType(() => ({
   name: 'Blog',
-  filePathPattern: `blog/**/*.md`,
+  filePathPattern: 'blog/**/*.md',
   fields: {
     title: { type: 'string', required: true },
     date: { type: 'date', required: true },
-    author: { type: 'string', required: true },
+    author: { type: 'nested', of: Author, required: true },
   },
   computedFields: {
     slug: {
       type: 'string',
-      resolve: (blog) => `${blog._raw.sourceFileName.replace(/\.md$/, '')}`,
+      resolve: (post) => `${post._raw.sourceFileName.replace(/\.md$/, '')}`,
     },
   },
 }))
 
 export const Changelog = defineDocumentType(() => ({
   name: 'Changelog',
-  filePathPattern: `changelog.md`,
+  filePathPattern: 'changelog.md',
   computedFields: {
     slug: {
       type: 'string',
-      resolve: (blog) => `${blog._raw.sourceFileName.replace(/\.md$/, '')}`,
+      resolve: (post) => `${post._raw.sourceFileName.replace(/\.md$/, '')}`,
     },
   },
 }))

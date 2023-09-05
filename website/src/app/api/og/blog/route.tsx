@@ -13,10 +13,10 @@ export function GET(request: Request) {
 
     return new ImageResponse(
       (
-        <div tw="flex h-full w-full flex-col items-center text-slate-800 justify-center bg-white">
-          <div tw="flex flex-col justify-center items-center">
-            <div tw="flex mb-16">
-              <span tw="w-10 h-10">
+        <div tw="flex h-full w-full flex-col items-center justify-center bg-white text-slate-800">
+          <div tw="flex flex-col items-center justify-center">
+            <div tw="mb-16 flex">
+              <span tw="h-10 w-10">
                 <svg fill="none" version="1.1" viewBox="0 0 80 80">
                   <g>
                     <g>
@@ -40,7 +40,7 @@ export function GET(request: Request) {
               </span>
             </div>
 
-            <div tw="text-6xl mb-4 font-bold">V2EX Polish</div>
+            <div tw="mb-4 text-6xl font-bold">V2EX Polish</div>
             <div tw="text-xl font-bold">{title}</div>
           </div>
         </div>

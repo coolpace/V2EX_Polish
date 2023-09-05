@@ -1,4 +1,4 @@
-import { type Metadata } from 'next'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { allBlogs } from 'contentlayer/generated'
@@ -35,10 +35,10 @@ export default function BlogIndexPage() {
                     alt="作者头像"
                     className="overflow-hidden rounded-full"
                     height={24}
-                    src="/LeoKu.jpg"
+                    src={blog.author.avatar}
                     width={24}
                   />
-                  <span>{blog.author}</span>
+                  <span>{blog.author.name}</span>
                   <time className="text-main-400" dateTime={blog.date}>
                     {format(parseISO(blog.date), 'yyyy-MM-dd')}
                   </time>
