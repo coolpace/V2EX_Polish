@@ -281,7 +281,7 @@ export function handlingTopicList() {
   })
 
   if (PAT) {
-    $('#TopicsHot')
+    $('#TopicsHot,#my-recent-topics')
       .find('.cell .item_hot_topic_title')
       .each((_, topicTitle) => {
         const $topicItem = $(topicTitle)
