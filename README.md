@@ -4,14 +4,14 @@
 
 一款专为 V2EX 用户设计的轻量浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！✨
 
-[![Chrome Web Store Version]][Chrome Web Store] ·
-[![Chrome Web Store Downloads]][Chrome Web Store] ·
-[![Chrome Web Store Rating]][Chrome Web Store Rating] ·
-[![Chrome Web Store Rating Count]][Chrome Web Store Rating]
+[![Badge CWS Version]][Link CWS] ·
+[![Badge CWS Downloads]][Link CWS] ·
+[![Badge CWS Rating]][Link CWS Rating] ·
+[![Badge CWS Rating Count]][Link CWS Rating]
 
 ## 安装使用
 
-- Chrome 和 Edge 用户请在 [Chrome 商店中安装][Chrome Web Store]
+- Chrome 和 Edge 用户请在 [Chrome 商店中安装][Link CWS]
 - Firefox 用户[在此下载安装](https://addons.mozilla.org/zh-CN/firefox/addon/v2ex-polish/)
 - 想要体验最新功能，可以[手动安装](https://github.com/coolpace/V2EX_Polish/releases)
 - [油猴脚本](https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex)（仅支持部分功能，文档后面介绍了功能差异）
@@ -65,7 +65,7 @@
 
 ## 为什么选择 V2EX Polish？
 
-在社区中早已存在众多用于增强 v2ex.com 的[脚本](https://greasyfork.org/zh-CN/scripts/by-site/v2ex.com)和[插件][Chrome Web Store Search V2EX]，然而它们带来的体验良莠不齐，且大多数已经停止更新。
+在社区中早已存在众多用于增强 v2ex.com 的[脚本](https://greasyfork.org/zh-CN/scripts/by-site/v2ex.com)和[插件][Link CWS Search V2EX]，然而它们带来的体验良莠不齐，且大多数已经停止更新。
 
 V2EX Polish 的目标是提供一个更加完善的插件，并且长期维护，快速响应 V2EX 用户的需求。我们希望打造最高质量的 V2EX 扩展，提供最佳的体验。
 
@@ -125,17 +125,17 @@ PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获
 - [关于 V2EX Polish 意外从 Chrome 应用商店下架的说明](https://www.v2ex.com/t/940580#reply57)
 - [V2EX Polish 在 5 月份更新了什么？](https://www.v2ex.com/t/942786#reply55)
 
-**喜欢我们的扩展吗？请在[应用商店][Chrome Web Store]给我们好评！🥰**
+**喜欢我们的扩展吗？请在[应用商店][Link CWS]给我们好评！🥰**
 
 <!--------[Badges]-------->
 
-[Chrome Web Store Version]: https://img.shields.io/chrome-web-store/v/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=最新版本&logo=hackthebox&logoColor=eeeeee
-[Chrome Web Store Downloads]: https://img.shields.io/chrome-web-store/users/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=用户量
-[Chrome Web Store Rating]: https://img.shields.io/chrome-web-store/rating/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=评分
-[Chrome Web Store Rating Count]: https://img.shields.io/chrome-web-store/rating-count/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=评价数
+[Badge CWS Version]: https://img.shields.io/chrome-web-store/v/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=最新版本&logo=hackthebox&logoColor=eeeeee
+[Badge CWS Downloads]: https://img.shields.io/chrome-web-store/users/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=用户量
+[Badge CWS Rating]: https://img.shields.io/chrome-web-store/rating/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=评分
+[Badge CWS Rating Count]: https://img.shields.io/chrome-web-store/rating-count/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=评价数
 
 <!--------[Internal]-------->
 
-[Chrome Web Store]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm
-[Chrome Web Store Search V2EX]: https://chromewebstore.google.com/search/V2EX?hl=zh-CN
-[Chrome Web Store Rating]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews?hl=zh-CN
+[Link CWS]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm
+[Link CWS Search V2EX]: https://chromewebstore.google.com/search/V2EX?hl=zh-CN
+[Link CWS Rating]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews?hl=zh-CN
