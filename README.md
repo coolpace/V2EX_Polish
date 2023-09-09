@@ -11,7 +11,7 @@
 
 ## 安装使用
 
-- Chrome 和 Edge 用户请在 [Chrome 商店中安装][Link CWS]
+- Chrome、Edge、Arc 用户请在 [Chrome 商店中安装][Link CWS]
 - Firefox 用户[在此下载安装](https://addons.mozilla.org/zh-CN/firefox/addon/v2ex-polish/)
 - 想要体验最新功能，可以[手动安装](https://github.com/coolpace/V2EX_Polish/releases)
 - [油猴脚本](https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex)（仅支持部分功能，文档后面介绍了功能差异）
