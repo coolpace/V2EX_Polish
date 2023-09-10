@@ -211,7 +211,11 @@ export function decodeBase64TopicPage() {
         const decodedStr = decodeURIComponent(window.atob(text))
         count += 1
         return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
-      } catch {
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error(`解析 Base64 出错：${err.message}`)
+        }
+
         return text
       }
     }

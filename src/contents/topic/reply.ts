@@ -162,8 +162,9 @@ export function handleReply() {
         try {
           encodedText = window.btoa(encodeURIComponent(inputText))
         } catch (err) {
-          console.error(err, '可能的错误原因：文本包含中文。')
-          createToast({ message: '该文本无法编码为 Base64' })
+          const errorTip = '该文本无法编码为 Base64'
+          console.error(err, `${errorTip}，可能的错误原因：文本包含中文。`)
+          createToast({ message: errorTip })
         }
 
         if (encodedText) {

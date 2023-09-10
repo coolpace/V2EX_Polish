@@ -334,7 +334,11 @@ export async function handlingComments() {
         }
 
         toastControl.clear()
-      } catch {
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error(`加载多页回复出错：${err.message}`)
+        }
+
         createToast({ message: '❌ 加载多页回复失败' })
         $pageNormal.removeClass('page_current').addClass('page_normal')
       }

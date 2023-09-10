@@ -363,7 +363,11 @@ function initTabs() {
               topicContentData[tabId].lastFetchTime = Date.now()
               return topics
             }
-          } catch {
+          } catch (err) {
+            if (err instanceof Error) {
+              console.error(`获取列表数据出错：${err.message}`)
+            }
+
             $tabContent.html(errorDisplay)
           }
         }
