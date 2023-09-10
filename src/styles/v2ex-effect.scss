@@ -203,12 +203,8 @@ a.v2p-topic-preview-title-link {
   top: 0;
   left: 0;
   z-index: var(--zidx-popup);
-  font-size: 14px;
-  background: var(--v2p-color-bg-widget);
-  border: 1px solid var(--box-border-color);
-  border-radius: 8px;
-  box-shadow: var(--v2p-widget-shadow);
-  backdrop-filter: blur(16px);
+
+  @include share.popup;
 }
 
 .v2p-popup-content {
