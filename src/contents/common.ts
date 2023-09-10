@@ -1,5 +1,5 @@
 import { Links, MessageFrom, StorageKey } from '../constants'
-import { iconChromeWebStore, iconGitHub, iconLogo } from '../icons'
+import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
 import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
 import { postTask } from './helpers'
@@ -112,20 +112,11 @@ void (async () => {
       <div class="v2p-footer-text">扩展自 V2EX Polish </div>
   
       <div class="v2p-footer-links">
-        <a class="v2p-footer-link v2p-hover-btn" href="${Links.Home}" target="_blank">插件主页</a>
+        <a class="v2p-footer-link v2p-hover-btn" href="${Links.Home}" target="_blank">插件官网</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Feedback}" target="_blank">问题反馈</a>
       </div>
   
       <div class="v2p-footer-brand">
-        <span>
-          <a
-            href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
-            target="_blank"
-            title="Chrome 应用商店"
-          >
-            ${iconChromeWebStore}
-          </a>
-        </span>
         <span>
           <a
             href="https://github.com/coolpace/V2EX_Polish"
