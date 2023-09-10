@@ -435,13 +435,71 @@ body {
     }
   }
 
-  // 选择主题节点的下拉选择框。
-  .select2-container--default .select2-selection--single {
-    background-color: var(--v2p-color-background);
-    border: 1px solid var(--v2p-color-border);
+  .CodeMirror-focused.cm-s-one-dark {
+    background-color: transparent;
+  }
 
-    .select2-selection__placeholder {
-      color: var(--v2p-color-foreground);
+  .cm-s-one-dark {
+    background-color: var(--v2p-color-bg-input);
+  }
+
+  // 选择主题节点的下拉选择框。
+  .select2-container {
+    width: 200px !important;
+
+    .select2-selection {
+      background-color: var(--v2p-color-background);
+      border: 1px solid var(--v2p-color-border);
+
+      .select2-selection__rendered,
+      .select2-selection__placeholder {
+        color: var(--v2p-color-foreground);
+      }
+    }
+
+    .select2-dropdown {
+      @include share.popup;
+
+      transform: translateY(5px);
+
+      .select2-search {
+        padding: 5px;
+
+        .select2-search__field {
+          padding: 6px 4px;
+          background-color: transparent;
+          border: 1px solid var(--v2p-color-main-200);
+          border-radius: 4px;
+
+          &:focus-visible {
+            border-color: var(--v2p-color-main-400);
+            outline: none;
+          }
+        }
+      }
+
+      .select2-results > .select2-results__options {
+        padding: 5px;
+      }
+
+      .select2-container--default .select2-results__option--selected {
+        color: currentColor;
+        background-color: var(--v2p-color-accent-100);
+      }
+    }
+
+    .select2-results__option {
+      border-radius: 4px;
+    }
+
+    .select2-results__option--highlighted.select2-results__option--selectable {
+      color: currentColor;
+      background-color: var(--v2p-color-main-200);
+    }
+
+    .select2-results__option--selected {
+      color: currentColor !important;
+      background-color: var(--v2p-color-accent-100) !important;
     }
   }
 
