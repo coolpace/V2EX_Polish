@@ -435,8 +435,21 @@ body {
     }
   }
 
-  .CodeMirror-focused.cm-s-one-dark {
-    background-color: transparent;
+  // 主题内容编辑器。
+  .CodeMirror {
+    .CodeMirror-focused.cm-s-one-dark {
+      background-color: transparent;
+    }
+
+    .CodeMirror-gutters {
+      padding-right: 5px;
+      background-color: var(--v2p-color-bg-input);
+      border-right: 1px solid var(--v2p-color-main-300);
+    }
+
+    .CodeMirror-linenumber {
+      color: var(--v2p-color-main-400);
+    }
   }
 
   .cm-s-one-dark {
