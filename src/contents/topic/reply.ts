@@ -3,6 +3,7 @@ import { bindImageUpload } from '../../components/image-upload'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { emoticons } from '../../constants'
+import { getPreviewContent } from '../../services'
 import { getOS } from '../../utils'
 import { $replyBox, $replyForm, $replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput } from '../helpers'
@@ -111,8 +112,12 @@ function handlingReplyActions() {
 export function handleReply() {
   $replyTextArea.attr('placeholder', '留下对他人有帮助的回复').wrap('<div class="v2p-reply-wrap">')
 
+  const $replyWrap = $('.v2p-reply-wrap')
+  const $replyPreview = $('<div class="v2p-reply-preview">')
+  $replyPreview.hide().insertAfter($replyWrap)
+
   const { uploadBar } = bindImageUpload({
-    $wrapper: $('.v2p-reply-wrap'),
+    $wrapper: $replyWrap,
     $input: $replyTextArea,
     insertText: (text: string) => {
       insertTextToReplyInput(text)
@@ -127,58 +132,109 @@ export function handleReply() {
     },
   })
 
-  const $tools = $(`
+  {
+    // 主题回复的「编辑」和「预览」功能。
+    const $replyTabs = $('<div class="v2p-reply-tabs">')
+    const $replyTabEdit = $('<div class="v2p-reply-tab active">编辑</div>')
+    const $replyTabPreview = $('<div class="v2p-reply-tab">预览</div>')
+
+    $replyTabEdit
+      .on('click', () => {
+        $replyTabEdit.addClass('active')
+        $replyTabPreview.removeClass('active')
+
+        $replyWrap.show()
+        $replyPreview.hide()
+      })
+      .appendTo($replyTabs)
+
+    let lastPreviewText: string | null = null
+
+    $replyTabPreview
+      .on('click', () => {
+        if (!$replyTabPreview.hasClass('active')) {
+          $replyTabPreview.addClass('active')
+          $replyTabEdit.removeClass('active')
+
+          const replyText = $replyTextArea.val()
+
+          if (typeof replyText === 'string') {
+            $replyWrap.hide()
+            $replyPreview.show()
+
+            if (replyText !== lastPreviewText) {
+              $replyPreview.html('正在加载预览...')
+
+              void getPreviewContent({ text: replyText, syntax: 'default' }).then(
+                (renderedContent) => {
+                  $replyPreview.html(renderedContent || '没有可预览的内容')
+                  lastPreviewText = replyText
+                }
+              )
+            }
+          }
+        }
+      })
+      .appendTo($replyTabs)
+
+    $replyBox.find('> .cell:first-of-type > div:first-of-type').replaceWith($replyTabs)
+  }
+
+  {
+    // 主题回复的工具箱。
+    const $tools = $(`
   <div class="v2p-reply-tools-box v2p-hover-btn">
     <span class="v2p-reply-tools-icon"><i data-lucide="package-plus"></i></span>
     工具箱
   </div>
   `)
 
-  const $toolContent = $(`
+    const $toolContent = $(`
   <div class="v2p-reply-tool-content">
     <div class="v2p-reply-tool v2p-reply-tool-encode">文字转 Base64</div>
     <div class="v2p-reply-tool v2p-reply-tool-img">上传图片</div>
   </div>
   `)
 
-  const toolsPopup = createPopup({
-    root: $replyBox,
-    trigger: $tools,
-    content: $toolContent,
-    offsetOptions: { mainAxis: 5, crossAxis: -5 },
-  })
-
-  $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
-    focusReplyInput()
-    toolsPopup.close()
-
-    setTimeout(() => {
-      // 加入下次事件循环，避免阻塞 Popup 关闭。
-      const inputText = window.prompt('输入要加密的字符串，完成后将填写到回复框中：')
-
-      if (inputText) {
-        let encodedText: string | undefined
-
-        try {
-          encodedText = window.btoa(encodeURIComponent(inputText))
-        } catch (err) {
-          const errorTip = '该文本无法编码为 Base64'
-          console.error(err, `${errorTip}，可能的错误原因：文本包含中文。`)
-          createToast({ message: errorTip })
-        }
-
-        if (encodedText) {
-          insertTextToReplyInput(encodedText)
-        }
-      }
+    const toolsPopup = createPopup({
+      root: $replyBox,
+      trigger: $tools,
+      content: $toolContent,
+      offsetOptions: { mainAxis: 5, crossAxis: -5 },
     })
-  })
 
-  $toolContent.find('.v2p-reply-tool-img').on('click', () => {
-    uploadBar.trigger('click')
-  })
+    $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
+      focusReplyInput()
+      toolsPopup.close()
 
-  $replyBox.find('> .flex-row-end').prepend($tools)
+      setTimeout(() => {
+        // 加入下次事件循环，避免阻塞 Popup 关闭。
+        const inputText = window.prompt('输入要加密的字符串，完成后将填写到回复框中：')
+
+        if (inputText) {
+          let encodedText: string | undefined
+
+          try {
+            encodedText = window.btoa(encodeURIComponent(inputText))
+          } catch (err) {
+            const errorTip = '该文本无法编码为 Base64'
+            console.error(err, `${errorTip}，可能的错误原因：文本包含中文。`)
+            createToast({ message: errorTip })
+          }
+
+          if (encodedText) {
+            insertTextToReplyInput(encodedText)
+          }
+        }
+      })
+    })
+
+    $toolContent.find('.v2p-reply-tool-img').on('click', () => {
+      uploadBar.trigger('click')
+    })
+
+    $replyBox.find('> .flex-row-end').prepend($tools)
+  }
 
   // 移除原站的“请尽量让自己的回复能够对别人有帮助”。
   $('.flex-one-row:last-of-type > .gray').text('')

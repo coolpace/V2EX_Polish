@@ -817,6 +817,29 @@ a.v2p-topic-preview-title-link {
   }
 }
 
+.v2p-reply-tabs {
+  display: flex;
+  gap: 0 6px;
+  align-items: center;
+  font-size: 14px;
+
+  .v2p-reply-tab {
+    padding: 2px 3px;
+    cursor: pointer;
+
+    &.active {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+      text-decoration-color: var(--v2p-color-main-600);
+    }
+  }
+
+  .v2p-reply-preview {
+    font-size: 15px;
+  }
+}
+
 .v2p-reply-tools-box {
   position: relative;
   display: inline-flex;
