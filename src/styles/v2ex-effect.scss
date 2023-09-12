@@ -35,6 +35,12 @@ body {
   }
 }
 
+#Main {
+  #reply-box .v2p-reply-preview {
+    font-size: 15px;
+  }
+}
+
 #Main,
 #Rightbar {
   .cell {
@@ -833,10 +839,6 @@ a.v2p-topic-preview-title-link {
       text-underline-offset: 4px;
       text-decoration-color: var(--v2p-color-main-600);
     }
-  }
-
-  .v2p-reply-preview {
-    font-size: 15px;
   }
 }
 

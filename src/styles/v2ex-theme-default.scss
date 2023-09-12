@@ -456,6 +456,13 @@ body {
     background-color: var(--v2p-color-bg-input);
   }
 
+  // 主题内容编辑器。
+  #workspace {
+    overflow: hidden;
+    border: 1px solid var(--button-border-color);
+    border-radius: 8px;
+  }
+
   // 选择主题节点的下拉选择框。
   .select2-container {
     width: 200px !important;
@@ -669,6 +676,28 @@ body {
 
     .cell_ops {
       padding: 15px 5px;
+    }
+
+    &:has(form[action='/write']) {
+      .cell {
+        &:nth-child(1),
+        &:nth-child(2) {
+          border: none;
+        }
+
+        &:has(#syntax-selector) {
+          padding: 8px 0 !important;
+
+          .tab-alt-container {
+            gap: 0 8px;
+          }
+
+          .tab-alt {
+            padding: 4px 2px;
+            border-bottom-width: 2px;
+          }
+        }
+      }
     }
   }
 
