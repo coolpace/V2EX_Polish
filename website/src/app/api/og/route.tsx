@@ -1,15 +1,18 @@
 import { ImageResponse } from 'next/server'
 
+import { OG_HEIGHT, OG_WIDTH } from '~/utils'
+
 export const runtime = 'edge'
 
 export async function GET() {
   await Promise.resolve()
+
   return new ImageResponse(
     (
-      <div tw="flex h-full w-full flex-col items-center text-slate-800 justify-center bg-white">
-        <div tw="flex flex-col justify-center items-center">
-          <div tw="flex mb-16">
-            <span tw="w-10 h-10">
+      <div tw="flex h-full w-full flex-col items-center justify-center bg-white text-slate-800">
+        <div tw="flex flex-col items-center justify-center">
+          <div tw="mb-16 flex">
+            <span tw="h-10 w-10">
               <svg fill="none" version="1.1" viewBox="0 0 80 80">
                 <g>
                   <g>
@@ -33,7 +36,7 @@ export async function GET() {
             </span>
           </div>
 
-          <div tw="text-6xl mb-4 font-bold">V2EX Polish</div>
+          <div tw="mb-4 text-6xl font-bold">V2EX Polish</div>
           <div tw="text-xl font-bold">
             专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验
           </div>
@@ -41,8 +44,8 @@ export async function GET() {
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      width: OG_WIDTH,
+      height: OG_HEIGHT,
     }
   )
 }

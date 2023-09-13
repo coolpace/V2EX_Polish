@@ -13,7 +13,7 @@ author:
 
 ## 安装使用
 
-[👉 在 Chrome 商店中获取](https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
+[👉 在 Chrome 商店中获取](https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
 
 目前仅在 Chrome 和 Edge 中可用，后续会同步支持 Firefox。
 

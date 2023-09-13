@@ -4,7 +4,7 @@ export function InstallButton() {
   return (
     <a
       className="gap-x group flex cursor-pointer gap-y-3 overflow-hidden rounded-[8px] border-2 border-solid border-current px-4 py-2 text-sm font-semibold text-current shadow-[0_5px_0_-2px_var(--v2p-color-main-300)] md:px-8 md:py-3 md:text-base md:font-bold"
-      href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm?hl=zh-CN&authuser=0"
+      href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
       rel="noreferrer"
       target="_blank"
     >

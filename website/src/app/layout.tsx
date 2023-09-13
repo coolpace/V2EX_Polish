@@ -13,8 +13,20 @@ import '~/styles/globals.css'
 export const metadata: Metadata = {
   colorScheme: 'light',
   icons: [
-    { url: '/favicon.svg', type: 'image/svg+xml', media: '(prefers-color-scheme: light)' },
-    { url: '/favicon-dark.svg', type: 'image/svg+xml', media: '(prefers-color-scheme: dark)' },
+    {
+      url: '/favicon.svg',
+      type: 'image/svg+xml',
+      media: '(prefers-color-scheme: light)',
+      sizes: 'any',
+      rel: 'icon',
+    },
+    {
+      url: '/favicon-dark.svg',
+      type: 'image/svg+xml',
+      media: '(prefers-color-scheme: dark)',
+      sizes: 'any',
+      rel: 'icon',
+    },
   ],
   title: getPageTitle(),
   description: '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。',
@@ -75,7 +87,7 @@ export default function RootLayout(props: React.PropsWithChildren) {
 
                   <HoverButton>
                     <Link
-                      href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
+                      href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
                       target="_blank"
                     >
                       应用商店

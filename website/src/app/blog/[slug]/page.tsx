@@ -25,7 +25,7 @@ export const generateMetadata = ({ params }: { params: { slug: string } }): Meta
         title: blog.title,
         description: '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。',
         url: `${HOST}/blog/${blog.slug}`,
-        images: encodeURIComponent(`${HOST}/api/og/blog?title=${blog.title}`),
+        images: `${HOST}/api/og/blog?title=${blog.title}`,
       },
     }
   }
@@ -49,27 +49,32 @@ export default function BlogPage({ params }: { params: { slug: string } }) {
         }}
       />
 
-      <Article>
-        <div className="mb-8">
-          <h1 className="text-xl font-bold lg:text-3xl">{blog.title}</h1>
+      <Article
+        header={
+          <>
+            <h1 className="text-xl font-bold lg:text-3xl">{blog.title}</h1>
 
-          <div className="mt-2 flex items-center gap-x-3 text-sm">
-            <Link className="inline-flex items-center gap-x-2 !border-none" href={blog.author.link}>
-              <Image
-                alt="作者头像"
-                className="!m-0 overflow-hidden rounded-full"
-                height={24}
-                src={blog.author.avatar}
-                width={24}
-              />
-              <span>{blog.author.name}</span>
-            </Link>
-            <time className="text-main-400" dateTime={blog.date}>
-              {format(parseISO(blog.date), 'yyyy-MM-dd')}
-            </time>
-          </div>
-        </div>
-
+            <div className="mt-4 flex items-center gap-x-3 text-sm md:mt-6">
+              <Link
+                className="inline-flex items-center gap-x-2 !border-none"
+                href={blog.author.link}
+              >
+                <Image
+                  alt="作者头像"
+                  className="!m-0 overflow-hidden rounded-full bg-main-200"
+                  height={24}
+                  src={blog.author.avatar}
+                  width={24}
+                />
+                <span>{blog.author.name}</span>
+              </Link>
+              <time className="text-main-400" dateTime={blog.date}>
+                {format(parseISO(blog.date), 'yyyy-MM-dd')}
+              </time>
+            </div>
+          </>
+        }
+      >
         <div dangerouslySetInnerHTML={{ __html: blog.body.html }} />
       </Article>
     </PageContainer>
