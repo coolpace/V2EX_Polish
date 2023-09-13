@@ -407,7 +407,13 @@ body {
     background-color: transparent;
   }
 
-  :is(.topic_content, .reply_content, .v2p-topic-preview-content, .v2p-topic-preview-addons) {
+  :is(
+      .topic_content,
+      .reply_content,
+      .v2p-topic-preview-content,
+      .v2p-topic-preview-addons,
+      .v2p-reply-preview
+    ) {
     a[href^='http'] {
       @include share.link;
 
