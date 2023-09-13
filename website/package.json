@@ -26,11 +26,12 @@
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.2.1",
-    "@tailwindcss/typography": "^0.5.9",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/typography": "^0.5.10",
     "@types/react": "18.2.21",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
-    "prefer-code-style": "1.5.5",
+    "prefer-code-style": "1.5.7",
     "stylelint": "^15.10.3",
     "tailwindcss": "^3.3.3",
     "typescript": "5.2.2"

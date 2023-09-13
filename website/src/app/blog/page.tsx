@@ -10,6 +10,7 @@ import { getPageTitle } from '~/utils'
 
 export const metadata: Metadata = {
   title: getPageTitle('Blog'),
+  description: 'V2P 博客文章，在这里发现更多 V2P 的相关信息。',
 }
 
 export default function BlogIndexPage() {
@@ -33,7 +34,7 @@ export default function BlogIndexPage() {
                 <span className="mt-2 flex items-center gap-x-2 pl-px text-sm">
                   <Image
                     alt="作者头像"
-                    className="overflow-hidden rounded-full"
+                    className="overflow-hidden rounded-full bg-main-200"
                     height={24}
                     src={blog.author.avatar}
                     width={24}

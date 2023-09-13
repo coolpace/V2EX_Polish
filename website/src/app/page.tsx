@@ -56,7 +56,7 @@ export default function Page() {
             <HoverButton>
               <Link
                 className="flex items-center gap-2"
-                href="https://chrome.google.com/webstore/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
+                href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
                 target="_blank"
               >
                 <span className="inline-block h-6 w-6">

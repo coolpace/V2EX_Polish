@@ -1,8 +1,24 @@
 import { ImageResponse } from 'next/server'
 
+import { OG_HEIGHT, OG_WIDTH } from '~/utils'
+
 export const runtime = 'edge'
 
-export function GET(request: Request) {
+function errorResponse(message: string): ImageResponse {
+  return new ImageResponse(
+    (
+      <div tw="flex h-full w-full flex-col items-center justify-center p-4">
+        <div tw="min-w-1/2 flex flex-col items-stretch rounded-xl shadow-2xl">
+          <div tw="rounded-t-xl bg-red-600 px-4 py-2 text-3xl text-white">Error</div>
+          <div tw="rounded-b-xl border border-red-600 bg-white p-4 text-xl">{message}</div>
+        </div>
+      </div>
+    ),
+    { width: OG_WIDTH, height: OG_HEIGHT }
+  )
+}
+
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
 
@@ -10,6 +26,9 @@ export function GET(request: Request) {
     const title = hasTitle
       ? searchParams.get('title')?.slice(0, 100)
       : '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验'
+
+    const res = await fetch('https://cdn.jsdelivr.net/gh/Codennnn/assets/NotoSansSC-Regular.ttf')
+    const fontData = await res.arrayBuffer()
 
     return new ImageResponse(
       (
@@ -40,19 +59,25 @@ export function GET(request: Request) {
               </span>
             </div>
 
-            <div tw="mb-4 text-6xl font-bold">V2EX Polish</div>
-            <div tw="text-xl font-bold">{title}</div>
+            <div tw="mb-4 text-5xl font-bold">V2EX Polish</div>
+            <div tw="text-5xl font-bold">{title}</div>
           </div>
         </div>
       ),
       {
-        width: 1200,
-        height: 630,
+        width: OG_WIDTH,
+        height: OG_HEIGHT,
+        fonts: [
+          {
+            name: 'Noto Sans SC',
+            data: fontData,
+            weight: 400,
+            style: 'normal',
+          },
+        ],
       }
     )
-  } catch {
-    return new Response(`Failed to generate the image`, {
-      status: 500,
-    })
+  } catch (err) {
+    return errorResponse(err instanceof Error ? err.message : '无法加载图片')
   }
 }

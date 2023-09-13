@@ -1,5 +1,5 @@
 ---
-title: V2EX Polish 大量功能更新，即刻体验更好用的 V2EX！
+title: 大量功能更新：更多、更强、更易用，即刻安装体验！
 date: 2023-04-25
 author:
   name: LeoKu

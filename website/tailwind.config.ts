@@ -22,6 +22,7 @@ export default {
           800: 'var(--v2p-color-main-800)',
         },
         foreground: 'var(--v2p-color-foreground)',
+        background: 'var(--v2p-color-background)',
         content: 'var(--v2p-color-content)',
       },
       boxShadow: {
@@ -30,5 +31,5 @@ export default {
     },
   },
 
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/container-queries')],
 } satisfies Config

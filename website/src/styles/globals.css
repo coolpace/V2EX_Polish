@@ -13,9 +13,13 @@
   --v2p-color-main-600: #475569;
   --v2p-color-main-700: #334155;
   --v2p-color-main-800: #1e293b;
+  --v2p-color-accent-100: #d1fae5;
   --v2p-color-content: #fff;
   --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
+  --v2p-color-border: var(--v2p-color-main-200);
   --v2p-color-foreground: var(--v2p-color-main-800);
+  --v2p-color-background: #f2f3f5;
+  --v2p-color-bg-input: var(--v2p-color-main-50);
 }
 
 .theme-dark {
@@ -29,8 +33,12 @@
   --v2p-color-main-600: #9ca3af;
   --v2p-color-main-700: #d1d5db;
   --v2p-color-main-800: #e5e7eb;
+  --v2p-color-accent-100: #065f46;
   --v2p-color-content: #22272e;
+  --v2p-color-border: #444c56;
   --v2p-color-foreground: #adbac7;
+  --v2p-color-background: #1c2128;
+  --v2p-color-bg-input: var(--v2p-color-background);
 }
 
 ::selection {

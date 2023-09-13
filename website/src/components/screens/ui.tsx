@@ -37,7 +37,7 @@ export function Box(props: React.PropsWithChildren<{ className?: string }>) {
 
 export function RightSide(props: React.PropsWithChildren) {
   return (
-    <div className="basis-[270px] flex-col gap-y-6 text-sm md:hidden lg:flex">{props.children}</div>
+    <div className="hidden basis-[270px] flex-col gap-y-6 text-sm lg:flex">{props.children}</div>
   )
 }
 
@@ -80,6 +80,22 @@ export function TopicItemRight(props: { long?: boolean }) {
         )}
       </div>
     </div>
+  )
+}
+
+export function Paragraph({ width }: { width?: 'full' | '4/5' | '3/4' | '1/2' }) {
+  return (
+    <div
+      className={`mt-[7px] h-[14px] rounded-sm bg-gradient-to-b from-main-200 to-main-100 ${
+        width === 'full'
+          ? 'w-full'
+          : width === '4/5'
+          ? 'w-4/5'
+          : width === '3/4'
+          ? 'w-3/4'
+          : 'w-1/2'
+      }`}
+    />
   )
 }
 
