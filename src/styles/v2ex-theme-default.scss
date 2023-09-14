@@ -700,6 +700,11 @@ body {
           .tab-alt {
             padding: 4px 2px;
             border-bottom-width: 2px;
+            transition: none;
+
+            &:not(.active):hover {
+              border-color: transparent;
+            }
           }
         }
       }

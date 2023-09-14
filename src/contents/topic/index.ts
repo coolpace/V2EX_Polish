@@ -1,7 +1,15 @@
+import { createPopup } from '../../components/popup'
+import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
-import { addToReadingList, loadIcons } from '../helpers'
+import {
+  addToReadingList,
+  decodeBase64TopicPage,
+  focusReplyInput,
+  insertTextToReplyInput,
+  loadIcons,
+} from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
 import { handlingPaging } from './paging'
@@ -27,6 +35,9 @@ void (async () => {
         <span class="v2p-tool v2p-hover-btn v2p-tool-scroll-top">
           <span class="v2p-tool-icon"><i data-lucide="chevrons-up"></i></span>回到顶部
         </span>
+        <span class="v2p-tool v2p-hover-btn v2p-tool-more">
+          <span class="v2p-tool-icon"><i data-lucide="package-plus"></i></span>更多功能
+        </span>
       </div>
     `)
 
@@ -45,6 +56,56 @@ void (async () => {
     $tools.find('.v2p-tool-scroll-top').on('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     })
+
+    {
+      const $moreTool = $tools.find('.v2p-tool-more')
+
+      $moreTool
+
+      const $toolContent = $(`
+        <div class="v2p-reply-tool-content">
+          <div class="v2p-reply-tool v2p-reply-tool-decode">解析本页 Base64</div>
+          <div class="v2p-reply-tool v2p-reply-tool-encode">文本转 Base64</div>
+        </div>
+      `)
+
+      const toolsPopup = createPopup({
+        root: $replyBox,
+        trigger: $moreTool,
+        content: $toolContent,
+        offsetOptions: { mainAxis: 5, crossAxis: -5 },
+      })
+
+      $toolContent.find('.v2p-reply-tool-decode').on('click', () => {
+        decodeBase64TopicPage()
+      })
+
+      $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
+        focusReplyInput()
+        toolsPopup.close()
+
+        setTimeout(() => {
+          // 加入下次事件循环，避免阻塞 Popup 关闭。
+          const inputText = window.prompt('输入要加密的字符串，完成后将填写到回复框中：')
+
+          if (inputText) {
+            let encodedText: string | undefined
+
+            try {
+              encodedText = window.btoa(encodeURIComponent(inputText))
+            } catch (err) {
+              const errorTip = '该文本无法编码为 Base64'
+              console.error(err, `${errorTip}，可能的错误原因：文本包含中文。`)
+              createToast({ message: errorTip })
+            }
+
+            if (encodedText) {
+              insertTextToReplyInput(encodedText)
+            }
+          }
+        })
+      })
+    }
 
     $('#Rightbar > .box:has("#member-activity")').addClass('v2p-tool-box').append($tools)
     loadIcons()
