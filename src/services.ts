@@ -323,7 +323,10 @@ export async function getPreviewContent(params: {
     body: formData,
   })
 
-  const renderedContent = await res.text()
-
-  return renderedContent
+  if (res.ok) {
+    const renderedContent = await res.text()
+    return renderedContent
+  } else {
+    throw new Error('预览失败')
+  }
 }

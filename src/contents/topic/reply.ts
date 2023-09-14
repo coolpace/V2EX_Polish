@@ -162,15 +162,30 @@ export function handleReply() {
             $replyWrap.hide()
             $replyPreview.show()
 
-            if (replyText !== lastPreviewText) {
-              $replyPreview.html('正在加载预览...')
+            if (replyText.trim() === '') {
+              $replyPreview.html('没有可预览的内容')
+            } else {
+              const handlePreview = async () => {
+                $replyPreview.html('正在加载预览...')
 
-              void getPreviewContent({ text: replyText, syntax: 'default' }).then(
-                (renderedContent) => {
-                  $replyPreview.html(renderedContent || '没有可预览的内容')
+                try {
+                  const renderedContent = await getPreviewContent({
+                    text: replyText,
+                    syntax: 'default',
+                  })
+                  $replyPreview.html(renderedContent)
                   lastPreviewText = replyText
+                } catch {
+                  $replyPreview.html('预览失败，<a class="v2p-preview-retry">点击重试</a>。')
+                  $replyPreview.find('.v2p-preview-retry').on('click', () => {
+                    void handlePreview()
+                  })
                 }
-              )
+              }
+
+              if (replyText !== lastPreviewText) {
+                void handlePreview()
+              }
             }
           }
         }
