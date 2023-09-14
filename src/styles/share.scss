@@ -174,3 +174,8 @@
   box-shadow: var(--v2p-widget-shadow);
   backdrop-filter: blur(16px);
 }
+
+@mixin underline-text {
+  text-decoration: underline 1px;
+  text-underline-offset: var(--v2p-underline-offset);
+}

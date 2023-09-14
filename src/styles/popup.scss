@@ -498,8 +498,7 @@ hr {
 
 a {
   &:hover {
-    text-underline-offset: var(--v2p-underline-offset);
-    text-decoration: underline;
+    @include share.underline-text;
   }
 
   &.link {

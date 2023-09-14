@@ -30,8 +30,7 @@ body {
     }
 
     &:hover {
-      text-decoration: underline 1px;
-      text-underline-offset: var(--v2p-underline-offset);
+      @include share.underline-text;
     }
   }
 

@@ -878,3 +878,9 @@ a.v2p-topic-preview-title-link {
     }
   }
 }
+
+.v2p-preview-retry {
+  @include share.underline-text;
+
+  cursor: pointer;
+}
