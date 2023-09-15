@@ -5,6 +5,14 @@
 
   &:has(#Wrapper.Night) {
     color-scheme: dark;
+
+    #Top {
+      background-color: transparent;
+    }
+
+    #search-container::before {
+      background-image: url('/static/img/search_icon_light.png');
+    }
   }
 
   html,
@@ -380,8 +388,8 @@ body {
     background: var(--v2p-color-orange-400);
   }
 
-  // https://www.v2ex.com/notes
-  form[action='/notes/new'] {
+  // 记事本：https://www.v2ex.com/notes
+  form[action^='/notes'] {
     .cell {
       background-color: transparent !important;
     }
@@ -597,6 +605,11 @@ body {
     .topic_content {
       font-size: 15px;
     }
+  }
+
+  // 设置页的开关。
+  .onoffswitch label .frame::before {
+    background-color: var(--v2p-color-accent-400);
   }
 }
 
