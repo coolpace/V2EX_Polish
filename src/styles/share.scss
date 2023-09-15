@@ -179,3 +179,10 @@
   text-decoration: underline 1px;
   text-underline-offset: var(--v2p-underline-offset);
 }
+
+@mixin select-box {
+  color: var(--v2p-color-foreground);
+  background-color: var(--v2p-color-background);
+  border: 1px solid var(--v2p-color-border);
+  border-radius: 4px;
+}

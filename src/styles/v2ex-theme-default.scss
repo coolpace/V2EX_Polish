@@ -609,7 +609,19 @@ body {
 
   // 设置页的开关。
   .onoffswitch label .frame::before {
+    color: #fff;
     background-color: var(--v2p-color-accent-400);
+  }
+
+  .onoffswitch label .frame::after {
+    color: var(--v2p-color-main-100);
+    background-color: var(--v2p-color-main-400);
+  }
+
+  select {
+    @include share.select-box;
+
+    padding: 4px 6px;
   }
 }
 
