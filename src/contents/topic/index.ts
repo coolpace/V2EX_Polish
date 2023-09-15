@@ -108,8 +108,12 @@ void (async () => {
         })
       })
 
-      if (options.replyContent.hideRefName) {
-        let isHidden: boolean = options.replyContent.hideRefName
+      const canHideRefName =
+        options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
+
+      if (canHideRefName) {
+        let isHidden = options.replyContent.hideRefName
+
         const $toolToggleDisplay = $(
           '<div class="v2p-reply-tool v2p-reply-tool-decode">显示 @ 用户名</div>'
         )

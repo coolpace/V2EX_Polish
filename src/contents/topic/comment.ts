@@ -345,6 +345,9 @@ export async function handlingComments() {
     }
   }
 
+  const canHideRefName =
+    options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
+
   commentDataList = $commentTableRows
     .map<CommentData>((idx, tr) => {
       const id = $commentCells[idx].id
@@ -383,12 +386,16 @@ export async function handlingComments() {
 
       let contentHtml: CommentData['contentHtml'] = undefined
 
-      if (refMemberNames?.length === 1) {
-        contentHtml = $content.html()
-        const pattern = /(@<a href="\/member\/\w+">[\w\s]+<\/a>)\s+/g
-        const replacement = '<span class="v2p-member-ref">$1</span> '
+      if (refMemberNames) {
+        if (canHideRefName) {
+          if (refMemberNames.length === 1) {
+            contentHtml = $content.html()
+            const pattern = /(@<a href="\/member\/\w+">[\w\s]+<\/a>)\s+/g
+            const replacement = '<span class="v2p-member-ref">$1</span> '
 
-        contentHtml = contentHtml.replace(pattern, replacement)
+            contentHtml = contentHtml.replace(pattern, replacement)
+          }
+        }
       }
 
       return {
@@ -457,7 +464,7 @@ export async function handlingComments() {
 
       processActions($cellDom, currentComment)
 
-      if (options.replyContent.hideRefName) {
+      if (canHideRefName) {
         if (currentComment.contentHtml) {
           $cellDom.find('.reply_content').html(currentComment.contentHtml)
         }
