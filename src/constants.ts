@@ -105,7 +105,7 @@ export const enum Links {
   /** 官网主页 */
   Home = 'https://v2p.app',
   /** 问题反馈页 */
-  Feedback = 'https://github.com/coolpace/V2EX_Polish/discussions/1',
+  Feedback = 'https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new',
 }
 
 export const READABLE_CONTENT_HEIGHT = 250
