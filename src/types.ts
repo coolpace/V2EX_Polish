@@ -37,6 +37,8 @@ export interface Options {
   replyContent: {
     /** 是否自动折叠回复内容。 */
     autoFold?: boolean
+    /** 是否隐藏 @ 的用户名称。 */
+    hideRefName?: boolean
   }
   /** 嵌套回复设置。 */
   nestedReply: {
@@ -217,6 +219,8 @@ export interface CommentData {
   memberAvatar: string
   /** 回复内容 */
   content: string
+  /** 经过处理的回复内容 HTML 文本 */
+  contentHtml?: string
   /** 该回复被感谢的次数 */
   likes: number
   /** 楼层数 */

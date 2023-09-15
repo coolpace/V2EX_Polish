@@ -867,3 +867,11 @@ a.v2p-topic-preview-title-link {
 
   cursor: pointer;
 }
+
+.v2p-member-ref {
+  display: none;
+
+  &.v2p-member-ref-show {
+    display: inline;
+  }
+}
