@@ -359,7 +359,9 @@ export async function handlingComments() {
       const memberLink = $member.prop('href')
       const memberAvatar = $tr.find('.avatar').prop('src')
 
-      const content = $td.find('> .reply_content').text()
+      const $content = $td.find('> .reply_content')
+      const content = $content.text()
+
       const likes = Number($td.find('span.small').text())
       const floor = $td.find('span.no').text()
 
@@ -379,12 +381,23 @@ export async function handlingComments() {
             })
           : undefined
 
+      let contentHtml: CommentData['contentHtml'] = undefined
+
+      if (refMemberNames?.length === 1) {
+        contentHtml = $content.html()
+        const pattern = /(@<a href="\/member\/\w+">[\w\s]+<\/a>)\s+/g
+        const replacement = '<span class="v2p-member-ref">$1</span> '
+
+        contentHtml = contentHtml.replace(pattern, replacement)
+      }
+
       return {
         id,
         memberName,
         memberLink,
         memberAvatar,
         content,
+        contentHtml,
         likes,
         floor,
         index: idx,
@@ -443,6 +456,12 @@ export async function handlingComments() {
       }
 
       processActions($cellDom, currentComment)
+
+      if (options.replyContent.hideRefName) {
+        if (currentComment.contentHtml) {
+          $cellDom.find('.reply_content').html(currentComment.contentHtml)
+        }
+      }
     })
 
     updateCommentCells()

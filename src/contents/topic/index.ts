@@ -58,6 +58,8 @@ void (async () => {
     })
 
     {
+      // 更多功能：
+
       const $moreTool = $tools.find('.v2p-tool-more')
 
       $moreTool
@@ -105,6 +107,26 @@ void (async () => {
           }
         })
       })
+
+      if (options.replyContent.hideRefName) {
+        let isHidden: boolean = options.replyContent.hideRefName
+        const $toolToggleDisplay = $(
+          '<div class="v2p-reply-tool v2p-reply-tool-decode">显示 @ 用户名</div>'
+        )
+        $toolToggleDisplay.on('click', () => {
+          if (isHidden) {
+            $toolToggleDisplay.text('显示 @ 用户名')
+            $('.v2p-member-ref').addClass('v2p-member-ref-show')
+            isHidden = false
+          } else {
+            $toolToggleDisplay.text('隐藏 @ 用户名')
+            $('.v2p-member-ref').removeClass('v2p-member-ref-show')
+            isHidden = true
+          }
+        })
+
+        $toolContent.prepend($toolToggleDisplay)
+      }
     }
 
     $('#Rightbar > .box:has("#member-activity")').addClass('v2p-tool-box').append($tools)

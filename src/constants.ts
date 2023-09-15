@@ -152,6 +152,7 @@ export const defaultOptions: Options = {
   },
   replyContent: {
     autoFold: true,
+    hideRefName: false,
   },
   nestedReply: {
     display: 'indent',
