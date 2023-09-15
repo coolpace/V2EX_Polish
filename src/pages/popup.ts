@@ -184,8 +184,12 @@ function loadSettings() {
   }
 
   {
+    const $localVersion = $('#local-version')
+    const $remoteVersion = $('#remote-version')
+    const $syncTime = $('#last-sync-time')
+
     const syncInfo = storage[StorageKey.SyncInfo]
-    $('#local-version').val(syncInfo?.version ?? defaultValue)
+    $localVersion.val(syncInfo?.version ?? defaultValue)
 
     void getV2P_Settings().then((res) => {
       const settings = res?.config
@@ -194,8 +198,8 @@ function loadSettings() {
       const version = remoteSyncInfo?.version
       const lastSyncTime = remoteSyncInfo?.lastSyncTime
 
-      $('#remote-version').val(version ?? defaultValue)
-      $('#last-sync-time').val(
+      $remoteVersion.val(version ?? defaultValue)
+      $syncTime.val(
         lastSyncTime ? formatTimestamp(lastSyncTime, { format: 'YMDHMS' }) : defaultValue
       )
 
@@ -222,7 +226,10 @@ function loadSettings() {
               try {
                 $syncBtn.text('备份中...').css('pointer-events', 'none')
                 const storage = await getStorage(false)
-                await setV2P_Settings(storage)
+                const newSyncInfo = await setV2P_Settings(storage)
+                $localVersion.val(newSyncInfo.version)
+                $remoteVersion.val(newSyncInfo.version)
+                $syncTime.val(formatTimestamp(newSyncInfo.lastSyncTime, { format: 'YMDHMS' }))
               } finally {
                 $syncBtn.text(txt).css('pointer-events', 'auto')
               }

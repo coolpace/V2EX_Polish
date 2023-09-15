@@ -7,7 +7,7 @@ import type {
   Member,
   Notification,
   Once,
-  StorageItems,
+  SettingsSyncInfo,
   StorageSettings,
   Topic,
   TopicReply,
@@ -190,16 +190,16 @@ export async function getV2P_Settings(): Promise<
 /**
  * 将个人配置备份存储。
  */
-export async function setV2P_Settings(storageSettings: StorageSettings): Promise<void> {
+export async function setV2P_Settings(storageSettings: StorageSettings): Promise<SettingsSyncInfo> {
   const data = await getV2P_Settings()
 
-  const updating = !!data
+  const updating = !!data // 判断操作是「初始化数据」还是「更新数据」。
 
   const formData = new FormData()
 
   const syncVersion = updating ? data.config[StorageKey.SyncInfo]!.version + 1 : 1
 
-  const syncInfo: StorageItems[StorageKey.SyncInfo] = {
+  const syncInfo: SettingsSyncInfo = {
     version: syncVersion,
     lastSyncTime: Date.now(),
   }
@@ -227,6 +227,8 @@ export async function setV2P_Settings(storageSettings: StorageSettings): Promise
   }
 
   await setStorage(StorageKey.SyncInfo, syncInfo)
+
+  return syncInfo
 }
 
 // ==================== 以下为非官方提供的接口 ====================
