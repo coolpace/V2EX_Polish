@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-interface SettingsSyncInfo {
+export interface SettingsSyncInfo {
   version: number
   lastSyncTime: number
 }
