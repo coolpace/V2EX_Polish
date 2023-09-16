@@ -39,10 +39,10 @@ export function handlingContent() {
   {
     const topicBtn = $('.topic_buttons .tb').addClass('v2p-tb v2p-hover-btn')
     const $favoriteBtn = topicBtn.eq(0)
-    $favoriteBtn.append(`<span class="v2p-tb-icon"><i data-lucide="star"></i></span>`)
-    topicBtn.eq(1).append(`<span class="v2p-tb-icon"><i data-lucide="twitter"></i></span>`)
-    topicBtn.eq(2).append(`<span class="v2p-tb-icon"><i data-lucide="eye-off"></i></span>`)
-    topicBtn.eq(3).append(`<span class="v2p-tb-icon"><i data-lucide="heart"></i></span>`)
+    $favoriteBtn.append('<span class="v2p-tb-icon"><i data-lucide="star"></i></span>')
+    topicBtn.eq(1).append('<span class="v2p-tb-icon"><i data-lucide="twitter"></i></span>')
+    topicBtn.eq(2).append('<span class="v2p-tb-icon"><i data-lucide="eye-off"></i></span>')
+    topicBtn.eq(3).append('<span class="v2p-tb-icon"><i data-lucide="heart"></i></span>')
     loadIcons()
 
     const url = $favoriteBtn.attr('href')

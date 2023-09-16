@@ -292,7 +292,7 @@ function initTabs() {
       }
 
       if (readingData && readingData.length > 0) {
-        const $readingList = $(`<ul class="list">`).append(generateReadingItmes(readingData))
+        const $readingList = $('<ul class="list">').append(generateReadingItmes(readingData))
 
         let currentReadingData = readingData
 
@@ -396,7 +396,7 @@ function initTabs() {
         }
 
         if (topicList) {
-          const $topicList = $(`<ul class="list">`).append(generateTopicItmes(topicList))
+          const $topicList = $('<ul class="list">').append(generateTopicItmes(topicList))
           $tabContent.empty().append($topicList)
         }
       }
@@ -443,7 +443,7 @@ function initTabs() {
         fetchNotifications()
           .then(({ result: notifications }) => {
             if (notifications.length > 0) {
-              const $noticeList = $(`<ul class="list">`).append(
+              const $noticeList = $('<ul class="list">').append(
                 notifications
                   .map((notice) => {
                     return `

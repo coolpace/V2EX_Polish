@@ -451,7 +451,7 @@ export async function handlingComments() {
 
       $likesBox
         .find('img[alt="❤️"]')
-        .replaceWith(`<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>`)
+        .replaceWith('<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>')
 
       if (thanked) {
         $likesBox.addClass('v2p-thanked')
