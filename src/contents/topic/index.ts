@@ -119,13 +119,13 @@ void (async () => {
         )
         $toolToggleDisplay.on('click', () => {
           if (isHidden) {
-            $toolToggleDisplay.text('显示 @ 用户名')
-            $('.v2p-member-ref').addClass('v2p-member-ref-show')
             isHidden = false
-          } else {
             $toolToggleDisplay.text('隐藏 @ 用户名')
-            $('.v2p-member-ref').removeClass('v2p-member-ref-show')
+            $('.v2p-member-ref').addClass('v2p-member-ref-show')
+          } else {
             isHidden = true
+            $toolToggleDisplay.text('显示 @ 用户名')
+            $('.v2p-member-ref').removeClass('v2p-member-ref-show')
           }
         })
 
