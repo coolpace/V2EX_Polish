@@ -20,7 +20,7 @@ void (async () => {
 
       // 如果检测到本地设置与用户偏好设置不一致：
       if (shouldSync) {
-        const href = $toggle.attr('href')
+        const href = $toggle.attr('href') // '/settings/night/toggle'
 
         // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
         if (typeof href === 'string') {
