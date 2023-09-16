@@ -1037,8 +1037,9 @@ body {
 
   .topic_content,
   .reply_content {
+    @include share.text-content;
+
     color: currentColor;
-    font-size: 15.4px;
 
     // 被 @ 的用户
     a[href^='/member'] {
