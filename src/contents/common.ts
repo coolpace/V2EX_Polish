@@ -2,16 +2,65 @@ import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
 import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
-import { postTask } from './helpers'
+import { $wrapper } from './globals'
+import { loadIcons, postTask } from './helpers'
 
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
+  const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
+
+  if (options.theme.autoSwitch) {
+    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+    const toggleTheme = (preferDark: boolean) => {
+      const shouldSync =
+        (preferDark && !$wrapper.hasClass('Night')) || (!preferDark && $wrapper.hasClass('Night'))
+
+      // 如果检测到本地设置与用户偏好设置不一致：
+      if (shouldSync) {
+        const href = $toggle.attr('href')
+
+        // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
+        if (typeof href === 'string') {
+          fetch(href)
+        }
+
+        // 同时修改切换按钮。
+        if (preferDark) {
+          $toggle.prop('title', '使用浅色主题')
+          $toggle.html('<i data-lucide="sun"></i>')
+        } else {
+          $toggle.prop('title', '使用深色主题')
+          $toggle.html('<i data-lucide="moon"></i>')
+        }
+        loadIcons()
+      }
+
+      if (preferDark) {
+        $('body').addClass('v2p-theme-dark')
+        $wrapper.addClass('Night')
+      } else {
+        $('body').removeClass('v2p-theme-dark')
+        $wrapper.removeClass('Night')
+      }
+    }
+
+    toggleTheme(perfersDark.matches)
+
+    perfersDark.addEventListener('change', ({ matches }) => {
+      toggleTheme(matches)
+    })
+
+    $toggle.on('click', () => {
+      // 当用户主动设置颜色主题后，取消自动跟随系统。
+      void setStorage(StorageKey.Options, deepMerge(options, { theme: { autoSwitch: false } }))
+    })
+  }
+
   {
     // 更换主题颜色切换的按钮。
-
-    const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
     const $toggleImg = $toggle.find('> img')
     const alt = $toggleImg.prop('alt')
@@ -21,31 +70,7 @@ void (async () => {
       $toggleImg.replaceWith('<i data-lucide="moon"></i>')
     } else if (alt === 'Dark') {
       $toggle.prop('title', '使用浅色主题')
-      $toggleImg.replaceWith(`<i data-lucide="sun"></i>`)
-    }
-
-    if (options.theme.autoSwitch) {
-      const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
-
-      if (perfersDark.matches) {
-        $('body').addClass('v2p-theme-dark')
-        $('#Wrapper').addClass('Night')
-      }
-
-      perfersDark.addEventListener('change', ({ matches }) => {
-        if (matches) {
-          $('body').addClass('v2p-theme-dark')
-          $('#Wrapper').addClass('Night')
-        } else {
-          $('body').removeClass('v2p-theme-dark')
-          $('#Wrapper').removeClass('Night')
-        }
-      })
-
-      $toggle.on('click', () => {
-        // 当用户主动设置颜色主题后，取消自动跟随系统。
-        void setStorage(StorageKey.Options, deepMerge(options, { theme: { autoSwitch: false } }))
-      })
+      $toggleImg.replaceWith('<i data-lucide="sun"></i>')
     }
   }
 
