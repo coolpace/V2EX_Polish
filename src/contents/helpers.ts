@@ -16,9 +16,9 @@ import {
 
 import { createToast } from '../components/toast'
 import {
-  type BiliEmoji,
   biliEmojiLink,
   MessageFrom,
+  type PopularEmoji,
   READING_CONTENT_LIMIT,
   StorageKey,
 } from '../constants'
@@ -317,7 +317,7 @@ export function loadIcons() {
 
 export function transformEmoji(textValue: string) {
   return textValue.replace(/\[[^\]]+\]/g, (x) => {
-    const emojiLink = biliEmojiLink[x as BiliEmoji]
+    const emojiLink = biliEmojiLink[x as PopularEmoji]
 
     if (typeof emojiLink === 'string') {
       return `${emojiLink} `
