@@ -1,7 +1,7 @@
 import { createButton } from '../../components/button'
 import { bindImageUpload } from '../../components/image-upload'
 import { createPopup } from '../../components/popup'
-import { type BiliEmoji, biliEmojiLink, emoticons } from '../../constants'
+import { biliEmojiLink, emoticons, type PopularEmoji } from '../../constants'
 import { getPreviewContent } from '../../services'
 import { getOS } from '../../utils'
 import { $replyBox, $replyForm, $replyTextArea } from '../globals'
@@ -54,9 +54,9 @@ function handlingReplyActions() {
         emojiGroup.list.map((emoji) => {
           const emoticon = emoticonSpan.clone()
 
-          if (emojiGroup.title === 'Bilibili') {
-            const emojiLink = biliEmojiLink[emoji as BiliEmoji]
-            emoticon.html(`<img src="${emojiLink}" />`)
+          if (emojiGroup.title === '流行') {
+            const emojiLink = biliEmojiLink[emoji as PopularEmoji]
+            emoticon.html(`<img src="${emojiLink}" />`).prop('title', emoji)
           } else {
             emoticon.text(emoji)
           }

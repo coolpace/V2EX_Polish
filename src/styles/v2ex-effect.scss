@@ -571,12 +571,14 @@ a.v2p-topic-preview-title-link {
 .v2p-emoji-list {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 6px;
+  gap: 5px;
   font-size: 20px;
 }
 
 .v2p-emoji {
-  padding: 2px;
+  height: 20px;
+  padding: 3px;
+  line-height: 20px;
   border-radius: 4px;
   cursor: pointer;
 
