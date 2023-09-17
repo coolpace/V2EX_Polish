@@ -15,7 +15,13 @@ import {
 } from 'lucide'
 
 import { createToast } from '../components/toast'
-import { MessageFrom, READING_CONTENT_LIMIT, StorageKey } from '../constants'
+import {
+  type BiliEmoji,
+  biliEmojiLink,
+  MessageFrom,
+  READING_CONTENT_LIMIT,
+  StorageKey,
+} from '../constants'
 import type {
   Member,
   MemberTag,
@@ -307,4 +313,16 @@ export function loadIcons() {
       },
     })
   }, 0)
+}
+
+export function transformEmoji(textValue: string) {
+  return textValue.replace(/\[[^\]]+\]/g, (x) => {
+    const emojiLink = biliEmojiLink[x as BiliEmoji]
+
+    if (typeof emojiLink === 'string') {
+      return `${emojiLink} `
+    }
+
+    return x
+  })
 }

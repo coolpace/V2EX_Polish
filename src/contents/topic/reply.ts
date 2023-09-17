@@ -1,11 +1,11 @@
 import { createButton } from '../../components/button'
 import { bindImageUpload } from '../../components/image-upload'
 import { createPopup } from '../../components/popup'
-import { emoticons } from '../../constants'
+import { type BiliEmoji, biliEmojiLink, emoticons } from '../../constants'
 import { getPreviewContent } from '../../services'
 import { getOS } from '../../utils'
 import { $replyBox, $replyForm, $replyTextArea } from '../globals'
-import { focusReplyInput, insertTextToReplyInput } from '../helpers'
+import { focusReplyInput, insertTextToReplyInput, transformEmoji } from '../helpers'
 
 function handlingReplyActions() {
   const os = getOS()
@@ -18,6 +18,12 @@ function handlingReplyActions() {
   }).replaceAll($replyBox.find('input[type="submit"]'))
 
   $replyForm.on('submit', () => {
+    const replyVal = $replyTextArea.val()
+
+    if (typeof replyVal === 'string') {
+      $replyTextArea.val(transformEmoji(replyVal))
+    }
+
     $replyBtn.text('提交回复中...').prop('disabled', true)
 
     setTimeout(() => {
@@ -32,25 +38,32 @@ function handlingReplyActions() {
     }
   })
 
+  // 添加表情插入功能。
   {
-    // 添加表情插入功能。
     const emoticonGroup = $('<div class="v2p-emoji-group">')
     const emoticonList = $('<div class="v2p-emoji-list">')
     const emoticonSpan = $('<span class="v2p-emoji">')
 
     const groups = emoticons.map((emojiGroup) => {
       const group = emoticonGroup.clone()
+      const list = emoticonList.clone()
 
       group.append(`<div class="v2p-emoji-title">${emojiGroup.title}</div>`)
 
-      const list = emoticonList.clone().append(
+      list.append(
         emojiGroup.list.map((emoji) => {
-          const emoticon = emoticonSpan
-            .clone()
-            .text(emoji)
-            .on('click', () => {
-              insertTextToReplyInput(emoji)
-            })
+          const emoticon = emoticonSpan.clone()
+
+          if (emojiGroup.title === 'Bilibili') {
+            const emojiLink = biliEmojiLink[emoji as BiliEmoji]
+            emoticon.html(`<img src="${emojiLink}" />`)
+          } else {
+            emoticon.text(emoji)
+          }
+
+          emoticon.on('click', () => {
+            insertTextToReplyInput(emoji)
+          })
           return emoticon
         })
       )
@@ -99,8 +112,8 @@ function handlingReplyActions() {
     })
   }
 
+  // 给「取消回复框停靠」、「回到顶部」按钮添加样式。
   {
-    // 给「取消回复框停靠」、「回到顶部」按钮添加样式。
     $replyBox
       .find('#undock-button, #undock-button + a')
       .addClass('v2p-hover-btn')
@@ -131,8 +144,8 @@ export function handleReply() {
     },
   })
 
+  // 主题回复的「编辑」和「预览」功能。
   {
-    // 主题回复的「编辑」和「预览」功能。
     const $replyTabs = $('<div class="v2p-reply-tabs">')
     const $replyTabEdit = $('<div class="v2p-reply-tab active">编辑</div>')
     const $replyTabPreview = $('<div class="v2p-reply-tab">预览</div>')
@@ -164,16 +177,18 @@ export function handleReply() {
             if (replyText.trim() === '') {
               $replyPreview.html('没有可预览的内容')
             } else {
+              const textToPreview = transformEmoji(replyText)
+
               const handlePreview = async () => {
                 $replyPreview.html('正在加载预览...')
 
                 try {
                   const renderedContent = await getPreviewContent({
-                    text: replyText,
+                    text: textToPreview,
                     syntax: 'default',
                   })
                   $replyPreview.html(renderedContent)
-                  lastPreviewText = replyText
+                  lastPreviewText = textToPreview
                 } catch {
                   $replyPreview.html('预览失败，<a class="v2p-preview-retry">点击重试</a>。')
                   $replyPreview.find('.v2p-preview-retry').on('click', () => {

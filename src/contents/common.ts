@@ -59,9 +59,8 @@ void (async () => {
     })
   }
 
+  // 更换主题颜色切换的按钮。
   {
-    // 更换主题颜色切换的按钮。
-
     const $toggleImg = $toggle.find('> img')
     const alt = $toggleImg.prop('alt')
 
@@ -74,13 +73,13 @@ void (async () => {
     }
   }
 
+  // 为顶部导航栏的按钮添加 hover 效果。
   {
-    // 为顶部导航栏的按钮添加 hover 效果。
     $('#Top .site-nav .tools > .top').addClass('v2p-hover-btn')
   }
 
+  // 增加 SOV2EX 作为搜索引擎选项。
   {
-    // 增加 SOV2EX 作为搜索引擎选项。
     const $searchItem = $('<a class="search-item cell" target="_blank">')
 
     $searchItem
@@ -130,8 +129,8 @@ void (async () => {
     }
   }
 
+  // 添加页面底部相关信息。
   {
-    // 添加页面底部相关信息。
     const $extraFooter = $(`
     <div class="v2p-footer">
       <div class="v2p-footer-text">扩展自 V2EX Polish </div>
