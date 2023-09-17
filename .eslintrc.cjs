@@ -17,6 +17,7 @@ module.exports = {
 
   ignorePatterns: [
     'dist/**/*',
+    'build*/**/*',
     'extension/scripts/**/*.min.js',
     'src/user-scripts/style.ts',
     'website/**/*',

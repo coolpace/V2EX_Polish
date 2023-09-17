@@ -6,5 +6,5 @@
     "moduleResolution": "Bundler",
     "verbatimModuleSyntax": false
   },
-  "include": ["./tsup.config.ts", "src/**/*"]
+  "include": ["./tsup.config.ts", "src/**/*", "scripts/**/*.ts"]
 }
