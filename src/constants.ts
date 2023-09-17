@@ -23,8 +23,73 @@ export const enum Menu {
   Options = 'menu/options',
 }
 
+export const enum BiliEmoji {
+  脱单doge = '[脱单doge]',
+  辣眼睛 = '[辣眼睛]',
+  跪了 = '[跪了]',
+  疑惑 = '[疑惑]',
+  捂脸 = '[捂脸]',
+  哦呼 = '[哦呼]',
+  响指 = '[响指]',
+  傲娇 = '[傲娇]',
+  思考 = '[思考]',
+  吃瓜 = '[吃瓜]',
+  无语 = '[无语]',
+  doge = '[doge]',
+  大哭 = '[大哭]',
+  酸了 = '[酸了]',
+  打call = '[打call]',
+  歪嘴 = '[歪嘴]',
+  星星眼 = '[星星眼]',
+  OK = '[OK]',
+}
+
+export const biliEmojiLink = {
+  [BiliEmoji.脱单doge]: 'https://i.imgur.com/L62ZP7V.png',
+  [BiliEmoji.doge]: 'https://i.imgur.com/agAJ0Rd.png',
+  [BiliEmoji.辣眼睛]: 'https://i.imgur.com/n119Wvk.png',
+  [BiliEmoji.疑惑]: 'https://i.imgur.com/U3hKhrT.png',
+  [BiliEmoji.捂脸]: 'https://i.imgur.com/14cwgsI.png',
+  [BiliEmoji.哦呼]: 'https://i.imgur.com/km62MY2.png',
+  [BiliEmoji.傲娇]: 'https://i.imgur.com/TkdeN49.png',
+  [BiliEmoji.思考]: 'https://i.imgur.com/MAyk5GN.png',
+  [BiliEmoji.吃瓜]: 'https://i.imgur.com/Ug1iMq4.png',
+  [BiliEmoji.无语]: 'https://i.imgur.com/e1q9ScT.png',
+  [BiliEmoji.大哭]: 'https://i.imgur.com/YGIx7lh.png',
+  [BiliEmoji.酸了]: 'https://i.imgur.com/5FDsp6L.png',
+  [BiliEmoji.打call]: 'https://i.imgur.com/pmNOo2w.png',
+  [BiliEmoji.歪嘴]: 'https://i.imgur.com/XzEYBoY.png',
+  [BiliEmoji.星星眼]: 'https://i.imgur.com/2spsghH.png',
+  [BiliEmoji.OK]: 'https://i.imgur.com/6DMydmQ.png',
+  [BiliEmoji.跪了]: 'https://i.imgur.com/TYtySHv.png',
+  [BiliEmoji.响指]: 'https://i.imgur.com/Ac88cMm.png',
+} as const satisfies Record<BiliEmoji, string>
+
 /** 表情数据 */
 export const emoticons = [
+  {
+    title: 'Bilibili',
+    list: [
+      BiliEmoji.脱单doge,
+      BiliEmoji.doge,
+      BiliEmoji.打call,
+      BiliEmoji.星星眼,
+      BiliEmoji.吃瓜,
+      BiliEmoji.OK,
+      BiliEmoji.哦呼,
+      BiliEmoji.思考,
+      BiliEmoji.疑惑,
+      BiliEmoji.辣眼睛,
+      BiliEmoji.傲娇,
+      BiliEmoji.捂脸,
+      BiliEmoji.无语,
+      BiliEmoji.大哭,
+      BiliEmoji.酸了,
+      BiliEmoji.歪嘴,
+      BiliEmoji.跪了,
+      BiliEmoji.响指,
+    ],
+  },
   {
     title: '小黄脸',
     list: [

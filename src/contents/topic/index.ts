@@ -137,8 +137,8 @@ void (async () => {
     loadIcons()
   }
 
+  // 按 Esc 隐藏回复框。
   {
-    // 按 Esc 隐藏回复框。
     $(document).on('keydown', (ev) => {
       if (!ev.isDefaultPrevented()) {
         if (ev.key === 'Escape') {

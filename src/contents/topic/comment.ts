@@ -415,9 +415,8 @@ export async function handlingComments() {
     })
     .get()
 
+  // 此区块的逻辑需要在处理嵌套评论前执行。
   {
-    // 此区块的逻辑需要在处理嵌套评论前执行。
-
     const membersHasSetTags = new Set<Member['username']>()
 
     $commentCells.each((i, cellDom) => {
