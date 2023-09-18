@@ -45,7 +45,9 @@ export function createModel(props: CreateModelProps): ModelControl {
 
   const $main = $('<div class="v2p-model-main">')
     .append($header, $content)
-    .on('click', (ev) => ev.stopPropagation())
+    .on('click', (ev) => {
+      ev.stopPropagation()
+    })
 
   const $container = $mask.append($main).hide()
 

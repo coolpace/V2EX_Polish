@@ -3,11 +3,12 @@ import { hoverDelay, type PopupControl } from '../../components/popup'
 import { fetchUserInfo } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { formatTimestamp } from '../../utils'
+import { openTagsSetter } from './content'
 
 const memberDataCache = new Map<Member['username'], Member>()
 
 interface ProcessAvatar {
-  $avatar: JQuery
+  $trigger: JQuery
   popupControl: PopupControl
   commentData: Pick<CommentData, 'memberName' | 'memberAvatar' | 'memberLink'>
   onSetTagsClick?: () => void
@@ -18,7 +19,7 @@ interface ProcessAvatar {
  *  - 鼠标悬浮头像会展示该用户的信息。
  */
 export function processAvatar(params: ProcessAvatar) {
-  const { $avatar, popupControl, commentData, onSetTagsClick: onSetTags } = params
+  const { $trigger, popupControl, commentData, onSetTagsClick: onSetTags } = params
 
   const { memberName, memberAvatar, memberLink } = commentData
 
@@ -26,7 +27,7 @@ export function processAvatar(params: ProcessAvatar) {
 
   const handleOver = () => {
     popupControl.close()
-    popupControl.open($avatar)
+    popupControl.open($trigger)
 
     const $content = $(`
       <div class="v2p-member-card">
@@ -58,6 +59,7 @@ export function processAvatar(params: ProcessAvatar) {
     createButton({ children: '添加用户标签' })
       .on('click', () => {
         popupControl.close()
+        openTagsSetter(memberName)
         onSetTags?.()
       })
       .appendTo($('.v2p-member-card-actions'))
@@ -104,7 +106,7 @@ export function processAvatar(params: ProcessAvatar) {
 
   let isOver = false
 
-  $avatar
+  $trigger
     .on('mouseover', () => {
       isOver = true
       setTimeout(() => {

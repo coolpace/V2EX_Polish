@@ -19,7 +19,7 @@ import {
 } from '../globals'
 import { insertTextToReplyInput, loadIcons } from '../helpers'
 import { processAvatar } from './avatar'
-import { openTagsSetter, processReplyContent, updateMemberTag } from './content'
+import { processReplyContent, updateMemberTag } from './content'
 
 /** 每一页的回复列表数据 */
 let commentDataList: readonly CommentData[] = []
@@ -431,12 +431,9 @@ export async function handlingComments() {
       const { memberName, thanked } = currentComment
 
       processAvatar({
-        $avatar: $cellDom.find('.avatar'),
+        $trigger: $cellDom.find('.avatar'),
         popupControl,
         commentData: currentComment,
-        onSetTagsClick: () => {
-          openTagsSetter(memberName)
-        },
       })
 
       if (memberName === loginName) {
@@ -595,6 +592,7 @@ export async function handlingComments() {
 
   {
     const $opAvatar = $topicHeader.find('.avatar')
+    const $opName = $topicHeader.find('.gray a[href^="/member"]')
     const memberName = $opAvatar.prop('alt')
     const memberAvatar = $opAvatar.prop('src')
     const memberLink = $topicHeader.find('.fr > a').prop('href')
@@ -605,12 +603,15 @@ export async function handlingComments() {
       typeof memberLink === 'string'
     ) {
       processAvatar({
-        $avatar: $opAvatar,
+        $trigger: $opAvatar,
         popupControl,
         commentData: { memberName, memberAvatar, memberLink },
-        onSetTagsClick: () => {
-          openTagsSetter(memberName)
-        },
+      })
+
+      processAvatar({
+        $trigger: $opName,
+        popupControl,
+        commentData: { memberName, memberAvatar, memberLink },
       })
     }
   }
