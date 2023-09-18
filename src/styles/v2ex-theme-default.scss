@@ -290,7 +290,7 @@ body {
   }
 
   .dock_area {
-    background: var(--v2p-color-main-200);
+    background: var(--v2p-color-main-100);
   }
 
   .member-activity-bar {
@@ -797,7 +797,7 @@ body {
       text-decoration: none;
 
       &:visited {
-        color: var(--v2p-color-font-secondary);
+        color: var(--v2p-color-main-400);
       }
     }
 
@@ -1154,7 +1154,7 @@ body {
       }
 
       .topic-link:visited {
-        color: var(--v2p-color-foreground);
+        color: var(--v2p-color-main-400);
       }
     }
   }
