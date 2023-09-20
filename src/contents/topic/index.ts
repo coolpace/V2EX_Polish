@@ -1,6 +1,6 @@
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
-import { StorageKey } from '../../constants'
+import { Links, StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $replyTextArea } from '../globals'
 import {
@@ -57,9 +57,8 @@ void (async () => {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     })
 
+    // 更多功能：
     {
-      // 更多功能：
-
       const $moreTool = $tools.find('.v2p-tool-more')
 
       $moreTool
@@ -68,6 +67,7 @@ void (async () => {
         <div class="v2p-reply-tool-content">
           <div class="v2p-reply-tool v2p-reply-tool-decode">解析本页 Base64</div>
           <div class="v2p-reply-tool v2p-reply-tool-encode">文本转 Base64</div>
+          <div class="v2p-reply-tool v2p-reply-tool-share">生成分享图片</div>
         </div>
       `)
 
@@ -106,6 +106,15 @@ void (async () => {
             }
           }
         })
+      })
+
+      $toolContent.find('.v2p-reply-tool-share').on('click', () => {
+        const splits = window.location.pathname.split('/')
+        const topicId = splits.at(-1)
+
+        if (topicId && splits.at(-2) === 't') {
+          window.open(`${Links.Home}/share/${topicId}`, '_blank')
+        }
       })
 
       const canHideRefName =
