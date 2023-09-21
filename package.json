@@ -8,7 +8,7 @@
     "dev": "run-p watch run:chrome",
     "dev:firefox": "run-p watch run:firefox",
     "dev:site": "live-server --entry-file=website/index.html --no-browser",
-    "run:chrome": "web-ext run -t chromium --source-dir ./extension",
+    "run:chrome": "web-ext run -t chromium --source-dir ./extension --chromium-profile ./extension/chrome-profile --profile-create-if-missing",
     "run:firefox": "web-ext run --source-dir ./extension",
     "build": "bun build:all && bun scripts/build.ts",
     "build:all": "run-p build:style build:ext build:userscript",
