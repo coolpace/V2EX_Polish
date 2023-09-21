@@ -900,6 +900,7 @@ body {
 
     .reply_content {
       padding-bottom: 10px;
+      line-height: 1.5; // 回复内容行距可以紧凑一点。
     }
 
     > table {
@@ -958,7 +959,6 @@ body {
         /* 嵌套回复的内容 */
         .reply_content {
           padding-right: 5px;
-          font-size: 15px;
         }
       }
 
