@@ -15,4 +15,4 @@ node_modules
 !/extension/scripts/polyfill.js
 
 # web-ext 产生的浏览器配置
-/extension/*-profile
+/*-profile
