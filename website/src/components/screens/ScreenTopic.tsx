@@ -91,19 +91,19 @@ export function ScreenTopic() {
             </div>
 
             <div className="flex items-center gap-x-6 px-1 py-2 text-xs text-main-600">
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 whitespace-nowrap">
                 <StarIcon size={15} />
                 加入收藏
               </span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 whitespace-nowrap">
                 <TwitterIcon size={15} />
                 Tweet
               </span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 whitespace-nowrap">
                 <EyeOffIcon size={15} />
                 忽略主题
               </span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 whitespace-nowrap">
                 <HeartIcon size={15} />
                 感谢
               </span>
@@ -119,21 +119,21 @@ export function ScreenTopic() {
           <Box className="px-3">
             <div className="flex items-center px-2 py-5 text-sm text-main-600">
               <span className="flex items-center gap-x-2">
-                <span>125 条回复</span>
+                <span className="whitespace-nowrap">125 条回复</span>
                 <span className="text-xl font-bold">·</span>
-                <span>34 条热门回复</span>
+                <span className="whitespace-nowrap">34 条热门回复</span>
               </span>
 
               <span className="ml-auto flex items-center gap-x-2 text-xs">
-                <span className="inline-flex items-center gap-x-1 rounded bg-main-200 px-2 py-1">
+                <span className="inline-flex items-center gap-x-1 whitespace-nowrap rounded bg-main-200 px-2 py-1">
                   <TagIcon size={12} />
                   插件
                 </span>
-                <span className="inline-flex items-center gap-x-1 rounded bg-main-200 px-2 py-1">
+                <span className="inline-flex items-center gap-x-1 whitespace-nowrap rounded bg-main-200 px-2 py-1">
                   <TagIcon size={12} />
                   程序
                 </span>
-                <span className="inline-flex items-center gap-x-1 rounded bg-main-200 px-2 py-1">
+                <span className="inline-flex items-center gap-x-1 whitespace-nowrap rounded bg-main-200 px-2 py-1">
                   <TagIcon size={12} />
                   开发
                 </span>

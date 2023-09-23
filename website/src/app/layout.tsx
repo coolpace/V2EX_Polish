@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
 import Link from 'next/link'
+import { Theme } from '@radix-ui/themes'
 import { Analytics } from '@vercel/analytics/react'
 
 import { HoverButton } from '~/components/HoverButton'
@@ -9,6 +10,7 @@ import { Nav } from '~/components/Nav'
 import { getPageTitle } from '~/utils'
 
 import '~/styles/globals.css'
+import '@radix-ui/themes/styles.css'
 
 export const metadata: Metadata = {
   colorScheme: 'light',
@@ -54,52 +56,54 @@ export default function RootLayout(props: React.PropsWithChildren) {
       lang="zh-Hans-CN"
     >
       <body className="relative m-0 h-full overflow-y-auto">
-        <header className="relative z-50 flex justify-center py-4 md:px-4 md:py-6">
-          <Nav />
-        </header>
+        <Theme className="h-full">
+          <header className="relative z-50 flex justify-center py-4 md:px-4 md:py-6">
+            <Nav />
+          </header>
 
-        <main className="px-4 py-6 md:p-12">{props.children}</main>
+          <main className="px-4 py-6 md:p-12">{props.children}</main>
 
-        <footer className="sticky top-full border-t border-solid border-main-200">
-          <div className="px-4 pt-5 md:px-12">
-            <div className="mx-auto max-w-container md:px-36">
-              <div className="flex justify-between py-3 md:py-8">
-                <div className="inline-flex items-center">
-                  <div className="h-3 w-3 md:h-4 md:w-4">
-                    <Logo />
+          <footer className="sticky top-full border-t border-solid border-main-200">
+            <div className="px-4 pt-5 md:px-12">
+              <div className="mx-auto max-w-container md:px-36">
+                <div className="flex justify-between py-3 md:py-8">
+                  <div className="inline-flex items-center">
+                    <div className="h-3 w-3 md:h-4 md:w-4">
+                      <Logo />
+                    </div>
+                    <span className="ml-2 text-sm/none font-semibold md:text-base/none">
+                      V2EX Polish
+                    </span>
                   </div>
-                  <span className="ml-2 text-sm/none font-semibold md:text-base/none">
-                    V2EX Polish
-                  </span>
-                </div>
 
-                <div className="inline-flex items-center gap-x-3 text-xs text-main-600 md:text-sm">
-                  <HoverButton>
-                    <Link
-                      href="https://github.com/coolpace/V2EX_Polish/discussions/1"
-                      target="_blank"
-                    >
-                      使用反馈
-                    </Link>
-                  </HoverButton>
+                  <div className="inline-flex items-center gap-x-3 text-xs text-main-600 md:text-sm">
+                    <HoverButton>
+                      <Link
+                        href="https://github.com/coolpace/V2EX_Polish/discussions/1"
+                        target="_blank"
+                      >
+                        使用反馈
+                      </Link>
+                    </HoverButton>
 
-                  <span className="text-xl font-bold text-main-400">·</span>
+                    <span className="text-xl font-bold text-main-400">·</span>
 
-                  <HoverButton>
-                    <Link
-                      href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
-                      target="_blank"
-                    >
-                      应用商店
-                    </Link>
-                  </HoverButton>
+                    <HoverButton>
+                      <Link
+                        href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
+                        target="_blank"
+                      >
+                        应用商店
+                      </Link>
+                    </HoverButton>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </footer>
+          </footer>
 
-        <Analytics />
+          <Analytics />
+        </Theme>
       </body>
     </html>
   )

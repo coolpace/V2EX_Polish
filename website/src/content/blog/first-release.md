@@ -52,7 +52,7 @@ author:
 
 ## 问题反馈
 
-如果你在使用过程中遇到任何问题，或者有任何想法，请在[这里](https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new)与我们讨论，也可以加入我们的[Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)进行快速交流。
+如果你在使用过程中遇到任何问题，或者有任何想法，请在[这里](https://github.com/coolpace/V2EX_Polish/discussions/1)与我们讨论，也可以加入我们的[Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)进行快速交流。
 
 ## 注意事项
 
