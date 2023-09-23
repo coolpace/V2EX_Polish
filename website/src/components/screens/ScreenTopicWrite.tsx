@@ -21,8 +21,10 @@ export function ScreenTopicWrite() {
 
           <div className="flex items-center py-2">
             <div>
-              <span className="border-b-2 border-solid border-current px-px pb-px pt-1">正文</span>
-              <span className="ml-3 border-b-2 border-solid border-transparent px-px pb-px pt-1">
+              <span className="whitespace-nowrap border-b-2 border-solid border-current px-px pb-px pt-1">
+                正文
+              </span>
+              <span className="ml-3 whitespace-nowrap border-b-2 border-solid border-transparent px-px pb-px pt-1">
                 预览
               </span>
             </div>

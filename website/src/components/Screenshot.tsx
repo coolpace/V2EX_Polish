@@ -23,10 +23,13 @@ export function Screenshot() {
 
   const [currentDisplay, setCurrentDisplay] = useState<ScreenName>('home')
 
+  const timer = useRef<number>()
   const mouseOver = useRef(false)
 
-  useEffect(() => {
-    const timer = window.setInterval(() => {
+  const setupInterval = () => {
+    window.clearInterval(timer.current)
+
+    timer.current = window.setInterval(() => {
       if (!mouseOver.current) {
         setCurrentDisplay((display) => {
           if (display === 'home') {
@@ -39,9 +42,13 @@ export function Screenshot() {
         })
       }
     }, 2500)
+  }
+
+  useEffect(() => {
+    setupInterval()
 
     return () => {
-      window.clearInterval(timer)
+      window.clearInterval(timer.current)
     }
   }, [])
 
@@ -111,6 +118,7 @@ export function Screenshot() {
             }`}
             onClick={() => {
               setCurrentDisplay(name)
+              setupInterval()
             }}
           />
         ))}

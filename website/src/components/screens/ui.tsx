@@ -18,7 +18,9 @@ export function Wrapper(props: React.PropsWithChildren) {
 export function Content(props: React.PropsWithChildren) {
   return (
     <div className="px-4 py-6">
-      <div className="mx-auto flex w-full max-w-5xl items-start gap-x-6">{props.children}</div>
+      <div className="mx-auto flex w-full max-w-5xl items-start gap-x-6 @container/content">
+        {props.children}
+      </div>
     </div>
   )
 }
@@ -37,7 +39,9 @@ export function Box(props: React.PropsWithChildren<{ className?: string }>) {
 
 export function RightSide(props: React.PropsWithChildren) {
   return (
-    <div className="hidden basis-[270px] flex-col gap-y-6 text-sm lg:flex">{props.children}</div>
+    <div className="hidden basis-[270px] flex-col gap-y-6 text-sm @4xl/content:flex">
+      {props.children}
+    </div>
   )
 }
 

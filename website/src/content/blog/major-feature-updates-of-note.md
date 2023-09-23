@@ -9,7 +9,7 @@ author:
 
 四月初，我们在 V 站上首次[介绍了 V2EX Polish](https://www.v2ex.com/t/930155?p=4#reply376)，目前超过 5000+ 小伙伴加入了体验之旅，十分感谢大家的支持！
 
-自发布以来，我们收到了大家热烈的[建议和反馈](https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new)，这极大地帮助了我们持续不断地完善功能。
+自发布以来，我们收到了大家热烈的[建议和反馈](https://github.com/coolpace/V2EX_Polish/discussions/1)，这极大地帮助了我们持续不断地完善功能。
 
 如今，四月已近尾声，我们非常高兴再次向大家介绍这个月的努力成果：
 
