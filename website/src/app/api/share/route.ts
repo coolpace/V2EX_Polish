@@ -26,6 +26,21 @@ const TopicInfoSchema = object({
 
 export type TopicInfo = Input<typeof TopicInfoSchema>
 
+export const enum ResponseCode {
+  Success,
+  NotFound,
+}
+
+export type ResponseJson =
+  | {
+      code: ResponseCode.Success
+      data: TopicInfo
+    }
+  | {
+      code: ResponseCode.NotFound
+      data: null
+    }
+
 export async function POST(request: NextRequest) {
   const body = parse(RequestDataSchema, await request.json())
 
@@ -36,7 +51,13 @@ export async function POST(request: NextRequest) {
   const $ = load(htmlText)
   const title = $('.header h1').text()
   const content = $('.topic_content').html()
-  // const stats = $('.topic_buttons .topic_stats')
+
+  if (!title && !content) {
+    return NextResponse.json<ResponseJson>(
+      { code: ResponseCode.NotFound, data: null },
+      { status: 200 }
+    )
+  }
 
   let supplements: TopicInfo['supplements'] = null
   const $subtles = $('.subtle .topic_content')
@@ -68,5 +89,5 @@ export async function POST(request: NextRequest) {
     url,
   })
 
-  return NextResponse.json({ data }, { status: 200 })
+  return NextResponse.json<ResponseJson>({ code: ResponseCode.Success, data }, { status: 200 })
 }

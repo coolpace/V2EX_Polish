@@ -51,12 +51,9 @@ const notoSans = Noto_Sans({
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
-    <html
-      className={`h-full overflow-hidden bg-white text-main-800 ${notoSans.className}`}
-      lang="zh-Hans-CN"
-    >
+    <html className="h-full overflow-hidden bg-white text-main-800" lang="zh-Hans-CN">
       <body className="relative m-0 h-full overflow-y-auto">
-        <Theme className="h-full">
+        <Theme className={`h-full ${notoSans.className}`}>
           <header className="relative z-50 flex justify-center py-4 md:px-4 md:py-6">
             <Nav />
           </header>

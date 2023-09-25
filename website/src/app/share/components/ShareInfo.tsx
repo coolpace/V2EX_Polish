@@ -12,21 +12,24 @@ import { toBlob, toPng } from 'html-to-image'
 import { AlertCircleIcon, SearchIcon } from 'lucide-react'
 
 import type { RequestData as ImgRequestData } from '~/app/api/img-to-base64/route'
-import type { RequestData as ShareRequestData, TopicInfo } from '~/app/api/share/route'
+import {
+  type RequestData as ShareRequestData,
+  ResponseCode,
+  type ResponseJson,
+  type TopicInfo,
+} from '~/app/api/share/route'
 import { HOST } from '~/utils'
 
 const isDev = process.env.NODE_ENV === 'development'
 
-const fetchTopicInfo = async (
-  topicId: ShareRequestData['topicId']
-): Promise<{ data: TopicInfo }> => {
+const fetchTopicInfo = async (topicId: ShareRequestData['topicId']): Promise<ResponseJson> => {
   const res = await window.fetch(`${isDev ? HOST : ''}/api/share`, {
     method: 'POST',
     body: JSON.stringify({ topicId }),
     mode: 'no-cors',
   })
 
-  const data: { data: TopicInfo } = await res.json()
+  const data: ResponseJson = await res.json()
 
   return data
 }
@@ -52,7 +55,9 @@ export function ShareInfo() {
 
   const [topicInfo, setTopicInfo] = useState<TopicInfo>()
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+
+  const [requestError, setRequestError] = useState(false)
+  const [notFoundError, setNotFoundError] = useState(false)
 
   const [showSubtle, setShowSubtle] = useState(true)
 
@@ -179,13 +184,19 @@ export function ShareInfo() {
         // setTopicInfo(JSON.parse(process.env.NEXT_PUBLIC_DATA!) as TopicInfo)
         // return
         setLoading(true)
-        setError(false)
+        setRequestError(false)
+        setNotFoundError(false)
 
-        const { data } = await fetchTopicInfo(topicId)
-        setTopicInfo(data)
-        console.log(data)
+        const { code, data } = await fetchTopicInfo(topicId)
+
+        if (code === ResponseCode.Success) {
+          setTopicInfo(data)
+          console.log(data)
+        } else {
+          setNotFoundError(true)
+        }
       } catch {
-        setError(true)
+        setRequestError(true)
       } finally {
         setLoading(false)
       }
@@ -196,7 +207,7 @@ export function ShareInfo() {
     requestTopicInfo()
   }, [requestTopicInfo])
 
-  const actionAvailable = !loading && !error
+  const actionAvailable = !loading && !requestError && !notFoundError
 
   return (
     <div className="flex items-start gap-x-8">
@@ -297,21 +308,27 @@ export function ShareInfo() {
 
       <div className="sticky top-[50px] min-w-[300px]">
         <Flex direction="column" gap="4">
-          {error && (
+          {(requestError || notFoundError) && (
             <Callout.Root color="red">
               <Callout.Icon>
                 <AlertCircleIcon size={16} />
               </Callout.Icon>
               <Callout.Text>
-                获取主题信息时发生错误，请
-                <Link
-                  onClick={() => {
-                    requestTopicInfo()
-                  }}
-                >
-                  重试
-                </Link>
-                。
+                {requestError ? (
+                  <>
+                    获取主题信息时发生错误，请
+                    <Link
+                      onClick={() => {
+                        requestTopicInfo()
+                      }}
+                    >
+                      重试
+                    </Link>
+                    。
+                  </>
+                ) : notFoundError ? (
+                  '无法找到主题，可能是因为它已被删除或需要授权访问。'
+                ) : null}
               </Callout.Text>
             </Callout.Root>
           )}

@@ -24,4 +24,8 @@ export default withContentlayer({
       },
     ],
   },
+
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
 })
