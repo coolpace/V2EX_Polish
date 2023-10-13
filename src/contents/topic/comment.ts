@@ -511,7 +511,6 @@ export async function handlingComments() {
                 const $thankAction = $tableInCell.find('.v2p-control-thank')
                 $thankAction.addClass('v2p-thanked').off('click')
                 $thankAction.siblings().has('.v2p-control-hide').hide()
-                createToast({ message: `❤️ 已感谢 @${memberName} 的回复` })
               },
 
               onFail: () => {
