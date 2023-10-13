@@ -375,6 +375,10 @@ a.v2p-topic-preview-title-link {
 
 @supports selector(:has(*)) {
   #Main .cell[id^='r']:not(:has(.cell:hover)) > table:hover {
+    .ago {
+      width: auto;
+    }
+
     .v2p-controls {
       opacity: 1;
     }
