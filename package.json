@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "run-p watch run:chrome",
     "dev:firefox": "run-p watch run:firefox",
-    "dev:site": "live-server --entry-file=website/index.html --no-browser",
     "run:chrome": "web-ext run -t chromium --source-dir ./extension --chromium-profile ./chrome-profile --profile-create-if-missing",
     "run:firefox": "web-ext run --source-dir ./extension",
     "build": "bun build:all && bun scripts/build.ts && bun pack:chrome && bun pack:firefox",
@@ -36,12 +35,10 @@
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.2.1",
-    "@types/archiver": "^5.3.2",
     "@types/chrome": "^0.0.246",
     "@types/firefox-webext-browser": "^111.0.2",
     "@types/jquery": "^3.5.16",
     "@types/node": "^20.6.2",
-    "archiver": "^6.0.1",
     "bun": "^1.0.2",
     "npm-run-all": "^4.1.5",
     "prefer-code-style": "^1.5.7",
