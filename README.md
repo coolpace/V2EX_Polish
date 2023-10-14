@@ -68,6 +68,43 @@
 
 </details>
 
+### 部分功能效果展示
+
+<table>
+<tr>
+<td>视觉友好的界面设计：</td>
+<td>丰富的个性化设置：</td>
+</tr>
+<tr>
+<td><img src=https://i.imgur.com/yaBXwFw.png width=600/></td>
+<td><img src=https://i.imgur.com/guRBbVB.png width=600/></td>
+</tr>
+<tr>
+<td>在回复中快速上传图片：</td>
+<td>实时预览回复内容：</td>
+</tr>
+<tr>
+<td><img src=https://i.imgur.com/1vfybCs.gif width=600/></td>
+<td><img src=https://i.imgur.com/FYSZ0n5.gif width=600/></td>
+</tr>
+<tr>
+<td>设置用户的标签，标记用户：</td>
+<td>生成主题分享图片：</td>
+</tr>
+<tr>
+<td><img src=https://i.imgur.com/YNFJeFv.gif width=600/></td>
+<td><img src=https://i.imgur.com/ysfCBav.gif width=600/></td>
+</tr>
+<tr>
+<td>隐藏回复中 @ 用户的名称：</td>
+<td>回复中插入热门流行表情：</td>
+</tr>
+<tr>
+<td><img src=https://i.imgur.com/jB8s6kd.gif width=600/></td>
+<td><img src=https://i.imgur.com/5Xkwk4L.gif width=600/></td>
+</tr>
+</table>
+
 ## 为什么选择 V2EX Polish？
 
 在社区中早已存在众多用于增强 v2ex.com 的[脚本](https://greasyfork.org/zh-CN/scripts/by-site/v2ex.com)和[插件][Link CWS Search V2EX]，然而它们带来的体验良莠不齐，且大多数已经停止更新。
