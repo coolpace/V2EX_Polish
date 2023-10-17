@@ -287,6 +287,10 @@ export async function handlingComments() {
   const tagData = storage[StorageKey.MemberTag]
   const options = storage[StorageKey.Options]
 
+  if (options.replyContent.hideReplyTime) {
+    $('.cell .ago').addClass('v2p-auto-hide')
+  }
+
   if (options.reply.preload !== 'off') {
     // 预加载多页回复，然后在同一页中显示，优化多页回复产生的楼中楼。
 

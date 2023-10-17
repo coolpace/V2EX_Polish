@@ -36,6 +36,14 @@ body {
 }
 
 #Main {
+  .cell[id^='r'] {
+    .v2p-auto-hide {
+      display: inline-flex;
+      width: 0;
+      overflow: hidden;
+    }
+  }
+
   #reply-box .v2p-reply-preview {
     @include share.text-content;
   }
@@ -375,7 +383,7 @@ a.v2p-topic-preview-title-link {
 
 @supports selector(:has(*)) {
   #Main .cell[id^='r']:not(:has(.cell:hover)) > table:hover {
-    .ago {
+    .v2p-auto-hide {
       width: auto;
     }
 
