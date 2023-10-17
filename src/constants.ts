@@ -236,6 +236,7 @@ export const defaultOptions: Options = {
   },
   replyContent: {
     autoFold: true,
+    hideReplyTime: true,
     hideRefName: false,
   },
   nestedReply: {

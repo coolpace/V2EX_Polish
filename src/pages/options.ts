@@ -32,6 +32,7 @@ const saveOptions = async () => {
     },
     replyContent: {
       autoFold: $('#autoFold').prop('checked'),
+      hideReplyTime: $('#hideReplyTime').prop('checked'),
       hideRefName: $('#hideRefName').prop('checked'),
     },
     nestedReply: (() => {
@@ -66,6 +67,7 @@ void (async function init() {
   $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
   $('#autoSwitch').prop('checked', options.theme.autoSwitch)
   $('#autoFold').prop('checked', options.replyContent.autoFold)
+  $('#hideReplyTime').prop('checked', options.replyContent.hideReplyTime)
   $('#hideRefName').prop('checked', options.replyContent.hideRefName)
 
   $('#displayAlign').prop('checked', options.nestedReply.display === 'align')

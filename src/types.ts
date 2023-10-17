@@ -37,6 +37,8 @@ export interface Options {
   replyContent: {
     /** 是否自动折叠回复内容。 */
     autoFold?: boolean
+    /** 是否隐藏回复时间。 */
+    hideReplyTime?: boolean
     /** 是否隐藏 @ 的用户名称。 */
     hideRefName?: boolean
   }
