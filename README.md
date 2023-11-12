@@ -93,7 +93,7 @@
 </tr>
 <tr>
 <td><img src=https://i.imgur.com/YNFJeFv.gif width=600/></td>
-<td><img src=https://imgur.com/I02bR3y.gif width=600/></td>
+<td><img src=https://i.imgur.com/jpHLxP2.gif width=600/></td>
 </tr>
 <tr>
 <td>隐藏回复中 @ 用户的名称：</td>
