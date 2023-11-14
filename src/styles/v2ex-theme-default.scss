@@ -318,6 +318,11 @@ body {
   }
 
   .online {
+    padding: 6px 8px;
+    color: var(--v2p-color-bg-content);
+    font-size: 13px;
+    background: var(--v2p-color-accent-400);
+    border-radius: 5px;
     user-select: none;
   }
 
