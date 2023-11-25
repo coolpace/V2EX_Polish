@@ -1,7 +1,5 @@
 import { createButton } from '../../components/button'
-import { createToast } from '../../components/toast'
 import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
-import { addFavorite, unfavorite } from '../../services'
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
 import { $commentCells, $topicContentBox, $topicHeader, topicOwnerName } from '../globals'
@@ -45,41 +43,42 @@ export function handlingContent() {
     topicBtn.eq(3).append('<span class="v2p-tb-icon"><i data-lucide="heart"></i></span>')
     loadIcons()
 
-    const url = $favoriteBtn.attr('href')
+    // const url = $favoriteBtn.attr('href')
 
     // 在不刷新页面下执行主题的收藏操作。
-    if (typeof url === 'string') {
-      let hasFavorited = !url.startsWith('/favorite')
+    // ! 不刷新页面的话，会导致获取不到最新的 once 参数，从而导致接口请求异常。
+    // if (typeof url === 'string') {
+    //   let hasFavorited = !url.startsWith('/favorite')
 
-      $favoriteBtn.attr('href', 'javascript:').on('click', () => {
-        void (async () => {
-          createToast({ message: hasFavorited ? '正在取消收藏...' : '正在加入收藏...' })
-          $favoriteBtn.css('pointer-events', 'none')
-          const originalContent = $favoriteBtn.html()
+    //   $favoriteBtn.attr('href', 'javascript:').on('click', () => {
+    //     void (async () => {
+    //       createToast({ message: hasFavorited ? '正在取消收藏...' : '正在加入收藏...' })
+    //       $favoriteBtn.css('pointer-events', 'none')
+    //       const originalContent = $favoriteBtn.html()
 
-          try {
-            if (hasFavorited) {
-              $favoriteBtn.html($favoriteBtn.html().replace('取消收藏', '取消中...'))
-              await unfavorite(url.replace('/favorite', '/unfavorite'))
-              $favoriteBtn.html($favoriteBtn.html().replace('取消中...', '加入收藏'))
-              hasFavorited = false
-            } else {
-              $favoriteBtn.html($favoriteBtn.html().replace('加入收藏', '收藏中...'))
-              await addFavorite(url)
-              $favoriteBtn.html($favoriteBtn.html().replace('收藏中...', '取消收藏'))
-              hasFavorited = true
-            }
-          } catch (err) {
-            $favoriteBtn.html(originalContent)
-            if (err instanceof Error) {
-              createToast({ message: `❌ ${err.message}` })
-            }
-          } finally {
-            $favoriteBtn.css('pointer-events', 'auto')
-          }
-        })()
-      })
-    }
+    //       try {
+    //         if (hasFavorited) {
+    //           $favoriteBtn.html($favoriteBtn.html().replace('取消收藏', '取消中...'))
+    //           await unfavorite(url.replace('/favorite', '/unfavorite'))
+    //           $favoriteBtn.html($favoriteBtn.html().replace('取消中...', '加入收藏'))
+    //           hasFavorited = false
+    //         } else {
+    //           $favoriteBtn.html($favoriteBtn.html().replace('加入收藏', '收藏中...'))
+    //           await addFavorite(url)
+    //           $favoriteBtn.html($favoriteBtn.html().replace('收藏中...', '取消收藏'))
+    //           hasFavorited = true
+    //         }
+    //       } catch (err) {
+    //         $favoriteBtn.html(originalContent)
+    //         if (err instanceof Error) {
+    //           createToast({ message: `❌ ${err.message}` })
+    //         }
+    //       } finally {
+    //         $favoriteBtn.css('pointer-events', 'auto')
+    //       }
+    //     })()
+    //   })
+    // }
   }
 }
 
