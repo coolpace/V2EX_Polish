@@ -60,4 +60,5 @@
   -webkit-text-fill-color: #fff;
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: var(--v2p-color-main-800);
+  text-shadow: 2px 4px 0 var(--v2p-color-main-600);
 }

@@ -5,6 +5,7 @@ import {
   HeartIcon,
   MessageSquarePlusIcon,
   MoonStarIcon,
+  PackagePlusIcon,
   SearchIcon,
   SunIcon,
 } from 'lucide-react'
@@ -107,6 +108,7 @@ export function Header() {
   return (
     <div className="h-14 w-full bg-content px-4">
       <div className="mx-auto flex h-full w-full max-w-5xl items-center">
+        <div className="mr-6 text-3xl font-black tracking-tighter">V2EX</div>
         <div className="inline-flex h-8 w-52 items-center rounded-md bg-main-100 px-2">
           <SearchIcon className="text-main-400" height={16} width={16} />
         </div>
@@ -194,11 +196,11 @@ export function UserPanel() {
         </div>
       </div>
 
-      <div className="border-t border-solid border-main-200 py-3 text-center text-green-500 group-[[data-page='topic']]/page:hidden">
+      <div className="hidden border-t border-solid border-main-200 py-3 text-center text-green-500 group-[[data-page='home']]/page:block">
         今日已自动签到
       </div>
 
-      <div className="grid grid-cols-3 gap-3 border-t border-solid border-main-200 px-2 py-3 text-xs text-main-600 group-[[data-page='home']]/page:hidden">
+      <div className="hidden grid-cols-3 gap-3 border-t border-solid border-main-200 px-2 py-3 text-xs text-main-600 group-[[data-page='topic']]/page:grid">
         <span className="flex items-center justify-center gap-x-1">
           <HeartIcon size={16} />
           热门回复
@@ -219,7 +221,49 @@ export function UserPanel() {
           <ChevronsUpIcon size={16} />
           回到顶部
         </span>
+        <span className="flex items-center justify-center gap-x-1">
+          <PackagePlusIcon size={16} />
+          更多功能
+        </span>
       </div>
     </Box>
+  )
+}
+
+export function ReplyItem(props: {
+  name: string
+  floor: string
+  nested?: boolean
+  isOp?: boolean
+  time: string
+  avatar?: React.ReactNode
+  content: string | React.ReactNode
+}) {
+  return (
+    <div
+      className={`flex text-xs ${
+        props.nested ? 'py-3' : 'border-t border-solid border-main-200 py-5'
+      }`}
+    >
+      {props.avatar}
+      <div className="ml-3 flex-1 pt-1">
+        <span className="flex items-center gap-x-3">
+          <span className="text-sm font-semibold text-main-600">{props.name}</span>
+          {props.isOp && (
+            <span className="inline-flex items-center overflow-hidden rounded border border-solid border-emerald-400 text-xs font-semibold">
+              <span className="bg-emerald-50 px-1 py-[1px] text-emerald-400 group-[.theme-dark]:bg-emerald-900">
+                OP
+              </span>
+              <span className="bg-emerald-400 px-1 py-[1px] text-content">YOU</span>
+            </span>
+          )}
+          <span className="ml-1 text-main-500">{props.time}</span>
+        </span>
+        <p className="mt-2 text-[15px] leading-5">{props.content}</p>
+      </div>
+      <div className="ml-3 mr-1">
+        <span className="px-2 py-1 text-main-350">{props.floor}</span>
+      </div>
+    </div>
   )
 }

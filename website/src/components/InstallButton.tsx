@@ -8,7 +8,7 @@ export function InstallButton() {
       rel="noreferrer"
       target="_blank"
     >
-      <span className="mr-2 w-5 opacity-100 transition-all md:w-6 md:group-hover:mr-0 md:group-hover:w-0 md:group-hover:opacity-0">
+      <span className="mr-2 flex w-5 items-center justify-center opacity-100 transition-all md:w-6 md:group-hover:mr-0 md:group-hover:w-0 md:group-hover:opacity-0">
         <ChromeIcon />
       </span>
       安装至 Chrome

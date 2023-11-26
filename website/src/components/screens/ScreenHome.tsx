@@ -7,7 +7,7 @@ import {
   TopicItemRight,
   UserPanel,
   Wrapper,
-} from './ui'
+} from '~/components/ui'
 
 export function ScreenHome() {
   return (

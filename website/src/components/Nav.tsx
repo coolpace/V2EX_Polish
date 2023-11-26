@@ -21,6 +21,10 @@ export function Nav() {
           <NavLink href="/blog">Blog</NavLink>
         </li>
 
+        {/* <li>
+          <NavLink href="/features">Features</NavLink>
+        </li> */}
+
         <li>
           <NavLink href="/changelog">Changelog</NavLink>
         </li>
