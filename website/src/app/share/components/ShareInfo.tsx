@@ -191,7 +191,6 @@ export function ShareInfo() {
 
         if (code === ResponseCode.Success) {
           setTopicInfo(data)
-          console.log(data)
         } else {
           setNotFoundError(true)
         }

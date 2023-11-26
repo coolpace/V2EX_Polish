@@ -1,4 +1,4 @@
-import { ImageResponse } from 'next/server'
+import { ImageResponse } from 'next/og'
 
 import { OG_HEIGHT, OG_WIDTH } from '~/utils'
 

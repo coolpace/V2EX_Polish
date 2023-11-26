@@ -38,21 +38,21 @@ export default function Page() {
       <section className="py-8">
         <div className="flex flex-col items-center">
           <div className="text-with-shadow flex items-center justify-center md:gap-6 lg:gap-7">
-            <h1 className="text-5xl font-black md:text-6xl lg:text-7xl">
+            <div className="text-5xl font-black md:text-6xl lg:text-7xl">
               V2EX
               <span className="text-polish ml-2 md:ml-3 lg:ml-4">Polish</span>
-            </h1>
+            </div>
           </div>
 
-          <p className="hero-sub-heading mb-8 mt-4 px-1 text-center text-base md:mb-16 md:mt-8 md:text-xl">
-            专为 V2EX 用户设计的浏览器插件，丰富的扩展功能为你带来出色的体验
-          </p>
+          <h1 className="hero-sub-heading mb-8 mt-4 px-1 text-center text-base md:mb-16 md:mt-8 md:text-xl">
+            专为 V2EX 用户设计的浏览器插件，集合了众多实用功能，让原生页面焕然一新！
+          </h1>
 
           <div className="flex select-none gap-x-6 gap-y-2">
             <InstallButton />
           </div>
 
-          <div className="mt-6 flex flex-col gap-6 text-xs text-main-500 md:flex-row md:items-center md:text-sm">
+          <div className="mt-6 flex flex-col gap-3 text-xs text-main-500 md:flex-row md:items-center md:gap-6 md:text-sm">
             <HoverButton>
               <Link
                 className="flex items-center gap-2"

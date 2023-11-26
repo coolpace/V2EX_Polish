@@ -9,43 +9,16 @@ import {
   TwitterIcon,
 } from 'lucide-react'
 
-import { Avatar, Box, Content, Header, RightSide, UserPanel, Wrapper } from './ui'
-
-function ReplyItem(props: {
-  name: string
-  floor: string
-  nested?: boolean
-  avatar?: React.ReactNode
-  content: string | React.ReactNode
-}) {
-  return (
-    <div
-      className={`flex text-xs ${
-        props.nested ? 'py-3' : 'border-t border-solid border-main-200 py-5'
-      }`}
-    >
-      {props.avatar}
-      <div className="ml-3 flex-1 pt-1">
-        <span className="flex items-center gap-x-3">
-          <span className="text-sm font-semibold text-main-600">{props.name}</span>
-          {props.nested && (
-            <span className="inline-flex items-center overflow-hidden rounded border border-solid border-emerald-400 text-xs font-semibold">
-              <span className="bg-emerald-50 px-1 py-[1px] text-emerald-400 group-[.theme-dark]:bg-emerald-900">
-                OP
-              </span>
-              <span className="bg-emerald-400 px-1 py-[1px] text-content">YOU</span>
-            </span>
-          )}
-          <span className="ml-1 text-main-500">21 天前</span>
-        </span>
-        <p className="mt-2 text-[15px] leading-5">{props.content}</p>
-      </div>
-      <div className="ml-3 mr-1">
-        <span className="px-2 py-1 text-main-350">{props.floor}</span>
-      </div>
-    </div>
-  )
-}
+import {
+  Avatar,
+  Box,
+  Content,
+  Header,
+  ReplyItem,
+  RightSide,
+  UserPanel,
+  Wrapper,
+} from '~/components/ui'
 
 export function ScreenTopic() {
   return (
@@ -117,7 +90,7 @@ export function ScreenTopic() {
           </Box>
 
           <Box className="px-3">
-            <div className="flex items-center px-2 py-5 text-sm text-main-600">
+            <div className="flex items-center px-2 py-4 text-sm text-main-600">
               <span className="flex items-center gap-x-2">
                 <span className="whitespace-nowrap">125 条回复</span>
                 <span className="text-xl font-bold">·</span>
@@ -148,9 +121,11 @@ export function ScreenTopic() {
                 content="安装了一下，真的是现代化的体验！"
                 floor="1"
                 name="codennnn"
+                time="21 天前"
               />
               <div className="border-l-[3px] border-solid border-main-300 bg-main-100">
                 <ReplyItem
+                  isOp
                   nested
                   avatar={<Avatar className="ml-3 h-6 w-6 rounded" />}
                   content={
@@ -164,6 +139,7 @@ export function ScreenTopic() {
                   }
                   floor="2"
                   name="coolpace"
+                  time="21 天前"
                 />
               </div>
             </div>

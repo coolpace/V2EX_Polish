@@ -1,6 +1,6 @@
 import { ArrowUpRightSquare, ChevronDownIcon, ChevronRightIcon, SendIcon } from 'lucide-react'
 
-import { Box, Content, Header, Paragraph, RightSide, Wrapper } from './ui'
+import { Box, Content, Header, Paragraph, RightSide, Wrapper } from '~/components/ui'
 
 export function ScreenTopicWrite() {
   return (
