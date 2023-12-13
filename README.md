@@ -170,6 +170,12 @@ PAT 并不是强制的，只有当你想要使用诸如 主题内容预览、获
 
 **喜欢我们的扩展吗？请在[应用商店][Link CWS]给我们好评！🥰**
 
+## 赞赏支持
+
+我们在这个插件上花了许多功夫，你的赞赏支持会激励我们持续维护此插件。
+
+![微信赞赏](./assets/appreciation-code.jpg)
+
 <!--------[Badges]-------->
 
 [Badge CWS Version]: https://img.shields.io/chrome-web-store/v/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=最新版本&logo=hackthebox&logoColor=eeeeee
