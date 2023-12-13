@@ -1,12 +1,70 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 body {
   font-size: 16px;
 }
 
-.wrapper {
-  min-width: 300px;
-  max-width: max-content;
-  margin: 0 auto;
-  padding: 50px;
+.layout {
+  display: flex;
+  height: 100%;
+}
+
+.side {
+  width: 300px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--v2p-color-main-50);
+  border-right: 1px solid var(--v2p-color-main-200);
+}
+
+.side-header {
+  display: flex;
+  gap: 0 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.side-header-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px 0;
+  padding: 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.menu-item {
+  display: flex;
+  gap: 0 10px;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.menu-item-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.menu-item.active {
+  background-color: var(--v2p-color-main-200);
+}
+
+.content {
+  flex: 1;
+  padding: 40px 50px;
+  background-color: var(--v2p-color-bg-content);
 }
 
 .title {
@@ -15,11 +73,6 @@ body {
 }
 
 #options-form {
-  margin: 20px 0;
-  padding: 20px 20px 10px;
-  border: 2px solid var(--v2p-color-main-700);
-  border-radius: 10px;
-
   @at-root {
     .options-form-inner {
       display: flex;
@@ -79,6 +132,10 @@ body {
       + p {
         font-size: 13px;
       }
+    }
+
+    hr {
+      color: var(--v2p-color-main-200);
     }
   }
 }

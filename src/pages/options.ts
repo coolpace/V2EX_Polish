@@ -1,11 +1,10 @@
+import { createIcons, Settings } from 'lucide'
+
 import { StorageKey } from '../constants'
 import type { Options } from '../types'
 import { getStorage, setStorage } from '../utils'
 
 const saveOptions = async () => {
-  const $save = $('#save')
-  const originText = $save.text()
-
   const currentOptions: Options = {
     openInNewTab: $('#openInNewTab').prop('checked'),
     autoCheckIn: {
@@ -47,12 +46,6 @@ const saveOptions = async () => {
   }
 
   await setStorage(StorageKey.Options, currentOptions)
-
-  $save.addClass('success').text('保存成功')
-
-  setTimeout(() => {
-    $save.removeClass('success').text(originText)
-  }, 1500)
 }
 
 $('#options-form').on('submit', (ev) => {
@@ -61,6 +54,16 @@ $('#options-form').on('submit', (ev) => {
 })
 
 void (async function init() {
+  createIcons({
+    attrs: {
+      width: '100%',
+      height: '100%',
+    },
+    icons: {
+      Settings,
+    },
+  })
+
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
   $('#openInNewTab').prop('checked', options.openInNewTab)
@@ -83,4 +86,8 @@ void (async function init() {
 
   $('#userTagDisplayInline').prop('checked', options.userTag.display === 'inline')
   $('#userTagDisplayBlock').prop('checked', options.userTag.display === 'block')
+
+  $('input[type]').on('change', () => {
+    void saveOptions()
+  })
 })()

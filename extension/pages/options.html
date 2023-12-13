@@ -10,180 +10,206 @@
   </head>
 
   <body>
-    <div class="wrapper">
-      <h1 class="title">V2EX Polish 控制选项</h1>
-      <form id="options-form">
-        <div class="options-form-inner">
-          <div class="form-checkbox">
-            <input type="checkbox" id="openInNewTab" checked="false" />
-            <div class="combo">
-              <label for="openInNewTab">新标签页打开主题</label>
-              <p>启用后点击主题将在新的页签中打开</p>
-            </div>
-          </div>
+    <div class="layout">
+      <div class="side">
+        <div class="side-header">
+          <img src="../images/icon-32.png" />
+          <span class="side-header-title">V2EX Polish</span>
+        </div>
 
-          <div class="form-checkbox">
-            <input type="checkbox" id="autoCheckIn" checked="false" />
-            <div class="combo">
-              <label for="autoCheckIn">每日自动签到</label>
-              <p>自动领取每日的登录奖励</p>
-            </div>
-          </div>
+        <div>
+          <ul class="menu">
+            <li class="menu-item active">
+              <i class="menu-item-icon" data-lucide="settings"></i>控制选项
+            </li>
+          </ul>
+        </div>
+      </div>
 
-          <fieldset>
-            <legend>颜色主题</legend>
+      <div class="content">
+        <form id="options-form">
+          <div class="options-form-inner">
             <div class="form-checkbox">
-              <input type="checkbox" id="autoSwitch" checked="false" />
+              <input type="checkbox" id="openInNewTab" checked="false" />
               <div class="combo">
-                <label for="autoSwitch">自动跟随系统切换浅色/深色模式</label>
+                <label for="openInNewTab">新标签页打开主题</label>
+                <p>启用后点击主题将在新的页签中打开</p>
               </div>
             </div>
-          </fieldset>
 
-          <fieldset>
-            <legend>
-              预加载多页回复<sup title="实验性的功能，后续版本可能会调整，请勿过于依赖">实验性</sup>
-            </legend>
-            <div class="form-radio">
-              <input
-                type="radio"
-                id="reply_preload_off"
-                name="reply.preload"
-                value="off"
-                checked="false"
-              />
+            <hr />
+
+            <div class="form-checkbox">
+              <input type="checkbox" id="autoCheckIn" checked="false" />
               <div class="combo">
-                <label for="reply_preload_off">关闭</label>
+                <label for="autoCheckIn">每日自动签到</label>
+                <p>自动领取每日的登录奖励</p>
               </div>
             </div>
-            <div class="form-radio">
-              <input
-                type="radio"
-                id="reply_preload_auto"
-                name="reply.preload"
-                value="off"
-                checked="false"
-              />
-              <div class="combo">
-                <label for="reply_preload_auto">自动预加载</label>
-                <p>抓取多页（最多三页）回复后在同一页中展示</p>
-              </div>
-            </div>
-          </fieldset>
 
-          <fieldset>
-            <legend>回复内容处理</legend>
+            <hr />
 
-            <div>
+            <fieldset>
+              <legend>颜色主题</legend>
               <div class="form-checkbox">
-                <input type="checkbox" id="autoFold" checked="false" />
+                <input type="checkbox" id="autoSwitch" checked="false" />
                 <div class="combo">
-                  <label for="autoFold">自动折叠长回复</label>
+                  <label for="autoSwitch">自动跟随系统切换浅色/深色模式</label>
                 </div>
               </div>
-            </div>
+            </fieldset>
 
-            <div>
-              <div class="form-checkbox">
-                <input type="checkbox" id="hideReplyTime" checked="false" />
+            <hr />
+
+            <fieldset>
+              <legend>
+                预加载多页回复<sup title="实验性的功能，后续版本可能会调整，请勿过于依赖"
+                  >实验性</sup
+                >
+              </legend>
+              <div class="form-radio">
+                <input
+                  type="radio"
+                  id="reply_preload_off"
+                  name="reply.preload"
+                  value="off"
+                  checked="false"
+                />
                 <div class="combo">
-                  <label for="hideReplyTime">自动隐藏回复时间</label>
+                  <label for="reply_preload_off">关闭</label>
                 </div>
               </div>
-            </div>
-
-            <div>
-              <div class="form-checkbox">
-                <input type="checkbox" id="nestedReply_multipleInsideOne" checked="false" />
+              <div class="form-radio">
+                <input
+                  type="radio"
+                  id="reply_preload_auto"
+                  name="reply.preload"
+                  value="off"
+                  checked="false"
+                />
                 <div class="combo">
-                  <label for="nestedReply_multipleInsideOne">一条回复中 @ 多个人时参与嵌套</label>
+                  <label for="reply_preload_auto">自动预加载</label>
+                  <p>抓取多页（最多三页）回复后在同一页中展示</p>
                 </div>
               </div>
-            </div>
+            </fieldset>
 
-            <div>
-              <div class="form-checkbox">
-                <input type="checkbox" id="hideRefName" checked="false" />
-                <div class="combo">
-                  <label for="hideRefName">不显示 @ 的用户名称</label>
+            <hr />
+
+            <fieldset>
+              <legend>回复内容处理</legend>
+
+              <div>
+                <div class="form-checkbox">
+                  <input type="checkbox" id="autoFold" checked="false" />
+                  <div class="combo">
+                    <label for="autoFold">自动折叠长回复</label>
+                  </div>
                 </div>
               </div>
-            </div>
-          </fieldset>
 
-          <fieldset>
-            <legend>楼中楼回复的展现形式</legend>
-            <div class="form-radio">
-              <input
-                type="radio"
-                id="displayIndent"
-                name="nestedReply.display"
-                value="indent"
-                checked="false"
-              />
-              <div class="combo">
-                <label for="displayIndent">逐层缩进（更直观）</label>
+              <div>
+                <div class="form-checkbox">
+                  <input type="checkbox" id="hideReplyTime" checked="false" />
+                  <div class="combo">
+                    <label for="hideReplyTime">自动隐藏回复时间</label>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="form-radio">
-              <input
-                type="radio"
-                id="displayAlign"
-                name="nestedReply.display"
-                value="align"
-                checked="false"
-              />
-              <div class="combo">
-                <label for="displayAlign">靠左对齐（更美观）</label>
-              </div>
-            </div>
-            <div class="form-radio">
-              <input
-                type="radio"
-                id="displayOff"
-                name="nestedReply.display"
-                value="off"
-                checked="false"
-              />
-              <div class="combo">
-                <label for="displayOff">关闭楼中楼</label>
-              </div>
-            </div>
-          </fieldset>
 
-          <fieldset>
-            <legend>用户标签展现形式</legend>
-            <div class="form-radio">
-              <input
-                type="radio"
-                id="userTagDisplayInline"
-                name="userTag.display"
-                value="inline"
-                checked="false"
-              />
-              <div class="combo">
-                <label for="userTagDisplayInline">行内显示（更省空间）</label>
+              <div>
+                <div class="form-checkbox">
+                  <input type="checkbox" id="nestedReply_multipleInsideOne" checked="false" />
+                  <div class="combo">
+                    <label for="nestedReply_multipleInsideOne">一条回复中 @ 多个人时参与嵌套</label>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="form-radio">
-              <input
-                type="radio"
-                id="userTagDisplayBlock"
-                name="userTag.display"
-                value="block"
-                checked="false"
-              />
-              <div class="combo">
-                <label for="userTagDisplayBlock">独行显示（更直观）</label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
 
-        <div class="actions">
-          <button id="save" type="submit">保存设置</button>
-        </div>
-      </form>
+              <div>
+                <div class="form-checkbox">
+                  <input type="checkbox" id="hideRefName" checked="false" />
+                  <div class="combo">
+                    <label for="hideRefName">不显示 @ 的用户名称</label>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <hr />
+
+            <fieldset>
+              <legend>楼中楼回复的展现形式</legend>
+              <div class="form-radio">
+                <input
+                  type="radio"
+                  id="displayIndent"
+                  name="nestedReply.display"
+                  value="indent"
+                  checked="false"
+                />
+                <div class="combo">
+                  <label for="displayIndent">逐层缩进（更直观）</label>
+                </div>
+              </div>
+              <div class="form-radio">
+                <input
+                  type="radio"
+                  id="displayAlign"
+                  name="nestedReply.display"
+                  value="align"
+                  checked="false"
+                />
+                <div class="combo">
+                  <label for="displayAlign">靠左对齐（更美观）</label>
+                </div>
+              </div>
+              <div class="form-radio">
+                <input
+                  type="radio"
+                  id="displayOff"
+                  name="nestedReply.display"
+                  value="off"
+                  checked="false"
+                />
+                <div class="combo">
+                  <label for="displayOff">关闭楼中楼</label>
+                </div>
+              </div>
+            </fieldset>
+
+            <hr />
+
+            <fieldset>
+              <legend>用户标签展现形式</legend>
+              <div class="form-radio">
+                <input
+                  type="radio"
+                  id="userTagDisplayInline"
+                  name="userTag.display"
+                  value="inline"
+                  checked="false"
+                />
+                <div class="combo">
+                  <label for="userTagDisplayInline">行内显示（更省空间）</label>
+                </div>
+              </div>
+              <div class="form-radio">
+                <input
+                  type="radio"
+                  id="userTagDisplayBlock"
+                  name="userTag.display"
+                  value="block"
+                  checked="false"
+                />
+                <div class="combo">
+                  <label for="userTagDisplayBlock">独行显示（更直观）</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </form>
+      </div>
     </div>
 
     <script src="../scripts/jquery.min.js"></script>
