@@ -211,6 +211,61 @@ export default function FeaturesPage() {
           </div>
         </div>
       </FeaturesBg>
+
+      <FeaturesBg className="flex items-center gap-10 p-16">
+        <div className="basis-[40%]">
+          <div className="text-5xl font-bold">预览回复</div>
+          <div className="mt-10 text-3xl leading-relaxed">
+            预览即将发送的内容，保证内容符合你的要求。
+          </div>
+        </div>
+
+        <div className="flex-1 text-xl">
+          <div className="rounded-xl border-[3px] border-solid border-main-200 bg-content p-5">
+            <div className="flex items-center gap-3">
+              <span className="shadow-[0_1px_currentColor]">编辑</span>
+              <span>预览</span>
+            </div>
+
+            <div className="mt-4 rounded-md border-[3px] border-solid border-main-300 p-4">
+              <p>/t/973118</p>
+              <p>https://www.v2ex.com/t/973118</p>
+              <p>https://www.v2p.app</p>
+              <p>https://i.imgur.com/8POFF6j.jpeg</p>
+            </div>
+          </div>
+
+          <div className="flex justify-center py-4 text-5xl">👇</div>
+
+          <div className="rounded-xl border-[3px] border-solid border-main-200 bg-content p-5">
+            <div className="flex items-center gap-3">
+              <span>编辑</span>
+              <span className="shadow-[0_1px_currentColor]">预览</span>
+            </div>
+            <div className="mt-4 [&>p]:mb-4">
+              <p>
+                <span className="bg-accent-50 text-accent-500 underline decoration-[1.5px] underline-offset-[0.46ex]">
+                  /t/973118
+                </span>
+              </p>
+              <p>
+                <span className="bg-accent-50 text-accent-500 underline decoration-[1.5px] underline-offset-[0.46ex]">
+                  https://www.v2ex.com/t/973118
+                </span>
+              </p>
+              <p>
+                <span className="bg-main-100 underline decoration-[1.5px] underline-offset-[0.46ex]">
+                  https://www.v2p.app
+                </span>
+              </p>
+              <p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt="xxx" src="https://i.imgur.com/8POFF6j.jpeg" />
+              </p>
+            </div>
+          </div>
+        </div>
+      </FeaturesBg>
     </PageContainer>
   )
 }
