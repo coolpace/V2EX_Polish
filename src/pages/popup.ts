@@ -296,7 +296,7 @@ function initTabs() {
 
         let currentReadingData = readingData
 
-        $('<hr />').prependTo($readingList)
+        $('<div style="padding: 0 var(--common-padding);"><hr /></div>').prependTo($readingList)
 
         const iconOpen = createElement(ArrowUpRightFromCircle)
         iconOpen.setAttribute('width', '100%')

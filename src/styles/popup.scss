@@ -232,7 +232,8 @@ button {
   }
 
   .notice-item {
-    padding: 10px 12px;
+    padding: 15px 12px;
+    border-bottom: 1px dashed var(--v2p-color-main-200);
 
     .notice {
       display: flex;
