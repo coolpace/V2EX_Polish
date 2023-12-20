@@ -13,7 +13,13 @@
   --v2p-color-main-600: #475569;
   --v2p-color-main-700: #334155;
   --v2p-color-main-800: #1e293b;
+  --v2p-color-accent-50: #ecfdf5;
   --v2p-color-accent-100: #d1fae5;
+  --v2p-color-accent-200: #a7f3d0;
+  --v2p-color-accent-300: #6ee7b7;
+  --v2p-color-accent-400: #34d399;
+  --v2p-color-accent-500: #10b981;
+  --v2p-color-accent-600: #059669;
   --v2p-color-content: #fff;
   --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
   --v2p-color-border: var(--v2p-color-main-200);
