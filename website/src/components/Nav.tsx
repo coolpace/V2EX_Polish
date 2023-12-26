@@ -30,7 +30,7 @@ export function Nav() {
         </li>
 
         <li>
-          <NavLink href="/github" prefetch={false} target="_blank">
+          <NavLink href="https://github.com/coolpace/V2EX_Polish" prefetch={false} target="_blank">
             GitHub
           </NavLink>
         </li>
