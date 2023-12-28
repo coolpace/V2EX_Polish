@@ -41,7 +41,7 @@
 
 简言之：执行 `pnpm build`，这可以分别构建出浏览器（Chrome/Firefox）扩展和油猴脚本。
 
-`pnpm build` 其实包含了多条命令的执行，包括编译输出 JS 脚本、样式、打包产物。执行完这条命令之后，会在根目录下生成 `build-chrome` 和 `build-firefox` 目录，这两个目录下的 `v2ex_polish-[版本号].zip` 就是可以上传到扩展平台的最终产物。
+`pnpm build` 其实包含了多条命令的执行，包括编译输出 JS 脚本、样式、打包产物。执行完这条命令之后，会在根目录下生成 `build-chrome` 和 `build-firefox` 目录，这两个目录下的 `v2ex_polish-[版本号].zip` 就是可以上传到扩展平台的最终产物。此外还会生成 `dist` 目录，其中包含了油猴脚本的 JS 脚本。
 
 <details>
   <summary>项目脚本解释：</summary>
