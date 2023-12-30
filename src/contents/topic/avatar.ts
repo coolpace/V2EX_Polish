@@ -8,9 +8,11 @@ import { openTagsSetter } from './content'
 const memberDataCache = new Map<Member['username'], Member>()
 
 interface ProcessAvatar {
+  /** 触发弹出框的元素。 */
   $trigger: JQuery
   popupControl: PopupControl
   commentData: Pick<CommentData, 'memberName' | 'memberAvatar' | 'memberLink'>
+  /** 点击「添加用户标签」按钮的回调。 */
   onSetTagsClick?: () => void
 }
 
@@ -19,7 +21,7 @@ interface ProcessAvatar {
  *  - 鼠标悬浮头像会展示该用户的信息。
  */
 export function processAvatar(params: ProcessAvatar) {
-  const { $trigger, popupControl, commentData, onSetTagsClick: onSetTags } = params
+  const { $trigger, popupControl, commentData, onSetTagsClick } = params
 
   const { memberName, memberAvatar, memberLink } = commentData
 
@@ -60,7 +62,7 @@ export function processAvatar(params: ProcessAvatar) {
       .on('click', () => {
         popupControl.close()
         openTagsSetter(memberName)
-        onSetTags?.()
+        onSetTagsClick?.()
       })
       .appendTo($('.v2p-member-card-actions'))
 

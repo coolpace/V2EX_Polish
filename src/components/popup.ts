@@ -17,9 +17,13 @@ interface PopupElements {
   $content: JQuery
 }
 
+/** 用户信息弹出框控制。 */
 export interface PopupControl extends PopupElements, Pick<CreatePopupProps, 'onClose'> {
+  /** 鼠标是否悬浮在弹出框上。 */
   isOver: boolean
+  /** 调用此方法在某个元素上打开弹出框。 */
   open: (reference?: JQuery) => void
+  /** 调用此方法关闭弹出框。 */
   close: () => void
 }
 
