@@ -96,8 +96,9 @@ export interface StorageSettings extends StorageItems {
 
 export interface Member {
   id: number
-  /** 展示昵称 */
+  /** 展示昵称。 */
   username: string
+  /** 用户主页链接。 */
   url: string
 
   avatar: string
@@ -107,6 +108,7 @@ export interface Member {
   avatar_xlarge: string
   avatar_xxlarge: string
 
+  /** 用户简介。 */
   bio?: string
   github?: string
   website?: string
