@@ -237,7 +237,7 @@ export const defaultOptions: Options = {
   replyContent: {
     autoFold: true,
     hideReplyTime: true,
-    hideRefName: false,
+    hideRefName: true,
   },
   nestedReply: {
     display: 'indent',
