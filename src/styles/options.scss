@@ -23,7 +23,7 @@ body {
 
 .side-header {
   display: flex;
-  gap: 0 10px;
+  gap: 0 14px;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -31,7 +31,7 @@ body {
 
 .side-header-title {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 26px;
 }
 
 .menu {
@@ -64,6 +64,7 @@ body {
 .content {
   flex: 1;
   padding: 40px 50px;
+  overflow: auto;
   background-color: var(--v2p-color-bg-content);
 }
 
@@ -179,5 +180,36 @@ fieldset {
   &.success {
     opacity: 0.8;
     pointer-events: none;
+  }
+}
+
+.tags-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px 0;
+  list-style: none;
+
+  @at-root {
+    .tag-item {
+      display: flex;
+    }
+
+    .tag-member-name {
+      min-width: 100px;
+      margin-right: 20px;
+      font-weight: bold;
+    }
+
+    .tag-item-tags {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tag-item-tag {
+      padding: 2px 6px;
+      background-color: var(--v2p-color-main-100);
+      border-radius: 4px;
+      cursor: default;
+    }
   }
 }

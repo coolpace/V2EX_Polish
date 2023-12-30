@@ -1,4 +1,4 @@
-import { createIcons, Settings } from 'lucide'
+import { createIcons, Settings, Tags } from 'lucide'
 
 import { StorageKey } from '../constants'
 import type { Options } from '../types'
@@ -61,33 +61,82 @@ void (async function init() {
     },
     icons: {
       Settings,
+      Tags,
     },
   })
 
   const storage = await getStorage()
-  const options = storage[StorageKey.Options]
-  $('#openInNewTab').prop('checked', options.openInNewTab)
-  $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
-  $('#autoSwitch').prop('checked', options.theme.autoSwitch)
-  $('#autoFold').prop('checked', options.replyContent.autoFold)
-  $('#hideReplyTime').prop('checked', options.replyContent.hideReplyTime)
-  $('#hideRefName').prop('checked', options.replyContent.hideRefName)
 
-  $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
-  $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
-  $('#displayOff').prop('checked', options.nestedReply.display === 'off')
-  $('#nestedReply_multipleInsideOne').prop(
-    'checked',
-    options.nestedReply.multipleInsideOne === 'nested'
-  )
+  {
+    const options = storage[StorageKey.Options]
 
-  $('#reply_preload_off').prop('checked', options.reply.preload === 'off')
-  $('#reply_preload_auto').prop('checked', options.reply.preload === 'auto')
+    $('#openInNewTab').prop('checked', options.openInNewTab)
+    $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
+    $('#autoSwitch').prop('checked', options.theme.autoSwitch)
+    $('#autoFold').prop('checked', options.replyContent.autoFold)
+    $('#hideReplyTime').prop('checked', options.replyContent.hideReplyTime)
+    $('#hideRefName').prop('checked', options.replyContent.hideRefName)
 
-  $('#userTagDisplayInline').prop('checked', options.userTag.display === 'inline')
-  $('#userTagDisplayBlock').prop('checked', options.userTag.display === 'block')
+    $('#displayAlign').prop('checked', options.nestedReply.display === 'align')
+    $('#displayIndent').prop('checked', options.nestedReply.display === 'indent')
+    $('#displayOff').prop('checked', options.nestedReply.display === 'off')
+    $('#nestedReply_multipleInsideOne').prop(
+      'checked',
+      options.nestedReply.multipleInsideOne === 'nested'
+    )
 
-  $('input[type]').on('change', () => {
-    void saveOptions()
-  })
+    $('#reply_preload_off').prop('checked', options.reply.preload === 'off')
+    $('#reply_preload_auto').prop('checked', options.reply.preload === 'auto')
+
+    $('#userTagDisplayInline').prop('checked', options.userTag.display === 'inline')
+    $('#userTagDisplayBlock').prop('checked', options.userTag.display === 'block')
+
+    $('input[type]').on('change', () => {
+      void saveOptions()
+    })
+  }
+
+  {
+    const tagData = storage[StorageKey.MemberTag]
+
+    if (tagData) {
+      const $a = $(`
+        <ul class="tags-list">
+          ${Object.entries(tagData)
+            .map(([memberName, { tags }]) => {
+              return `
+                <li class="tag-item">
+                  <div class="tag-member-name">${memberName}</div>
+                  <div class="tag-item-tags">
+                    ${
+                      tags
+                        ?.map((tag) => `<span class="tag-item-tag">${tag.name}</span>`)
+                        .join('') || ''
+                    }
+                  </div>
+                </li>
+              `
+            })
+            .join('')}
+        </ul>
+      `)
+
+      $('.content-tags').append($a)
+    }
+  }
+
+  {
+    $('.menu-item').on('click', (ev) => {
+      const $target = $(ev.currentTarget)
+      $target.addClass('active').siblings().removeClass('active')
+
+      if ($target.hasClass('menu-item-settings')) {
+        $('.content-settings').show()
+        $('.content-tags').hide()
+      } else if ($target.hasClass('menu-item-tags')) {
+        $('.content-settings').hide()
+        $('.content-tags').show()
+      }
+    })
+  }
 })()
