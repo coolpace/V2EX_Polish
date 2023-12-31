@@ -202,7 +202,10 @@ export function openTagsSetter(memberName: Member['username']) {
     if (newTagsValue !== null) {
       const tags =
         newTagsValue.trim().length > 0
-          ? newTagsValue.split(/,|，/g).map((it) => ({ name: it }))
+          ? newTagsValue
+              .split(/,|，/g)
+              .filter((it) => it.trim().length > 0)
+              .map((it) => ({ name: it }))
           : undefined
 
       await setMemberTags(memberName, tags)
