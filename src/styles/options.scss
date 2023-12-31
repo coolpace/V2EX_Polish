@@ -198,18 +198,49 @@ fieldset {
       min-width: 100px;
       margin-right: 20px;
       font-weight: bold;
+
+      a {
+        &:hover {
+          text-decoration: underline 1.5px;
+          text-underline-offset: 0.46ex;
+        }
+      }
     }
 
     .tag-item-tags {
       display: flex;
       gap: 6px;
+      padding: 1px;
+      font-size: 14px;
     }
 
     .tag-item-tag {
+      position: relative;
       padding: 2px 6px;
       background-color: var(--v2p-color-main-100);
       border-radius: 4px;
       cursor: default;
+
+      .tag-item-tag-remove {
+        position: absolute;
+        top: -0.8ex;
+        right: -0.8ex;
+        z-index: 10;
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        padding: 1px;
+        overflow: hidden;
+        color: var(--v2p-color-error);
+        background-color: var(--v2p-color-bg-error);
+        border-radius: 9999px;
+        cursor: pointer;
+        opacity: 0;
+      }
+
+      &:hover .tag-item-tag-remove {
+        opacity: 1;
+      }
     }
   }
 }

@@ -442,8 +442,8 @@ hr {
 
     #clear-storage {
       &:hover {
-        color: #ef4444;
-        background-color: #fee2e2;
+        color: var(--v2p-color-error);
+        background-color: var(--v2p-color-bg-error);
       }
     }
 
