@@ -50,6 +50,10 @@ body {
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--v2p-color-main-100);
+  }
 }
 
 .menu-item-icon {
@@ -183,15 +187,26 @@ fieldset {
   }
 }
 
+.tags-divider {
+  margin: 10px 0 20px;
+}
+
 .tags-list {
   display: flex;
   flex-direction: column;
-  gap: 20px 0;
+  gap: 10px 0;
   list-style: none;
 
   @at-root {
     .tag-item {
       display: flex;
+      padding: 5px 0;
+
+      &:hover {
+        .tag-item-tag-add {
+          opacity: 1;
+        }
+      }
     }
 
     .tag-member-name {
@@ -209,19 +224,28 @@ fieldset {
 
     .tag-item-tags {
       display: flex;
-      gap: 6px;
-      padding: 1px;
+      gap: 6px 8px;
       font-size: 14px;
     }
 
     .tag-item-tag {
       position: relative;
+      display: inline-flex;
+      gap: 0 2px;
+      align-items: center;
+      justify-content: center;
       padding: 2px 6px;
       background-color: var(--v2p-color-main-100);
       border-radius: 4px;
       cursor: default;
 
-      .tag-item-tag-remove {
+      &.tag-item-tag-add {
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .tag-remove {
         position: absolute;
         top: -0.8ex;
         right: -0.8ex;
@@ -238,8 +262,13 @@ fieldset {
         opacity: 0;
       }
 
-      &:hover .tag-item-tag-remove {
+      &:hover .tag-remove {
         opacity: 1;
+      }
+
+      .tag-add {
+        width: 1em;
+        height: 1em;
       }
     }
   }

@@ -1,4 +1,4 @@
-import { createIcons, Settings, Tags, X } from 'lucide'
+import { createIcons, Plus, Settings, Tags, X } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
 import type { MemberTag, Options } from '../types'
@@ -97,7 +97,7 @@ void (async function init() {
   }
 
   const $contentSettings = $('.content-settings')
-  const $contentTags = $('.content-tags')
+  const $contentTags = $('.content-tags').hide()
 
   {
     /** 渲染已设置的用户标签列表。 */
@@ -105,118 +105,160 @@ void (async function init() {
       const storage = await getStorage(false)
       const tagData = storage[StorageKey.MemberTag]
 
-      $('.tags-list').remove()
+      $('.tags-list-wrapper').remove()
 
-      if (tagData && Object.keys(tagData).length > 0) {
-        const $tagList = $(`
-          <ul class="tags-list">
-            ${Object.entries(tagData)
-              .map(([memberName, { tags }]) => {
-                if (tags && tags.length > 0) {
-                  return `
-                    <li class="tag-item">
-                      <div class="tag-member-name">
-                        <a href="${
-                          V2EX.Origin
-                        }/member/${memberName}" target="_blank">${memberName}</a>
-                      </div>
-                      <div class="tag-item-tags">
-                        ${
-                          tags
-                            .map((tag, idx) => {
-                              return `
-                                <span
-                                  class="tag-item-tag"
-                                  data-member-name="${memberName}"
-                                  data-tag-idx="${idx}"
-                                  data-tag-name="${tag.name}"
-                                >
-                                  ${tag.name}
-    
-                                  <span class="tag-item-tag-remove">
-                                    <span data-lucide="x"></span>
-                                  </span>
-                                </span>
-                              `
-                            })
-                            .join('') || ''
-                        }
-                      </div>
-                    </li>
-                  `
+      if (tagData) {
+        const count = Object.keys(tagData).length
+
+        if (count > 0) {
+          const $tagList = $(`
+            <div class="tags-list-wrapper">
+              <div class="tags-tip">已设置 ${count} 条用户标签</div>
+              <hr class="tags-divider" />
+              <ul class="tags-list">
+                ${Object.entries(tagData)
+                  .map(([memberName, { tags }]) => {
+                    if (tags && tags.length > 0) {
+                      return `
+                        <li class="tag-item">
+                          <div class="tag-member-name">
+                            <a href="${V2EX.Origin}/member/${memberName}" target="_blank">
+                              ${memberName}：
+                            </a>
+                          </div>
+
+                          <div class="tag-item-tags">
+                            ${
+                              tags
+                                .map((tag, idx) => {
+                                  return `
+                                    <span
+                                      class="tag-item-tag"
+                                      data-member-name="${memberName}"
+                                      data-tag-idx="${idx}"
+                                      data-tag-name="${tag.name}"
+                                    >
+                                      ${tag.name}
+        
+                                      <span class="tag-remove">
+                                        <span data-lucide="x"></span>
+                                      </span>
+                                    </span>
+                                  `
+                                })
+                                .join('') || ''
+                            }
+
+                            <span class="tag-item-tag tag-item-tag-add" data-member-name="${memberName}">
+                              <span class="tag-add"><span data-lucide="plus"></span></span>
+                              <span>添加标签</span>
+                            </span>
+                          </div>
+                        </li>
+                      `
+                    }
+
+                    return ''
+                  })
+                  .join('')}
+              </ul>
+            </div>
+          `)
+
+          $tagList.find('.tag-item-tag.tag-item-tag-add').on('click', (ev) => {
+            void (async () => {
+              const $target = $(ev.currentTarget)
+              const { memberName } = $target.data()
+              const newTagValue = window.prompt(`新增对 @${memberName} 的标签。`)
+
+              if (typeof memberName === 'string') {
+                if (newTagValue && newTagValue.trim() !== '') {
+                  const currentMemberTags = tagData[memberName].tags
+
+                  if (currentMemberTags) {
+                    await setStorage(StorageKey.MemberTag, {
+                      ...tagData,
+                      [memberName]: {
+                        tags: [...currentMemberTags, { name: newTagValue }],
+                      },
+                    })
+
+                    renderTagsContent()
+                  }
                 }
+              }
+            })()
+          })
 
-                return ''
-              })
-              .join('')}
-          </ul>
-        `)
+          $tagList
+            .find('.tag-item-tag')
+            .not('.tag-item-tag-add')
+            .on('click', (ev) => {
+              void (async () => {
+                const $target = $(ev.currentTarget)
 
-        $tagList.find('.tag-item-tag').on('click', (ev) => {
-          void (async () => {
-            const $target = $(ev.currentTarget)
-            const { memberName, tagIdx, tagName: tn } = $target.data()
-            const tagName = String(tn)
+                const { memberName, tagIdx, tagName: tn } = $target.data()
+                const tagName = String(tn)
 
-            if (typeof memberName === 'string' && typeof tagIdx === 'number') {
-              let newTagsValue = window.prompt(`修改 @${memberName} 的标签。`, tagName)
-              newTagsValue = newTagsValue ? newTagsValue.trim() : null
+                if (typeof memberName === 'string' && typeof tagIdx === 'number') {
+                  const changedTagValue = window.prompt(`修改 @${memberName} 的标签。`, tagName)
 
-              if (newTagsValue !== null) {
+                  if (changedTagValue && changedTagValue.trim() !== '') {
+                    const currentMemberTags = tagData[memberName].tags
+
+                    if (currentMemberTags) {
+                      await setStorage(StorageKey.MemberTag, {
+                        ...tagData,
+                        [memberName]: {
+                          tags: currentMemberTags.map((it, idx) =>
+                            idx === tagIdx ? { name: changedTagValue } : it
+                          ),
+                        },
+                      })
+
+                      renderTagsContent()
+                    }
+                  }
+                }
+              })()
+            })
+
+          $tagList.find('.tag-remove').on('click', (ev) => {
+            ev.stopPropagation()
+
+            void (async () => {
+              const $target = $(ev.currentTarget)
+              const $tagItem = $target.closest('.tag-item-tag')
+              const { memberName, tagIdx } = $tagItem.data()
+
+              if (typeof memberName === 'string' && typeof tagIdx === 'number') {
                 const currentMemberTags = tagData[memberName].tags
 
                 if (currentMemberTags) {
-                  await setStorage(StorageKey.MemberTag, {
-                    ...tagData,
-                    [memberName]: {
-                      tags: currentMemberTags.map((it, idx) =>
-                        idx === tagIdx ? { name: newTagsValue! } : it
-                      ),
-                    },
-                  })
+                  if (currentMemberTags.length <= 1) {
+                    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                    delete tagData[memberName]
+
+                    await setStorage(StorageKey.MemberTag, tagData)
+                  } else {
+                    const newTagData: MemberTag = {
+                      ...tagData,
+                      [memberName]: { tags: currentMemberTags.filter((_, idx) => idx !== tagIdx) },
+                    }
+
+                    await setStorage(StorageKey.MemberTag, newTagData)
+                  }
 
                   renderTagsContent()
                 }
               }
-            }
-          })()
-        })
+            })()
+          })
 
-        $tagList.find('.tag-item-tag-remove').on('click', (ev) => {
-          ev.stopPropagation()
+          $contentTags.append($tagList)
 
-          void (async () => {
-            const $target = $(ev.currentTarget)
-            const $tagItem = $target.closest('.tag-item')
-            const { memberName, tagIdx } = $tagItem.data()
-
-            if (typeof memberName === 'string' && typeof tagIdx === 'number') {
-              const currentMemberTags = tagData[memberName].tags
-
-              if (currentMemberTags) {
-                if (currentMemberTags.length <= 1) {
-                  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-                  delete tagData[memberName]
-
-                  await setStorage(StorageKey.MemberTag, tagData)
-                } else {
-                  const newTagData: MemberTag = {
-                    ...tagData,
-                    [memberName]: { tags: currentMemberTags.filter((_, idx) => idx !== tagIdx) },
-                  }
-
-                  await setStorage(StorageKey.MemberTag, newTagData)
-                }
-
-                renderTagsContent()
-              }
-            }
-          })()
-        })
-
-        $contentTags.append($tagList)
-
-        createIcons({ attrs: { width: '100%', height: '100%' }, icons: { X } })
+          createIcons({ attrs: { width: '100%', height: '100%' }, icons: { Plus, X } })
+        }
       } else {
         $contentTags.append($('<p class="tags-empty">未对任何用户设置标签。</p>'))
       }
