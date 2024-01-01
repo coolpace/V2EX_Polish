@@ -38,7 +38,14 @@ chrome.contextMenus.removeAll(() => {
   const runEnv = getRunEnv()
 
   chrome.contextMenus.create({
-    documentUrlPatterns: ['https://v2ex.com/*', 'https://www.v2ex.com/*', 'https://cn.v2ex.com/*'],
+    documentUrlPatterns: [
+      'https://v2ex.com/*',
+      'https://www.v2ex.com/*',
+      'https://cn.v2ex.com/*',
+      'https://global.v2ex.com/*',
+      'https://fast.v2ex.com/*',
+      'https://hk.v2ex.com/*',
+    ],
     contexts: ['page'],
     title: 'V2EX Polish',
     visible: true,
@@ -51,6 +58,9 @@ chrome.contextMenus.removeAll(() => {
         'https://v2ex.com/*',
         'https://www.v2ex.com/*',
         'https://cn.v2ex.com/*',
+        'https://global.v2ex.com/*',
+        'https://fast.v2ex.com/*',
+        'https://hk.v2ex.com/*',
       ],
       contexts: ['page'],
       title: '选项设置',
@@ -64,6 +74,9 @@ chrome.contextMenus.removeAll(() => {
       'https://v2ex.com/t/*',
       'https://www.v2ex.com/t/*',
       'https://cn.v2ex.com/t/*',
+      'https://global.v2ex.com/t/*',
+      'https://fast.v2ex.com/t/*',
+      'https://hk.v2ex.com/t/*',
     ],
     contexts: ['page'],
     title: '解析本页 Base64',
@@ -76,6 +89,9 @@ chrome.contextMenus.removeAll(() => {
       'https://v2ex.com/t/*',
       'https://www.v2ex.com/t/*',
       'https://cn.v2ex.com/t/*',
+      'https://global.v2ex.com/t/*',
+      'https://fast.v2ex.com/t/*',
+      'https://hk.v2ex.com/t/*',
     ],
     contexts: ['page'],
     title: '添加进稍后阅读',
@@ -126,7 +142,10 @@ chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
     if (
       url.origin === 'https://www.v2ex.com' ||
       url.origin === 'https://v2ex.com' ||
-      url.origin === 'https://cn.v2ex.com'
+      url.origin === 'https://cn.v2ex.com' ||
+      url.origin === 'https://global.v2ex.com' ||
+      url.origin === 'https://fast.v2ex.com' ||
+      url.origin === 'https://hk.v2ex.com'
     ) {
       await chrome.sidePanel.setOptions({
         tabId,
