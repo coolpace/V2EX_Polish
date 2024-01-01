@@ -95,10 +95,10 @@ export function Paragraph({ width }: { width?: 'full' | '4/5' | '3/4' | '1/2' })
         width === 'full'
           ? 'w-full'
           : width === '4/5'
-          ? 'w-4/5'
-          : width === '3/4'
-          ? 'w-3/4'
-          : 'w-1/2'
+            ? 'w-4/5'
+            : width === '3/4'
+              ? 'w-3/4'
+              : 'w-1/2'
       }`}
     />
   )

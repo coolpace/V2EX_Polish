@@ -7,9 +7,9 @@ import { useEffect, useRef, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
 import { useParams } from 'next/navigation'
-import { Avatar, Button, Callout, Checkbox, Flex, Link, Text, TextField } from '@radix-ui/themes'
+import { Avatar, Button, Callout, Checkbox, Flex, Link, Text } from '@radix-ui/themes'
 import { toBlob, toPng } from 'html-to-image'
-import { AlertCircleIcon, SearchIcon } from 'lucide-react'
+import { AlertCircleIcon } from 'lucide-react'
 
 import type { RequestData as ImgRequestData } from '~/app/api/img-to-base64/route'
 import {
@@ -19,6 +19,8 @@ import {
   type TopicInfo,
 } from '~/app/api/share/route'
 import { HOST } from '~/utils'
+
+import { TopicLinkInput } from './TopicLinkInput'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -332,31 +334,26 @@ export function ShareInfo() {
             </Callout.Root>
           )}
 
-          <TextField.Root>
-            <TextField.Slot>
-              <SearchIcon height="16" width="16" />
-            </TextField.Slot>
-            <TextField.Input
-              defaultValue={topicInfo?.url}
-              disabled={!actionAvailable}
-              placeholder="输入 V2EX 主题链接..."
-            />
-          </TextField.Root>
+          <TopicLinkInput value={topicInfo?.url} />
 
           <Flex>
-            <Text size="2">
-              <label>
-                <Checkbox
-                  checked={showSubtle}
-                  mr="1"
-                  variant="soft"
-                  onCheckedChange={(checked) => {
-                    setShowSubtle(checked ? true : false)
-                  }}
-                />
-                显示附言
-              </label>
-            </Text>
+            {topicInfo &&
+              Array.isArray(topicInfo.supplements) &&
+              topicInfo.supplements.length > 0 && (
+                <Text size="2">
+                  <label>
+                    <Checkbox
+                      checked={showSubtle}
+                      mr="1"
+                      variant="soft"
+                      onCheckedChange={(checked) => {
+                        setShowSubtle(checked ? true : false)
+                      }}
+                    />
+                    显示附言
+                  </label>
+                </Text>
+              )}
           </Flex>
 
           <Flex gap="3">
@@ -372,10 +369,10 @@ export function ShareInfo() {
               {copySuccess
                 ? '复制成功'
                 : copyFail
-                ? '复制失败'
-                : doingCopy
-                ? '复制中...'
-                : '复制为图片'}
+                  ? '复制失败'
+                  : doingCopy
+                    ? '复制中...'
+                    : '复制为图片'}
             </Button>
 
             <Button

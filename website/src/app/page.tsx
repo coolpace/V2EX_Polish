@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   title: getPageTitle(),
 }
 
-export default function Page() {
+export default function HomePage() {
   return (
     <PageContainer className="mx-auto max-w-7xl">
       {/* Hero */}
