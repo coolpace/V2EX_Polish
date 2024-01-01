@@ -95,11 +95,11 @@ export function Screenshot() {
                   name === 'home'
                     ? 'group-[[data-page="home"]]/page:opacity-100'
                     : name === 'topic'
-                    ? 'group-[[data-page="topic"]]/page:opacity-100'
-                    : // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    name === 'topic-write'
-                    ? 'group-[[data-page="topic-write"]]/page:opacity-100'
-                    : ''
+                      ? 'group-[[data-page="topic"]]/page:opacity-100'
+                      : // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                        name === 'topic-write'
+                        ? 'group-[[data-page="topic-write"]]/page:opacity-100'
+                        : ''
                 }`}
               >
                 {page}
