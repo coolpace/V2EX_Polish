@@ -79,28 +79,29 @@ void (async () => {
   }
 
   // 增加 SOV2EX 作为搜索引擎选项。
-  {
-    const $searchItem = $('<a class="search-item cell" target="_blank">')
+  // @deprecated: V2EX 原站已支持 SOV2EX，故不再需要此功能。
+  // {
+  //   const $searchItem = $('<a class="search-item cell" target="_blank">')
 
-    $searchItem
-      .on('mouseover', () => {
-        $('#search-result .search-item.active').addClass('v2p-no-active')
-        $searchItem.addClass('active')
-      })
-      .on('mouseleave', () => {
-        $('#search-result .search-item.active').removeClass('v2p-no-active')
-        $searchItem.removeClass('active')
-      })
+  //   $searchItem
+  //     .on('mouseover', () => {
+  //       $('#search-result .search-item.active').addClass('v2p-no-active')
+  //       $searchItem.addClass('active')
+  //     })
+  //     .on('mouseleave', () => {
+  //       $('#search-result .search-item.active').removeClass('v2p-no-active')
+  //       $searchItem.removeClass('active')
+  //     })
 
-    const $search = $('#search')
+  //   const $search = $('#search')
 
-    $search.on('input', (ev) => {
-      const value = (ev.target as HTMLInputElement).value
-      const $searchGroup = $('#search-result .search-item-group:last-of-type')
-      $searchItem.text(`SOV2EX ${value}`).prop('href', `https://www.sov2ex.com/?q=${value}`)
-      $searchGroup.append($searchItem)
-    })
-  }
+  //   $search.on('input', (ev) => {
+  //     const value = (ev.target as HTMLInputElement).value
+  //     const $searchGroup = $('#search-result .search-item-group:last-of-type')
+  //     $searchItem.text(`SOV2EX ${value}`).prop('href', `https://www.sov2ex.com/?q=${value}`)
+  //     $searchGroup.append($searchItem)
+  //   })
+  // }
 
   {
     const runEnv = getRunEnv()
