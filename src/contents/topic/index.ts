@@ -24,6 +24,7 @@ void (async () => {
     $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
   }
 
+  // 右侧用户信息卡片中的工具栏。
   {
     const $tools = $(`
       <div class="cell v2p-tools">

@@ -1,11 +1,16 @@
 import { createElement, PanelRight, PanelTop } from 'lucide'
 
+import { StorageKey } from '../../constants'
+import { getStorageSync } from '../../utils'
 import { $wrapper } from '../globals'
 
 /**
  * 控制主题布局水平分屏显示。
  */
 export function handlingLayout() {
+  const storage = getStorageSync()
+  const options = storage[StorageKey.Options]
+
   const layoutToggle = $('<span class="v2p-layout-toggle v2p-hover-btn">')
 
   const iconLayoutV = createElement(PanelTop)
@@ -55,7 +60,11 @@ export function handlingLayout() {
     layoutToggle.attr('title', '切换为水平布局')
   }
 
-  switchToVerticalLayout()
+  if (options.reply.layout === 'horizontal') {
+    switchToHorizontalLayout()
+  } else {
+    switchToVerticalLayout()
+  }
 
   layoutToggle.on('click', () => {
     if ($wrapperContent.hasClass('v2p-content-layout')) {

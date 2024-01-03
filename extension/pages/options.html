@@ -66,11 +66,7 @@
               <hr />
 
               <fieldset>
-                <legend>
-                  预加载多页回复<sup title="实验性的功能，后续版本可能会调整，请勿过于依赖"
-                    >实验性</sup
-                  >
-                </legend>
+                <legend>预加载多页回复</legend>
                 <div class="form-radio">
                   <input
                     type="radio"
@@ -210,6 +206,36 @@
                   />
                   <div class="combo">
                     <label for="userTagDisplayBlock">独行显示（更直观）</label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <hr />
+
+              <fieldset>
+                <legend>主题内容布局<sup>新功能</sup></legend>
+                <div class="form-radio">
+                  <input
+                    type="radio"
+                    id="replyLayoutDefault"
+                    name="reply.layout"
+                    value="inline"
+                    checked="false"
+                  />
+                  <div class="combo">
+                    <label for="replyLayoutDefault">默认</label>
+                  </div>
+                </div>
+                <div class="form-radio">
+                  <input
+                    type="radio"
+                    id="replyLayoutHorizontal"
+                    name="reply.layout"
+                    value="block"
+                    checked="false"
+                  />
+                  <div class="combo">
+                    <label for="replyLayoutHorizontal">水平排列</label>
                   </div>
                 </div>
               </fieldset>
