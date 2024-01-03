@@ -18,7 +18,7 @@ export let $commentCells = $commentBox.find('.cell[id^="r_"]')
 
 export let $commentTableRows = $commentCells.find('> table > tbody > tr')
 
-/** 当元素发生改变时，需要更新以选择到最新的元素 */
+/** 当文档结构发生改变时，执行此方法以重新选择到最新的元素 */
 export function updateCommentCells() {
   $commentCells = $commentBox.find('.cell[id^="r_"]')
   $commentTableRows = $commentCells.find('> table > tbody > tr')
@@ -27,9 +27,6 @@ export function updateCommentCells() {
 /** 回复输入控件 */
 export const $replyBox = $('#reply-box')
 export const $replyForm = $replyBox.find('form[action^="/t"]')
-
-/** 当前页面使用的颜色模式：浅色 | 深色 */
-export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'
 
 /** 主题回复输入框 */
 export const $replyTextArea = $('#reply_content')
