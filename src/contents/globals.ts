@@ -1,20 +1,14 @@
-/** 登录人的昵称 */
-export const loginName = $('#Top .tools > a[href^="/member"]').text()
-
-/** 发帖人的昵称 */
-export const topicOwnerName = $('#Main > .box > .header > small > a[href^="/member"]').text()
-
 export const $wrapper = $('#Wrapper')
 
 export const $topicList = $(
   '#Main #Tabs ~ .cell.item, #Main #TopicsNode > .cell, #Main .cell.item:has(.item_title > .topic-link)'
 )
 
-/** 主题头部 */
-export const $topicHeader = $('#Main .header')
-
 /** 主题内容区 */
 export const $topicContentBox = $('#Main .box:has(.topic_content)')
+
+/** 主题内容区的头部 */
+export const $topicHeader = $topicContentBox.find('.header')
 
 /** 主题下的评论区 */
 export const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
@@ -40,3 +34,9 @@ export const colorTheme = $('#Wrapper').hasClass('Night') ? 'dark' : 'light'
 /** 主题回复输入框 */
 export const $replyTextArea = $('#reply_content')
 export const replyTextArea = document.querySelector('#reply_content')
+
+/** 登录人的昵称 */
+export const loginName = $('#Top .tools > a[href^="/member"]').text()
+
+/** 发帖人的昵称 */
+export const topicOwnerName = $topicHeader.find('> small > a[href^="/member"]').text()
