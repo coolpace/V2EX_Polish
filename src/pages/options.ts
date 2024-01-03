@@ -28,6 +28,7 @@ const saveOptions = async () => {
 
         return undefined
       })(),
+      layout: $('#replyLayoutHorizontal').prop('checked') ? 'horizontal' : undefined,
     },
     replyContent: {
       autoFold: $('#autoFold').prop('checked'),
@@ -90,6 +91,9 @@ void (async function init() {
 
     $('#userTagDisplayInline').prop('checked', options.userTag.display === 'inline')
     $('#userTagDisplayBlock').prop('checked', options.userTag.display === 'block')
+
+    $('#replyLayoutDefault').prop('checked', !options.reply.layout)
+    $('#replyLayoutHorizontal').prop('checked', options.reply.layout === 'horizontal')
 
     $('input[type]').on('change', () => {
       void saveOptions()
