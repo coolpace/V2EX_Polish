@@ -12,6 +12,7 @@ import {
 } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
+import { handlingLayout } from './layout'
 import { handlingPaging } from './paging'
 import { handleReply } from './reply'
 
@@ -180,6 +181,8 @@ void (async () => {
   handlingPaging()
   await handlingComments()
   handleReply()
+
+  handlingLayout()
 
   loadIcons()
 })()

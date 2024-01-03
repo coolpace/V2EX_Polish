@@ -427,7 +427,7 @@ export async function handlingComments() {
     })
     .get()
 
-  // 此区块的逻辑需要在处理嵌套评论前执行。
+  // 👇此区块的逻辑需要在处理嵌套评论前执行。
   {
     const membersHasSetTags = new Set<Member['username']>()
 
@@ -601,6 +601,7 @@ export async function handlingComments() {
     }
   }
 
+  // 让主题内容区的头像在鼠标悬浮时也能展示用户信息弹框。
   {
     const $opAvatar = $topicHeader.find('.avatar')
     const $opName = $topicHeader.find('.gray a[href^="/member"]')

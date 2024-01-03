@@ -182,6 +182,9 @@ export function updateMemberTag(
   }
 }
 
+/**
+ * 打开模态框，让用户编辑用户标签。
+ */
 export function openTagsSetter(memberName: Member['username']) {
   void (async () => {
     const storage = await getStorage(false)
