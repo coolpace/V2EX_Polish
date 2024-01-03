@@ -1,7 +1,7 @@
 import { Clock4, createElement, Heart } from 'lucide'
 
 import { createModel } from '../../components/model'
-import { popupControl } from '../../components/popup'
+import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { crawalTopicPage, thankReply } from '../../services'
@@ -13,6 +13,7 @@ import {
   $commentTableRows,
   $replyTextArea,
   $topicHeader,
+  $wrapper,
   loginName,
   topicOwnerName,
   updateCommentCells,
@@ -280,6 +281,13 @@ function processActions($cellDom: JQuery, data: CommentData) {
 
   $actions.empty().append($controls, floorNum)
 }
+
+const popupControl = createPopup({
+  root: $wrapper,
+  triggerType: 'hover',
+  placement: 'right-start',
+  offsetOptions: { mainAxis: 8, crossAxis: -4 },
+})
 
 export async function handlingComments() {
   const storage = getStorageSync()
