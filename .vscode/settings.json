@@ -3,7 +3,8 @@
     "asset": true,
     "extension/**/{*.min.js}": true,
     "extension/**/{*.min.css}": true,
-    "extension/css/**/*.css": true
+    "extension/css/**/*.css": true,
+    "/website": true
   },
   "files.readonlyInclude": {
     "dist/**/*": true,
