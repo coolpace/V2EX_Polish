@@ -332,3 +332,23 @@ export async function getPreviewContent(params: {
     throw new Error('预览失败')
   }
 }
+
+export async function getUnreadMessagesCount(): Promise<number> {
+  const res = await fetch(`${V2EX.Origin}/mission`)
+  const htmlText = await res.text()
+  const $page = $(htmlText)
+  const text = $page.find('#Rightbar a[href^="/notifications"]').text()
+
+  if (text.includes('未读提醒')) {
+    const countStr = text.match(/\d+/)?.at(0)
+
+    if (countStr) {
+      const count = Number(text.match(/\d+/)?.at(0))
+      return count
+    }
+  } else {
+    return 0
+  }
+
+  throw new Error('无法获取未读消息数量')
+}

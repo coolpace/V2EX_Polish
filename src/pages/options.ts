@@ -53,14 +53,14 @@ void (async function init() {
   const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
   if (perfersDark.matches) {
-    $('body').addClass('v2p-theme-dark')
+    $(document.body).addClass('v2p-theme-dark')
   }
 
   perfersDark.addEventListener('change', ({ matches }) => {
     if (matches) {
-      $('body').addClass('v2p-theme-dark')
+      $(document.body).addClass('v2p-theme-dark')
     } else {
-      $('body').removeClass('v2p-theme-dark')
+      $(document.body).removeClass('v2p-theme-dark')
     }
   })
 
