@@ -68,6 +68,7 @@ void (async function init() {
 
   const storage = await getStorage()
 
+  // 初始化设置表单的值。
   {
     const options = storage[StorageKey.Options]
 
@@ -100,11 +101,10 @@ void (async function init() {
     })
   }
 
-  const $contentSettings = $('.content-settings')
-  const $contentTags = $('.content-tags').hide()
-
+  // 渲染已设置的用户标签列表。
   {
-    /** 渲染已设置的用户标签列表。 */
+    const $contentTags = $('[data-content-key="tags"]')
+
     const renderTagsContent = async () => {
       const storage = await getStorage(false)
       const tagData = storage[StorageKey.MemberTag]
@@ -271,17 +271,51 @@ void (async function init() {
     renderTagsContent()
   }
 
+  // 控制切换显示菜单的内容。
   {
+    const url = new URL(window.location.href)
+    const DEFAULT_ACTIVE_KEY = 'settings'
+    const MENU = 'menu'
+
+    const menuKeys = new Set<string>()
+
+    $('[data-menu-key]').each((_, ele) => {
+      const menuKey = ele.dataset.menuKey
+
+      if (typeof menuKey === 'string') {
+        menuKeys.add(menuKey)
+      }
+    })
+
+    const activeMenu = (activeKey = DEFAULT_ACTIVE_KEY) => {
+      if (!menuKeys.has(activeKey)) {
+        activeKey = DEFAULT_ACTIVE_KEY
+      }
+
+      $('[data-menu-key]').removeClass('active')
+      $(`[data-menu-key="${activeKey}"]`).addClass('active')
+
+      $('[data-content-key]').hide()
+      $(`[data-content-key="${activeKey}"]`).show()
+
+      if (activeKey === DEFAULT_ACTIVE_KEY) {
+        url.searchParams.delete(MENU)
+        history.replaceState(null, '', url.toString())
+      } else {
+        url.searchParams.set(MENU, activeKey)
+        history.replaceState(null, '', url.toString())
+      }
+    }
+
+    const initialMenuKey = url.searchParams.get(MENU) || DEFAULT_ACTIVE_KEY
+    activeMenu(initialMenuKey)
+
     $('.menu-item').on('click', (ev) => {
       const $target = $(ev.currentTarget)
-      $target.addClass('active').siblings().removeClass('active')
+      const { menuKey } = $target.data()
 
-      if ($target.hasClass('menu-item-settings')) {
-        $contentSettings.show()
-        $contentTags.hide()
-      } else if ($target.hasClass('menu-item-tags')) {
-        $contentSettings.hide()
-        $contentTags.show()
+      if (typeof menuKey === 'string') {
+        activeMenu(menuKey)
       }
     })
   }
