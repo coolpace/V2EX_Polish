@@ -70,6 +70,10 @@ body {
   padding: 40px 50px;
   overflow: auto;
   background-color: var(--v2p-color-bg-content);
+
+  [data-content-key] {
+    display: none;
+  }
 }
 
 .title {

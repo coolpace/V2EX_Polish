@@ -19,10 +19,10 @@
 
         <div>
           <ul class="menu">
-            <li class="menu-item active menu-item-settings">
+            <li data-menu-key="settings" class="menu-item">
               <i class="menu-item-icon" data-lucide="settings"></i>控制选项
             </li>
-            <li class="menu-item menu-item-tags">
+            <li data-menu-key="tags" class="menu-item">
               <i class="menu-item-icon" data-lucide="tags"></i>用户标签
             </li>
           </ul>
@@ -30,7 +30,7 @@
       </div>
 
       <div class="content">
-        <div class="content-settings">
+        <div data-content-key="settings">
           <form id="options-form">
             <div class="options-form-inner">
               <div class="form-checkbox">
@@ -243,7 +243,7 @@
           </form>
         </div>
 
-        <div class="content-tags"></div>
+        <div data-content-key="tags"></div>
       </div>
     </div>
 
