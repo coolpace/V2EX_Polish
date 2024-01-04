@@ -6,6 +6,10 @@ body {
 
 body {
   font-size: 16px;
+
+  &.v2p-theme-dark {
+    color-scheme: dark;
+  }
 }
 
 .layout {
@@ -274,6 +278,96 @@ fieldset {
         width: 1em;
         height: 1em;
       }
+    }
+  }
+}
+
+.tags-empty-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  font-size: 14px;
+  pointer-events: none;
+
+  .empty-tip {
+    padding: 20px 10px;
+    text-align: center;
+  }
+
+  .empty-content {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+    background-color: var(--v2p-color-main-100);
+    border-radius: 8px;
+    user-select: none;
+  }
+
+  .avatar {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background-color: var(--v2p-color-main-300);
+    border-radius: 5px;
+  }
+
+  .userinfo {
+    position: relative;
+    top: -5px;
+    width: max-content;
+    padding: 12px;
+    background: var(--v2p-color-bg-widget);
+    border: 1px solid var(--box-border-color);
+    border-radius: 8px;
+    box-shadow: var(--v2p-widget-shadow);
+    backdrop-filter: blur(16px);
+  }
+
+  .userinfo-top {
+    display: flex;
+    gap: 0 20px;
+    align-items: center;
+  }
+
+  .userinfo-bottom {
+    margin-top: 20px;
+  }
+
+  .userinfo-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    color: var(--button-foreground-color);
+    font-weight: 500;
+    font-family: inherit;
+    white-space: nowrap;
+    text-shadow: none;
+    background: var(--button-background-color);
+    border-radius: 6px;
+    box-shadow:
+      0 1.8px 0 var(--box-background-hover-color),
+      0 1.8px 0 var(--button-background-color);
+  }
+
+  .userinfo-avatar {
+    width: 73px;
+    height: 73px;
+    background-color: var(--v2p-color-main-300);
+    border-radius: 5px;
+  }
+
+  .userinfo-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    div {
+      height: 15px;
+      background-color: var(--v2p-color-main-300);
     }
   }
 }

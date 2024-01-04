@@ -283,7 +283,7 @@ button {
         display: flex;
         align-items: center;
 
-        #theme-trigger {
+        #theme-toggle {
           margin-left: auto;
         }
       }
@@ -572,7 +572,7 @@ a {
   width: 320px;
   margin-top: 20px;
   overflow: hidden;
-  background-color: var(--v2p-color-background);
+  background-color: var(--v2p-color-main-100);
   border-radius: 8px;
 }
 
