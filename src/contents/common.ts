@@ -39,10 +39,10 @@ void (async () => {
       }
 
       if (preferDark) {
-        $('body').addClass('v2p-theme-dark')
+        $(document.body).addClass('v2p-theme-dark')
         $wrapper.addClass('Night')
       } else {
-        $('body').removeClass('v2p-theme-dark')
+        $(document.body).removeClass('v2p-theme-dark')
         $wrapper.removeClass('Night')
       }
     }

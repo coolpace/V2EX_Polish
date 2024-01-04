@@ -27,6 +27,7 @@ import {
   fetchHotTopics,
   fetchLatestTopics,
   fetchNotifications,
+  getUnreadMessagesCount,
   getV2P_Settings,
   setV2P_Settings,
 } from '../services'
@@ -580,6 +581,37 @@ window.addEventListener('load', () => {
   void getStorage().then(() => {
     initTabs()
   })
+
+  const lastFetchUnreadMsgInfo = window.localStorage.getItem('v2p_last_fetch_unread_info')
+  const fiveMin = 5 * 1000 * 2
+  interface Info {
+    time: number
+    count: number
+  }
+  const info: Info = lastFetchUnreadMsgInfo
+    ? JSON.parse(lastFetchUnreadMsgInfo)
+    : { time: 0, count: 0 }
+  const now = Date.now()
+  const $tabMsg = $('.tabs > li[data-target="tab-message"]')
+
+  if (now - info.time >= fiveMin) {
+    getUnreadMessagesCount().then((count) => {
+      const storeInfo: Info = { time: now, count }
+      window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
+
+      if (count > 0) {
+        $tabMsg.text(`消息(${count})`)
+      } else {
+        $tabMsg.text('消息')
+      }
+    })
+  } else {
+    if (info.count > 0) {
+      $tabMsg.text(`消息(${info.count})`)
+    } else {
+      $tabMsg.text('消息')
+    }
+  }
 
   const themeMode = window.localStorage.getItem('v2p_popup_theme')
 
