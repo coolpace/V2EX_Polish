@@ -175,7 +175,7 @@ function loadSettings() {
       chrome.runtime.openOptionsPage()
     })
 
-    $('#theme-trigger').on('click', () => {
+    $('#theme-toggle').on('click', () => {
       const shouldDark = !$(document.body).hasClass('v2p-theme-dark')
       const themeMode = shouldDark ? 'dark' : 'light'
       window.localStorage.setItem('v2p_popup_theme', themeMode)

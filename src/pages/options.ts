@@ -49,12 +49,21 @@ const saveOptions = async () => {
   await setStorage(StorageKey.Options, currentOptions)
 }
 
-$('#options-form').on('submit', (ev) => {
-  ev.preventDefault() // 阻止默认的表单提交行为
-  void saveOptions()
-})
-
 void (async function init() {
+  const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+  if (perfersDark.matches) {
+    $('body').addClass('v2p-theme-dark')
+  }
+
+  perfersDark.addEventListener('change', ({ matches }) => {
+    if (matches) {
+      $('body').addClass('v2p-theme-dark')
+    } else {
+      $('body').removeClass('v2p-theme-dark')
+    }
+  })
+
   createIcons({
     attrs: {
       width: '100%',
@@ -109,7 +118,7 @@ void (async function init() {
       const storage = await getStorage(false)
       const tagData = storage[StorageKey.MemberTag]
 
-      $('.tags-list-wrapper').remove()
+      $contentTags.empty()
 
       if (tagData) {
         const count = Object.keys(tagData).length
@@ -143,7 +152,7 @@ void (async function init() {
                                       data-tag-name="${tag.name}"
                                     >
                                       ${tag.name}
-        
+
                                       <span class="tag-remove">
                                         <span data-lucide="x"></span>
                                       </span>
@@ -264,7 +273,7 @@ void (async function init() {
           createIcons({ attrs: { width: '100%', height: '100%' }, icons: { Plus, X } })
         }
       } else {
-        $contentTags.append($('<p class="tags-empty">未对任何用户设置标签。</p>'))
+        $contentTags.append($('#tags-empty').html())
       }
     }
 
