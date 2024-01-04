@@ -1,4 +1,7 @@
 export const $wrapper = $('#Wrapper')
+export const $wrapperContent = $wrapper.find('> .content')
+
+export const $main = $('#Main')
 
 export const $topicList = $(
   '#Main #Tabs ~ .cell.item, #Main #TopicsNode > .cell, #Main .cell.item:has(.item_title > .topic-link)'

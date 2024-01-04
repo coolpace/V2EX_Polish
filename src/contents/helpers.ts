@@ -290,6 +290,11 @@ export function postTask(expression: string, callback?: (result: unknown) => voi
   }
 }
 
+/**
+ * 将页面中带有 data-lucide 属性的元素替换为 lucide SVG 图标。
+ *
+ * 此方法是为了方便统一设置页面中的所有图标，一般在元素有图标更新需要时，都需要及时调用此方法以及时设置图标。
+ */
 export function loadIcons() {
   setTimeout(() => {
     createIcons({
@@ -315,6 +320,9 @@ export function loadIcons() {
   }, 0)
 }
 
+/**
+ * 将形如 [表情代码] 转换成表情图片的网络链接。
+ */
 export function transformEmoji(textValue: string) {
   return textValue.replace(/\[[^\]]+\]/g, (x) => {
     const emojiLink = biliEmojiLink[x as PopularEmoji]
