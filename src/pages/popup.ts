@@ -582,34 +582,38 @@ window.addEventListener('load', () => {
     initTabs()
   })
 
-  const lastFetchUnreadMsgInfo = window.localStorage.getItem('v2p_last_fetch_unread_info')
-  const fiveMin = 5 * 1000 * 2
-  interface Info {
-    time: number
-    count: number
-  }
-  const info: Info = lastFetchUnreadMsgInfo
-    ? JSON.parse(lastFetchUnreadMsgInfo)
-    : { time: 0, count: 0 }
-  const now = Date.now()
-  const $tabMsg = $('.tabs > li[data-target="tab-message"]')
+  // 展示消息未读数量。
+  {
+    const infoStr = window.localStorage.getItem('v2p_last_fetch_unread_info')
+    const fiveMinutes = 5 * 1000 * 60
 
-  if (now - info.time >= fiveMin) {
-    getUnreadMessagesCount().then((count) => {
-      const storeInfo: Info = { time: now, count }
-      window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
+    interface Info {
+      time: number
+      count: number
+    }
 
-      if (count > 0) {
-        $tabMsg.text(`消息(${count})`)
+    const lastFetchUnreadMsgInfo: Info = infoStr ? JSON.parse(infoStr) : { time: 0, count: 0 }
+    const now = Date.now()
+    const $tabMsg = $('.tabs > li[data-target="tab-message"]')
+
+    // 每 5 分钟获取一次未读消息数量。
+    if (now - lastFetchUnreadMsgInfo.time >= fiveMinutes) {
+      getUnreadMessagesCount().then((count) => {
+        const storeInfo: Info = { time: now, count }
+        window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
+
+        if (count > 0) {
+          $tabMsg.text(`消息(${count})`)
+        } else {
+          $tabMsg.text('消息')
+        }
+      })
+    } else {
+      if (lastFetchUnreadMsgInfo.count > 0) {
+        $tabMsg.text(`消息(${lastFetchUnreadMsgInfo.count})`)
       } else {
         $tabMsg.text('消息')
       }
-    })
-  } else {
-    if (info.count > 0) {
-      $tabMsg.text(`消息(${info.count})`)
-    } else {
-      $tabMsg.text('消息')
     }
   }
 
