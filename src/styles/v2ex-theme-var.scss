@@ -95,12 +95,12 @@
     }
 
     ::selection {
-      color: var(--v2p-color-main-100);
-      background-color: var(--v2p-color-main-700);
+      color: var(--v2p-color-main-100, #f1f5f9);
+      background-color: var(--v2p-color-main-700, #334155);
     }
 
     img::selection {
-      background-color: var(--v2p-color-main-500);
+      background-color: var(--v2p-color-main-500, #64748b);
     }
   }
 
@@ -167,12 +167,12 @@
     }
 
     ::selection {
-      color: var(--v2p-color-background);
-      background-color: var(--v2p-color-foreground);
+      color: var(--v2p-color-background, #1c2128);
+      background-color: var(--v2p-color-foreground, #adbac7);
     }
 
     img::selection {
-      background-color: var(--v2p-color-foreground);
+      background-color: var(--v2p-color-foreground, #adbac7);
     }
   }
 
