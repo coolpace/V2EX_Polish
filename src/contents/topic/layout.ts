@@ -14,16 +14,19 @@ const iconLayoutH = createElement(PanelRight)
 iconLayoutH.setAttribute('width', '100%')
 iconLayoutH.setAttribute('height', '100%')
 
-/** 将主题页切换为垂直布局。 */
+/** 将主题页切换为水平布局。 */
 const switchToHorizontalLayout = () => {
   if (!$wrapperContent.hasClass('v2p-content-layout')) {
     const $divider1 = $main.find('> .sep20:first-of-type')
-    const leftGroup = $divider1.add($divider1.next('.box'))
-    leftGroup.wrapAll('<div class="v2p-left-side">')
+    const $leftGroup = $divider1.add($divider1.next('.box'))
+    const $leftSide = $('<div class="v2p-left-side">')
+    $leftGroup.wrapAll($leftSide)
+    const $content = $leftGroup.find('> .cell')
+    $content.add($content.next('.subtle')).wrapAll('<div class="v2p-left-side-content">')
 
     const $divider2 = $main.find('.sep20:nth-of-type(2)')
-    const rightGroup = $divider2.add($divider2.nextAll())
-    rightGroup.wrapAll('<div class="v2p-right-side">')
+    const $rightGroup = $divider2.add($divider2.nextAll())
+    $rightGroup.wrapAll('<div class="v2p-right-side">')
 
     $wrapperContent.addClass('v2p-content-layout')
     $main.addClass('v2p-horizontal-layout')
@@ -34,19 +37,16 @@ const switchToHorizontalLayout = () => {
   $('.v2p-reply-tool-layout').text('切换为垂直布局')
 }
 
-/** 将主题页切换为水平布局。 */
+/** 将主题页切换为垂直布局。 */
 const switchToVerticalLayout = () => {
   if ($wrapperContent.hasClass('v2p-content-layout')) {
     $wrapperContent.removeClass('v2p-content-layout')
     $main.removeClass('v2p-horizontal-layout')
 
-    const $leftSide = $('.v2p-left-side')
-    $leftSide.children().appendTo($main)
-    $leftSide.remove()
+    $('.v2p-left-side-content').children().unwrap()
 
-    const $rightSide = $('.v2p-right-side')
-    $rightSide.children().appendTo($main)
-    $rightSide.remove()
+    $('.v2p-left-side').children().unwrap()
+    $('.v2p-right-side').children().unwrap()
   }
 
   $layoutToggle.html(iconLayoutH)

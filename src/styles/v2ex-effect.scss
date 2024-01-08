@@ -920,11 +920,11 @@ a.v2p-topic-preview-title-link {
           > .header {
             flex-shrink: 0;
           }
+        }
 
-          > .cell {
-            flex: 1;
-            overflow: auto;
-          }
+        .v2p-left-side-content {
+          flex: 1;
+          overflow: auto;
         }
       }
 
