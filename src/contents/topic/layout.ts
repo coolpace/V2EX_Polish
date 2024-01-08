@@ -22,7 +22,7 @@ const switchToHorizontalLayout = () => {
     const $leftSide = $('<div class="v2p-left-side">')
     $leftGroup.wrapAll($leftSide)
     const $content = $leftGroup.find('> .cell')
-    $content.add($content.next('.subtle')).wrapAll('<div class="v2p-left-side-content">')
+    $content.add($content.nextAll('.subtle')).wrapAll('<div class="v2p-left-side-content">')
 
     const $divider2 = $main.find('.sep20:nth-of-type(2)')
     const $rightGroup = $divider2.add($divider2.nextAll())
