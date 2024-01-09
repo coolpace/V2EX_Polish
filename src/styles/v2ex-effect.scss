@@ -642,6 +642,10 @@ a.v2p-topic-preview-title-link {
   }
 
   &.v2p-collapsed {
+    .reply_content a {
+      pointer-events: none;
+    }
+
     &::before {
       position: absolute;
       right: 0;
