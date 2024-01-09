@@ -25,24 +25,6 @@ body {
   border-right: 1px solid var(--v2p-color-main-200);
 }
 
-@media screen and (width<=768px) {
-  .side {
-    width: 80px;
-
-    .side-header-title {
-      display: none;
-    }
-
-    .menu-item {
-      justify-content: center;
-    }
-
-    .menu-item-title {
-      display: none;
-    }
-  }
-}
-
 .side-header {
   display: flex;
   gap: 0 14px;
@@ -218,15 +200,16 @@ fieldset {
 }
 
 .tags-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
   list-style: none;
 
   @at-root {
     .tag-item {
-      display: flex;
-      padding: 5px 0;
+      padding: 8px;
+      border: 1px solid var(--box-border-color);
+      border-radius: 0.4em;
 
       &:hover {
         .tag-item-tag-add {
@@ -237,7 +220,7 @@ fieldset {
 
     .tag-member-name {
       min-width: 100px;
-      margin-right: 20px;
+      margin: 0 0 5px;
       font-weight: bold;
 
       a {
@@ -250,7 +233,8 @@ fieldset {
 
     .tag-item-tags {
       display: flex;
-      gap: 6px 8px;
+      flex-wrap: wrap;
+      gap: 6px;
       font-size: 14px;
     }
 
@@ -261,6 +245,7 @@ fieldset {
       align-items: center;
       justify-content: center;
       padding: 2px 6px;
+      white-space: nowrap;
       background-color: var(--v2p-color-main-100);
       border-radius: 4px;
       cursor: default;
@@ -276,7 +261,7 @@ fieldset {
         top: -0.8ex;
         right: -0.8ex;
         z-index: 10;
-        display: inline-block;
+        display: none;
         width: 14px;
         height: 14px;
         padding: 1px;
@@ -285,11 +270,15 @@ fieldset {
         background-color: var(--v2p-color-bg-error);
         border-radius: 9999px;
         cursor: pointer;
-        opacity: 0;
+        opacity: 0.7;
+
+        &:hover {
+          opacity: 1;
+        }
       }
 
       &:hover .tag-remove {
-        opacity: 1;
+        display: inline-block;
       }
 
       .tag-add {
@@ -387,5 +376,53 @@ fieldset {
       height: 15px;
       background-color: var(--v2p-color-main-300);
     }
+  }
+}
+
+@media screen and (width<=768px) {
+  .side {
+    width: 80px;
+
+    .side-header-title {
+      display: none;
+    }
+
+    .menu {
+      padding: 15px;
+    }
+
+    .menu-item {
+      justify-content: center;
+    }
+
+    .menu-item-title {
+      display: none;
+    }
+  }
+
+  .content {
+    padding: 30px;
+  }
+}
+
+@media screen and (width<=500px) {
+  .side {
+    width: 60px;
+
+    .side-header {
+      padding: 15px;
+    }
+
+    .menu {
+      padding: 8px;
+    }
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+  .tags-list {
+    grid-template-columns: repeat(1, 1fr);
   }
 }

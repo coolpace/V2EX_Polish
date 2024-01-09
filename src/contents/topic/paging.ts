@@ -1,5 +1,8 @@
 import { $commentBox } from '../globals'
 
+/**
+ * 处理主题分页。
+ */
 export function handlingPaging() {
   const $notCommentCells = $commentBox.find('> .cell:not([id^="r_"])')
 
