@@ -76,8 +76,8 @@
 <td>丰富的个性化设置：</td>
 </tr>
 <tr>
-<td><img src=https://i.imgur.com/yaBXwFw.png width=600/></td>
-<td><img src=https://i.imgur.com/guRBbVB.png width=600/></td>
+<td><img src=https://github.com/coolpace/V2EX_Polish/assets/47730755/670411b9-039e-4dbb-97c9-b6c1d83d86a7 width=600/></td>
+<td><img src=https://github.com/coolpace/V2EX_Polish/assets/47730755/1364ee37-cba6-4a84-8255-17e90140f642 width=600/></td>
 </tr>
 <tr>
 <td>在回复中快速上传图片：</td>
@@ -174,7 +174,7 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 
 ## 赞赏支持
 
-如果这个插件帮助你节省了时间，让你的生活更加愉快，可以给开发者一点小小的赞赏，这会帮助插件更持续地发展。迄今为止，我们已收到 18 笔赞赏，共计 260 元。对于你们的大方支持，我们感慨万分！
+如果这个插件帮助你节省了时间，让你的生活更加愉快，可以给开发者一点小小的赞赏，这会帮助插件更持续地发展。迄今为止，我们已收到 19 笔赞赏，共计 266 元。对于你们的大方支持，我们感慨万分！
 
 ![微信赞赏](./assets/appreciation-code.jpg)
 
