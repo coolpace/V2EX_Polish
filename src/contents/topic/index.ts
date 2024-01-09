@@ -17,6 +17,7 @@ void (async () => {
     $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
   }
 
+  handlingLayout()
   handlingTools()
 
   // 按 Esc 隐藏回复框。
@@ -53,8 +54,6 @@ void (async () => {
   handlingPaging()
   await handlingComments()
   handleReply()
-
-  handlingLayout()
 
   loadIcons()
 })()
