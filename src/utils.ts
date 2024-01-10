@@ -1,7 +1,6 @@
 import { createToast } from './components/toast'
-import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
-import { setV2P_Settings } from './services'
-import type { StorageItems, StorageSettings } from './types'
+import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
+import type { SettingsSyncInfo, StorageItems, StorageSettings } from './types'
 
 /**
  * 获取用户的操作系统。
@@ -126,6 +125,151 @@ export function getRunEnv(): 'chrome' | 'web-ext' | null {
 }
 
 /**
+ * 转义 HTML 字符串中的特殊字符。
+ */
+export function escapeHTML(htmlString: string): string {
+  return htmlString.replace(/[<>&"'']/g, (match) => {
+    switch (match) {
+      case '<':
+        return '&lt;'
+      case '>':
+        return '&gt;'
+      case '&':
+        return '&amp;'
+      case '"':
+        return '&quot;'
+      case "'":
+        return '&#39;'
+      default:
+        return match
+    }
+  })
+}
+
+/**
+ * 向 HTML body 下动态插入脚本。
+ */
+export function injectScript(scriptSrc: string) {
+  const script = document.createElement('script')
+  script.setAttribute('type', 'text/javascript')
+  script.setAttribute('src', scriptSrc)
+  document.body.appendChild(script)
+}
+
+/**
+ * 简单地校验数据类型，更好的做法是使用 zod、yup 等库，但在此插件没必要。
+ */
+export function isValidSettings(settings: any): settings is StorageSettings {
+  return !!settings && typeof settings === 'object' && StorageKey.Options in settings
+}
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+const mark = `${EXTENSION_NAME}_settings`
+
+/**
+ * 获取存储的个人配置备份。
+ */
+export async function getV2P_Settings(): Promise<
+  { noteId: string; config: StorageSettings } | undefined
+> {
+  let noteId: string | undefined
+
+  {
+    const res = await fetch(`${V2EX.Origin}/notes`)
+    const htmlText = await res.text()
+    const $page = $(htmlText)
+    const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
+
+    $note.each((_, dom) => {
+      const $dom = $(dom)
+
+      if ($dom.text().startsWith(mark)) {
+        const href = $dom.attr('href')
+
+        if (typeof href === 'string') {
+          const id = href.split('/').at(2)
+          noteId = id
+        }
+
+        return false
+      }
+    })
+  }
+
+  if (noteId) {
+    const res = await fetch(`${V2EX.Origin}/notes/edit/${noteId}`)
+    const htmlText = await res.text()
+
+    const $editor = $(htmlText).find('#note_content.note_editor')
+    const value = $editor.val()
+
+    if (typeof value === 'string') {
+      const syncSettings = JSON.parse(value.replace(mark, ''))
+
+      if (isValidSettings(syncSettings)) {
+        return { noteId, config: syncSettings }
+      }
+    }
+  }
+}
+
+/**
+ * 将个人配置备份存储。
+ */
+export async function setV2P_Settings(
+  storageSettings: StorageSettings,
+  signal?: AbortSignal
+): Promise<SettingsSyncInfo> {
+  const data = await getV2P_Settings()
+
+  const updating = !!data // 判断操作是「初始化数据」还是「更新数据」。
+
+  const formData = new FormData()
+
+  const syncVersion = updating ? data.config[StorageKey.SyncInfo]!.version + 1 : 1
+
+  const syncInfo: SettingsSyncInfo = {
+    version: syncVersion,
+    lastSyncTime: Date.now(),
+  }
+
+  formData.append(
+    'content',
+    mark + JSON.stringify({ ...storageSettings, [StorageKey.SyncInfo]: syncInfo })
+  )
+  formData.append('syntax', '0')
+
+  if (updating) {
+    const { noteId } = data
+
+    await fetch(`${V2EX.Origin}/notes/edit/${noteId}`, {
+      method: 'POST',
+      body: formData,
+      signal,
+    }).then(() => {
+      console.log('success')
+    })
+  } else {
+    // 如果是第一次备份，则新建一个 V2EX 记事本来存储。
+    formData.append('parent_id', '0')
+
+    await fetch(`${V2EX.Origin}/notes/new`, {
+      method: 'POST',
+      body: formData,
+      signal,
+    })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  await setStorage(StorageKey.SyncInfo, syncInfo)
+
+  return syncInfo
+}
+
+/**
  * 获取用户存储的应用数据。
  */
 export function getStorage(useCache = true): Promise<StorageSettings> {
@@ -183,6 +327,8 @@ export function getStorageSync(): StorageSettings {
   return storage
 }
 
+let controller: AbortController | null = null
+
 export async function setStorage<T extends StorageKey>(
   storageKey: T,
   storageItem: StorageItems[T]
@@ -197,13 +343,22 @@ export async function setStorage<T extends StorageKey>(
       try {
         await chrome.storage.sync.set({ [storageKey]: storageItem })
 
+        // 当检测到配置更新时，自动备份到远程。
         if (storageKey !== StorageKey.SyncInfo) {
-          try {
-            const settings = await getStorage(false)
-            await setV2P_Settings(settings)
-          } catch {
-            createToast({ message: '❌ 备份配置失败' })
+          const settings = await getStorage(false)
+
+          if (controller) {
+            controller.abort()
           }
+          controller = new AbortController()
+
+          setV2P_Settings(settings, controller.signal)
+            .catch(() => {
+              createToast({ message: '❌ 自动备份配置失败' })
+            })
+            .finally(() => {
+              controller = null
+            })
         }
       } catch (err) {
         if (String(err).includes('QUOTA_BYTES_PER_ITEM quota exceeded')) {
@@ -219,47 +374,4 @@ export async function setStorage<T extends StorageKey>(
     default:
       throw new Error(`未知的 storageKey： ${storageKey}`)
   }
-}
-
-/**
- * 转义 HTML 字符串中的特殊字符。
- */
-export function escapeHTML(htmlString: string): string {
-  return htmlString.replace(/[<>&"'']/g, (match) => {
-    switch (match) {
-      case '<':
-        return '&lt;'
-      case '>':
-        return '&gt;'
-      case '&':
-        return '&amp;'
-      case '"':
-        return '&quot;'
-      case "'":
-        return '&#39;'
-      default:
-        return match
-    }
-  })
-}
-
-/**
- * 向 HTML body 下动态插入脚本。
- */
-export function injectScript(scriptSrc: string) {
-  const script = document.createElement('script')
-  script.setAttribute('type', 'text/javascript')
-  script.setAttribute('src', scriptSrc)
-  document.body.appendChild(script)
-}
-
-/**
- * 简单地校验数据类型，更好的做法是使用 zod、yup 等库，但在此插件没必要。
- */
-export function isValidSettings(settings: any): settings is StorageSettings {
-  return !!settings && typeof settings === 'object' && StorageKey.Options in settings
-}
-
-export function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
 }

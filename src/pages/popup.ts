@@ -28,8 +28,6 @@ import {
   fetchLatestTopics,
   fetchNotifications,
   getUnreadMessagesCount,
-  getV2P_Settings,
-  setV2P_Settings,
 } from '../services'
 import type { Topic } from '../types'
 import {
@@ -37,8 +35,10 @@ import {
   formatTimestamp,
   getStorage,
   getStorageSync,
+  getV2P_Settings,
   isSameDay,
   setStorage,
+  setV2P_Settings,
 } from '../utils'
 import {
   calculateLocalStorageSize,
@@ -57,10 +57,7 @@ interface LastFetchUnreadMsgInfoInfo {
 
 function loadIcons() {
   createIcons({
-    attrs: {
-      width: '100%',
-      height: '100%',
-    },
+    attrs: { width: '100%', height: '100%' },
     icons: {
       Check,
       ChevronRight,
@@ -195,9 +192,14 @@ function loadSettings() {
     const $localVersion = $('#local-version')
     const $remoteVersion = $('#remote-version')
     const $syncTime = $('#last-sync-time')
+    const $checkTime = $('#last-check-time')
 
     const syncInfo = storage[StorageKey.SyncInfo]
     $localVersion.val(syncInfo?.version ?? defaultValue)
+
+    if (syncInfo?.lastCheckTime) {
+      $checkTime.val(formatTimestamp(syncInfo.lastCheckTime, { format: 'YMDHMS' }))
+    }
 
     void getV2P_Settings().then((res) => {
       const settings = res?.config
