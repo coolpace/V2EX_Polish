@@ -4,7 +4,7 @@ import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
-import { crawalTopicPage, thankReply } from '../../services'
+import { crawalTopicPage, fetchUserInfo, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { escapeHTML, getStorageSync } from '../../utils'
 import {
@@ -19,7 +19,7 @@ import {
   updateCommentCells,
 } from '../globals'
 import { insertTextToReplyInput, loadIcons } from '../helpers'
-import { processAvatar } from './avatar'
+import { memberDataCache, processAvatar } from './avatar'
 import { processReplyContent, updateMemberTag } from './content'
 
 /** 每一页的回复列表数据 */
@@ -624,6 +624,20 @@ export async function handlingComments() {
         $trigger: $opName,
         popupControl,
         commentData: { memberName, memberAvatar, memberLink },
+        shouldWrap: false,
+      })
+
+      fetchUserInfo(memberName).then((memberData) => {
+        memberDataCache.set(memberName, memberData)
+        const diffInDays = (Date.now() / 1000 - memberData.created) / (60 * 60 * 24)
+
+        if (diffInDays <= 30) {
+          $opName.append(
+            `<span class="v2p-register-days v2p-register-days-15">${diffInDays.toFixed(
+              0
+            )} 天内注册</span>`
+          )
+        }
       })
     }
   }

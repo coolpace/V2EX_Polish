@@ -5,13 +5,15 @@ import type { CommentData, Member } from '../../types'
 import { formatTimestamp } from '../../utils'
 import { openTagsSetter } from './content'
 
-const memberDataCache = new Map<Member['username'], Member>()
+export const memberDataCache = new Map<Member['username'], Member>()
 
 interface ProcessAvatar {
   /** 触发弹出框的元素。 */
   $trigger: JQuery
   popupControl: PopupControl
   commentData: Pick<CommentData, 'memberName' | 'memberAvatar' | 'memberLink'>
+  /** 是否要包裹一层可点击链接。 */
+  shouldWrap?: boolean
   /** 点击「添加用户标签」按钮的回调。 */
   onSetTagsClick?: () => void
 }
@@ -21,7 +23,7 @@ interface ProcessAvatar {
  *  - 鼠标悬浮头像会展示该用户的信息。
  */
 export function processAvatar(params: ProcessAvatar) {
-  const { $trigger, popupControl, commentData, onSetTagsClick } = params
+  const { $trigger, popupControl, commentData, shouldWrap = true, onSetTagsClick } = params
 
   const { memberName, memberAvatar, memberLink } = commentData
 
@@ -125,5 +127,8 @@ export function processAvatar(params: ProcessAvatar) {
         }
       }, hoverDelay)
     })
-    .wrap(`<a href="/member/${commentData.memberName}" style="cursor: pointer;">`)
+
+  if (shouldWrap) {
+    $trigger.wrap(`<a href="/member/${commentData.memberName}" style="cursor: pointer;">`)
+  }
 }

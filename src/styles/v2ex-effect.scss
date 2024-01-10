@@ -938,3 +938,13 @@ a.v2p-topic-preview-title-link {
     }
   }
 }
+
+.v2p-register-days {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+  padding: 0 2px;
+  color: var(--v2p-color-orange-400);
+  background-color: var(--v2p-color-orange-100);
+  border-radius: 2px;
+}
