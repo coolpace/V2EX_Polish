@@ -342,7 +342,7 @@ export async function setStorage<T extends StorageKey>(
         await chrome.storage.sync.set({ [storageKey]: storageItem })
 
         // 当检测到配置更新时，自动备份到远程。
-        if (storageKey !== StorageKey.SyncInfo) {
+        if (storageKey !== StorageKey.API && storageKey !== StorageKey.SyncInfo) {
           const settings = await getStorage(false)
 
           if (controller) {
@@ -351,12 +351,6 @@ export async function setStorage<T extends StorageKey>(
           controller = new AbortController()
 
           setV2P_Settings(settings, controller.signal)
-            .catch(() => {
-              createToast({ message: '❌ 自动备份配置失败' })
-            })
-            .finally(() => {
-              controller = null
-            })
         }
       } catch (err) {
         if (String(err).includes('QUOTA_BYTES_PER_ITEM quota exceeded')) {
