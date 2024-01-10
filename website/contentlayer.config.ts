@@ -20,7 +20,7 @@ export const Blog = defineDocumentType(() => ({
   computedFields: {
     slug: {
       type: 'string',
-      resolve: (post) => `${post._raw.sourceFileName.replace(/\.md$/, '')}`,
+      resolve: (post) => post._raw.sourceFileName.replace(/\.md$/, ''),
     },
   },
 }))
@@ -31,9 +31,23 @@ export const Changelog = defineDocumentType(() => ({
   computedFields: {
     slug: {
       type: 'string',
-      resolve: (post) => `${post._raw.sourceFileName.replace(/\.md$/, '')}`,
+      resolve: (post) => post._raw.sourceFileName.replace(/\.md$/, ''),
     },
   },
 }))
 
-export default makeSource({ contentDirPath: 'src/content', documentTypes: [Blog, Changelog] })
+export const Donation = defineDocumentType(() => ({
+  name: 'Donation',
+  filePathPattern: 'donation.md',
+  computedFields: {
+    slug: {
+      type: 'string',
+      resolve: (post) => post._raw.sourceFileName.replace(/\.md$/, ''),
+    },
+  },
+}))
+
+export default makeSource({
+  contentDirPath: 'src/content',
+  documentTypes: [Blog, Changelog, Donation],
+})

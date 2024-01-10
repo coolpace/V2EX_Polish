@@ -8,7 +8,9 @@ module.exports = {
   rules: {
     'import/no-unresolved': [
       2,
-      { ignore: ['^\\~/', '^(contentlayer|next-contentlayer)', '@vercel/analytics/react'] },
+      {
+        ignore: ['^\\~/', '^(contentlayer|next-contentlayer)', '@vercel/analytics/react'],
+      },
     ],
   },
 
@@ -17,16 +19,6 @@ module.exports = {
       files: TYPESCRIPT_FILES,
       rules: {
         '@typescript-eslint/no-unsafe-enum-comparison': 0,
-      },
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: __dirname,
-      },
-    },
-    {
-      files: ['src/app/api/**/route.tsx'],
-      rules: {
-        'react/no-unknown-property': [2, { ignore: ['tw'] }],
       },
       parserOptions: {
         project: true,

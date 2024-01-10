@@ -8,7 +8,7 @@ export function Feature(props: FeatureProps) {
   return (
     <div>
       <div className="flex justify-center">
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-main-100">
+        <span className="inline-flex size-9 items-center justify-center rounded-lg bg-main-100">
           {props.icon}
         </span>
       </div>

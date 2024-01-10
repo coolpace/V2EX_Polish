@@ -65,7 +65,7 @@ export default function RootLayout(props: React.PropsWithChildren) {
               <div className="mx-auto max-w-container md:px-36">
                 <div className="flex justify-between py-3 md:py-8">
                   <div className="inline-flex items-center">
-                    <div className="h-3 w-3 md:h-4 md:w-4">
+                    <div className="size-3 md:size-4">
                       <Logo />
                     </div>
                     <span className="ml-2 text-sm/none font-semibold md:text-base/none">
