@@ -52,7 +52,7 @@ export function ScreenTopic() {
                   <span>4096 次点击</span>
                 </div>
               </div>
-              <Avatar className="h-12 w-12 rounded" />
+              <Avatar className="size-12 rounded" />
             </div>
 
             <div className="border-y border-solid border-main-200 px-2 py-5 text-[15px] [&>p:last-of-type]:mb-0 [&>p]:mb-[15px]">
@@ -116,7 +116,7 @@ export function ScreenTopic() {
             <div className="px-1 pb-3">
               <ReplyItem
                 avatar={
-                  <div className="h-10 w-10 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
+                  <div className="size-10 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
                 }
                 content="安装了一下，真的是现代化的体验！"
                 floor="1"
@@ -127,7 +127,7 @@ export function ScreenTopic() {
                 <ReplyItem
                   isOp
                   nested
-                  avatar={<Avatar className="ml-3 h-6 w-6 rounded" />}
+                  avatar={<Avatar className="ml-3 size-6 rounded" />}
                   content={
                     <>
                       <span className="mr-1 text-sm">

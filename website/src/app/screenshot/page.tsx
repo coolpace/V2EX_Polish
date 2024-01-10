@@ -62,7 +62,7 @@ export default function FeaturesPage() {
             </div>
             <ReplyItem
               avatar={
-                <div className="h-10 w-10 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
+                <div className="size-10 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
               }
               content="安装了一下，真的是现代化的体验！"
               floor="1"
@@ -74,7 +74,7 @@ export default function FeaturesPage() {
                 <ReplyItem
                   isOp
                   nested
-                  avatar={<Avatar className="h-6 w-6 rounded" />}
+                  avatar={<Avatar className="size-6 rounded" />}
                   content={
                     <>
                       <span className="mr-1 text-sm">
@@ -92,7 +92,7 @@ export default function FeaturesPage() {
                   <ReplyItem
                     nested
                     avatar={
-                      <div className="h-6 w-6 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
+                      <div className="size-6 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
                     }
                     content={
                       <>
@@ -114,7 +114,7 @@ export default function FeaturesPage() {
                     <ReplyItem
                       nested
                       avatar={
-                        <div className="h-6 w-6 rounded bg-gradient-to-br from-violet-200 to-pink-200" />
+                        <div className="size-6 rounded bg-gradient-to-br from-violet-200 to-pink-200" />
                       }
                       content={
                         <>
@@ -137,7 +137,7 @@ export default function FeaturesPage() {
             </div>
             <ReplyItem
               avatar={
-                <div className="h-10 w-10 rounded bg-gradient-to-br from-teal-400 to-yellow-200" />
+                <div className="size-10 rounded bg-gradient-to-br from-teal-400 to-yellow-200" />
               }
               content="体验优秀，反馈响应也很及时，给开发者点赞👍"
               floor="4"
