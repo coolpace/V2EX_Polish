@@ -249,8 +249,6 @@ export async function setV2P_Settings(
       method: 'POST',
       body: formData,
       signal,
-    }).then(() => {
-      console.log('success')
     })
   } else {
     // 如果是第一次备份，则新建一个 V2EX 记事本来存储。
