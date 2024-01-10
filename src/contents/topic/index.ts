@@ -13,11 +13,12 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
+  handlingLayout()
+
   if (options.openInNewTab) {
     $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
   }
 
-  handlingLayout()
   handlingTools()
 
   // 按 Esc 隐藏回复框。

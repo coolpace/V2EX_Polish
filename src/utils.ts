@@ -1,5 +1,6 @@
 import { createToast } from './components/toast'
 import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
+import { setV2P_Settings } from './services'
 import type { StorageItems, StorageSettings } from './types'
 
 /**
@@ -195,6 +196,15 @@ export async function setStorage<T extends StorageKey>(
     case StorageKey.ReadingList:
       try {
         await chrome.storage.sync.set({ [storageKey]: storageItem })
+
+        if (storageKey !== StorageKey.SyncInfo) {
+          try {
+            const settings = await getStorage(false)
+            await setV2P_Settings(settings)
+          } catch {
+            createToast({ message: '❌ 备份配置失败' })
+          }
+        }
       } catch (err) {
         if (String(err).includes('QUOTA_BYTES_PER_ITEM quota exceeded')) {
           console.error(

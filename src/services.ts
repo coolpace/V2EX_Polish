@@ -218,6 +218,7 @@ export async function setV2P_Settings(storageSettings: StorageSettings): Promise
       body: formData,
     })
   } else {
+    // 如果是第一次备份，则新建一个 V2EX 记事本来存储。
     formData.append('parent_id', '0')
 
     await fetch(`${V2EX.Origin}/notes/new`, {
