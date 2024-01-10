@@ -1,4 +1,4 @@
-import { EXTENSION_NAME, imgurClientIdPool, StorageKey, V2EX } from './constants'
+import { imgurClientIdPool, StorageKey, V2EX } from './constants'
 import { postTask } from './contents/helpers'
 import type {
   API_Info,
@@ -7,13 +7,11 @@ import type {
   Member,
   Notification,
   Once,
-  SettingsSyncInfo,
-  StorageSettings,
   Topic,
   TopicReply,
   V2EX_Response,
 } from './types'
-import { getStorage, isValidSettings, setStorage } from './utils'
+import { getStorage, setStorage } from './utils'
 
 // 动态获取 V2EX 的域名，防止跨域。
 const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
@@ -136,100 +134,6 @@ export async function uploadImage(file: File): Promise<string> {
   }
 
   throw new Error('上传失败')
-}
-
-const mark = `${EXTENSION_NAME}_settings`
-
-/**
- * 获取存储的个人配置备份。
- */
-export async function getV2P_Settings(): Promise<
-  { noteId: string; config: StorageSettings } | undefined
-> {
-  let noteId: string | undefined
-
-  {
-    const res = await fetch(`${V2EX.Origin}/notes`)
-    const htmlText = await res.text()
-    const $page = $(htmlText)
-    const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
-
-    $note.each((_, dom) => {
-      const $dom = $(dom)
-
-      if ($dom.text().startsWith(mark)) {
-        const href = $dom.attr('href')
-
-        if (typeof href === 'string') {
-          const id = href.split('/').at(2)
-          noteId = id
-        }
-
-        return false
-      }
-    })
-  }
-
-  if (noteId) {
-    const res = await fetch(`${V2EX.Origin}/notes/edit/${noteId}`)
-    const htmlText = await res.text()
-
-    const $editor = $(htmlText).find('#note_content.note_editor')
-    const value = $editor.val()
-
-    if (typeof value === 'string') {
-      const syncSettings = JSON.parse(value.replace(mark, ''))
-
-      if (isValidSettings(syncSettings)) {
-        return { noteId, config: syncSettings }
-      }
-    }
-  }
-}
-
-/**
- * 将个人配置备份存储。
- */
-export async function setV2P_Settings(storageSettings: StorageSettings): Promise<SettingsSyncInfo> {
-  const data = await getV2P_Settings()
-
-  const updating = !!data // 判断操作是「初始化数据」还是「更新数据」。
-
-  const formData = new FormData()
-
-  const syncVersion = updating ? data.config[StorageKey.SyncInfo]!.version + 1 : 1
-
-  const syncInfo: SettingsSyncInfo = {
-    version: syncVersion,
-    lastSyncTime: Date.now(),
-  }
-
-  formData.append(
-    'content',
-    mark + JSON.stringify({ ...storageSettings, [StorageKey.SyncInfo]: syncInfo })
-  )
-  formData.append('syntax', '0')
-
-  if (updating) {
-    const { noteId } = data
-
-    await fetch(`${V2EX.Origin}/notes/edit/${noteId}`, {
-      method: 'POST',
-      body: formData,
-    })
-  } else {
-    // 如果是第一次备份，则新建一个 V2EX 记事本来存储。
-    formData.append('parent_id', '0')
-
-    await fetch(`${V2EX.Origin}/notes/new`, {
-      method: 'POST',
-      body: formData,
-    })
-  }
-
-  await setStorage(StorageKey.SyncInfo, syncInfo)
-
-  return syncInfo
 }
 
 // ==================== 以下为非官方提供的接口 ====================

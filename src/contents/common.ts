@@ -1,8 +1,14 @@
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
-import { getV2P_Settings } from '../services'
 import type { MessageData } from '../types'
-import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
+import {
+  deepMerge,
+  getRunEnv,
+  getStorage,
+  getV2P_Settings,
+  injectScript,
+  setStorage,
+} from '../utils'
 import { $wrapper } from './globals'
 import { loadIcons, postTask } from './helpers'
 
@@ -67,14 +73,15 @@ void (async () => {
     if (syncInfo) {
       const lastCheckTime = syncInfo.lastCheckTime
       const twoHours = 2 * 60 * 1000 * 60
+      const neverChecked = !lastCheckTime
 
-      if ((lastCheckTime && Date.now() - lastCheckTime >= twoHours) || !lastCheckTime) {
+      if ((lastCheckTime && Date.now() - lastCheckTime >= twoHours) || neverChecked) {
         void getV2P_Settings().then(async (res) => {
           const settings = res?.config
           const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
 
           if (settings && remoteSyncInfo) {
-            if (syncInfo.version < remoteSyncInfo.version) {
+            if (syncInfo.version < remoteSyncInfo.version || neverChecked) {
               await chrome.storage.sync.set(
                 deepMerge(storage, {
                   ...settings,

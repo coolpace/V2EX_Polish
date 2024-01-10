@@ -4,6 +4,18 @@ import { StorageKey, V2EX } from '../constants'
 import type { MemberTag, Options } from '../types'
 import { getStorage, setStorage } from '../utils'
 
+function loadIcons() {
+  createIcons({
+    attrs: { width: '100%', height: '100%' },
+    icons: {
+      Settings,
+      Tags,
+      Plus,
+      X,
+    },
+  })
+}
+
 const saveOptions = async () => {
   const currentOptions: Options = {
     openInNewTab: $('#openInNewTab').prop('checked'),
@@ -64,16 +76,7 @@ void (async function init() {
     }
   })
 
-  createIcons({
-    attrs: {
-      width: '100%',
-      height: '100%',
-    },
-    icons: {
-      Settings,
-      Tags,
-    },
-  })
+  loadIcons()
 
   const storage = await getStorage()
 
@@ -270,7 +273,7 @@ void (async function init() {
 
           $contentTags.append($tagList)
 
-          createIcons({ attrs: { width: '100%', height: '100%' }, icons: { Plus, X } })
+          loadIcons()
         }
       } else {
         $contentTags.append($('#tags-empty').html())
