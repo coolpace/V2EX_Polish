@@ -59,7 +59,7 @@ export default function HomePage() {
                 href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
                 target="_blank"
               >
-                <span className="inline-block h-6 w-6">
+                <span className="inline-block size-6">
                   <EdgeIcon />
                 </span>
                 <span className="break-all">
@@ -75,7 +75,7 @@ export default function HomePage() {
                 href="https://addons.mozilla.org/zh-CN/firefox/addon/v2ex-polish/"
                 target="_blank"
               >
-                <span className="inline-block h-6 w-6">
+                <span className="inline-block size-6">
                   <FirefoxIcon />
                 </span>
                 <span className="break-all">
@@ -91,8 +91,8 @@ export default function HomePage() {
                 href="https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex"
                 target="_blank"
               >
-                <span className="inline-flex h-6 w-6 items-center">
-                  <span className="h-5 w-5">
+                <span className="inline-flex size-6 items-center">
+                  <span className="size-5">
                     <TampermonkeyIcon />
                   </span>
                 </span>

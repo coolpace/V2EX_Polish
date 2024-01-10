@@ -28,6 +28,7 @@ export type TopicInfo = Input<typeof TopicInfoSchema>
 
 export const enum ResponseCode {
   Success,
+  /** 由于不存在主题或需要授权访问，无法爬取到主题内容。 */
   NotFound,
 }
 

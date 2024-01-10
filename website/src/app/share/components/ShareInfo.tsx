@@ -1,15 +1,12 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable @next/next/no-img-element */
-
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
 import { useParams } from 'next/navigation'
-import { Avatar, Button, Callout, Checkbox, Flex, Link, Text } from '@radix-ui/themes'
+import { Button, Callout, Checkbox, Flex, Link, Text } from '@radix-ui/themes'
 import { toBlob, toPng } from 'html-to-image'
-import { AlertCircleIcon } from 'lucide-react'
+import { AlertCircleIcon, CopyIcon, DownloadIcon } from 'lucide-react'
 
 import type { RequestData as ImgRequestData } from '~/app/api/img-to-base64/route'
 import {
@@ -18,8 +15,10 @@ import {
   type ResponseJson,
   type TopicInfo,
 } from '~/app/api/share/route'
+import { ShareCardThemeBasic } from '~/app/share/components/ShareCardThemeBasic'
 import { HOST } from '~/utils'
 
+import { ShareLoading } from './ShareLoading'
 import { TopicLinkInput } from './TopicLinkInput'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -213,97 +212,20 @@ export function ShareInfo() {
   return (
     <div className="flex items-start gap-x-8">
       <div className="overflow-hidden rounded-lg shadow-lg">
-        <div
-          ref={eleRef}
-          className="w-[375px] p-2"
-          style={{
-            backgroundImage: `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><path d="m0 0 4 4Zm4 0L0 4Z" stroke-width=".5" stroke="%23000"/></svg>')`,
-          }}
-        >
-          <div className="overflow-hidden rounded border-[3px] border-solid border-main-800 bg-white p-3 text-black">
-            {topicInfo ? (
-              <>
-                <div className="pb-2 text-2xl font-extrabold">V2EX</div>
-
-                <h2 className="line-clamp-3 text-xl font-semibold">{topicInfo.title}</h2>
-
-                <div className="mt-3 flex items-center px-1 text-main-500">
-                  <Avatar
-                    ref={avatarRef}
-                    className="mr-2"
-                    fallback={topicInfo.member.username.at(0)?.toUpperCase() || ''}
-                    size="1"
-                    src={topicInfo.member.avatar}
-                  />
-                  <span className="mr-3 truncate">{topicInfo.member.username}</span>
-
-                  <span className="ml-auto whitespace-nowrap text-xs">
-                    {topicInfo.time.year}-{topicInfo.time.month}-{topicInfo.time.day}
-                  </span>
-                </div>
-
-                {topicInfo.content && (
-                  <>
-                    <hr className="my-3 bg-main-100" />
-
-                    <div
-                      className="prose prose-slate leading-6 prose-p:mt-0 prose-p:text-black prose-a:pointer-events-none prose-a:font-normal prose-a:text-green-600 prose-a:no-underline prose-blockquote:text-[15px] prose-blockquote:font-normal prose-blockquote:not-italic prose-li:m-0 prose-img:m-0"
-                      id="topic-content"
-                    >
-                      <div dangerouslySetInnerHTML={{ __html: topicInfo.content }} />
-
-                      {showSubtle &&
-                        topicInfo.supplements?.map((item, idx) => {
-                          return (
-                            <blockquote key={`${idx}`}>
-                              <div dangerouslySetInnerHTML={{ __html: item.content }} />
-                            </blockquote>
-                          )
-                        })}
-                    </div>
-                  </>
-                )}
-
-                <div className="flex pt-6">
-                  <div className="ml-auto flex items-center gap-x-3">
-                    <div className="text-xs/5 text-main-400">
-                      <p>长按扫码</p>
-                      <p>查看详情</p>
-                    </div>
-                    <img
-                      alt="二维码"
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=54x54&bgcolor=ffffff&color=475569&data=${topicInfo.url}`}
-                    />
-                  </div>
-                </div>
-              </>
-            ) : loading ? (
-              <>
-                <div className="p-3">
-                  <div className="h-7 w-3/4 rounded bg-main-200" />
-                  <hr className="my-3 bg-main-100" />
-                  <div className="prose pt-1 prose-p:mb-2 prose-p:mt-0 prose-p:h-4 prose-p:rounded prose-p:bg-main-200">
-                    <p className="w-full" />
-                    <p className="w-full" />
-                    <p className="w-3/5" />
-                    <p className="w-0" />
-                    <p className="w-full" />
-                    <p className="w-full" />
-                    <p className="w-full" />
-                    <p className="w-3/4" />
-                    <p className="w-0" />
-                    <p className="w-full" />
-                    <p className="w-full" />
-                    <p className="w-1/2" />
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div>
-                <div className="px-4 py-6 text-center text-xl text-main-500">( ´◔ ‸◔`)</div>
-              </div>
-            )}
-          </div>
+        <div ref={eleRef} className="w-[375px]">
+          {topicInfo ? (
+            <ShareCardThemeBasic
+              avatarRef={avatarRef}
+              showSubtle={showSubtle}
+              topicInfo={topicInfo}
+            />
+          ) : loading ? (
+            <ShareLoading />
+          ) : (
+            <div>
+              <div className="px-4 py-6 text-center text-xl text-main-500">( ´◔ ‸◔`)</div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -341,9 +263,10 @@ export function ShareInfo() {
               Array.isArray(topicInfo.supplements) &&
               topicInfo.supplements.length > 0 && (
                 <Text size="2">
-                  <label>
+                  <label htmlFor="show-subtle">
                     <Checkbox
                       checked={showSubtle}
+                      id="show-subtle"
                       mr="1"
                       variant="soft"
                       onCheckedChange={(checked) => {
@@ -366,6 +289,8 @@ export function ShareInfo() {
                 void handleCopy()
               }}
             >
+              <CopyIcon size={14} />
+
               {copySuccess
                 ? '复制成功'
                 : copyFail
@@ -382,6 +307,8 @@ export function ShareInfo() {
                 void handleDownload()
               }}
             >
+              <DownloadIcon size={14} />
+
               {downloading ? '下载中...' : '保存为图片'}
             </Button>
           </Flex>
