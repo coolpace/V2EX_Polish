@@ -13,8 +13,10 @@ declare global {
 export interface SettingsSyncInfo {
   /** 当前使用的备份版本。 */
   version: number
-  /** 上次同步时间。 */
+  /** 上次同步的时间。 */
   lastSyncTime: number
+  /** 上次检查更新的时间 */
+  lastCheckTime?: number
 }
 
 export interface Options {
