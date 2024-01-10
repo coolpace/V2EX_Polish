@@ -50,6 +50,11 @@ import {
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
 
+interface LastFetchUnreadMsgInfoInfo {
+  time: number
+  count: number
+}
+
 function loadIcons() {
   createIcons({
     attrs: {
@@ -110,6 +115,8 @@ const topicContentData: Record<TabId, RemoteDataStore> = {
   [TabId.Feature]: {},
   [TabId.Setting]: {},
 }
+
+const $tabMsg = $('.tabs > li[data-target="tab-message"]')
 
 function loadSettings() {
   const storage = getStorageSync()
@@ -470,18 +477,28 @@ function initTabs() {
               iconAtSign.setAttribute('width', '100%')
               iconAtSign.setAttribute('height', '100%')
 
+              const $checkMsgBtn = $(`
+              <a class="action-btn" href="${V2EX.Origin}/notifications" target="_blank">
+                <span class="action-icon"></span>
+                查看所有消息
+              </a>
+              `)
+              $checkMsgBtn.find('.action-icon').append(iconAtSign)
+
+              $checkMsgBtn.on('click', () => {
+                // 当在 Popup 中主动点击查看消息时，应该重置未读数量。
+                const storeInfo: LastFetchUnreadMsgInfoInfo = { time: Date.now(), count: 0 }
+                window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
+                $tabMsg.text('消息')
+              })
+
               const $tabHeader = $(`
               <div class="tab-header">
-                <div class="message-actions">
-                  <a class="action-btn" href="${V2EX.Origin}/notifications" target="_blank">
-                    <span class="action-icon"></span>
-                    查看所有消息
-                  </a>
-                </div>
+                <div class="message-actions"></div>
                 <hr />
               </div>
              `)
-              $tabHeader.find('.action-icon').append(iconAtSign)
+              $tabHeader.find('.message-actions').append($checkMsgBtn)
 
               $tabContent.empty().append($tabHeader).append($noticeList)
             } else {
@@ -587,19 +604,14 @@ window.addEventListener('load', () => {
     const infoStr = window.localStorage.getItem('v2p_last_fetch_unread_info')
     const fiveMinutes = 5 * 1000 * 60
 
-    interface Info {
-      time: number
-      count: number
-    }
+    const info: LastFetchUnreadMsgInfoInfo = infoStr ? JSON.parse(infoStr) : { time: 0, count: 0 }
 
-    const lastFetchUnreadMsgInfo: Info = infoStr ? JSON.parse(infoStr) : { time: 0, count: 0 }
     const now = Date.now()
-    const $tabMsg = $('.tabs > li[data-target="tab-message"]')
 
     // 每 5 分钟获取一次未读消息数量。
-    if (now - lastFetchUnreadMsgInfo.time >= fiveMinutes) {
+    if (now - info.time >= fiveMinutes) {
       getUnreadMessagesCount().then((count) => {
-        const storeInfo: Info = { time: now, count }
+        const storeInfo: LastFetchUnreadMsgInfoInfo = { time: now, count }
         window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
 
         if (count > 0) {
@@ -609,10 +621,8 @@ window.addEventListener('load', () => {
         }
       })
     } else {
-      if (lastFetchUnreadMsgInfo.count > 0) {
-        $tabMsg.text(`消息(${lastFetchUnreadMsgInfo.count})`)
-      } else {
-        $tabMsg.text('消息')
+      if (info.count > 0) {
+        $tabMsg.text(`消息(${info.count})`)
       }
     }
   }
