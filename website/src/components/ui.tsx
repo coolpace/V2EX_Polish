@@ -57,7 +57,7 @@ export function TopicItem(props: {
   return (
     <div className="flex items-center border-b border-solid border-main-200 px-4 py-6 text-sm last-of-type:border-none">
       <div
-        className={`mr-6 mt-[3px] h-12 w-12 shrink-0 self-start rounded bg-gradient-to-br ${props.avatar}`}
+        className={`mr-6 mt-[3px] size-12 shrink-0 self-start rounded bg-gradient-to-br ${props.avatar}`}
       />
       <div className="mr-7">
         <div className="text-base font-semibold">{props.title}</div>
@@ -77,7 +77,7 @@ export function TopicItem(props: {
 export function TopicItemRight(props: { long?: boolean }) {
   return (
     <div className="flex items-center border-t border-solid border-main-200 p-2 text-sm">
-      <div className="mr-2 h-6 w-6 shrink-0 rounded bg-gradient-to-b from-main-200 to-main-100" />
+      <div className="mr-2 size-6 shrink-0 rounded bg-gradient-to-b from-main-200 to-main-100" />
       <div className="flex-1">
         <div className="h-3 flex-1 rounded-sm bg-gradient-to-b from-main-200 to-main-100" />
         {props.long && (
@@ -134,9 +134,7 @@ export function Avatar(props: React.PropsWithChildren<{ className?: string }>) {
 function Coin(props: { className?: string }) {
   return (
     <span
-      className={`mx-1 inline-block h-3 w-3 rounded-full last-of-type:mr-0 ${
-        props.className ?? ''
-      }`}
+      className={`mx-1 inline-block size-3 rounded-full last-of-type:mr-0 ${props.className ?? ''}`}
     />
   )
 }
@@ -145,7 +143,7 @@ export function UserPanel() {
   return (
     <Box>
       <div className="flex gap-x-4 px-4 py-3">
-        <Avatar className="h-12 w-12 rounded" />
+        <Avatar className="size-12 rounded" />
         <div>
           <div className="text-base">coolpace</div>
           <div className="mt-1 text-[13px] text-main-500">不要去追一匹马</div>
