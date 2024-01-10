@@ -1,5 +1,6 @@
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
+import { getV2P_Settings } from '../services'
 import type { MessageData } from '../types'
 import { deepMerge, getRunEnv, getStorage, injectScript, setStorage } from '../utils'
 import { $wrapper } from './globals'
@@ -57,6 +58,37 @@ void (async () => {
       // 当用户主动设置颜色主题后，取消自动跟随系统。
       void setStorage(StorageKey.Options, deepMerge(options, { theme: { autoSwitch: false } }))
     })
+  }
+
+  // 当发现远程的配置有更新时，自动同步到本地。
+  {
+    const syncInfo = storage[StorageKey.SyncInfo]
+
+    if (syncInfo) {
+      const lastCheckTime = syncInfo.lastCheckTime
+      const twoHours = 2 * 60 * 1000 * 60
+
+      if ((lastCheckTime && Date.now() - lastCheckTime >= twoHours) || !lastCheckTime) {
+        void getV2P_Settings().then(async (res) => {
+          const settings = res?.config
+          const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
+
+          if (settings && remoteSyncInfo) {
+            if (syncInfo.version < remoteSyncInfo.version) {
+              await chrome.storage.sync.set(
+                deepMerge(storage, {
+                  ...settings,
+                  [StorageKey.SyncInfo]: {
+                    ...settings[StorageKey.SyncInfo],
+                    lastCheckTime: Date.now(),
+                  },
+                })
+              )
+            }
+          }
+        })
+      }
+    }
   }
 
   // 更换主题颜色切换的按钮。
