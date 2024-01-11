@@ -28,22 +28,22 @@ interface CreateModelProps {
 export function createModel(props: CreateModelProps): ModelControl {
   const { root, title, onOpen, onClose, onMount } = props
 
-  const $mask = $('<div class="v2p-model-mask">')
+  const $mask = $('<div class="v2p-modal-mask">')
 
-  const $content = $('<div class="v2p-model-content">')
+  const $content = $('<div class="v2p-modal-content">')
 
   const $closeBtn = createButton({
     children: '关闭<kbd>Esc</kbd>',
-    className: 'v2p-model-close-btn',
+    className: 'v2p-modal-close-btn',
   })
 
-  const $title = $(`<div class="v2p-model-title">${title ?? ''}</div>`)
+  const $title = $(`<div class="v2p-modal-title">${title ?? ''}</div>`)
 
-  const $actions = $('<div class="v2p-model-actions">').append($closeBtn)
+  const $actions = $('<div class="v2p-modal-actions">').append($closeBtn)
 
-  const $header = $('<div class="v2p-model-header">').append($title, $actions)
+  const $header = $('<div class="v2p-modal-header">').append($title, $actions)
 
-  const $main = $('<div class="v2p-model-main">')
+  const $main = $('<div class="v2p-modal-main">')
     .append($header, $content)
     .on('click', (ev) => {
       ev.stopPropagation()

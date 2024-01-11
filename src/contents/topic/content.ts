@@ -85,12 +85,10 @@ export function handlingContent() {
 /**
  * 处理回复内容：
  *  - 过长内容会被折叠。
+ *  - 对同一个元素重复执行此方法时，效果不会叠加。
  */
-export function processReplyContent(
-  $cellDom: JQuery,
-  replyContentOptions: Options['replyContent']
-) {
-  if (!replyContentOptions.autoFold || $cellDom.find('.v2p-reply-content').length > 0) {
+export function processReplyContent($cellDom: JQuery) {
+  if ($cellDom.find('.v2p-reply-content').length > 0) {
     return
   }
 

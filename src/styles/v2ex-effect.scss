@@ -203,7 +203,7 @@ a.v2p-topic-preview-title-link {
   }
 }
 
-.v2p-model-mask {
+.v2p-modal-mask {
   position: fixed;
   z-index: var(--zidx-model-mask);
   padding: 60px;
@@ -241,24 +241,20 @@ a.v2p-topic-preview-title-link {
   transform: translateX(-50%);
 }
 
-.v2p-model-main {
+.v2p-modal-main {
   position: relative;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   width: 800px;
   height: 100%;
   margin: 0 auto;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   background-color: var(--v2p-color-bg-content);
   border-radius: var(--box-border-radius);
 
   @at-root {
-    .v2p-model-header {
-      position: sticky;
-      top: 0;
-      right: 0;
-      left: 0;
-      z-index: var(--zidx-model-header);
+    .v2p-modal-header {
       display: flex;
       gap: 0 20px;
       align-items: center;
@@ -267,7 +263,7 @@ a.v2p-topic-preview-title-link {
       border-bottom: 1px solid var(--box-border-color);
     }
 
-    .v2p-model-title {
+    .v2p-modal-title {
       padding: 2px 0;
       overflow: hidden;
       font-weight: bold;
@@ -276,14 +272,20 @@ a.v2p-topic-preview-title-link {
       text-overflow: ellipsis;
     }
 
-    .v2p-model-actions {
+    .v2p-modal-actions {
       display: flex;
       gap: 0 10px;
       align-items: center;
       margin-left: auto;
     }
 
-    .v2p-model-loading {
+    .v2p-modal-content {
+      position: relative;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .v2p-modal-loading {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -294,6 +296,45 @@ a.v2p-topic-preview-title-link {
         position: relative;
         right: -13px;
         width: 50px;
+      }
+    }
+
+    .v2p-modal-comments {
+      position: absolute;
+      inset: 0;
+      padding: 0 20px;
+      overflow-y: auto;
+      visibility: hidden;
+
+      &.v2p-tab-content-active {
+        z-index: 20;
+        visibility: visible;
+      }
+    }
+
+    .v2p-modal-comment-tabs {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px 5px;
+      font-weight: normal;
+      font-size: 14px;
+      background-color: var(--button-background-color);
+      border-radius: 4px;
+
+      > [data-tab-key] {
+        padding: 4px 5px;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--v2p-color-main-200);
+        }
+
+        &.v2p-tab-active {
+          color: var(--v2p-color-foreground);
+          background-color: var(--v2p-color-accent-100);
+        }
       }
     }
   }
