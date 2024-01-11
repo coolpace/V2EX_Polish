@@ -218,7 +218,7 @@ export function handlingTopicList() {
                 $template.append(`
                   <div class="v2p-topic-reply">
                     <div class="v2p-topic-reply-member">
-                      <a href="${r.member.url}">
+                      <a href="${r.member.url}" target="_blank">
                         <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
                         <span>${r.member.username}</span>
                         <span style="
