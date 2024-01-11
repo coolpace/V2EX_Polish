@@ -75,7 +75,7 @@ function handlingPopularComments() {
               <div class="v2p-topic-reply-ref">
                 <div class="v2p-topic-reply">
                   <div class="v2p-topic-reply-member">
-                    <a href="${replyMember.memberAvatar}">
+                    <a href="${replyMember.memberLink}" target="_blank">
                       <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
                       <span>${replyMember.memberName}</span>
                     </a>：
@@ -107,11 +107,11 @@ function handlingPopularComments() {
   })
 
   {
-    const commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
-    const countText = commentBoxCount.text()
+    const $commentBoxCount = $commentBox.find('.cell:first-of-type > span.gray')
+    const countText = $commentBoxCount.text()
     const newCountText = countText.substring(0, countText.indexOf('回复') + 2)
     const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>${popularCount} 条热门回复`
-    commentBoxCount.empty().append(countTextSpan)
+    $commentBoxCount.empty().append(countTextSpan)
   }
 }
 
@@ -149,7 +149,7 @@ function handlingRecentComments() {
       recentCommentData.forEach(({ index, refMemberNames }) => {
         const $clonedCells = $commentCells.eq(index).clone()
 
-        // 查看热门回复时，禁用回复操作和楼层锚点。
+        // 禁用回复操作和楼层锚点。
         $clonedCells.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
         $clonedCells.find('.no').css('pointer-events', 'none')
 
@@ -164,7 +164,7 @@ function handlingRecentComments() {
               <div class="v2p-topic-reply-ref">
                 <div class="v2p-topic-reply">
                   <div class="v2p-topic-reply-member">
-                    <a href="${replyMember.memberAvatar}">
+                    <a href="${replyMember.memberLink}" target="_blank">
                       <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
                       <span>${replyMember.memberName}</span>
                     </a>：
