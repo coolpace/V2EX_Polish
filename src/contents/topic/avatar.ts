@@ -129,6 +129,8 @@ export function processAvatar(params: ProcessAvatar) {
     })
 
   if (shouldWrap) {
-    $trigger.wrap(`<a href="/member/${commentData.memberName}" style="cursor: pointer;">`)
+    $trigger.wrap(
+      `<a href="/member/${commentData.memberName}" target="_blank" style="cursor: pointer;">`
+    )
   }
 }

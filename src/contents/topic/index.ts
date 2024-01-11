@@ -1,4 +1,3 @@
-import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox } from '../globals'
 import { loadIcons } from '../helpers'
@@ -10,14 +9,11 @@ import { handleReply } from './reply'
 import { handlingTools } from './tool'
 
 void (async () => {
-  const storage = await getStorage()
-  const options = storage[StorageKey.Options]
-
+  await getStorage()
   handlingLayout()
 
-  if (options.openInNewTab) {
-    $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
-  }
+  // 支持新页签打开用户主页链接。
+  $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
 
   handlingTools()
 
