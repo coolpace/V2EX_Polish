@@ -633,9 +633,9 @@ export async function handlingComments() {
 
         if (diffInDays <= 30) {
           $opName.append(
-            `<span class="v2p-register-days v2p-register-days-15">${diffInDays.toFixed(
-              0
-            )} 天内注册</span>`
+            `<span class="v2p-register-days v2p-register-days-15">${
+              diffInDays <= 15 ? '15' : '30'
+            } 天内注册</span>`
           )
         }
       })
