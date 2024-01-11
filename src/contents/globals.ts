@@ -8,7 +8,7 @@ export const $topicList = $(
 )
 
 /** 主题内容区 */
-export const $topicContentBox = $('#Main .box:has(.topic_content)')
+export const $topicContentBox = $('#Main .box:has(.topic_buttons)')
 
 /** 主题内容区的头部 */
 export const $topicHeader = $topicContentBox.find('.header')

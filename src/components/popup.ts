@@ -8,7 +8,6 @@ import {
   shift,
 } from '@floating-ui/dom'
 
-import { $topicContentBox } from '../contents/globals'
 import { createToast } from './toast'
 
 export const hoverDelay = 350
