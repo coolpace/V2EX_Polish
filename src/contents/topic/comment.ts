@@ -1,4 +1,4 @@
-import { Clock4, createElement, Heart } from 'lucide'
+import { createElement, Heart } from 'lucide'
 
 import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
@@ -11,6 +11,7 @@ import {
   $commentBox,
   $commentCells,
   $commentTableRows,
+  $main,
   $replyTextArea,
   $topicHeader,
   $wrapper,
@@ -26,83 +27,229 @@ import { processReplyContent, updateMemberTag } from './content'
 let commentDataList: readonly CommentData[] = []
 
 /**
- * 设置热门回复。
+ * 设置经过筛选后的回复。
  */
-function handlingPopularComments() {
+function handlingFilteredComments() {
+  const iconHeart = createElement(Heart)
+  iconHeart.setAttribute('width', '100%')
+  iconHeart.setAttribute('height', '100%')
+
+  const $commentsBtn = $(
+    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"></span>热门回复</span>`
+  )
+  $commentsBtn.find('.v2p-tool-icon').append(iconHeart)
+
+  $('.v2p-tools').prepend($commentsBtn)
+
   const popularCommentData = commentDataList
     .filter(({ likes }) => likes > 0)
     .sort((a, b) => b.likes - a.likes)
 
   const popularCount = popularCommentData.length
 
-  const iconHeart = createElement(Heart)
-  iconHeart.setAttribute('width', '100%')
-  iconHeart.setAttribute('height', '100%')
-
-  const $popularBtn = $(
-    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"></span>热门回复</span>`
-  )
-  $popularBtn.find('.v2p-tool-icon').append(iconHeart)
-
-  $('.v2p-tools').prepend($popularBtn)
-
-  if (popularCount <= 0) {
-    $popularBtn.addClass('v2p-hover-btn-disabled').contents().last().replaceWith('暂无热门')
-    return
-  }
-
   const model = createModel({
-    root: $commentBox,
-    title: `本页共有 ${popularCommentData.length} 条热门回复`,
-    onMount: ({ $content }) => {
-      const $template = $('<div>')
+    root: $main,
+    onMount: ({ $title, $content }) => {
+      const $template = $('<div class="v2p-modal-comments">')
+      const $t1 = $template.clone().attr('data-tab-key', 'hot').addClass('v2p-tab-content-active')
+      const $t2 = $template.clone().attr('data-tab-key', 'recent')
+      const $t3 = $template.clone().attr('data-tab-key', 'op')
 
-      popularCommentData.forEach(({ index, refMemberNames }) => {
-        const $clonedCells = $commentCells.eq(index).clone()
+      {
+        if (popularCount > 0) {
+          popularCommentData.forEach(({ index, refMemberNames }) => {
+            const $clonedCell = $commentCells.eq(index).clone()
 
-        // 查看热门回复时，禁用回复操作和楼层锚点。
-        $clonedCells.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-        $clonedCells.find('.no').css('pointer-events', 'none')
+            // 禁用回复操作和楼层锚点。
+            $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+            $clonedCell.find('.no').css('pointer-events', 'none')
 
-        const firstRefMember = refMemberNames?.at(0)
-        if (firstRefMember) {
-          // 找出回复的是哪一条回复。
-          const replyMember = commentDataList.findLast(
-            (it, idx) => idx < index && it.memberName === firstRefMember
-          )
-          if (replyMember) {
-            const $refCell = $(`
-              <div class="v2p-topic-reply-ref">
-                <div class="v2p-topic-reply">
-                  <div class="v2p-topic-reply-member">
-                    <a href="${replyMember.memberLink}" target="_blank">
-                      <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
-                      <span>${replyMember.memberName}</span>
-                    </a>：
-                  </div>
-                  <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
-                </div>
-              </div>
-            `)
-            $clonedCells.prepend($refCell)
-          }
+            const firstRefMember = refMemberNames?.at(0)
+
+            if (firstRefMember) {
+              // 找出回复的是哪一条回复。
+              const replyMember = commentDataList.findLast(
+                (it, idx) => idx < index && it.memberName === firstRefMember
+              )
+
+              if (replyMember) {
+                $clonedCell.prepend(
+                  $(`
+                    <div class="v2p-topic-reply-ref">
+                      <div class="v2p-topic-reply">
+                        <div class="v2p-topic-reply-member">
+                          <a href="${replyMember.memberLink}" target="_blank">
+                            <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
+                            <span>${replyMember.memberName}</span>
+                          </a>：
+                        </div>
+                        <div class="v2p-topic-reply-content">${escapeHTML(
+                          replyMember.content
+                        )}</div>
+                      </div>
+                    </div>
+                  `)
+                )
+              }
+            }
+
+            $t1.append($clonedCell)
+          })
+        } else {
+          $t1.append($('<div>暂无热门回复</div>').css({ padding: '20px', textAlign: 'center' }))
         }
 
-        $template.append($clonedCells)
-      })
+        $content.append($t1)
+      }
 
-      $content.css({ padding: '0 20px' }).append($template.html())
+      {
+        const len = commentDataList.length
+        const displayNum =
+          len < 10
+            ? len
+            : len <= 10
+              ? 5
+              : len <= 30
+                ? 10
+                : len <= 60
+                  ? 20
+                  : len <= 100
+                    ? 40
+                    : len <= 200
+                      ? 60
+                      : 90
+
+        if (displayNum > 0) {
+          const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
+
+          recentCommentData.forEach(({ index, refMemberNames }) => {
+            const $clonedCell = $commentCells.eq(index).clone()
+
+            // 禁用回复操作和楼层锚点。
+            $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+            $clonedCell.find('.no').css('pointer-events', 'none')
+
+            const firstRefMember = refMemberNames?.at(0)
+
+            if (firstRefMember) {
+              // 找出回复的是哪一条回复。
+              const replyMember = commentDataList.findLast(
+                (it, idx) => idx < index && it.memberName === firstRefMember
+              )
+
+              if (replyMember) {
+                $clonedCell.prepend(
+                  $(`
+                    <div class="v2p-topic-reply-ref">
+                      <div class="v2p-topic-reply">
+                        <div class="v2p-topic-reply-member">
+                          <a href="${replyMember.memberLink}" target="_blank">
+                            <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
+                            <span>${replyMember.memberName}</span>
+                          </a>：
+                        </div>
+                        <div class="v2p-topic-reply-content">${escapeHTML(
+                          replyMember.content
+                        )}</div>
+                      </div>
+                    </div>
+                  `)
+                )
+              }
+            }
+
+            $t2.append($clonedCell)
+          })
+        } else {
+          $t2.append($('<div>暂无最近回复</div>').css({ padding: '20px', textAlign: 'center' }))
+        }
+
+        $content.append($t2)
+      }
+
+      {
+        const opCommentData = commentDataList.filter(
+          ({ memberName }) => memberName === topicOwnerName
+        )
+
+        if (opCommentData.length > 0) {
+          opCommentData.forEach(({ index, refMemberNames }) => {
+            const $clonedCell = $commentCells.eq(index).clone()
+
+            // 禁用回复操作和楼层锚点。
+            $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+            $clonedCell.find('.no').css('pointer-events', 'none')
+
+            const firstRefMember = refMemberNames?.at(0)
+
+            if (firstRefMember) {
+              // 找出回复的是哪一条回复。
+              const replyMember = commentDataList.findLast(
+                (it, idx) => idx < index && it.memberName === firstRefMember
+              )
+
+              if (replyMember) {
+                $clonedCell.prepend(
+                  $(`
+                    <div class="v2p-topic-reply-ref">
+                      <div class="v2p-topic-reply">
+                        <div class="v2p-topic-reply-member">
+                          <a href="${replyMember.memberLink}" target="_blank">
+                            <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
+                            <span>${replyMember.memberName}</span>
+                          </a>：
+                        </div>
+                        <div class="v2p-topic-reply-content">${escapeHTML(
+                          replyMember.content
+                        )}</div>
+                      </div>
+                    </div>
+                  `)
+                )
+              }
+            }
+
+            $t3.append($clonedCell)
+          })
+        } else {
+          $t3.append($('<div>暂无题主回复</div>').css({ padding: '20px', textAlign: 'center' }))
+        }
+
+        $content.append($t3)
+      }
+
+      const $tabs = $(`
+      <div class="v2p-modal-comment-tabs">
+        <div data-tab-key="hot" class="v2p-tab-active">热门回复</div>
+        <div data-tab-key="recent">最近回复</div>
+        <div data-tab-key="op">题主回复</div>
+      </div>
+    `)
+      $title.append($tabs)
+
+      $tabs.find('[data-tab-key]').on('click', (ev) => {
+        const $target = $(ev.currentTarget)
+        const { tabKey } = $target.data()
+        $target.addClass('v2p-tab-active').siblings().removeClass('v2p-tab-active')
+        $(`.v2p-modal-comments[data-tab-key="${tabKey}"]`)
+          .addClass('v2p-tab-content-active')
+          .siblings()
+          .removeClass('v2p-tab-content-active')
+      })
     },
-    onOpen: ({ $container }) => {
-      $container.find('.cell[id^="r_"]').each((_, cellDom) => {
+    onOpen: ({ $content }) => {
+      $content.find('.cell[id^="r_"]').each((_, cellDom) => {
         const storage = getStorageSync()
         const options = storage[StorageKey.Options]
-        processReplyContent($(cellDom), options.replyContent)
+
+        if (options.replyContent.autoFold) {
+          processReplyContent($(cellDom))
+        }
       })
     },
   })
 
-  $popularBtn.on('click', () => {
+  $commentsBtn.on('click', () => {
     model.open()
   })
 
@@ -113,87 +260,6 @@ function handlingPopularComments() {
     const countTextSpan = `<span class="count-text">${newCountText}</span><span class="v2p-dot">·</span>${popularCount} 条热门回复`
     $commentBoxCount.empty().append(countTextSpan)
   }
-}
-
-/**
- * 设置最近回复。
- */
-function handlingRecentComments() {
-  if (commentDataList.length <= 5) {
-    return
-  }
-
-  const len = commentDataList.length
-  const displayNum =
-    len <= 10 ? 5 : len <= 30 ? 10 : len <= 60 ? 20 : len <= 100 ? 40 : len <= 200 ? 60 : 90
-
-  const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
-
-  const iconClock = createElement(Clock4)
-  iconClock.setAttribute('width', '100%')
-  iconClock.setAttribute('height', '100%')
-
-  const $recentBtn = $(
-    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"></span>最近回复</span>`
-  )
-  $recentBtn.find('.v2p-tool-icon').append(iconClock)
-
-  $('.v2p-tools').prepend($recentBtn)
-
-  const model = createModel({
-    root: $commentBox,
-    title: `最近 ${displayNum} 条回复`,
-    onMount: ({ $content }) => {
-      const $template = $('<div>')
-
-      recentCommentData.forEach(({ index, refMemberNames }) => {
-        const $clonedCells = $commentCells.eq(index).clone()
-
-        // 禁用回复操作和楼层锚点。
-        $clonedCells.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-        $clonedCells.find('.no').css('pointer-events', 'none')
-
-        const firstRefMember = refMemberNames?.at(0)
-        if (firstRefMember) {
-          // 找出回复的是哪一条回复。
-          const replyMember = commentDataList.findLast(
-            (it, idx) => idx < index && it.memberName === firstRefMember
-          )
-          if (replyMember) {
-            const $refCell = $(`
-              <div class="v2p-topic-reply-ref">
-                <div class="v2p-topic-reply">
-                  <div class="v2p-topic-reply-member">
-                    <a href="${replyMember.memberLink}" target="_blank">
-                      <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
-                      <span>${replyMember.memberName}</span>
-                    </a>：
-                  </div>
-                  <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
-                </div>
-              </div>
-            `)
-            $clonedCells.prepend($refCell)
-          }
-        }
-
-        $template.append($clonedCells)
-      })
-
-      $content.css({ padding: '0 20px' }).append($template.html())
-    },
-    onOpen: ({ $container }) => {
-      $container.find('.cell[id^="r_"]').each((_, cellDom) => {
-        const storage = getStorageSync()
-        const options = storage[StorageKey.Options]
-        processReplyContent($(cellDom), options.replyContent)
-      })
-    },
-  })
-
-  $recentBtn.on('click', () => {
-    model.open()
-  })
 }
 
 /**
@@ -480,8 +546,7 @@ export async function handlingComments() {
     })
 
     updateCommentCells()
-    handlingRecentComments()
-    handlingPopularComments()
+    handlingFilteredComments()
 
     // 处理「点击感谢回复」的逻辑。
     $('.v2p-control-thank').on('click', (ev) => {
@@ -544,7 +609,9 @@ export async function handlingComments() {
 
         const dataFromIndex = commentDataList.at(i)
 
-        processReplyContent($cellDom, options.replyContent)
+        if (options.replyContent.autoFold) {
+          processReplyContent($cellDom)
+        }
 
         // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
         const currentComment =

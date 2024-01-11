@@ -97,7 +97,7 @@ export function handlingTopicList() {
               abortController = new AbortController()
 
               model.$content.empty().append(`
-                    <div class="v2p-model-loading">
+                    <div class="v2p-modal-loading">
                       <div class="v2p-icon-loading">${iconLoading}</div>
                     </div>
                     `)
