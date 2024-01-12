@@ -84,7 +84,7 @@
 <td>实时预览回复内容：</td>
 </tr>
 <tr>
-<td><img src=https://i.imgur.com/1vfybCs.gif width=600/></td>
+<td><img src=https://i.imgur.com/XIOFQVS.gif width=600/></td>
 <td><img src=https://i.imgur.com/FYSZ0n5.gif width=600/></td>
 </tr>
 <tr>
