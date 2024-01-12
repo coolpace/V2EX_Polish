@@ -73,6 +73,29 @@ body {
       display: flex;
       gap: var(--v2p-layout-column-gap);
     }
+
+    @at-root {
+      #Navcol {
+        .nav_item:hover {
+          background-color: var(--box-background-hover-color);
+        }
+
+        .nav_item_current:hover {
+          color: var(--box-foreground-color);
+          background-color: var(--box-background-color);
+        }
+      }
+
+      #Rightcol {
+        #page-outline-title {
+          background-color: var(--v2p-color-main-200);
+        }
+
+        .page-outline-item:hover {
+          background-color: var(--box-background-hover-color);
+        }
+      }
+    }
   }
 
   #Leftbar {
