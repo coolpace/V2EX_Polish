@@ -1,3 +1,12 @@
+---
+title: 赞助和支持
+date: 2024-01-10
+author:
+  name: LeoKu
+  avatar: https://avatars.githubusercontent.com/u/47730755?v=4
+  link: https://github.com/Codennnn
+---
+
 迄今为止，我们已收到 20 笔赞赏，共计 272 元。对于你们的大方支持，我们感慨万分！
 
 | 来自             | 金额（元） |       时间 |                                                   留言 |     方式 |

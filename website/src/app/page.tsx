@@ -19,6 +19,7 @@ import { Feature } from '~/components/Feature'
 import { HoverButton } from '~/components/HoverButton'
 import { EdgeIcon } from '~/components/icons/EdgeIcon'
 import { FirefoxIcon } from '~/components/icons/FirefoxIcon'
+import { SafariIcon } from '~/components/icons/SafariIcon'
 import { TampermonkeyIcon } from '~/components/icons/TampermonkeyIcon'
 import { InstallButton } from '~/components/InstallButton'
 import { Introduction } from '~/components/Introduction'
@@ -52,7 +53,7 @@ export default function HomePage() {
             <InstallButton />
           </div>
 
-          <div className="mt-6 flex flex-col gap-3 text-xs text-main-500 md:flex-row md:items-center md:gap-6 md:text-sm">
+          <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-main-500 md:flex md:items-center md:gap-6 md:text-sm">
             <HoverButton>
               <Link
                 className="flex items-center gap-2"
@@ -80,6 +81,22 @@ export default function HomePage() {
                 </span>
                 <span className="break-all">
                   <span className="whitespace-nowrap">Firefox</span>
+                  <span className="ml-1 whitespace-nowrap">可用</span>
+                </span>
+              </Link>
+            </HoverButton>
+
+            <HoverButton>
+              <Link
+                className="flex items-center gap-2"
+                href="https://github.com/coolpace/V2EX_Polish/blob/main/website/src/content/docs/use-in-safari.md"
+                target="_blank"
+              >
+                <span className="inline-block size-6">
+                  <SafariIcon />
+                </span>
+                <span className="break-all">
+                  <span className="whitespace-nowrap">Safari</span>
                   <span className="ml-1 whitespace-nowrap">可用</span>
                 </span>
               </Link>
