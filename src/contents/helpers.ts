@@ -87,6 +87,7 @@ export async function setMemberTags(memberName: Member['username'], tags: Tag[] 
   const runEnv = getRunEnv()
 
   if (!(runEnv === 'chrome' || runEnv === 'web-ext')) {
+    // 非浏览器扩展不能设置用户标签。
     return
   }
 
