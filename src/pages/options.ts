@@ -1,7 +1,8 @@
 import { createIcons, Plus, Settings, Tags, X } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
-import type { MemberTag, Options } from '../types'
+import { setMemberTags } from '../contents/helpers'
+import type { Options } from '../types'
 import { getStorage, setStorage } from '../utils'
 
 function loadIcons() {
@@ -192,12 +193,7 @@ void (async function init() {
                   const currentMemberTags = tagData[memberName].tags
 
                   if (currentMemberTags) {
-                    await setStorage(StorageKey.MemberTag, {
-                      ...tagData,
-                      [memberName]: {
-                        tags: [...currentMemberTags, { name: newTagValue }],
-                      },
-                    })
+                    await setMemberTags(memberName, [...currentMemberTags, { name: newTagValue }])
 
                     renderTagsContent()
                   }
@@ -223,14 +219,12 @@ void (async function init() {
                     const currentMemberTags = tagData[memberName].tags
 
                     if (currentMemberTags) {
-                      await setStorage(StorageKey.MemberTag, {
-                        ...tagData,
-                        [memberName]: {
-                          tags: currentMemberTags.map((it, idx) =>
-                            idx === tagIdx ? { name: changedTagValue } : it
-                          ),
-                        },
-                      })
+                      await setMemberTags(
+                        memberName,
+                        currentMemberTags.map((it, idx) =>
+                          idx === tagIdx ? { name: changedTagValue } : it
+                        )
+                      )
 
                       renderTagsContent()
                     }
@@ -257,12 +251,10 @@ void (async function init() {
 
                     await setStorage(StorageKey.MemberTag, tagData)
                   } else {
-                    const newTagData: MemberTag = {
-                      ...tagData,
-                      [memberName]: { tags: currentMemberTags.filter((_, idx) => idx !== tagIdx) },
-                    }
-
-                    await setStorage(StorageKey.MemberTag, newTagData)
+                    await setMemberTags(
+                      memberName,
+                      currentMemberTags.filter((_, idx) => idx !== tagIdx)
+                    )
                   }
 
                   renderTagsContent()
