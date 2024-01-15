@@ -160,7 +160,7 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 
 我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new)提出。你也可以加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)向我们快速反馈。
 
-## V 站相关主题
+## V2EX 相关主题
 
 - [V2EX 超强浏览器扩展：体验更先进的 V2EX](https://www.v2ex.com/t/930155)
 - [V2EX Polish 大量功能更新，即刻体验更好用的 V2EX](https://www.v2ex.com/t/935916)
