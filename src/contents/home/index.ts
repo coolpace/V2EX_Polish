@@ -1,6 +1,7 @@
 import { StorageKey } from '../../constants'
 import { getStorage, isSameDay } from '../../utils'
 import { loadIcons } from '../helpers'
+import { handlingHotTopics } from './hot-topics'
 import { handlingTopicList } from './topic-list'
 
 void (async () => {
@@ -35,6 +36,8 @@ void (async () => {
       }
     }
   }
+
+  handlingHotTopics()
 
   loadIcons()
 })()

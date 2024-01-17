@@ -57,10 +57,10 @@ export function handlingTools() {
     const $moreTool = $tools.find('.v2p-tool-more')
 
     const $toolContent = $(`
-      <div class="v2p-reply-tool-content">
-        <div class="v2p-reply-tool v2p-reply-tool-decode">解析本页 Base64</div>
-        <div class="v2p-reply-tool v2p-reply-tool-encode">文本转 Base64</div>
-        <div class="v2p-reply-tool v2p-reply-tool-share">生成分享图片</div>
+      <div class="v2p-select-dropdown">
+        <div class="v2p-select-item v2p-reply-tool-decode">解析本页 Base64</div>
+        <div class="v2p-select-item v2p-reply-tool-encode">文本转 Base64</div>
+        <div class="v2p-select-item v2p-reply-tool-share">生成分享图片</div>
       </div>
     `)
 
@@ -77,7 +77,6 @@ export function handlingTools() {
 
     $toolContent.find('.v2p-reply-tool-encode').on('click', () => {
       focusReplyInput()
-      toolsPopup.close()
 
       setTimeout(() => {
         // 加入下次事件循环，避免阻塞 Popup 关闭。
@@ -116,7 +115,7 @@ export function handlingTools() {
     if (canHideRefName) {
       let isHidden = options.replyContent.hideRefName
 
-      const $toolToggleDisplay = $('<div class="v2p-reply-tool">显示 @ 用户名</div>')
+      const $toolToggleDisplay = $('<div class="v2p-select-item">显示 @ 用户名</div>')
 
       $toolToggleDisplay.on('click', () => {
         if (isHidden) {
@@ -135,7 +134,7 @@ export function handlingTools() {
 
     const $toolToggleLayout = $(
       `
-      <div class="v2p-reply-tool v2p-reply-tool-layout">
+      <div class="v2p-select-item v2p-reply-tool-layout">
         ${options.reply.layout === 'horizontal' ? '切换为垂直布局' : '切换为水平布局'}
       </div>
       `
@@ -146,6 +145,10 @@ export function handlingTools() {
     })
 
     $toolContent.prepend($toolToggleLayout)
+
+    $toolContent.find('.v2p-select-item').on('click', () => {
+      toolsPopup.close()
+    })
   }
 
   $('#Rightbar > .box:has("#member-activity")').addClass('v2p-tool-box').append($tools)

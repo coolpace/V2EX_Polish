@@ -257,3 +257,32 @@ export async function getUnreadMessagesCount(): Promise<number> {
 
   throw new Error('无法获取未读消息数量')
 }
+
+/**
+ * 获取近期热议主题。
+ */
+export async function getHotTopics(params: {
+  /** 开始时间，单位：秒。 */
+  startTime: number
+  /** 结束时间，单位：秒。 */
+  endTime: number
+  /** 限制返回数据条数。 */
+  limits?: number
+}): Promise<DataWrapper<Pick<Topic, 'id' | 'title' | 'url' | 'member'>[]>> {
+  const url = new URL('https://wbhvzt9dzy.us.aircode.run/hot-topics')
+
+  url.searchParams.set('startTime', String(params.startTime))
+  url.searchParams.set('endTime', String(params.endTime))
+
+  if (params.limits) {
+    url.searchParams.set('limits', String(params.limits))
+  }
+
+  const res = await fetch(url, {
+    method: 'GET',
+  })
+
+  const data: DataWrapper<Pick<Topic, 'id' | 'title' | 'url' | 'member'>[]> = await res.json()
+
+  return data
+}
