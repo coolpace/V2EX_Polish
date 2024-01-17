@@ -905,13 +905,13 @@ a.v2p-topic-preview-title-link {
   }
 }
 
-.v2p-reply-tool-content {
+.v2p-select-dropdown {
   padding: 5px;
   font-size: 12px;
   border-radius: 5px;
 
   @at-root {
-    .v2p-reply-tool {
+    .v2p-select-item {
       padding: 5px 10px;
       white-space: nowrap;
       border-radius: 4px;
@@ -919,6 +919,10 @@ a.v2p-topic-preview-title-link {
 
       &:hover {
         background-color: var(--v2p-color-main-200);
+      }
+
+      &.v2p-select-item-active {
+        background-color: var(--v2p-color-accent-50);
       }
     }
   }
@@ -991,4 +995,34 @@ a.v2p-topic-preview-title-link {
   color: var(--v2p-color-orange-400);
   background-color: var(--v2p-color-orange-100);
   border-radius: 2px;
+}
+
+.v2p-topics-hot-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+  color: currentColor;
+
+  .v2p-icon-loading {
+    width: 40px;
+  }
+}
+
+.v2p-topics-hot-header {
+  display: flex;
+  align-items: center;
+}
+
+.v2p-picker-hot {
+  margin-left: auto;
+  padding: 1px 5px;
+  font-size: 13px;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--v2p-color-main-200);
+  }
 }
