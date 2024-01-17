@@ -2,7 +2,7 @@ import { createElement, PanelRight, PanelTop } from 'lucide'
 
 import { StorageKey } from '../../constants'
 import { getStorageSync } from '../../utils'
-import { $main, $wrapperContent } from '../globals'
+import { $main, $topicContentBox, $wrapperContent } from '../globals'
 
 const $layoutToggle = $('<span class="v2p-layout-toggle v2p-hover-btn">')
 
@@ -69,10 +69,20 @@ export function handlingLayout() {
   const storage = getStorageSync()
   const options = storage[StorageKey.Options]
 
-  if (options.reply.layout === 'horizontal') {
-    switchToHorizontalLayout()
+  if (options.reply.layout === 'auto') {
+    const contentHeight = $topicContentBox.height()
+
+    if (typeof contentHeight === 'number' && contentHeight >= 600) {
+      switchToHorizontalLayout()
+    } else {
+      switchToVerticalLayout()
+    }
   } else {
-    switchToVerticalLayout()
+    if (options.reply.layout === 'horizontal') {
+      switchToHorizontalLayout()
+    } else {
+      switchToVerticalLayout()
+    }
   }
 
   $layoutToggle.on('click', () => {

@@ -37,7 +37,7 @@ export interface Options {
     /** 是否预加载回复内容。 */
     preload?: 'off' | 'auto'
     /** 是否使用水平布局。 */
-    layout?: 'horizontal'
+    layout?: 'auto' | 'horizontal'
   }
   /** 回复内容设置。 */
   replyContent: {

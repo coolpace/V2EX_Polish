@@ -41,7 +41,11 @@ const saveOptions = async () => {
 
         return undefined
       })(),
-      layout: $('#replyLayoutHorizontal').prop('checked') ? 'horizontal' : undefined,
+      layout: $('#replyLayoutAuto').prop('checked')
+        ? 'auto'
+        : $('#replyLayoutHorizontal').prop('checked')
+          ? 'horizontal'
+          : undefined,
     },
     replyContent: {
       autoFold: $('#autoFold').prop('checked'),
@@ -107,6 +111,7 @@ void (async function init() {
     $('#userTagDisplayBlock').prop('checked', options.userTag.display === 'block')
 
     $('#replyLayoutDefault').prop('checked', !options.reply.layout)
+    $('#replyLayoutAuto').prop('checked', options.reply.layout === 'auto')
     $('#replyLayoutHorizontal').prop('checked', options.reply.layout === 'horizontal')
 
     $('input[type]').on('change', () => {
