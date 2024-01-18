@@ -175,6 +175,8 @@ export interface Topic {
   }
 }
 
+export type HotTopic = Pick<Topic, 'id' | 'title' | 'url' | 'member'>
+
 export interface TopicReply {
   id: number
   created: number

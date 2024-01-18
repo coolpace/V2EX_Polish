@@ -1014,9 +1014,12 @@ a.v2p-topic-preview-title-link {
   align-items: center;
 }
 
-.v2p-picker-hot {
+.v2p-topics-hot-picker {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
   margin-left: auto;
-  padding: 1px 5px;
+  padding: 1px 6px;
   font-size: 13px;
   background-color: var(--v2p-color-main-100);
   border-radius: 4px;
@@ -1024,5 +1027,14 @@ a.v2p-topic-preview-title-link {
 
   &:hover {
     background-color: var(--v2p-color-main-200);
+  }
+
+  @at-root {
+    .v2p-topics-hot-icon {
+      position: relative;
+      top: -2px;
+      width: 1em;
+      height: 1em;
+    }
   }
 }
