@@ -1,5 +1,6 @@
 import {
   BookOpenCheck,
+  ChevronDown,
   ChevronsUp,
   createIcons,
   EyeOff,
@@ -316,6 +317,7 @@ export function loadIcons() {
         PackagePlus,
         Star,
         Twitter,
+        ChevronDown,
       },
     })
   }, 0)

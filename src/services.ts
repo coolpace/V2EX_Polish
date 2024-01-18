@@ -3,6 +3,7 @@ import { postTask } from './contents/helpers'
 import type {
   API_Info,
   DataWrapper,
+  HotTopic,
   ImgurResponse,
   Member,
   Notification,
@@ -268,21 +269,25 @@ export async function getHotTopics(params: {
   endTime: number
   /** 限制返回数据条数。 */
   limits?: number
-}): Promise<DataWrapper<Pick<Topic, 'id' | 'title' | 'url' | 'member'>[]>> {
+  signal?: AbortSignal
+}): Promise<DataWrapper<HotTopic[]>> {
+  const { startTime, endTime, limits = 8, signal } = params
+
   const url = new URL('https://wbhvzt9dzy.us.aircode.run/hot-topics')
 
-  url.searchParams.set('startTime', String(params.startTime))
-  url.searchParams.set('endTime', String(params.endTime))
+  url.searchParams.set('startTime', String(startTime))
+  url.searchParams.set('endTime', String(endTime))
 
-  if (params.limits) {
-    url.searchParams.set('limits', String(params.limits))
+  if (limits) {
+    url.searchParams.set('limits', String(limits))
   }
 
   const res = await fetch(url, {
     method: 'GET',
+    signal,
   })
 
-  const data: DataWrapper<Pick<Topic, 'id' | 'title' | 'url' | 'member'>[]> = await res.json()
+  const data: DataWrapper<HotTopic[]> = await res.json()
 
   return data
 }
