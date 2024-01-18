@@ -53,7 +53,7 @@ export function handlingHotTopics() {
       const $user = $clonedCell.find('a[href^="/member"]')
       $user.attr('href', `/member/${it.member.username}`)
       $user.find('> img').attr('src', it.member.avatar_mini)
-      $clonedCell.find('.item_hot_topic_title > a').text(it.title).attr('href', it.url)
+      $clonedCell.find('.item_hot_topic_title > a').text(it.title).attr('href', `/t/${it.id}`)
       $listWrapper.append($clonedCell)
     })
   }
@@ -81,7 +81,7 @@ export function handlingHotTopics() {
     `)
 
     if (typeof alias === 'string') {
-      $trigger.text(alias)
+      $text.text(alias)
 
       switch (alias) {
         case '今日':
