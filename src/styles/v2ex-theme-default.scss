@@ -850,7 +850,8 @@ body {
       .votes,
       .node,
       strong:first-of-type,
-      span:first-of-type {
+      span:first-of-type,
+      .v2p-topic-ignore-btn {
         position: relative;
         z-index: 2;
         pointer-events: auto;

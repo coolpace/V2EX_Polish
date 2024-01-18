@@ -2,7 +2,7 @@ import { createButton } from '../../components/button'
 import { bindImageUpload } from '../../components/image-upload'
 import { createPopup } from '../../components/popup'
 import { biliEmojiLink, emoticons, type PopularEmoji } from '../../constants'
-import { getPreviewContent } from '../../services'
+import { getCommentPreview } from '../../services'
 import { getOS } from '../../utils'
 import { $replyBox, $replyForm, $replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput, transformEmoji } from '../helpers'
@@ -183,7 +183,7 @@ export function handleReply() {
                 $replyPreview.html('正在加载预览...')
 
                 try {
-                  const renderedContent = await getPreviewContent({
+                  const renderedContent = await getCommentPreview({
                     text: textToPreview,
                     syntax: 'default',
                   })

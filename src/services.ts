@@ -180,7 +180,7 @@ export async function thankReply(params: {
 }
 
 /**
- * 爬取主题内容页。
+ * 爬取主题内容页，返回 HTML 纯文本。
  */
 export async function crawalTopicPage(path: string, page: string): Promise<string> {
   const res = await fetch(`${V2EX.Origin}${path}?p=${page}`)
@@ -217,9 +217,9 @@ export async function unfavorite(url: string): Promise<void> {
 }
 
 /**
- * 获取纯文本的预览渲染内容。
+ * 获取回复的预览渲染内容。
  */
-export async function getPreviewContent(params: {
+export async function getCommentPreview(params: {
   text: string
   syntax: 'default' | 'markdown'
 }): Promise<string> {

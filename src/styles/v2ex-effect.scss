@@ -53,7 +53,8 @@ body {
 #Rightbar {
   .cell {
     &:hover {
-      .v2p-topic-preview-btn {
+      .v2p-topic-preview-btn,
+      .v2p-topic-ignore-btn {
         visibility: visible;
       }
     }
@@ -124,6 +125,12 @@ body {
   border: none;
   border-radius: 3px;
   outline: none;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.v2p-topic-ignore-btn {
+  margin-left: 8px;
   visibility: hidden;
   cursor: pointer;
 }
