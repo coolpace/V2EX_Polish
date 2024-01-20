@@ -1,7 +1,6 @@
 import {
   BookOpenCheckIcon,
   ChevronsUpIcon,
-  Clock4Icon,
   HeartIcon,
   MessageSquarePlusIcon,
   MoonStarIcon,
@@ -202,10 +201,6 @@ export function UserPanel() {
         <span className="flex items-center justify-center gap-x-1">
           <HeartIcon size={16} />
           热门回复
-        </span>
-        <span className="flex items-center justify-center gap-x-1">
-          <Clock4Icon size={16} />
-          最近回复
         </span>
         <span className="flex items-center justify-center gap-x-1">
           <MessageSquarePlusIcon size={16} />

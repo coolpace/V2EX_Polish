@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
 import Link from 'next/link'
 import { Theme } from '@radix-ui/themes'
-import { Analytics } from '@vercel/analytics/react'
 
 import { HoverButton } from '~/components/HoverButton'
 import { Logo } from '~/components/Logo'
@@ -98,8 +97,6 @@ export default function RootLayout(props: React.PropsWithChildren) {
               </div>
             </div>
           </footer>
-
-          <Analytics />
         </Theme>
       </body>
     </html>

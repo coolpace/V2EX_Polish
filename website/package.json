@@ -15,33 +15,32 @@
   },
   "dependencies": {
     "@radix-ui/themes": "^2.0.3",
-    "@vercel/analytics": "^1.1.1",
     "cheerio": "1.0.0-rc.12",
     "contentlayer": "^0.3.4",
-    "date-fns": "^3.0.6",
+    "date-fns": "^3.2.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "html-to-image": "^1.11.11",
-    "lucide-react": "^0.303.0",
-    "next": "^14.0.4",
+    "lucide-react": "^0.312.0",
+    "next": "^14.1.0",
     "next-contentlayer": "^0.3.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-use-event-hook": "^0.9.6",
-    "valibot": "^0.25.0"
+    "valibot": "^0.26.0"
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.2.1",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.10",
-    "@types/react": "18.2.46",
+    "@types/react": "18.2.48",
     "@types/react-dom": "^18.2.18",
-    "autoprefixer": "^10.4.16",
+    "autoprefixer": "^10.4.17",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.32",
-    "prefer-code-style": "1.5.11",
+    "postcss": "^8.4.33",
+    "prefer-code-style": "1.5.12",
     "stylelint": "^15.11.0",
-    "tailwindcss": "^3.4.0",
-    "typescript": "5.2.2"
+    "tailwindcss": "^3.4.1",
+    "typescript": "5.3.3"
   },
   "engines": {
     "node": ">=18",
