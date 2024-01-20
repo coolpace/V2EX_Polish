@@ -25,6 +25,22 @@ export const Blog = defineDocumentType(() => ({
   },
 }))
 
+export const Docs = defineDocumentType(() => ({
+  name: 'Docs',
+  filePathPattern: 'docs/**/*.md',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    author: { type: 'nested', of: Author, required: true },
+  },
+  computedFields: {
+    slug: {
+      type: 'string',
+      resolve: (post) => post._raw.sourceFileName.replace(/\.md$/, ''),
+    },
+  },
+}))
+
 export const Changelog = defineDocumentType(() => ({
   name: 'Changelog',
   filePathPattern: 'changelog.md',

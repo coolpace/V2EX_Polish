@@ -9,7 +9,7 @@ module.exports = {
     'import/no-unresolved': [
       2,
       {
-        ignore: ['^\\~/', '^(contentlayer|next-contentlayer)', '@vercel/analytics/react'],
+        ignore: ['^\\~/', '^(contentlayer|next-contentlayer)'],
       },
     ],
   },
