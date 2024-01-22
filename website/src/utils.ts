@@ -8,3 +8,7 @@ export function getPageTitle(title?: string): string {
 
   return title ? `${title} - ${mainTitle}` : mainTitle
 }
+
+export function isNumeric(str: string) {
+  return /^\d+$/.test(str)
+}

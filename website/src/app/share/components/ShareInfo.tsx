@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Button, Callout, Checkbox, Flex, Link, Text } from '@radix-ui/themes'
 import { toBlob, toPng } from 'html-to-image'
 import { AlertCircleIcon, CopyIcon, DownloadIcon } from 'lucide-react'
@@ -16,14 +16,19 @@ import {
   type TopicInfo,
 } from '~/app/api/share/route'
 import { ShareCardThemeBasic } from '~/app/share/components/ShareCardThemeBasic'
-import { HOST } from '~/utils'
+import { HOST, isNumeric } from '~/utils'
 
 import { ShareLoading } from './ShareLoading'
-import { TopicLinkInput } from './TopicLinkInput'
+import { TopicLinkInput, type TopicLinkInputProps } from './TopicLinkInput'
 
 const isDev = process.env.NODE_ENV === 'development'
 
 const fetchTopicInfo = async (topicId: ShareRequestData['topicId']): Promise<ResponseJson> => {
+  // return {
+  //   code: ResponseCode.Success,
+  //   data: JSON.parse(process.env.NEXT_PUBLIC_DATA!) as TopicInfo,
+  // }
+
   const res = await window.fetch(`${isDev ? HOST : ''}/api/share`, {
     method: 'POST',
     body: JSON.stringify({ topicId }),
@@ -50,17 +55,20 @@ async function convertImageToBase64(url: string): Promise<string> {
 
 export function ShareInfo() {
   const { topicId } = useParams()
+  const router = useRouter()
 
   const eleRef = useRef<HTMLDivElement>(null)
   const avatarRef = useRef<HTMLImageElement>(null)
 
   const [topicInfo, setTopicInfo] = useState<TopicInfo>()
+  const [topicUrl, setTopicUrl] = useState<TopicInfo['url']>()
   const [loading, setLoading] = useState(true)
 
   const [requestError, setRequestError] = useState(false)
   const [notFoundError, setNotFoundError] = useState(false)
 
   const [showSubtle, setShowSubtle] = useState(true)
+  const [showQRCode, setShowQRCode] = useState(true)
 
   const [downloading, setDownloading] = useState(false)
 
@@ -91,6 +99,22 @@ export function ShareInfo() {
       })
 
       await Promise.all(promises)
+    }
+  }
+
+  const handleSearchTopic: TopicLinkInputProps['onSearh'] = (val) => {
+    let topicId: string | undefined
+
+    if (val) {
+      if (val.startsWith('http')) {
+        topicId = val.split('/').pop()
+      } else if (isNumeric(val)) {
+        topicId = val
+      }
+
+      if (topicId && isNumeric(topicId)) {
+        router.push(`/share/${topicId}`)
+      }
     }
   }
 
@@ -182,8 +206,6 @@ export function ShareInfo() {
   const requestTopicInfo = useEvent(async () => {
     if (typeof topicId === 'string') {
       try {
-        // setTopicInfo(JSON.parse(process.env.NEXT_PUBLIC_DATA!) as TopicInfo)
-        // return
         setLoading(true)
         setRequestError(false)
         setNotFoundError(false)
@@ -192,10 +214,12 @@ export function ShareInfo() {
 
         if (code === ResponseCode.Success) {
           setTopicInfo(data)
+          setTopicUrl(data.url)
         } else {
           setNotFoundError(true)
         }
-      } catch {
+      } catch (err) {
+        console.error(err)
         setRequestError(true)
       } finally {
         setLoading(false)
@@ -256,9 +280,24 @@ export function ShareInfo() {
             </Callout.Root>
           )}
 
-          <TopicLinkInput value={topicInfo?.url} />
+          <TopicLinkInput value={topicUrl} onChange={setTopicUrl} onSearh={handleSearchTopic} />
 
-          <Flex>
+          <Flex gap="3">
+            <Text size="2">
+              <label htmlFor="show-qrcode">
+                <Checkbox
+                  checked={showQRCode}
+                  id="show-qrcode"
+                  mr="1"
+                  variant="soft"
+                  onCheckedChange={(checked) => {
+                    setShowQRCode(checked ? true : false)
+                  }}
+                />
+                显示分享二维码
+              </label>
+            </Text>
+
             {topicInfo &&
               Array.isArray(topicInfo.supplements) &&
               topicInfo.supplements.length > 0 && (

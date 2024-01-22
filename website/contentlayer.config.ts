@@ -44,26 +44,15 @@ export const Docs = defineDocumentType(() => ({
 export const Changelog = defineDocumentType(() => ({
   name: 'Changelog',
   filePathPattern: 'changelog.md',
-  computedFields: {
-    slug: {
-      type: 'string',
-      resolve: (post) => post._raw.sourceFileName.replace(/\.md$/, ''),
-    },
-  },
 }))
 
-export const Donation = defineDocumentType(() => ({
-  name: 'Donation',
-  filePathPattern: 'donation.md',
-  computedFields: {
-    slug: {
-      type: 'string',
-      resolve: (post) => post._raw.sourceFileName.replace(/\.md$/, ''),
-    },
-  },
+export const Support = defineDocumentType(() => ({
+  name: 'Support',
+  filePathPattern: 'support.mdx',
+  contentType: 'mdx',
 }))
 
 export default makeSource({
   contentDirPath: 'src/content',
-  documentTypes: [Blog, Changelog, Donation],
+  documentTypes: [Blog, Changelog, Support],
 })

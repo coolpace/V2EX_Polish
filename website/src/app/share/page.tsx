@@ -5,11 +5,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Flex } from '@radix-ui/themes'
 
-import { TopicLinkInput } from './components/TopicLinkInput'
+import { isNumeric } from '~/utils'
 
-function isNumeric(str: string) {
-  return /^\d+$/.test(str)
-}
+import { TopicLinkInput } from './components/TopicLinkInput'
 
 export default function SharePage() {
   const router = useRouter()

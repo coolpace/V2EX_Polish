@@ -1,7 +1,7 @@
 import { TextField } from '@radix-ui/themes'
 import { SearchIcon } from 'lucide-react'
 
-interface TopicLinkInputProps {
+export interface TopicLinkInputProps {
   value?: string
   onChange?: (value: string) => void
   disabled?: boolean
