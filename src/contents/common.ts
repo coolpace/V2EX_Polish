@@ -178,6 +178,7 @@ void (async () => {
       <div class="v2p-footer-links">
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Home}" target="_blank">插件官网</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Feedback}" target="_blank">问题反馈</a>
+        <a class="v2p-footer-link v2p-hover-btn" href="${Links.Support}" target="_blank">赞赏支持</a>
       </div>
   
       <div class="v2p-footer-brand">
