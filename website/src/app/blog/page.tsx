@@ -17,7 +17,7 @@ export default function BlogIndexPage() {
   const blogs = allBlogs.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
 
   return (
-    <PageContainer className="py-5 md:py-8">
+    <PageContainer>
       <div className="px-2 lg:px-60">
         <PageHeaderTitle>Blog</PageHeaderTitle>
 

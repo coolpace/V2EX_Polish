@@ -32,6 +32,7 @@
     "@codennnn/tsconfig": "^1.2.1",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.10",
+    "@types/mdx": "^2.0.10",
     "@types/react": "18.2.48",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.17",

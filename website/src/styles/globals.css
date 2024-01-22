@@ -26,6 +26,10 @@
   --v2p-color-foreground: var(--v2p-color-main-800);
   --v2p-color-background: #f2f3f5;
   --v2p-color-bg-input: var(--v2p-color-main-50);
+
+  .radix-themes {
+    --cursor-button: pointer;
+  }
 }
 
 .theme-dark {

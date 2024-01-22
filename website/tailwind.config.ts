@@ -8,6 +8,7 @@ export default {
       maxWidth: {
         container: '1280px',
       },
+
       colors: {
         main: {
           50: 'var(--v2p-color-main-50)',
@@ -34,6 +35,7 @@ export default {
         background: 'var(--v2p-color-background)',
         content: 'var(--v2p-color-content)',
       },
+
       boxShadow: {
         box: 'var(--v2p-box-shadow)',
       },

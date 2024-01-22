@@ -18,7 +18,7 @@ export default function ChangelogPage() {
   }
 
   return (
-    <PageContainer className="py-5 md:py-8">
+    <PageContainer>
       <Article>
         <PageHeaderTitle>Changelog</PageHeaderTitle>
 
