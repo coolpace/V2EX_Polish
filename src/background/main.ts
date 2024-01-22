@@ -103,7 +103,7 @@ chrome.contextMenus.removeAll(() => {
     if (tab?.id) {
       switch (info.menuItemId) {
         case Menu.Options: {
-          chrome.sidePanel.open({ windowId: tab.windowId })
+          chrome.sidePanel.open({ tabId: tab.id })
           break
         }
 
