@@ -30,15 +30,32 @@ const V2EX_API = `${V2EX_ORIGIN}/api/v2`
 async function legacyRequest<Data>(url: string, options?: RequestInit): Promise<Data> {
   const res = await fetch(url, options)
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return res.json()
+  if (res.ok) {
+    return res.json() as Data
+  }
+
+  throw new Error('调用 V2EX API v1 出错', { cause: res.status })
 }
 
-export function fetchUserInfo(memberName: Member['username'], options?: RequestInit) {
-  return legacyRequest<Member>(
-    `${V2EX_LEGACY_API}/members/show.json?username=${memberName}`,
-    options
-  )
+export async function fetchUserInfo(memberName: Member['username'], options?: RequestInit) {
+  try {
+    const member = await legacyRequest<Member>(
+      `${V2EX_LEGACY_API}/members/show.json?username=${memberName}`,
+      options
+    )
+
+    return member
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.name === 'AbortError') {
+        throw new Error('请求被取消')
+      } else if (err.cause === 404) {
+        throw new Error('查无此用户，疑似已被封禁', { cause: err.cause })
+      }
+    }
+
+    throw new Error('获取用户信息失败')
+  }
 }
 
 export function fetchLatestTopics(options?: RequestInit) {

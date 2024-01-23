@@ -5,7 +5,9 @@ import type { CommentData, Member } from '../../types'
 import { formatTimestamp } from '../../utils'
 import { openTagsSetter } from './content'
 
-export const memberDataCache = new Map<Member['username'], Member>()
+const banned = Symbol()
+
+export const memberDataCache = new Map<Member['username'], Member | typeof banned>()
 
 interface ProcessAvatar {
   /** 触发弹出框的元素。 */
@@ -84,16 +86,21 @@ export function processAvatar(params: ProcessAvatar) {
 
           memberDataCache.set(memberName, memberData)
         } catch (err) {
-          if (err && typeof err === 'object' && 'name' in err && err.name !== 'AbortError') {
-            $content.html(`<span>获取用户信息失败</span>`)
+          if (err instanceof Error) {
+            $content.html(`<span>${err.message}</span>`)
+
+            if (err.cause === 404) {
+              memberDataCache.set(memberName, banned)
+            }
           }
+
           return null
         }
       }
 
       const data = memberDataCache.get(memberName)
 
-      if (data) {
+      if (typeof data === 'object') {
         $content.find('.v2p-no').removeClass('v2p-loading').text(`V2EX 第 ${data.id} 号会员`)
 
         $content
@@ -104,6 +111,8 @@ export function processAvatar(params: ProcessAvatar) {
         if (data.bio && data.bio.trim().length > 0) {
           $content.find('.v2p-bio').css('disply', 'block').text(data.bio)
         }
+      } else if (typeof data === 'symbol' && data === banned) {
+        $content.html('<span>查无此用户，疑似已被封禁</span>')
       }
     })()
   }
