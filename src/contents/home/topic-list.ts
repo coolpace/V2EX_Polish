@@ -239,7 +239,7 @@ export function handlingTopicList() {
                 .append($template.html())
                 .append(
                   `
-                  <div class="v2p-more-reply-tip">
+                  <div class="v2p-topic-reply-tip">
                     <a
                       href="${linkHref || ''}"
                       style="color: currentColor;"
@@ -247,6 +247,16 @@ export function handlingTopicList() {
                     >
                         在主题内查看完整评论...
                     </a>
+                  </div>
+                  `
+                )
+                .appendTo($topicPreview)
+            } else {
+              $('<div class="v2p-topic-reply-box">')
+                .append(
+                  `
+                  <div class="v2p-topic-reply-tip">
+                    - 暂无回复 -
                   </div>
                   `
                 )
