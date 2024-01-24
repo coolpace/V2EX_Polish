@@ -139,13 +139,14 @@ void (async function init() {
               <hr class="tags-divider" />
               <ul class="tags-list">
                 ${Object.entries(tagData)
-                  .map(([memberName, { tags }]) => {
+                  .map(([memberName, { tags, avatar }]) => {
                     if (tags && tags.length > 0) {
                       return `
                         <li class="tag-item">
                           <div class="tag-member-name">
                             <a href="${V2EX.Origin}/member/${memberName}" target="_blank">
-                              ${memberName}：
+                              ${avatar ? `<img src="${avatar}">` : ''}
+                              <span>${memberName}：</span>
                             </a>
                           </div>
 
@@ -191,16 +192,22 @@ void (async function init() {
             void (async () => {
               const $target = $(ev.currentTarget)
               const { memberName } = $target.data()
-              const newTagValue = window.prompt(`新增对 @${memberName} 的标签。`)
 
               if (typeof memberName === 'string') {
-                if (newTagValue && newTagValue.trim() !== '') {
-                  const currentMemberTags = tagData[memberName].tags
+                const newTagValue = window.prompt(`新增对 @${memberName} 的标签。`)
 
-                  if (currentMemberTags) {
-                    await setMemberTags(memberName, [...currentMemberTags, { name: newTagValue }])
+                if (typeof memberName === 'string') {
+                  if (newTagValue && newTagValue.trim() !== '') {
+                    const currentMemberTags = tagData[memberName].tags
 
-                    renderTagsContent()
+                    if (currentMemberTags) {
+                      await setMemberTags({
+                        memberName,
+                        tags: [...currentMemberTags, { name: newTagValue }],
+                      })
+
+                      renderTagsContent()
+                    }
                   }
                 }
               }
@@ -224,12 +231,12 @@ void (async function init() {
                     const currentMemberTags = tagData[memberName].tags
 
                     if (currentMemberTags) {
-                      await setMemberTags(
+                      await setMemberTags({
                         memberName,
-                        currentMemberTags.map((it, idx) =>
+                        tags: currentMemberTags.map((it, idx) =>
                           idx === tagIdx ? { name: changedTagValue } : it
-                        )
-                      )
+                        ),
+                      })
 
                       renderTagsContent()
                     }
@@ -256,10 +263,10 @@ void (async function init() {
 
                     await setStorage(StorageKey.MemberTag, tagData)
                   } else {
-                    await setMemberTags(
+                    await setMemberTags({
                       memberName,
-                      currentMemberTags.filter((_, idx) => idx !== tagIdx)
-                    )
+                      tags: currentMemberTags.filter((_, idx) => idx !== tagIdx),
+                    })
                   }
 
                   renderTagsContent()

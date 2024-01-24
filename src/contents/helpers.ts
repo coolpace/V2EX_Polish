@@ -81,7 +81,13 @@ export function insertTextToReplyInput(text: string) {
   }
 }
 
-export async function setMemberTags(memberName: Member['username'], tags: Tag[] | undefined) {
+export async function setMemberTags(params: {
+  memberName: Member['username']
+  memberAvatar?: Member['avatar']
+  tags: Tag[] | undefined
+}) {
+  const { memberName, memberAvatar, tags } = params
+
   const storage = await getStorage(false)
   const tagData = storage[StorageKey.MemberTag]
 
@@ -93,7 +99,10 @@ export async function setMemberTags(memberName: Member['username'], tags: Tag[] 
   }
 
   if (tags && tags.length > 0) {
-    const newTagData: MemberTag = { ...tagData, [memberName]: { tags } }
+    const newTagData: MemberTag = {
+      ...tagData,
+      [memberName]: { tags, avatar: memberAvatar || tagData?.[memberName]?.avatar },
+    }
     await setStorage(StorageKey.MemberTag, newTagData)
   } else {
     if (tagData && Reflect.has(tagData, memberName)) {

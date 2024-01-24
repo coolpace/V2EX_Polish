@@ -78,7 +78,7 @@ export interface Tag {
   name: string
 }
 
-export type MemberTag = Record<Member['username'], { tags?: Tag[] }>
+export type MemberTag = Record<Member['username'], { tags?: Tag[]; avatar?: Member['avatar'] }>
 
 export interface ReadingItem extends Pick<Topic, 'url' | 'title' | 'content'> {
   addedTime: number

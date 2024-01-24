@@ -129,13 +129,16 @@ export function processReplyContent($cellDom: JQuery) {
 }
 
 /**
- * 根据用户的昵称设置用户的标签。
+ * 根据用户的昵称设置用户标签，会把标签插入到 cells 中。
  */
-export function updateMemberTag(
-  memberName: Member['username'],
-  tags: Tag[] | undefined,
+export function updateMemberTag(params: {
+  memberName: Member['username']
+  memberAvatar?: Member['avatar']
+  tags: Tag[] | undefined
   options: Options
-) {
+}) {
+  const { memberName, memberAvatar, tags, options } = params
+
   const $v2pTags = $(`.v2p-tags-${memberName}`)
 
   const tagsValue = tags?.map((it) => it.name).join('，')
@@ -154,7 +157,7 @@ export function updateMemberTag(
 
       $tags.on('click', () => {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        openTagsSetter(memberName)
+        openTagsSetter({ memberName, memberAvatar })
       })
 
       if (memberName === topicOwnerName) {
@@ -183,15 +186,21 @@ export function updateMemberTag(
 /**
  * 打开模态框，让用户编辑用户标签。
  */
-export function openTagsSetter(memberName: Member['username']) {
+export function openTagsSetter(params: {
+  memberName: Member['username']
+  memberAvatar?: Member['avatar']
+}) {
+  const { memberName, memberAvatar } = params
+
   void (async () => {
     const storage = await getStorage(false)
     const latestTagsData = storage[StorageKey.MemberTag]
     const options = storage[StorageKey.Options]
+    const memberTagData = latestTagsData?.[memberName]
 
-    const tagsValue = latestTagsData
+    const tagsValue = memberTagData
       ? Reflect.has(latestTagsData, memberName)
-        ? latestTagsData[memberName].tags?.map((it) => it.name).join('，')
+        ? memberTagData.tags?.map((it) => it.name).join('，')
         : undefined
       : undefined
 
@@ -209,9 +218,9 @@ export function openTagsSetter(memberName: Member['username']) {
               .map((it) => ({ name: it }))
           : undefined
 
-      await setMemberTags(memberName, tags)
+      await setMemberTags({ memberName, memberAvatar: memberTagData?.avatar || memberAvatar, tags })
 
-      updateMemberTag(memberName, tags, options)
+      updateMemberTag({ memberName, memberAvatar, tags, options })
     }
   })()
 }

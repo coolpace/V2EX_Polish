@@ -65,7 +65,7 @@ export function processAvatar(params: ProcessAvatar) {
     createButton({ children: '添加用户标签' })
       .on('click', () => {
         popupControl.close()
-        openTagsSetter(memberName)
+        openTagsSetter({ memberName, memberAvatar })
         onSetTagsClick?.()
       })
       .appendTo($('.v2p-member-card-actions'))
