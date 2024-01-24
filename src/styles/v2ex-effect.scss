@@ -647,14 +647,14 @@ a.v2p-topic-preview-title-link {
   }
 }
 
-.v2p-decode {
+@mixin v2p-decode($cursor) {
   position: relative;
   padding: 2px 4px;
   color: var(--v2p-color-orange-400);
   font-size: 13px;
   text-decoration: none;
   background-color: var(--v2p-color-orange-50);
-  cursor: copy;
+  cursor: $cursor;
 
   &:hover {
     color: var(--v2p-color-orange-400);
@@ -674,6 +674,14 @@ a.v2p-topic-preview-title-link {
     opacity: 0;
     content: attr(data-title);
   }
+}
+
+.v2p-decode-text {
+  @include v2p-decode(copy)
+}
+
+.v2p-decode-url {
+  @include v2p-decode(pointer)
 }
 
 .v2p-reply-content {

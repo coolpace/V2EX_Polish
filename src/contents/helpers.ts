@@ -167,7 +167,10 @@ export function decodeBase64TopicPage() {
    * 如果以上三个条件都满足，则可以认为这段字符是base64编码。
    */
 
-  const dataTitle = '点击复制'
+  const configMap = {
+    text: { title: '点击复制', className: 'v2p-decode-text' },
+    url: { title: '点击跳转', className: 'v2p-decode-url' },
+  }
 
   if (window.__V2P_DecodeStatus === 'decodeed') {
     createToast({ message: '已解析完本页所有的 Base64 字符串' })
@@ -190,6 +193,21 @@ export function decodeBase64TopicPage() {
       'airpords',
       'Windows7',
     ]
+
+    const isValidUrl = (text: string) => {
+      try {
+        const url = new URL(text)
+        return ['http:', 'https:'].includes(url.protocol)
+      } catch (err) {
+        return false
+      }
+    }
+    const detectTextType = (text: string) => {
+      if (isValidUrl(text)) {
+        return 'url'
+      }
+      return 'text'
+    }
 
     const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
       // 检查长度是否为 4 的倍数，字符长度小的也排除掉。
@@ -218,7 +236,8 @@ export function decodeBase64TopicPage() {
       try {
         const decodedStr = decodeURIComponent(window.atob(text))
         count += 1
-        return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
+        const { title, className } = configMap[detectTextType(decodedStr)]
+        return `${text}<span class="v2p-decode-block">(<ins class="${className}" data-title="${title}">${decodedStr}</ins>)</span>`
       } catch (err) {
         if (err instanceof Error) {
           console.error(`解析 Base64 出错：${err.message}`)
@@ -250,17 +269,21 @@ export function decodeBase64TopicPage() {
     } else {
       window.__V2P_DecodeStatus = 'decodeed'
       createToast({ message: `✅ 已解析本页所有的 Base64 字符串，共 ${count} 条` })
-    }
 
-    $('.v2p-decode').on('click', (ev) => {
-      const text = ev.target.innerText
-      void navigator.clipboard.writeText(text).then(() => {
-        ev.target.dataset.title = '✅ 已复制'
-        setTimeout(() => {
-          ev.target.dataset.title = dataTitle
-        }, 1000)
+      $('.v2p-decode-text').on('click', (ev) => {
+        const text = ev.target.innerText
+        void navigator.clipboard.writeText(text).then(() => {
+          ev.target.dataset.title = '✅ 已复制'
+          setTimeout(() => {
+            ev.target.dataset.title = configMap.text.title
+          }, 1000)
+        })
       })
-    })
+      $('.v2p-decode-url').on('click', (ev) => {
+        const text = ev.target.innerText
+        window.open(text, '_blank')
+      })
+    }
   }
 }
 
