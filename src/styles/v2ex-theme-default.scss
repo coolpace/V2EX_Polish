@@ -835,16 +835,17 @@ body {
     .topic_info {
       position: relative;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       user-select: none;
       pointer-events: none;
 
       &::after {
         position: absolute;
-        inset: 0 0 -6px;
         z-index: 1;
         background-color: var(--v2p-color-bg-content);
         content: '';
+        inset: 0 0 -6px;
       }
 
       .votes,

@@ -230,11 +230,14 @@ function handlingFilteredComments() {
       $tabs.find('[data-tab-key]').on('click', (ev) => {
         const $target = $(ev.currentTarget)
         const { tabKey } = $target.data()
-        $target.addClass('v2p-tab-active').siblings().removeClass('v2p-tab-active')
-        $(`.v2p-modal-comments[data-tab-key="${tabKey}"]`)
-          .addClass('v2p-tab-content-active')
-          .siblings()
-          .removeClass('v2p-tab-content-active')
+
+        if (typeof tabKey === 'string') {
+          $target.addClass('v2p-tab-active').siblings().removeClass('v2p-tab-active')
+          $(`.v2p-modal-comments[data-tab-key="${tabKey}"]`)
+            .addClass('v2p-tab-content-active')
+            .siblings()
+            .removeClass('v2p-tab-content-active')
+        }
       })
     },
     onOpen: ({ $content }) => {
@@ -495,55 +498,63 @@ export async function handlingComments() {
 
   // 👇此区块的逻辑需要在处理嵌套评论前执行。
   {
+    // 记录已经设置过「用户标签」的 cells，避免重复处理，减少性能开支。
     const membersHasSetTags = new Set<Member['username']>()
 
-    $commentCells.each((i, cellDom) => {
-      const currentComment = commentDataList.at(i)
+    if ($commentCells.length > 0) {
+      $commentCells.each((i, cellDom) => {
+        const currentComment = commentDataList.at(i)
 
-      if (currentComment?.id !== cellDom.id) {
-        return
-      }
-
-      const $cellDom = $(cellDom)
-
-      const { memberName, thanked } = currentComment
-
-      processAvatar({
-        $trigger: $cellDom.find('.avatar'),
-        popupControl,
-        commentData: currentComment,
-      })
-
-      if (memberName === loginName) {
-        $cellDom
-          .find('.badges')
-          .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
-      }
-
-      // 增加感谢爱心的样式。
-      const $likesBox = $cellDom.find('.small.fade').addClass('v2p-likes-box')
-
-      $likesBox
-        .find('img[alt="❤️"]')
-        .replaceWith('<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>')
-
-      if (thanked) {
-        $likesBox.addClass('v2p-thanked')
-      }
-
-      if (tagData && Reflect.has(tagData, memberName) && !membersHasSetTags.has(memberName)) {
-        updateMemberTag(memberName, tagData[memberName].tags, options)
-        membersHasSetTags.add(memberName)
-      }
-
-      processActions($cellDom, currentComment)
-
-      if (canHideRefName) {
-        if (currentComment.contentHtml) {
-          $cellDom.find('.reply_content').html(currentComment.contentHtml)
+        if (currentComment?.id !== cellDom.id) {
+          return
         }
+
+        const $cellDom = $(cellDom)
+
+        const { memberName, memberAvatar, thanked } = currentComment
+
+        processAvatar({
+          $trigger: $cellDom.find('.avatar'),
+          popupControl,
+          commentData: currentComment,
+        })
+
+        if (memberName === loginName) {
+          $cellDom
+            .find('.badges')
+            .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
+        }
+
+        // 增加感谢爱心的样式。
+        const $likesBox = $cellDom.find('.small.fade').addClass('v2p-likes-box')
+
+        $likesBox
+          .find('img[alt="❤️"]')
+          .replaceWith('<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>')
+
+        if (thanked) {
+          $likesBox.addClass('v2p-thanked')
+        }
+
+        if (tagData && Reflect.has(tagData, memberName) && !membersHasSetTags.has(memberName)) {
+          updateMemberTag({ memberName, memberAvatar, tags: tagData[memberName].tags, options })
+          membersHasSetTags.add(memberName)
+        }
+
+        processActions($cellDom, currentComment)
+
+        if (canHideRefName) {
+          if (currentComment.contentHtml) {
+            $cellDom.find('.reply_content').html(currentComment.contentHtml)
+          }
+        }
+      })
+    } else {
+      // 当主题没有回复时，也应该展示题主的标签。
+      if (tagData) {
+        updateMemberTag({ memberName: topicOwnerName, tags: tagData[topicOwnerName].tags, options })
       }
-    })
+    }
 
     updateCommentCells()
     handlingFilteredComments()
