@@ -12,6 +12,10 @@ import {
 import { $wrapper } from './globals'
 import { loadIcons, postTask } from './helpers'
 
+if ($('#site-header').length > 0) {
+  $(document.body).addClass('v2p-mobile')
+}
+
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
