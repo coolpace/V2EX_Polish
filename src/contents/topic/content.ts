@@ -141,18 +141,18 @@ export function updateMemberTag(params: {
 
   const $v2pTags = $(`.v2p-tags-${memberName}`)
 
-  const tagsValue = tags?.map((it) => it.name).join('，')
+  const tagsText = tags?.map((it) => it.name).join('，')
 
   if ($v2pTags.length > 0) {
-    if (tagsValue) {
-      $v2pTags.html(`<b>#</b>&nbsp;${tagsValue}`)
+    if (tagsText) {
+      $v2pTags.html(`<b>#</b>&nbsp;${tagsText}`)
     } else {
       $v2pTags.remove()
     }
   } else {
-    if (tagsValue) {
+    if (tagsText) {
       const $tags = $(
-        `<div class="v2p-reply-tags v2p-tags-${memberName}" title="${tagsValue}"><b>#</b>&nbsp;${tagsValue}</div>`
+        `<div class="v2p-reply-tags v2p-tags-${memberName}" title="${tagsText}"><b>#</b>&nbsp;${tagsText}</div>`
       )
 
       $tags.on('click', () => {
