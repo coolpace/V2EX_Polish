@@ -53,8 +53,8 @@ devDependencies:
     specifier: ^5.3.3
     version: 5.3.3
   web-ext:
-    specifier: ^7.10.0
-    version: 7.10.0
+    specifier: ^7.11.0
+    version: 7.11.0
 
 packages:
 
@@ -743,8 +743,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@mdn/browser-compat-data@5.5.4:
-    resolution: {integrity: sha512-3Ut58LMJig1igriRHsbRHd7tRi4zz3dlnM/6msgl6FqDglxWZLN+ikYsluOg4D6CFmsXBq5WyYF/7HLwHMzDzA==}
+  /@mdn/browser-compat-data@5.5.7:
+    resolution: {integrity: sha512-DoHTZ/TjtNfUu9eiqJd+x3IcCQrhS+yOYU436TKUnlE36jZwNbK535D1CmTsSYdi/UcdCWNm5KRQZ9g1tlZCPw==}
     dev: true
 
   /@mrmlnc/readdir-enhanced@2.2.1:
@@ -1259,13 +1259,13 @@ packages:
     hasBin: true
     dev: true
 
-  /addons-linter@6.20.0(node-fetch@3.3.1):
-    resolution: {integrity: sha512-u3nnnz+dZS5sOAJMF/DdVnjLVDqqbLbpdTNEbCEPIwKlAIDR+FbHHrgRp3JWJw2gvwZuZCmYStQd/G5Llp0nFg==}
+  /addons-linter@6.21.0(node-fetch@3.3.1):
+    resolution: {integrity: sha512-4GBn14BR16FZE7dog6uz+1HO6V3B+mAVxmbwxRhed2y5eyrwIW832TmEpku+5A5bbovBZ4gilXEtBsl6A1AMmg==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
       '@fluent/syntax': 0.19.0
-      '@mdn/browser-compat-data': 5.5.4
+      '@mdn/browser-compat-data': 5.5.7
       addons-moz-compare: 1.3.0
       addons-scanner-utils: 9.9.0(node-fetch@3.3.1)
       ajv: 8.12.0
@@ -8292,14 +8292,14 @@ packages:
       defaults: 1.0.4
     dev: true
 
-  /web-ext@7.10.0:
-    resolution: {integrity: sha512-UTh4n/F6tvJrfYxICuJMkc7N4Qp3GrmQ1XIXTuc8XDt1tKFPfmKMa0D/kJZKoPg8PJud7j5TT3EtTqMqzPj8Rg==}
+  /web-ext@7.11.0:
+    resolution: {integrity: sha512-EG6YXHITNDJB/h6Rc5FF08eMoN45sZPBBIIlEraBzxJ0RdJZ8Z3xvUUawbDwt+mowfv9X0XRWlLSwdWbRKgojg==}
     engines: {node: '>=14.0.0', npm: '>=6.9.0'}
     hasBin: true
     dependencies:
       '@babel/runtime': 7.21.0
       '@devicefarmer/adbkit': 3.2.3
-      addons-linter: 6.20.0(node-fetch@3.3.1)
+      addons-linter: 6.21.0(node-fetch@3.3.1)
       bunyan: 1.8.15
       camelcase: 7.0.1
       chrome-launcher: 0.15.1
