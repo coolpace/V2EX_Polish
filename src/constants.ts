@@ -190,6 +190,8 @@ export const enum Links {
   Home = 'https://v2p.app',
   /** 问题反馈页 */
   Feedback = 'https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new',
+  /** 主题图片分享页 */
+  Share = 'https://v2p.app/share',
   /** 赞赏支持页 */
   Support = 'https://v2p.app/support',
 }

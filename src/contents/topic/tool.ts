@@ -2,7 +2,7 @@ import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { Links, StorageKey } from '../../constants'
 import { getStorageSync } from '../../utils'
-import { $replyBox, $replyTextArea } from '../globals'
+import { $replyBox, $replyTextArea, topicId } from '../globals'
 import {
   addToReadingList,
   decodeBase64TopicPage,
@@ -101,10 +101,7 @@ export function handlingTools() {
     })
 
     $toolContent.find('.v2p-reply-tool-share').on('click', () => {
-      const splits = window.location.pathname.split('/')
-      const topicId = splits.at(-1)
-
-      if (topicId && splits.at(-2) === 't') {
+      if (topicId) {
         window.open(`${Links.Home}/share/${topicId}`, '_blank')
       }
     })

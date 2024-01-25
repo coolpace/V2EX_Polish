@@ -38,5 +38,7 @@ export const replyTextArea = document.querySelector('#reply_content')
 /** 登录人的昵称 */
 export const loginName = $('#Top .tools > a[href^="/member"]').text()
 
-/** 发帖人的昵称 */
+/** 题主的昵称 */
 export const topicOwnerName = $topicHeader.find('> small > a[href^="/member"]').text()
+
+export const topicId = window.location.pathname.match(/\/t\/(\d+)/)?.at(1)
