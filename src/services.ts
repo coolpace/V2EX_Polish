@@ -59,7 +59,7 @@ export async function fetchUserInfo(memberName: Member['username'], options?: Re
 }
 
 export function fetchLatestTopics(options?: RequestInit) {
-  return legacyRequest<Topic[]>(`${V2EX_LEGACY_API}/topics/latest.json`, options)
+  return legacyRequest<Topic[]>(`${V2EX_LEGACY_API}/topics/latest.json?r=${Date.now()}`, options)
 }
 
 export function fetchHotTopics(options?: RequestInit) {
