@@ -73,7 +73,7 @@ export function handlingTopicList() {
   >()
 
   const handlePreview = (params: { topicId?: string; topicTitle?: string; linkHref?: string }) => {
-    const { topicId, topicTitle, linkHref } = params
+    const { topicId, topicTitle = '', linkHref } = params
 
     if (topicId) {
       model.open()
@@ -295,31 +295,33 @@ export function handlingTopicList() {
     $ignoreBtn
       .clone()
       .on('click', () => {
-        void (async () => {
-          const toast = createToast({ message: `正在屏蔽主题 ⌈${topicTitle}⌋`, duration: 0 })
+        if (typeof topicId === 'string') {
+          void (async () => {
+            const toast = createToast({ message: `正在屏蔽主题 ⌈${topicTitle}⌋`, duration: 0 })
 
-          const pageText = await crawalTopicPage(`/t/${topicId}`, '0')
+            const pageText = await crawalTopicPage(`/t/${topicId}`, '0')
 
-          const $ignoreBtn = $(pageText).find('.topic_buttons a:nth-of-type(3)')
-          const txt = $ignoreBtn.attr('onclick')
+            const $ignoreBtn = $(pageText).find('.topic_buttons a:nth-of-type(3)')
+            const txt = $ignoreBtn.attr('onclick')
 
-          if (txt) {
-            const match = txt.match(/'\/.*'/)
+            if (txt) {
+              const match = txt.match(/'\/.*'/)
 
-            if (match) {
-              const result = match[0].slice(1, -1)
-              if (result.startsWith('/ignore/topic')) {
-                try {
-                  await fetch(`${V2EX.Origin}${result}`)
-                  createToast({ message: `✅ 已屏蔽` })
-                  $topicItem.remove()
-                } finally {
-                  toast.clear()
+              if (match) {
+                const result = match[0].slice(1, -1)
+                if (result.startsWith('/ignore/topic')) {
+                  try {
+                    await fetch(`${V2EX.Origin}${result}`)
+                    createToast({ message: `✅ 已屏蔽` })
+                    $topicItem.remove()
+                  } finally {
+                    toast.clear()
+                  }
                 }
               }
             }
-          }
-        })()
+          })()
+        }
       })
       .insertAfter($topicInfo.find('> span:first-of-type'))
   })

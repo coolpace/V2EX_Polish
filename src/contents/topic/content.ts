@@ -1,8 +1,8 @@
 import { createButton } from '../../components/button'
-import { MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
+import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
-import { $commentCells, $topicContentBox, $topicHeader, topicOwnerName } from '../globals'
+import { $commentCells, $topicContentBox, $topicHeader, topicId, topicOwnerName } from '../globals'
 import { loadIcons, setMemberTags } from '../helpers'
 
 /**
@@ -35,12 +35,20 @@ export function handlingContent() {
   }
 
   {
-    const topicBtn = $('.topic_buttons .tb').addClass('v2p-tb v2p-hover-btn')
-    const $favoriteBtn = topicBtn.eq(0)
+    const $topicBtns = $('.topic_buttons')
+    const $topicBtn = $topicBtns.find('.tb').addClass('v2p-tb v2p-hover-btn')
+    const $favoriteBtn = $topicBtn.eq(0)
     $favoriteBtn.append('<span class="v2p-tb-icon"><i data-lucide="star"></i></span>')
-    topicBtn.eq(1).append('<span class="v2p-tb-icon"><i data-lucide="twitter"></i></span>')
-    topicBtn.eq(2).append('<span class="v2p-tb-icon"><i data-lucide="eye-off"></i></span>')
-    topicBtn.eq(3).append('<span class="v2p-tb-icon"><i data-lucide="heart"></i></span>')
+    $topicBtn.eq(1).append('<span class="v2p-tb-icon"><i data-lucide="twitter"></i></span>')
+    $topicBtn.eq(2).append('<span class="v2p-tb-icon"><i data-lucide="eye-off"></i></span>')
+    $topicBtn.eq(3).append('<span class="v2p-tb-icon"><i data-lucide="heart"></i></span>')
+
+    if (topicId) {
+      $topicBtns.append(
+        ` &nbsp;<a href="${Links.Share}/${topicId}" target="_blank" class="tb v2p-tb v2p-hover-btn">分享<span class="v2p-tb-icon"><i data-lucide="arrow-up-right-square"></i></span></a>`
+      )
+    }
+
     loadIcons()
 
     // const url = $favoriteBtn.attr('href')

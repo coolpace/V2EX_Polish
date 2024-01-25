@@ -1,4 +1,5 @@
 import {
+  ArrowUpRightSquare,
   BookOpenCheck,
   ChevronDown,
   ChevronsUp,
@@ -327,6 +328,7 @@ export function loadIcons() {
         Star,
         Twitter,
         ChevronDown,
+        ArrowUpRightSquare,
       },
     })
   }, 0)
