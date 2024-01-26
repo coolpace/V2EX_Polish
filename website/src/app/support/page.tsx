@@ -5,11 +5,11 @@ import { allSupports } from 'contentlayer/generated'
 import type { MDXComponents } from 'mdx/types'
 
 import { Article } from '~/components/Article'
-import { DonationOptions } from '~/components/donation/DonationOptions'
-import { DonationTable } from '~/components/donation/DonationTable'
-import { DontaionText } from '~/components/donation/DontaionText'
 import { PageContainer } from '~/components/PageContainer'
 import { PageHeaderTitle } from '~/components/PageHeaderTitle'
+import { SupportOptions } from '~/components/support/SupportOptions'
+import { SupportTable } from '~/components/support/SupportTable'
+import { SupportText } from '~/components/support/SupportText'
 import { getPageTitle } from '~/utils'
 
 export const metadata: Metadata = {
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 }
 
 const mdxComponents: MDXComponents = {
-  DonationOptions: () => <DonationOptions />,
-  DonationText: () => <DontaionText />,
-  DonationTable: () => <DonationTable />,
+  SupportOptions: () => <SupportOptions />,
+  SupportText: () => <SupportText />,
+  SupportTable: () => <SupportTable />,
 }
 
 export default function DonationPage() {

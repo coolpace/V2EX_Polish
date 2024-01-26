@@ -16,7 +16,7 @@ import {
   type TopicInfo,
 } from '~/app/api/share/route'
 import { ShareCardThemeBasic } from '~/app/share/components/ShareCardThemeBasic'
-import { HOST, isNumeric } from '~/utils'
+import { HOST, isNumeric, trackEvent } from '~/utils'
 
 import { ShareLoading } from './ShareLoading'
 import { TopicLinkInput, type TopicLinkInputProps } from './TopicLinkInput'
@@ -119,6 +119,8 @@ export function ShareInfo() {
   }
 
   const handleCopy = async () => {
+    trackEvent('点击复制分享图片按钮')
+
     if (
       eleRef.current &&
       topicInfo &&
@@ -178,6 +180,8 @@ export function ShareInfo() {
   }
 
   const handleDownload = async () => {
+    trackEvent('点击下载分享图片按钮')
+
     if (eleRef.current && topicInfo && !downloading) {
       setDownloading(true)
 

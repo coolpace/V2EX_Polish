@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Theme } from '@radix-ui/themes'
 
 import { HoverButton } from '~/components/HoverButton'
+import { Initial } from '~/components/Initial'
 import { Logo } from '~/components/Logo'
 import { Nav } from '~/components/Nav'
 import { getPageTitle } from '~/utils'
@@ -51,6 +52,8 @@ const notoSans = Noto_Sans({
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
     <html className="h-full overflow-hidden bg-white text-main-800" lang="zh-Hans-CN">
+      <Initial />
+
       <body className="relative m-0 h-full overflow-y-auto">
         <Theme className={`h-full ${notoSans.className}`}>
           <header className="relative z-50 flex justify-center py-4 md:px-4 md:py-6">
