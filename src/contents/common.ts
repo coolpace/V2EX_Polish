@@ -1,3 +1,5 @@
+import { patternToRegex } from 'webext-patterns'
+
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
@@ -71,15 +73,18 @@ void (async () => {
   }
 
   // 当发现远程的配置有更新时，自动同步到本地。
-  {
-    const syncInfo = storage[StorageKey.SyncInfo]
+  const syncInfo = storage[StorageKey.SyncInfo]
 
-    if (syncInfo) {
-      const lastCheckTime = syncInfo.lastCheckTime
-      const twoHours = 2 * 60 * 1000 * 60
-      const neverChecked = !lastCheckTime
+  if (syncInfo) {
+    const lastCheckTime = syncInfo.lastCheckTime
+    const twoHours = 2 * 60 * 1000 * 60
+    const neverChecked = !lastCheckTime
 
-      if ((lastCheckTime && Date.now() - lastCheckTime >= twoHours) || neverChecked) {
+    if ((lastCheckTime && Date.now() - lastCheckTime >= twoHours) || neverChecked) {
+      const isSignInPage = patternToRegex('https://*/signin*').test(window.location.href)
+
+      // Warning: 不能在登录页请求 getV2P_Settings 接口，否则会导致无法成功跳转页面。
+      if (!isSignInPage) {
         void getV2P_Settings().then(async (res) => {
           const settings = res?.config
           const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
@@ -178,13 +183,13 @@ void (async () => {
     const $extraFooter = $(`
     <div class="v2p-footer">
       <div class="v2p-footer-text">扩展自 V2EX Polish </div>
-  
+
       <div class="v2p-footer-links">
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Home}" target="_blank">插件官网</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Feedback}" target="_blank">问题反馈</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Support}" target="_blank">赞赏支持</a>
       </div>
-  
+
       <div class="v2p-footer-brand">
         <span>
           <a
