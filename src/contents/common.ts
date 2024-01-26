@@ -1,5 +1,3 @@
-import { patternToRegex } from 'webext-patterns'
-
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
@@ -81,7 +79,7 @@ void (async () => {
     const neverChecked = !lastCheckTime
 
     if ((lastCheckTime && Date.now() - lastCheckTime >= twoHours) || neverChecked) {
-      const isSignInPage = patternToRegex('https://*/signin*').test(window.location.href)
+      const isSignInPage = window.location.href.includes('/signin')
 
       // Warning: 不能在登录页请求 getV2P_Settings 接口，否则会导致无法成功跳转页面。
       if (!isSignInPage) {
