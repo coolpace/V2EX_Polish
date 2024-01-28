@@ -16,3 +16,4 @@ node_modules
 
 # web-ext 产生的浏览器配置
 /*-profile
+/.idea
