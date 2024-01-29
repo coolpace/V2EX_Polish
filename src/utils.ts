@@ -1,4 +1,3 @@
-import { createToast } from './components/toast'
 import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
 import type { SettingsSyncInfo, StorageItems, StorageSettings } from './types'
 
@@ -357,7 +356,6 @@ export async function setStorage<T extends StorageKey>(
           console.error(
             `${EXTENSION_NAME}: 无法设置 ${storageKey}， 单个 item 不能超出 8 KB，详情查看：https://developer.chrome.com/docs/extensions/reference/storage/#storage-areas`
           )
-          createToast({ message: '❌ 用户数据超出存储空间限制' })
         }
         throw new Error(`❌ 无法设置：${storageKey}`)
       }
