@@ -45,7 +45,7 @@ export interface Options {
     autoFold?: boolean
     /** 是否隐藏回复时间。 */
     hideReplyTime?: boolean
-    /** 是否隐藏 @ 的用户名称。 */
+    /** 是否隐藏 @ 提及用户名。 */
     hideRefName?: boolean
   }
   /** 嵌套回复设置。 */
