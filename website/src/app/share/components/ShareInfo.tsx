@@ -214,16 +214,22 @@ export function ShareInfo() {
         setRequestError(false)
         setNotFoundError(false)
 
-        const { code, data } = await fetchTopicInfo(topicId)
+        if (isNumeric(topicId)) {
+          const { code, data } = await fetchTopicInfo(topicId)
 
-        if (code === ResponseCode.Success) {
-          setTopicInfo(data)
-          setTopicUrl(data.url)
+          if (code === ResponseCode.Success) {
+            setTopicInfo(data)
+            setTopicUrl(data.url)
+          } else {
+            setNotFoundError(true)
+          }
         } else {
           setNotFoundError(true)
         }
       } catch (err) {
-        console.error(err)
+        if (err instanceof Error) {
+          console.error(`无法获取主题 ${topicId}: ${err.message}`)
+        }
         setRequestError(true)
       } finally {
         setLoading(false)
@@ -239,11 +245,12 @@ export function ShareInfo() {
 
   return (
     <div className="flex items-start gap-x-8">
-      <div className="overflow-hidden rounded-lg shadow-lg">
+      <div className="overflow-hidden shadow-lg">
         <div ref={eleRef} className="w-[375px]">
           {topicInfo ? (
             <ShareCardThemeBasic
               avatarRef={avatarRef}
+              showQRCode={showQRCode}
               showSubtle={showSubtle}
               topicInfo={topicInfo}
             />
@@ -278,7 +285,7 @@ export function ShareInfo() {
                     。
                   </>
                 ) : notFoundError ? (
-                  '无法找到主题，可能是因为它已被删除或需要授权访问。'
+                  '无法找到主题，可能已被删除或需要授权访问。'
                 ) : null}
               </Callout.Text>
             </Callout.Root>
@@ -324,10 +331,23 @@ export function ShareInfo() {
 
           <Flex gap="3">
             <Button
-              color={copySuccess ? 'green' : copyFail ? 'red' : undefined}
-              disabled={!actionAvailable}
-              highContrast={doingCopy}
+              highContrast
+              disabled={!actionAvailable || downloading}
               variant="surface"
+              onClick={() => {
+                void handleDownload()
+              }}
+            >
+              <DownloadIcon size={14} />
+
+              {downloading ? '下载中...' : '保存为图片'}
+            </Button>
+
+            <Button
+              highContrast
+              color={copySuccess ? 'green' : copyFail ? 'red' : undefined}
+              disabled={!actionAvailable || doingCopy}
+              variant="classic"
               onClick={() => {
                 void handleCopy()
               }}
@@ -341,18 +361,6 @@ export function ShareInfo() {
                   : doingCopy
                     ? '复制中...'
                     : '复制为图片'}
-            </Button>
-
-            <Button
-              disabled={!actionAvailable}
-              highContrast={downloading}
-              onClick={() => {
-                void handleDownload()
-              }}
-            >
-              <DownloadIcon size={14} />
-
-              {downloading ? '下载中...' : '保存为图片'}
             </Button>
           </Flex>
         </Flex>

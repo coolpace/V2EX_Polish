@@ -10,7 +10,6 @@ import { Nav } from '~/components/Nav'
 import { getPageTitle } from '~/utils'
 
 import '~/styles/globals.css'
-import '@radix-ui/themes/styles.css'
 
 export const metadata: Metadata = {
   colorScheme: 'light',
@@ -55,7 +54,7 @@ export default function RootLayout(props: React.PropsWithChildren) {
       <Initial />
 
       <body className="relative m-0 h-full overflow-y-auto">
-        <Theme className={`h-full ${notoSans.className}`}>
+        <Theme accentColor="gray" appearance="light" className={`h-full ${notoSans.className}`}>
           <header className="relative z-50 flex justify-center py-4 md:px-4 md:py-6">
             <Nav />
           </header>
@@ -78,6 +77,17 @@ export default function RootLayout(props: React.PropsWithChildren) {
                   <div className="inline-flex items-center gap-x-3 text-xs text-main-600 md:text-sm">
                     <HoverButton>
                       <Link
+                        href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
+                        target="_blank"
+                      >
+                        应用商店
+                      </Link>
+                    </HoverButton>
+
+                    <span className="text-xl font-bold text-main-400">·</span>
+
+                    <HoverButton>
+                      <Link
                         href="https://github.com/coolpace/V2EX_Polish/discussions/1"
                         target="_blank"
                       >
@@ -88,11 +98,8 @@ export default function RootLayout(props: React.PropsWithChildren) {
                     <span className="text-xl font-bold text-main-400">·</span>
 
                     <HoverButton>
-                      <Link
-                        href="https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm"
-                        target="_blank"
-                      >
-                        应用商店
+                      <Link href="/support" target="_blank">
+                        赞赏支持
                       </Link>
                     </HoverButton>
                   </div>

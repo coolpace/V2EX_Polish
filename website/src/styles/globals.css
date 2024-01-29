@@ -1,4 +1,7 @@
-@tailwind base;
+/* 解决 tailwindCSS 和 radixCSS 顺序冲突的问题： https://github.com/radix-ui/themes/issues/109 */
+@import url('tailwindcss/base');
+@import url('@radix-ui/themes/styles.css');
+
 @tailwind components;
 @tailwind utilities;
 
@@ -26,6 +29,7 @@
   --v2p-color-foreground: var(--v2p-color-main-800);
   --v2p-color-background: #f2f3f5;
   --v2p-color-bg-input: var(--v2p-color-main-50);
+  --v2p-color-bg-subtle: rgb(236 253 245 / 90%);
 
   .radix-themes {
     --cursor-button: pointer;
@@ -43,12 +47,19 @@
   --v2p-color-main-600: #9ca3af;
   --v2p-color-main-700: #d1d5db;
   --v2p-color-main-800: #e5e7eb;
+  --v2p-color-accent-50: #064e3b;
   --v2p-color-accent-100: #065f46;
+  --v2p-color-accent-200: #047857;
+  --v2p-color-accent-300: #059669;
+  --v2p-color-accent-400: #10b981;
+  --v2p-color-accent-500: #34d399;
+  --v2p-color-accent-600: #6ee7b7;
   --v2p-color-content: #22272e;
   --v2p-color-border: #444c56;
   --v2p-color-foreground: #adbac7;
   --v2p-color-background: #1c2128;
   --v2p-color-bg-input: var(--v2p-color-background);
+  --v2p-color-bg-subtle: rgb(6 78 59 / 30%);
 }
 
 ::selection {

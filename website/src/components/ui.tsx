@@ -106,7 +106,7 @@ export function Paragraph({ width }: { width?: 'full' | '4/5' | '3/4' | '1/2' })
 export function Header() {
   return (
     <div className="h-14 w-full bg-content px-4">
-      <div className="mx-auto flex h-full w-full max-w-5xl items-center">
+      <div className="mx-auto flex size-full max-w-5xl items-center">
         <div className="mr-6 text-3xl font-black tracking-tighter">V2EX</div>
         <div className="inline-flex h-8 w-52 items-center rounded-md bg-main-100 px-2">
           <SearchIcon className="text-main-400" height={16} width={16} />
@@ -147,7 +147,7 @@ export function UserPanel() {
           <div className="text-base">coolpace</div>
           <div className="mt-1 text-[13px] text-main-500">不要去追一匹马</div>
         </div>
-        <div className="relative ml-auto h-[22px] w-[22px] text-main-600">
+        <div className="relative ml-auto size-[22px] text-main-600">
           <SunIcon
             className="absolute left-0 top-0 hidden group-[.theme-dark]:inline-block"
             height={22}

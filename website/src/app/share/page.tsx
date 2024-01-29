@@ -42,6 +42,8 @@ export default function SharePage() {
         </div>
 
         <Button
+          highContrast
+          variant="classic"
           onClick={() => {
             handleSearchTopic()
           }}
