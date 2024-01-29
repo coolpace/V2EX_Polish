@@ -513,7 +513,7 @@ export async function handlingComments() {
       memberNames.add(memberName)
 
       processAvatar({
-        $trigger: $cellDom.find('.avatar'),
+        $trigger: $cellDom.find('.avatar, .dark'),
         popupControl,
         commentData: currentComment,
       })
