@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 import { Avatar } from '@radix-ui/themes'
 
 import type { TopicInfo } from '~/app/api/share/route'
@@ -8,24 +6,20 @@ interface ShareCardProps {
   avatarRef: React.RefObject<HTMLImageElement>
   topicInfo: TopicInfo
   showSubtle?: boolean
+  showQRCode?: boolean
 }
 
 export function ShareCardThemeBasic(props: ShareCardProps) {
-  const { topicInfo, avatarRef, showSubtle } = props
+  const { topicInfo, avatarRef, showSubtle, showQRCode } = props
 
   return (
-    <div
-      className="p-2"
-      style={{
-        backgroundImage: `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><path d="m0 0 4 4Zm4 0L0 4Z" stroke-width=".5" stroke="%23000"/></svg>')`,
-      }}
-    >
-      <div className="overflow-hidden rounded border-[3px] border-solid border-main-800 bg-white p-3 text-black">
+    <div className="theme-dark bg-background p-2">
+      <div className="overflow-hidden rounded-lg border border-solid border-main-400 bg-content p-3 text-foreground">
         <div className="pb-2 text-2xl font-extrabold">V2EX</div>
 
         <h2 className="line-clamp-3 text-xl font-semibold">{topicInfo.title}</h2>
 
-        <div className="mt-3 flex items-center px-1 text-main-500">
+        <div className="mt-3 flex items-center px-1">
           <Avatar
             ref={avatarRef}
             className="mr-2"
@@ -43,10 +37,18 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
 
         {topicInfo.content && (
           <>
-            <hr className="my-3 bg-main-100" />
+            <hr className="my-3 border-main-400" />
 
             <div
-              className="prose prose-slate leading-6 prose-p:mt-0 prose-p:text-black prose-a:pointer-events-none prose-a:font-normal prose-a:text-green-600 prose-a:no-underline prose-blockquote:text-[15px] prose-blockquote:font-normal prose-blockquote:not-italic prose-li:m-0 prose-img:m-0"
+              className={`
+              prose prose-slate prose-invert leading-6
+              prose-p:mt-0 prose-p:text-foreground
+              prose-a:pointer-events-none prose-a:font-normal prose-a:text-accent-600 prose-a:no-underline
+              prose-blockquote:-mx-2 prose-blockquote:border-l-accent-200
+              prose-blockquote:bg-subtle prose-blockquote:p-2 prose-blockquote:text-[15px] prose-blockquote:font-normal
+              prose-blockquote:not-italic prose-blockquote:text-foreground prose-li:m-0
+              prose-img:m-0
+              `}
               id="topic-content"
             >
               <div dangerouslySetInnerHTML={{ __html: topicInfo.content }} />
@@ -63,18 +65,21 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
           </>
         )}
 
-        <div className="flex pt-6">
-          <div className="ml-auto flex items-center gap-x-3">
-            <div className="text-xs/5 text-main-400">
-              <p>长按扫码</p>
-              <p>查看详情</p>
+        {showQRCode && (
+          <div className="flex pt-6">
+            <div className="ml-auto flex items-center gap-x-3">
+              <div className="text-xs/5">
+                <p>长按扫码</p>
+                <p>查看详情</p>
+              </div>
+              {/* eslint-disable @next/next/no-img-element */}
+              <img
+                alt="二维码"
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=54x54&bgcolor=22272e&color=adbac7&data=${topicInfo.url}`}
+              />
             </div>
-            <img
-              alt="二维码"
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=54x54&bgcolor=ffffff&color=475569&data=${topicInfo.url}`}
-            />
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

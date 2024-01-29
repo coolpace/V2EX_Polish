@@ -91,7 +91,7 @@ export function Screenshot() {
             {screens.map(({ name, page }, idx) => (
               <div
                 key={`${idx}`}
-                className={`absolute left-0 top-0 h-full w-full opacity-0 transition-opacity ${
+                className={`absolute left-0 top-0 size-full opacity-0 transition-opacity ${
                   name === 'home'
                     ? 'group-[[data-page="home"]]/page:opacity-100'
                     : name === 'topic'

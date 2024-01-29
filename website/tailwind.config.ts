@@ -34,6 +34,7 @@ export default {
         foreground: 'var(--v2p-color-foreground)',
         background: 'var(--v2p-color-background)',
         content: 'var(--v2p-color-content)',
+        subtle: 'var(--v2p-color-bg-subtle)',
       },
 
       boxShadow: {

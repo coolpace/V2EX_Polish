@@ -21,6 +21,7 @@ export function TopicLinkInput(props: TopicLinkInputProps) {
         disabled={disabled}
         placeholder="输入 V2EX 主题链接或主题 ID"
         value={value}
+        variant="soft"
         onChange={(ev) => {
           onChange?.(ev.target.value)
         }}
