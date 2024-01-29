@@ -138,6 +138,7 @@ export function processAvatar(params: ProcessAvatar) {
     })
 
   if (shouldWrap) {
+    // 点击头像跳转到该用户的主页。
     $trigger.wrap(
       `<a href="/member/${commentData.memberName}" target="_blank" style="cursor: pointer;">`
     )
