@@ -944,6 +944,10 @@ a.v2p-topic-preview-title-link {
 .v2p-member-ref {
   display: none;
 
+  + br {
+    display: none;
+  }
+
   &.v2p-member-ref-show {
     display: inline;
   }
