@@ -341,7 +341,11 @@ export async function setStorage<T extends StorageKey>(
         await chrome.storage.sync.set({ [storageKey]: storageItem })
 
         // 当检测到配置更新时，自动备份到远程。
-        if (storageKey !== StorageKey.API && storageKey !== StorageKey.SyncInfo) {
+        if (
+          storageKey !== StorageKey.API &&
+          storageKey !== StorageKey.SyncInfo &&
+          typeof $ !== 'undefined'
+        ) {
           const settings = await getStorage(false)
 
           if (controller) {
