@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "run-p watch run:chrome",
     "dev:firefox": "run-p watch run:firefox",
-    "run:chrome": "web-ext run -t chromium --source-dir ./extension --chromium-profile ./chrome-profile --profile-create-if-missing --start-url https://www.v2ex.com/",
+    "run:chrome": "web-ext run -t chromium --source-dir ./extension --chromium-profile ./chrome-profile --profile-create-if-missing --keep-profile-changes --start-url https://www.v2ex.com/",
     "run:firefox": "web-ext run --source-dir ./extension --start-url https://www.v2ex.com/",
     "build": "bun build:all && bun scripts/build.ts && bun pack:chrome && bun pack:firefox",
     "build:all": "run-p build:style build:ext build:userscript",
