@@ -302,7 +302,7 @@ function initTabs() {
       }
 
       if (readingData && readingData.length > 0) {
-        const $readingList = $('<ul class="list">').append(generateReadingItmes(readingData))
+        const $readingList = $('<div class="list">').append(generateReadingItmes(readingData))
 
         let currentReadingData = readingData
 
