@@ -23,17 +23,19 @@ export function isTabId(tabId: any): tabId is TabId {
 export const generateReadingItmes = (items: ReadingItem[]) => {
   return items
     .map((topic) => {
+      const escapedText = $('<div>').text(topic.content).html()
+
       return `
-        <li class="topic-item">
+        <div class="topic-item">
           <a href="${topic.url}" target="_blank">
             <span class="title">${escapeHTML(topic.title)}</span>
-            <span class="content">${topic.content.replace(/<[^>]*>/g, '')}</span>
+            <span class="content">${escapedText}</span>
 
             <div class="topic-item-actions">
               <button class="topic-item-action-remove" data-url="${topic.url}">移除</button>
             </div>
           </a>
-        </li>
+        </div>
       `
     })
     .join('')
@@ -42,11 +44,13 @@ export const generateReadingItmes = (items: ReadingItem[]) => {
 export const generateTopicItmes = (topics: Topic[]) => {
   return topics
     .map((topic) => {
+      const escapedText = $('<div>').text(topic.content).html()
+
       return `
         <li class="topic-item">
           <a href="${topic.url}" target="_blank">
             <span class="title">${escapeHTML(topic.title)}</span>
-            <span class="content">${topic.content.replace(/<[^>]*>/g, '')}</span>
+            <span class="content">${escapedText}</span>
           </a>
         </li>
         `
