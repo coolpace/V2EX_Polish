@@ -418,11 +418,11 @@ export async function handlingComments() {
 
         createToast({ message: '❌ 加载多页回复失败' })
         $pageNormal.removeClass('page_current').addClass('page_normal')
-      } finally {
-        if (options.replyContent.hideReplyTime) {
-          $('.cell .ago').addClass('v2p-auto-hide')
-        }
       }
+    }
+
+    if (options.replyContent.hideReplyTime) {
+      $('.cell .ago').addClass('v2p-auto-hide')
     }
   }
 
