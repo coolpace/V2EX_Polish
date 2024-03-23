@@ -300,7 +300,7 @@ export function ShareInfo() {
                   checked={showQRCode}
                   id="show-qrcode"
                   mr="1"
-                  variant="soft"
+                  variant="surface"
                   onCheckedChange={(checked) => {
                     setShowQRCode(checked ? true : false)
                   }}
@@ -318,7 +318,7 @@ export function ShareInfo() {
                       checked={showSubtle}
                       id="show-subtle"
                       mr="1"
-                      variant="soft"
+                      variant="surface"
                       onCheckedChange={(checked) => {
                         setShowSubtle(checked ? true : false)
                       }}

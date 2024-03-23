@@ -5,10 +5,24 @@ interface DonationData {
   money: string
   time: string
   message?: string
-  channel: '微信赞赏'
+  channel: '微信赞赏' | '微信转账'
 }
 
 export const donationList: DonationData[] = [
+  {
+    from: '余*',
+    money: '66',
+    time: '2024/02/28',
+    message: '好看好用',
+    channel: '微信转账',
+  },
+  {
+    from: 'Zhitao',
+    money: '9',
+    time: '2024/02/02',
+    message: '感谢大佬开发好用的插件',
+    channel: '微信赞赏',
+  },
   {
     from: 'Zryan',
     money: '6',
