@@ -946,7 +946,7 @@ a.v2p-topic-preview-title-link {
 
   + br {
     display: none;
-    
+
     + b {
       display: none;
     }
@@ -992,6 +992,10 @@ a.v2p-topic-preview-title-link {
         .v2p-left-side-content {
           flex: 1;
           overflow: auto;
+
+          .cell:last-child {
+            border-bottom: 1px solid var(--box-border-color);
+          }
         }
       }
 
