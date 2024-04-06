@@ -5,7 +5,7 @@ import { createModel } from '../../components/model'
 import { createToast } from '../../components/toast'
 import { RequestMessage, StorageKey, V2EX } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
-import { crawalTopicPage, fetchTopic, fetchTopicReplies } from '../../services'
+import { crawlTopicPage, fetchTopic, fetchTopicReplies } from '../../services'
 import type { Topic, TopicReply } from '../../types'
 import { escapeHTML, formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
 import { $topicList } from '../globals'
@@ -300,7 +300,7 @@ export function handlingTopicList() {
             void (async () => {
               const toast = createToast({ message: `正在屏蔽主题 ⌈${topicTitle}⌋`, duration: 0 })
 
-              const pageText = await crawalTopicPage(`/t/${topicId}`, '0')
+              const pageText = await crawlTopicPage(`/t/${topicId}`, '0')
 
               const $ignoreBtn = $(pageText).find('.topic_buttons a:nth-of-type(3)')
               const txt = $ignoreBtn.attr('onclick')
