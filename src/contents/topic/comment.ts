@@ -4,7 +4,7 @@ import { createModel } from '../../components/model'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
-import { crawalTopicPage, fetchUserInfo, thankReply } from '../../services'
+import { crawlTopicPage, fetchUserInfo, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { escapeHTML, getStorageSync } from '../../utils'
 import {
@@ -399,7 +399,7 @@ export async function handlingComments() {
 
           if (pages.length > 0) {
             const pagesText = await Promise.all(
-              pages.map((p) => crawalTopicPage(window.location.pathname, p))
+              pages.map((p) => crawlTopicPage(window.location.pathname, p))
             )
 
             pagesText.map((pageText) => {
