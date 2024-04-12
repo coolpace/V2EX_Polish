@@ -173,7 +173,7 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 
 ## 赞赏支持
 
-如果这个插件帮助你节省了时间，让你的生活更加愉快，可以给开发者一点小小的赞赏，这会帮助插件更持续地发展。迄今为止，我们已收到 [20 笔赞赏][Link Donation]，共计 272 元。对于你们的大方支持，我们感慨万分！
+如果这个插件帮助你节省了时间，让你的生活更加愉快，可以给开发者一点小小的赞赏，这会帮助插件更持续地发展。迄今为止，我们已收到 [22 笔赞赏][Link Donation]，共计 347 元。对于你们的大方支持，我们感慨万分！
 
 ![赞赏码](./assets/appreciation-code.png)
 
@@ -189,4 +189,4 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 [Link CWS]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm
 [Link CWS Search V2EX]: https://chromewebstore.google.com/search/V2EX?hl=zh-CN
 [Link CWS Rating]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews?hl=zh-CN
-[Link Donation]: https://www.v2p.app/donation
+[Link Donation]: https://www.v2p.app/support
