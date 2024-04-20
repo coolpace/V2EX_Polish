@@ -1,3 +1,5 @@
+// 如果要在 GreaseMonkey 中运行本地文件，需设置「@require file:///[file path]」。
+
 import { patternToRegex } from 'webext-patterns'
 
 import { style } from './style'
