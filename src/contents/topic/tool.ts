@@ -2,7 +2,7 @@ import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { Links, StorageKey } from '../../constants'
 import { getStorageSync } from '../../utils'
-import { $replyBox, $replyTextArea, topicId } from '../globals'
+import { $infoCard, $replyBox, $replyTextArea, topicId } from '../globals'
 import {
   addToReadingList,
   decodeBase64TopicPage,
@@ -148,7 +148,7 @@ export function handlingTools() {
     })
   }
 
-  $('#Rightbar > .box:has("#member-activity")').addClass('v2p-tool-box').append($tools)
+  $infoCard.addClass('v2p-tool-box').append($tools)
 
   loadIcons()
 }

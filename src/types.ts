@@ -60,6 +60,8 @@ export interface Options {
     /** 用户标签展示形式。 */
     display: 'inline' | 'block'
   }
+  /** 隐藏账号信息。 */
+  hideAccount?: boolean
 }
 
 export interface API_Info {

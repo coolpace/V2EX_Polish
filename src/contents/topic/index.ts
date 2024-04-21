@@ -1,5 +1,6 @@
+import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
-import { $commentTableRows, $replyBox } from '../globals'
+import { $commentTableRows, $infoCard, $replyBox } from '../globals'
 import { loadIcons } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
@@ -9,11 +10,17 @@ import { handleReply } from './reply'
 import { handlingTools } from './tool'
 
 void (async () => {
-  await getStorage()
+  const storage = await getStorage()
+  const options = storage[StorageKey.Options]
+
   handlingLayout()
 
   // 支持新页签打开用户主页链接。
   $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
+
+  if (options.hideAccount) {
+    $infoCard.find('a[href^="/member/"]').css('opacity', '0')
+  }
 
   handlingTools()
 

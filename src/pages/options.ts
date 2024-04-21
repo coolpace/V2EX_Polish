@@ -61,6 +61,7 @@ const saveOptions = async () => {
     userTag: {
       display: $('input[name="userTag.display"]:checked').prop('value'),
     },
+    hideAccount: $('#hideAccount').prop('checked'),
   }
 
   await setStorage(StorageKey.Options, currentOptions)
@@ -113,6 +114,7 @@ void (async function init() {
     $('#replyLayoutDefault').prop('checked', !options.reply.layout)
     $('#replyLayoutAuto').prop('checked', options.reply.layout === 'auto')
     $('#replyLayoutHorizontal').prop('checked', options.reply.layout === 'horizontal')
+    $('#hideAccount').prop('checked', options.hideAccount === true)
 
     $('input[type]').on('change', () => {
       void saveOptions()
