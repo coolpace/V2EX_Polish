@@ -80,9 +80,15 @@ export function handlingTopicList() {
 
       $detailBtn.prop('href', linkHref)
 
-      const $titleLink = $(
-        `<a class="v2p-topic-preview-title-link" title="${topicTitle}">${topicTitle}</a>`
-      )
+      const $titleLink = $(`
+        <a class="v2p-topic-preview-title-link" title="${topicTitle}" href="${linkHref || ''}">
+          ${topicTitle}
+        </a>
+      `)
+
+      if (options.openInNewTab) {
+        $titleLink.prop('target', '_blank')
+      }
 
       model.$title.empty().append($titleLink)
 
@@ -98,10 +104,10 @@ export function handlingTopicList() {
               abortController = new AbortController()
 
               model.$content.empty().append(`
-                    <div class="v2p-modal-loading">
-                      <div class="v2p-icon-loading">${iconLoading}</div>
-                    </div>
-                    `)
+                <div class="v2p-modal-loading">
+                  <div class="v2p-icon-loading">${iconLoading}</div>
+                </div>
+              `)
 
               const promises = [
                 fetchTopic(topicId, { signal: abortController.signal }),
@@ -137,11 +143,6 @@ export function handlingTopicList() {
             const { topic, topicReplies } = cacheData
 
             const $topicPreview = $('<div class="v2p-topic-preview">')
-
-            $titleLink.prop('href', topic.url)
-            if (options.openInNewTab) {
-              $titleLink.prop('target', '_blank')
-            }
 
             const $infoBar = $(`
               <div class="v2p-tp-info-bar">
@@ -208,6 +209,10 @@ export function handlingTopicList() {
                     .join('')}
                 </div>
               `)
+            }
+
+            if (options.openInNewTab) {
+              $topicPreview.find('a').prop('target', '_blank')
             }
 
             if (topicReplies.length > 0) {
