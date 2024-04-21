@@ -7,6 +7,9 @@ export const $topicList = $(
   '#Main #Tabs ~ .cell.item, #Main #TopicsNode > .cell, #Main .cell.item:has(.item_title > .topic-link)'
 )
 
+/** 个人信息卡片 */
+export const $infoCard = $('#Rightbar > .box:has("#member-activity")')
+
 /** 主题内容区 */
 export const $topicContentBox = $('#Main .box:has(.topic_buttons)')
 

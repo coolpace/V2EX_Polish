@@ -1,5 +1,6 @@
 import { StorageKey } from '../../constants'
 import { getStorage, isSameDay } from '../../utils'
+import { $infoCard } from '../globals'
 import { loadIcons } from '../helpers'
 import { handlingHotTopics } from './hot-topics'
 import { handlingTopicList } from './topic-list'
@@ -7,6 +8,10 @@ import { handlingTopicList } from './topic-list'
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
+
+  if (options.hideAccount) {
+    $infoCard.find('a[href^="/member/"]').css('opacity', '0')
+  }
 
   {
     $('#Main .tab').addClass('v2p-hover-btn')
@@ -32,7 +37,7 @@ void (async () => {
           </a>
         `)
 
-        $('#Rightbar > .box:has("#member-activity")').append($info)
+        $infoCard.append($info)
       }
     }
   }
