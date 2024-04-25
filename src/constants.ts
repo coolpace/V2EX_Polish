@@ -255,6 +255,7 @@ export const defaultOptions: Options = {
 export const enum MessageKey {
   action = 'action',
   colorScheme = 'colorSchemes',
+  showOptions = 'showOptions',
 }
 
 export const enum MessageFrom {

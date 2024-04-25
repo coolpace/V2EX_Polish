@@ -1,4 +1,4 @@
-import { Links, MessageFrom, StorageKey } from '../constants'
+import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
 import {
@@ -186,6 +186,7 @@ void (async () => {
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Home}" target="_blank">插件官网</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Feedback}" target="_blank">问题反馈</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Support}" target="_blank">赞赏支持</a>
+        <a class="v2p-footer-link v2p-hover-btn v2p-optbtn" href="javascript:void(0);">选项设置</a>
       </div>
 
       <div class="v2p-footer-brand">
@@ -201,6 +202,10 @@ void (async () => {
       </div>
     </div>
     `)
+
+    $extraFooter.find('.v2p-optbtn').on('click', () => {
+      chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
+    })
 
     $(`<div class="v2p-footer-logo">${iconLogo}</div>`).prependTo($extraFooter)
 
