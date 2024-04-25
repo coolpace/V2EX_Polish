@@ -574,19 +574,29 @@ body {
   }
 
   // 正文内容的表格。
-  .markdown_body table {
-    border-top: 1px solid var(--v2p-color-border-darker);
-    box-shadow: none;
+  .markdown_body {
+    table {
+      border-top: 1px solid var(--v2p-color-border-darker);
+      box-shadow: none;
 
-    tr {
-      th,
-      td {
-        border: 1px solid var(--v2p-color-border-darker);
+      tr {
+        th,
+        td {
+          border: 1px solid var(--v2p-color-border-darker);
+        }
+      }
+
+      tr:nth-child(2n) {
+        background-color: var(--box-background-alt-color);
       }
     }
 
-    tr:nth-child(2n) {
-      background-color: var(--box-background-alt-color);
+    blockquote {
+      padding: 0 1em;
+      color: var(--v2p-color-main-500);
+      border-left: 3px solid var(--v2p-color-border);
+      margin-inline-start: 0;
+      margin-inline-end: 0;
     }
   }
 
