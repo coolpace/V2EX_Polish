@@ -5,15 +5,10 @@ import { checkIn } from './daily-check-in'
 interface Message {
   [MessageKey.action]?: 'openPopup'
   [MessageKey.colorScheme]?: 'dark' | 'light'
+  [MessageKey.showOptions]?: true
 }
 
 chrome.runtime.onMessage.addListener((message: Message) => {
-  // if (Reflect.has(message, MessageKey.action)) {
-  // if (message[MessageKey.action] === 'openPopup') {
-  //   void chrome.action.openPopup()
-  // }
-  // }
-
   if (Reflect.has(message, MessageKey.colorScheme)) {
     void chrome.action.setIcon({
       path:
@@ -31,6 +26,10 @@ chrome.runtime.onMessage.addListener((message: Message) => {
               128: '../images/icon-128.png',
             },
     })
+  } else if (Reflect.has(message, MessageKey.showOptions)) {
+    if (message[MessageKey.showOptions] === true) {
+      chrome.runtime.openOptionsPage()
+    }
   }
 })
 
