@@ -149,6 +149,13 @@ void (async () => {
   //   })
   // }
 
+  if (options.hideAccount) {
+    const link = $("link[rel~='icon']")
+    link.prop('href', 'https://v2p.app/favicon.svg')
+
+    $('#Logo').css('opacity', '0')
+  }
+
   {
     const runEnv = getRunEnv()
 
