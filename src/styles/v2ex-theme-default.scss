@@ -58,6 +58,10 @@ body {
     color: var(--v2p-color-font-secondary);
     background-color: var(--v2p-color-bg-footer);
     border: none;
+
+    .content {
+      flex-direction: column; // 修复 v2ex.com/settings/invite 页脚布局错乱的问题。
+    }
   }
 
   #Wrapper {
