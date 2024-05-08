@@ -80,7 +80,13 @@
         "https://hk.v2ex.com/*",
         "https://s.v2ex.com/*"
       ],
-      "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings", "*://*/write"],
+      "exclude_matches": [
+        "*://*/t/*",
+        "*://*/notes/*",
+        "*://*/settings",
+        "*://*/write",
+        "*://*/member/*"
+      ],
       "js": ["scripts/jquery.min.js", "scripts/v2ex-home.min.js"],
       "all_frames": true
     },
@@ -99,15 +105,28 @@
     },
     {
       "matches": [
-        "https://v2ex.com/write*",
-        "https://www.v2ex.com/write*",
-        "https://cn.v2ex.com/write*",
+        "https://v2ex.com/write/*",
+        "https://www.v2ex.com/write/*",
+        "https://cn.v2ex.com/write/*",
         "https://global.v2ex.com/write/*",
         "https://fast.v2ex.com/write/*",
         "https://hk.v2ex.com/write/*",
         "https://s.v2ex.com/write/*"
       ],
       "js": ["scripts/jquery.min.js", "scripts/v2ex-write.min.js"],
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://v2ex.com/member/*",
+        "https://www.v2ex.com/member/*",
+        "https://cn.v2ex.com/member/*",
+        "https://global.v2ex.com/member/*",
+        "https://fast.v2ex.com/member/*",
+        "https://hk.v2ex.com/member/*",
+        "https://s.v2ex.com/member/*"
+      ],
+      "js": ["scripts/jquery.min.js", "scripts/v2ex-member.min.js"],
       "all_frames": true
     },
 
