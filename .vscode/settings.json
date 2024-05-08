@@ -13,5 +13,8 @@
   },
   "files.readonlyExclude": {
     "extension/scripts/polyfill.js": true
+  },
+  "workbench.editor.customLabels.patterns": {
+    "**/src/**/{index}.ts": "${dirname} - ${filename}"
   }
 }
