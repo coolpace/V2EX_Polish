@@ -85,7 +85,13 @@
         "https://hk.v2ex.com/*",
         "https://s.v2ex.com/*"
       ],
-      "exclude_matches": ["*://*/t/*", "*://*/notes/*", "*://*/settings", "*://*/write"],
+      "exclude_matches": [
+        "*://*/t/*",
+        "*://*/notes/*",
+        "*://*/settings",
+        "*://*/write",
+        "*://*/member/*"
+      ],
       "js": ["scripts/v2ex-home.min.js"],
       "all_frames": true
     },
@@ -104,9 +110,9 @@
     },
     {
       "matches": [
-        "https://v2ex.com/write*",
-        "https://www.v2ex.com/write*",
-        "https://cn.v2ex.com/write*",
+        "https://v2ex.com/write/*",
+        "https://www.v2ex.com/write/*",
+        "https://cn.v2ex.com/write/*",
         "https://global.v2ex.com/write/*",
         "https://fast.v2ex.com/write/*",
         "https://hk.v2ex.com/write/*",

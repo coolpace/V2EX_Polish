@@ -3,7 +3,7 @@ import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
 import { $commentCells, $topicContentBox, $topicHeader, topicId, topicOwnerName } from '../globals'
-import { loadIcons, setMemberTags } from '../helpers'
+import { getTagsText, loadIcons, setMemberTags } from '../helpers'
 
 /**
  * 处理主题的正文内容。
@@ -136,26 +136,34 @@ export function processReplyContent($cellDom: JQuery) {
   }
 }
 
+export interface CallbackFunctions {
+  onRemoveExistingTagBlock?: () => void
+  onInsertNewTagBlock?: (params: { $tags: JQuery }) => void
+}
+
 /**
  * 根据用户的昵称设置用户标签，会把标签插入到 cells 中。
  */
-export function updateMemberTag(params: {
-  memberName: Member['username']
-  memberAvatar?: Member['avatar']
-  tags: Tag[] | undefined
-  options: Options
-}) {
-  const { memberName, memberAvatar, tags, options } = params
+export function updateMemberTag(
+  params: {
+    memberName: Member['username']
+    memberAvatar?: Member['avatar']
+    tags: Tag[] | undefined
+    options: Options
+  } & CallbackFunctions
+) {
+  const { memberName, memberAvatar, tags, options, ...callbacks } = params
 
   const $v2pTags = $(`.v2p-tags-${memberName}`)
 
-  const tagsText = tags?.map((it) => it.name).join('，')
+  const tagsText = tags ? getTagsText(tags) : undefined
 
   if ($v2pTags.length > 0) {
     if (tagsText) {
       $v2pTags.html(`<b>#</b>&nbsp;${tagsText}`)
     } else {
       $v2pTags.remove()
+      callbacks.onRemoveExistingTagBlock?.()
     }
   } else {
     if (tagsText) {
@@ -165,27 +173,32 @@ export function updateMemberTag(params: {
 
       $tags.on('click', () => {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        openTagsSetter({ memberName, memberAvatar })
+        openTagsSetter({ memberName, memberAvatar, ...callbacks })
       })
 
-      if (memberName === topicOwnerName) {
-        $topicHeader.append($tags.clone(true))
-      }
+      if (callbacks.onInsertNewTagBlock) {
+        callbacks.onInsertNewTagBlock({ $tags })
+      } else {
+        if (memberName === topicOwnerName) {
+          // 如果为当前题主设置标签，也需要在主题头部区域同步展示标签。
+          $topicHeader.append($tags.clone(true))
+        }
 
-      if (options.userTag.display === 'inline') {
-        $tags
-          .addClass('v2p-reply-tags-inline')
-          .insertBefore(
+        if (options.userTag.display === 'inline') {
+          $tags
+            .addClass('v2p-reply-tags-inline')
+            .insertBefore(
+              $commentCells
+                .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
+                .find('> table .badges')
+            )
+        } else {
+          $tags.insertBefore(
             $commentCells
               .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
-              .find('> table .badges')
+              .find('> table .reply_content')
           )
-      } else {
-        $tags.insertBefore(
-          $commentCells
-            .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
-            .find('> table .reply_content')
-        )
+        }
       }
     }
   }
@@ -194,11 +207,13 @@ export function updateMemberTag(params: {
 /**
  * 打开模态框，让用户编辑用户标签。
  */
-export function openTagsSetter(params: {
-  memberName: Member['username']
-  memberAvatar?: Member['avatar']
-}) {
-  const { memberName, memberAvatar } = params
+export function openTagsSetter(
+  params: {
+    memberName: Member['username']
+    memberAvatar?: Member['avatar']
+  } & CallbackFunctions
+) {
+  const { memberName, memberAvatar, ...callbacks } = params
 
   void (async () => {
     const storage = await getStorage(false)
@@ -208,7 +223,9 @@ export function openTagsSetter(params: {
 
     const tagsValue = memberTagData
       ? Reflect.has(latestTagsData, memberName)
-        ? memberTagData.tags?.map((it) => it.name).join('，')
+        ? memberTagData.tags
+          ? getTagsText(memberTagData.tags)
+          : undefined
         : undefined
       : undefined
 
@@ -228,7 +245,7 @@ export function openTagsSetter(params: {
 
       await setMemberTags({ memberName, memberAvatar: memberTagData?.avatar || memberAvatar, tags })
 
-      updateMemberTag({ memberName, memberAvatar, tags, options })
+      updateMemberTag({ memberName, memberAvatar, tags, options, ...callbacks })
     }
   })()
 }

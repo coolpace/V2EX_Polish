@@ -304,7 +304,7 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
           }
           resolve(data)
         })
-        .catch((err) => {
+        .catch((err: Error) => {
           reject(err)
         })
     }
