@@ -1,6 +1,6 @@
 import { StorageKey } from '../../constants'
 import { getStorage, isSameDay } from '../../utils'
-import { $infoCard } from '../globals'
+import { $infoCard, $topicList } from '../globals'
 import { loadIcons } from '../helpers'
 import { handlingHotTopics } from './hot-topics'
 import { handlingTopicList } from './topic-list'
@@ -45,4 +45,15 @@ void (async () => {
   handlingHotTopics()
 
   loadIcons()
+
+  {
+    $topicList.each((_, ele) => {
+      const $cell = $(ele)
+      const bgImg = ($cell.prop('style') as CSSStyleDeclaration).backgroundImage
+
+      if (bgImg.includes('/static/img/corner_star.png')) {
+        $cell.find('.count_livid').append(' | 置顶')
+      }
+    })
+  }
 })()
