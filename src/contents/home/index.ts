@@ -52,7 +52,7 @@ void (async () => {
       const bgImg = ($cell.prop('style') as CSSStyleDeclaration).backgroundImage
 
       if (bgImg.includes('/static/img/corner_star.png')) {
-        $cell.find('.count_livid').append(' | 置顶')
+        $cell.find('.count_livid').append(' | 置顶').addClass('count_orange')
       }
     })
   }
