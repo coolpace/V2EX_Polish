@@ -5,9 +5,9 @@ import { createModal } from '../../components/modal'
 import { createToast } from '../../components/toast'
 import { RequestMessage, StorageKey, V2EX } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
-import { crawlTopicPage, fetchTopic, fetchTopicReplies } from '../../services'
-import type { Topic, TopicReply } from '../../types'
-import { escapeHTML, formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
+import { crawlTopicPage, fetchTopic } from '../../services'
+import type { Topic } from '../../types'
+import { formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
 import { $topicList } from '../globals'
 import { addToReadingList, isV2EX_RequestError } from '../helpers'
 
@@ -30,6 +30,13 @@ const invalidTemplate = (tip: string) => `
   </div>
 </div>
 `
+
+interface TopicData {
+  topic: Topic
+  /** 爬取主题页得到的 HTML 文本。 */
+  topicPageText: string
+  cacheTime: number
+}
 
 export function handlingTopicList() {
   const runEnv = getRunEnv()
@@ -67,10 +74,7 @@ export function handlingTopicList() {
     },
   })
 
-  const topicDataCache = new Map<
-    string,
-    { topic: Topic; topicReplies: TopicReply[]; cacheTime: number }
-  >()
+  const topicDataCache = new Map<string, TopicData>()
 
   const handlePreview = (params: { topicId?: string; topicTitle?: string; linkHref?: string }) => {
     const { topicId, topicTitle = '', linkHref } = params
@@ -93,12 +97,12 @@ export function handlingTopicList() {
       modal.$title.empty().append($titleLink)
 
       if (PAT) {
-        void (async () => {
+        const load = async () => {
           let cacheData = topicDataCache.get(topicId)
 
           if (
             !cacheData ||
-            Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 缓存超时时间为十分钟
+            Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 在同一个页面中且不刷新的情况下，缓存超时时间为十分钟。
           ) {
             try {
               abortController = new AbortController()
@@ -111,19 +115,29 @@ export function handlingTopicList() {
 
               const promises = [
                 fetchTopic(topicId, { signal: abortController.signal }),
-                fetchTopicReplies(topicId, { signal: abortController.signal }),
+                crawlTopicPage(`/t/${topicId}`),
               ] as const
 
-              const [{ result: topic }, { result: topicReplies }] = await Promise.all(promises)
+              try {
+                const [{ result: topic }, topicPageText] = await Promise.all(promises)
 
-              const data = {
-                topic,
-                topicReplies,
-                cacheTime: Date.now(),
+                const data: TopicData = {
+                  topic,
+                  cacheTime: Date.now(),
+                  topicPageText,
+                }
+
+                topicDataCache.set(topicId, data)
+                cacheData = data
+              } catch {
+                const $errorTip = $(
+                  '<div style="padding: 20px; text-align: center;">加载主题失败，<a class="v2p-topic-preview-retry">点击重试</a>。</div>'
+                )
+                $errorTip.find('.v2p-topic-preview-retry').on('click', () => {
+                  load()
+                })
+                modal.$content.empty().append($errorTip)
               }
-
-              topicDataCache.set(topicId, data)
-              cacheData = data
             } catch (err) {
               if (isV2EX_RequestError(err)) {
                 const message = err.cause.message
@@ -140,9 +154,11 @@ export function handlingTopicList() {
           }
 
           if (cacheData) {
-            const { topic, topicReplies } = cacheData
+            const { topic, topicPageText } = cacheData
 
-            const $topicPreview = $('<div class="v2p-topic-preview">')
+            const $page = $(topicPageText)
+
+            const $topicPreview = $('<div id="Main" class="v2p-topic-preview">')
 
             const $infoBar = $(`
               <div class="v2p-tp-info-bar">
@@ -153,7 +169,7 @@ export function handlingTopicList() {
                   </a>
 
                   <span>
-                    ${formatTimestamp(topic.created, { format: 'YMDHMS' })}
+                    ${formatTimestamp(topic.created, { format: 'YMDHM' })}
                   </span>
 
                   <span>${topic.replies} 条回复</span>
@@ -165,9 +181,9 @@ export function handlingTopicList() {
             iconBook.setAttribute('width', '100%')
             iconBook.setAttribute('height', '100%')
 
-            const $readingBtn = $(`
-                  <div class="v2p-tp-read"><span class="v2p-tp-read-icon"></span>稍后阅读</div>
-                  `)
+            const $readingBtn = $(
+              '<div class="v2p-tp-read"><span class="v2p-tp-read-icon"></span>稍后阅读</div>'
+            )
             $readingBtn.find('.v2p-tp-read-icon').append(iconBook)
             $readingBtn
               .on('click', () => {
@@ -181,32 +197,43 @@ export function handlingTopicList() {
 
             $topicPreview.append($infoBar)
 
-            if (topic.content_rendered) {
-              $topicPreview.append(
-                `<div class="v2p-topic-preview-content markdown_body">${topic.content_rendered}</div>`
-              )
-            } else {
+            const $topicMain = $page.find('#Main')
+            const $topicContent = $topicMain.find('> .box > .cell > .topic_content')
+            const $topicSubtle = $topicMain.find('> .box >.subtle')
+
+            if ($topicContent.length <= 0) {
               $topicPreview.append(`
                 <div class="v2p-empty-content">
                   <div class="v2p-text-emoji">¯\\_(ツ)_/¯</div>
                   <p>该主题没有正文内容</p>
                 </div>
               `)
+            } else {
+              $topicPreview.append($topicContent)
+              $topicContent.wrap('<div class="cell">')
             }
 
-            if (topic.supplements && topic.supplements.length > 0) {
+            $topicPreview.append($topicSubtle)
+
+            const $topicReplyBox = $topicMain.find('.box:has(.cell[id^="r_"])')
+
+            if ($topicReplyBox.length > 0) {
+              $topicReplyBox.css('margin-top', '20px')
+              $topicReplyBox
+                .find(
+                  '.cell:first-of-type, .cell.ps_container, .cell > table > tbody > tr > td:last-of-type > .fr'
+                )
+                .remove()
+              $topicPreview.append($topicReplyBox)
+
               $topicPreview.append(`
-                <div class="v2p-topic-preview-addons">
-                  ${topic.supplements
-                    .map((addon, idx) => {
-                      return `
-                      <div class="v2p-topic-preview-addon subtle">
-                        <div class="fade" style="margin-bottom:10px;">附言 ${idx + 1}：</div>
-                        <div class="topic_content markdown_body">${addon.content_rendered}</div>
-                      </div>
-                      `
-                    })
-                    .join('')}
+                <div class="v2p-topic-reply-tip">
+                  <a
+                    href="${linkHref || ''}"
+                    style="color: currentColor;"
+                  >
+                      在主题内查看完整评论...
+                  </a>
                 </div>
               `)
             }
@@ -215,62 +242,11 @@ export function handlingTopicList() {
               $topicPreview.find('a').prop('target', '_blank')
             }
 
-            if (topicReplies.length > 0) {
-              const $template = $('<div>')
-
-              const op = topic.member.username
-
-              topicReplies.forEach((r) => {
-                $template.append(`
-                  <div class="v2p-topic-reply">
-                    <div class="v2p-topic-reply-member">
-                      <a href="${r.member.url}" target="_blank">
-                        <img class="v2p-topic-reply-avatar" src="${r.member.avatar}">
-                        <span>${r.member.username}</span>
-                        <span style="
-                          display: ${op === r.member.username ? 'unset' : 'none'};
-                          margin-left:${op === r.member.username ? '3px' : '0'};
-                        ">
-                          <span class="badge op mini">OP</span>
-                        </span>
-                      </a>：
-                    </div>
-                    <div class="v2p-topic-reply-content">${escapeHTML(r.content)}</div>
-                  </div>
-                `)
-              })
-
-              $('<div class="v2p-topic-reply-box">')
-                .append($template.html())
-                .append(
-                  `
-                  <div class="v2p-topic-reply-tip">
-                    <a
-                      href="${linkHref || ''}"
-                      style="color: currentColor;"
-                      target="${options.openInNewTab ? '_blank' : '_self'}"
-                    >
-                        在主题内查看完整评论...
-                    </a>
-                  </div>
-                  `
-                )
-                .appendTo($topicPreview)
-            } else {
-              $('<div class="v2p-topic-reply-box">')
-                .append(
-                  `
-                  <div class="v2p-topic-reply-tip">
-                    - 暂无回复 -
-                  </div>
-                  `
-                )
-                .appendTo($topicPreview)
-            }
-
             modal.$content.empty().append($topicPreview)
           }
-        })()
+        }
+
+        load()
       } else {
         modal.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
       }
