@@ -63,7 +63,7 @@ export function fetchLatestTopics(options?: RequestInit) {
 }
 
 export function fetchHotTopics(options?: RequestInit) {
-  return legacyRequest<Topic[]>(`${V2EX_LEGACY_API}/topics/hot.json`, options)
+  return legacyRequest<Topic[]>(`${V2EX_LEGACY_API}/topics/hot.json?r=${Date.now()}`, options)
 }
 
 async function request<Data>(url: string, options?: RequestInit): Promise<DataWrapper<Data>> {
