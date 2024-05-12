@@ -1,7 +1,7 @@
 import { BookOpenCheck, createElement } from 'lucide'
 
 import { createButton } from '../../components/button'
-import { createModel } from '../../components/model'
+import { createModal } from '../../components/modal'
 import { createToast } from '../../components/toast'
 import { RequestMessage, StorageKey, V2EX } from '../../constants'
 import { iconLoading, iconLogo } from '../../icons'
@@ -55,7 +55,7 @@ export function handlingTopicList() {
     $detailBtn.prop('target', '_blank')
   }
 
-  const model = createModel({
+  const modal = createModal({
     root: $(document.body),
     onMount: ({ $actions }) => {
       $actions.prepend($detailBtn)
@@ -76,7 +76,7 @@ export function handlingTopicList() {
     const { topicId, topicTitle = '', linkHref } = params
 
     if (topicId) {
-      model.open()
+      modal.open()
 
       $detailBtn.prop('href', linkHref)
 
@@ -90,7 +90,7 @@ export function handlingTopicList() {
         $titleLink.prop('target', '_blank')
       }
 
-      model.$title.empty().append($titleLink)
+      modal.$title.empty().append($titleLink)
 
       if (PAT) {
         void (async () => {
@@ -103,7 +103,7 @@ export function handlingTopicList() {
             try {
               abortController = new AbortController()
 
-              model.$content.empty().append(`
+              modal.$content.empty().append(`
                 <div class="v2p-modal-loading">
                   <div class="v2p-icon-loading">${iconLoading}</div>
                 </div>
@@ -133,7 +133,7 @@ export function handlingTopicList() {
                   message === RequestMessage.InvalidToken
                   /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
                 ) {
-                  model.$content.empty().append(invalidTemplate('您的 PAT 已失效，请重新设置。'))
+                  modal.$content.empty().append(invalidTemplate('您的 PAT 已失效，请重新设置。'))
                 }
               }
             }
@@ -268,11 +268,11 @@ export function handlingTopicList() {
                 .appendTo($topicPreview)
             }
 
-            model.$content.empty().append($topicPreview)
+            modal.$content.empty().append($topicPreview)
           }
         })()
       } else {
-        model.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
+        modal.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
       }
     }
   }
