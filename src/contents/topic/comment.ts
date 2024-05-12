@@ -1,6 +1,6 @@
 import { createElement, Heart } from 'lucide'
 
-import { createModel } from '../../components/model'
+import { createModal } from '../../components/modal'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
@@ -47,7 +47,7 @@ function handlingFilteredComments() {
 
   const popularCount = popularCommentData.length
 
-  const model = createModel({
+  const modal = createModal({
     root: $main,
     onMount: ({ $title, $content }) => {
       const $template = $('<div class="v2p-modal-comments">')
@@ -253,7 +253,7 @@ function handlingFilteredComments() {
   })
 
   $commentsBtn.on('click', () => {
-    model.open()
+    modal.open()
   })
 
   {
