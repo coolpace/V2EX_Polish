@@ -199,7 +199,7 @@ export async function thankReply(params: {
 /**
  * 爬取主题内容页，返回 HTML 纯文本。
  */
-export async function crawlTopicPage(path: string, page: string): Promise<string> {
+export async function crawlTopicPage(path: string, page = '1'): Promise<string> {
   const res = await fetch(`${V2EX_ORIGIN}${path}?p=${page}`)
   const htmlText = await res.text()
   return htmlText

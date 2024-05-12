@@ -32,7 +32,7 @@ export function getOS() {
  */
 export function formatTimestamp(
   timestamp: number,
-  { format = 'YMD' }: { format?: 'YMD' | 'YMDHMS' } = {}
+  { format = 'YMD' }: { format?: 'YMD' | 'YMDHM' | 'YMDHMS' } = {}
 ): string {
   const date = new Date(timestamp.toString().length === 10 ? timestamp * 1000 : timestamp)
   const year = date.getFullYear().toString()
@@ -40,6 +40,13 @@ export function formatTimestamp(
   const day = date.getDate().toString().padStart(2, '0')
 
   const YMD = `${year}-${month}-${day}`
+
+  if (format === 'YMDHM') {
+    const hour = date.getHours().toString().padStart(2, '0')
+    const minute = date.getMinutes().toString().padStart(2, '0')
+
+    return `${YMD} ${hour}:${minute}`
+  }
 
   if (format === 'YMDHMS') {
     const hour = date.getHours().toString().padStart(2, '0')
