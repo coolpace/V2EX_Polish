@@ -156,7 +156,7 @@ body {
       padding: 5px 10px;
       overflow: hidden;
       font-size: 13px;
-      background-color: var(--v2p-color-main-200);
+      background-color: var(--v2p-color-main-100);
       border-radius: 5px;
     }
 
@@ -164,6 +164,10 @@ body {
       gap: 4px;
       cursor: pointer;
       user-select: none;
+
+      &:hover {
+        background-color: var(--v2p-color-main-200);
+      }
     }
 
     .v2p-tp-read-icon {
