@@ -387,7 +387,7 @@ body {
     }
   }
 
-  // 主题编辑内容的语法。
+  // MARK: 主题编辑内容的语法。
   #syntax-selector {
     .radio-group {
       padding: 3px;
@@ -420,7 +420,8 @@ body {
     background: var(--v2p-color-orange-400);
   }
 
-  // 记事本：https://www.v2ex.com/notes
+  // MARK: 记事本演示。
+  // 记事本页面链接：https://www.v2ex.com/notes
   form[action^='/notes'] {
     .cell {
       background-color: transparent !important;
@@ -464,7 +465,7 @@ body {
       }
     }
 
-    // 站内链接
+    // MARK: 站内链接。
     a[href*='v2ex.com/t'],
     a[href^='/t'],
     a[href^='/go'] {
@@ -480,7 +481,7 @@ body {
     }
   }
 
-  // 主题内容编辑器。
+  // MARK: 主题内容编辑器。
   .CodeMirror {
     .CodeMirror-focused.cm-s-one-dark {
       background-color: transparent;
@@ -501,7 +502,6 @@ body {
     background-color: var(--v2p-color-bg-input);
   }
 
-  // 主题内容编辑器。
   #workspace {
     overflow: hidden;
     border: 1px solid var(--button-border-color);
@@ -577,7 +577,7 @@ body {
     border-bottom: none;
   }
 
-  // 正文内容的表格。
+  // MARK: 正文内容的表格。
   .markdown_body {
     table {
       border-top: 1px solid var(--v2p-color-border-darker);
