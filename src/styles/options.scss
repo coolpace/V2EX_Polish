@@ -18,9 +18,9 @@ body {
 }
 
 .side {
+  overflow-y: auto;
   width: 300px;
   height: 100%;
-  overflow-y: auto;
   background-color: var(--v2p-color-main-50);
   border-right: 1px solid var(--v2p-color-main-200);
 }
@@ -34,8 +34,8 @@ body {
 }
 
 .side-header-title {
-  font-weight: bold;
   font-size: 26px;
+  font-weight: bold;
 }
 
 .menu {
@@ -43,17 +43,17 @@ body {
   flex-direction: column;
   gap: 10px 0;
   padding: 20px;
-  font-weight: bold;
   font-size: 14px;
+  font-weight: bold;
 }
 
 .menu-item {
+  cursor: pointer;
   display: flex;
   gap: 0 10px;
   align-items: center;
   padding: 8px 12px;
   border-radius: 5px;
-  cursor: pointer;
 
   &:hover {
     background-color: var(--v2p-color-main-100);
@@ -70,9 +70,9 @@ body {
 }
 
 .content {
+  overflow: auto;
   flex: 1;
   padding: 40px 50px;
-  overflow: auto;
   background-color: var(--v2p-color-bg-content);
 
   [data-content-key] {
@@ -81,8 +81,8 @@ body {
 }
 
 .title {
-  font-weight: 600;
   font-size: 20px;
+  font-weight: 600;
 }
 
 #options-form {
@@ -119,8 +119,8 @@ body {
       label {
         & ~ p {
           margin-top: 5px;
-          color: var(--v2p-color-main-700);
           font-size: 14px;
+          color: var(--v2p-color-main-700);
         }
       }
     }
@@ -139,8 +139,8 @@ body {
     }
 
     label[for] {
-      font-weight: bold;
       font-size: 15px;
+      font-weight: bold;
 
       + p {
         font-size: 13px;
@@ -161,15 +161,15 @@ fieldset {
   }
 
   sup {
+    cursor: help;
     margin-left: 5px;
     padding: 3px 4px;
-    color: var(--v2p-color-orange-400);
     font-weight: normal;
     line-height: 1;
+    color: var(--v2p-color-orange-400);
     background-color: var(--v2p-color-orange-100);
     border: 1px solid currentColor;
     border-radius: 4px;
-    cursor: help;
   }
 }
 
@@ -179,21 +179,21 @@ fieldset {
 }
 
 #save {
+  user-select: none;
   display: flex;
   align-items: center;
   height: 100%;
   margin-top: 20px;
   padding: 5px 10px;
-  color: var(--v2p-color-main-100);
   font-size: 12px;
+  color: var(--v2p-color-main-100);
   background-color: var(--v2p-color-main-800);
   border: none;
   border-radius: 5px;
-  user-select: none;
 
   &.success {
-    opacity: 0.8;
     pointer-events: none;
+    opacity: 0.8;
   }
 }
 
@@ -252,6 +252,7 @@ fieldset {
     }
 
     .tag-item-tag {
+      cursor: pointer;
       position: relative;
       display: inline-flex;
       gap: 0 2px;
@@ -261,7 +262,6 @@ fieldset {
       white-space: nowrap;
       background-color: var(--v2p-color-main-100);
       border-radius: 4px;
-      cursor: pointer;
 
       &.tag-item-tag-add {
         cursor: pointer;
@@ -270,20 +270,20 @@ fieldset {
       }
 
       .tag-remove {
+        cursor: pointer;
         position: absolute;
+        z-index: 10;
         top: -0.8ex;
         right: -0.8ex;
-        z-index: 10;
+        overflow: hidden;
         display: none;
         width: 14px;
         height: 14px;
         padding: 1px;
-        overflow: hidden;
         color: var(--v2p-color-error);
+        opacity: 0.7;
         background-color: var(--v2p-color-bg-error);
         border-radius: 9999px;
-        cursor: pointer;
-        opacity: 0.7;
 
         &:hover {
           opacity: 1;
@@ -303,12 +303,12 @@ fieldset {
 }
 
 .tags-empty-block {
+  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
   font-size: 14px;
-  pointer-events: none;
 
   .empty-tip {
     padding: 20px 10px;
@@ -316,14 +316,14 @@ fieldset {
   }
 
   .empty-content {
+    user-select: none;
+    overflow: hidden;
     display: flex;
     gap: 10px;
     justify-content: center;
     padding: 20px;
-    overflow: hidden;
     background-color: var(--v2p-color-main-100);
     border-radius: 8px;
-    user-select: none;
   }
 
   .avatar {
@@ -340,10 +340,10 @@ fieldset {
     width: max-content;
     padding: 12px;
     background: var(--v2p-color-bg-widget);
+    backdrop-filter: blur(16px);
     border: 1px solid var(--box-border-color);
     border-radius: 8px;
     box-shadow: var(--v2p-widget-shadow);
-    backdrop-filter: blur(16px);
   }
 
   .userinfo-top {
@@ -361,11 +361,11 @@ fieldset {
     align-items: center;
     height: 28px;
     padding: 0 12px;
-    color: var(--button-foreground-color);
-    font-weight: 500;
     font-family: inherit;
-    white-space: nowrap;
+    font-weight: 500;
+    color: var(--button-foreground-color);
     text-shadow: none;
+    white-space: nowrap;
     background: var(--button-background-color);
     border-radius: 6px;
     box-shadow:

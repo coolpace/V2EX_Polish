@@ -15,8 +15,8 @@ body {
 body {
   width: 500px;
   height: 600px;
-  color: var(--v2p-color-foreground);
   font-size: 12px;
+  color: var(--v2p-color-foreground);
   background-color: var(--v2p-color-bg-content);
 
   .lucide-sun {
@@ -29,8 +29,8 @@ body {
 }
 
 body.v2p-theme-dark {
-  border: 2px solid var(--v2p-color-foreground);
   color-scheme: dark;
+  border: 2px solid var(--v2p-color-foreground);
 
   .lucide-sun {
     display: block;
@@ -45,8 +45,8 @@ main {
   --nav-height: 58px;
 
   position: relative;
-  height: 100%;
   overflow: hidden;
+  height: 100%;
   background-color: var(--v2p-color-bg-content);
 
   > nav {
@@ -108,6 +108,8 @@ button {
   border-radius: 5px;
 
   > li[data-target] {
+    cursor: pointer;
+    user-select: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -115,8 +117,6 @@ button {
     padding: 0 10px;
     letter-spacing: 1px;
     border-radius: 3px;
-    cursor: pointer;
-    user-select: none;
 
     &:hover {
       background-color: var(--v2p-color-main-200);
@@ -143,10 +143,9 @@ button {
 }
 
 .tab-content {
+  overflow: hidden auto;
   display: none;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
 
   &.active {
     display: block;
@@ -188,16 +187,16 @@ button {
         @include share.line-clamp(2);
 
         margin-bottom: 6px;
-        font-weight: bold;
         font-size: 16px;
+        font-weight: bold;
       }
 
       .content {
         @include share.line-clamp(3);
 
         padding: 0;
-        color: var(--v2p-color-main-600);
         font-size: 13px;
+        color: var(--v2p-color-main-600);
       }
     }
 
@@ -264,15 +263,15 @@ button {
     @at-root {
       h2 {
         margin-bottom: 8px;
-        font-weight: bold;
         font-size: 15px;
+        font-weight: bold;
 
         sup {
           margin-left: 5px;
           padding: 2px 4px;
-          color: var(--v2p-color-orange-400);
           font-weight: normal;
           line-height: 1;
+          color: var(--v2p-color-orange-400);
           background-color: var(--v2p-color-orange-100);
           border: 1px solid currentColor;
           border-radius: 4px;
@@ -292,8 +291,8 @@ button {
         padding-top: 20px;
 
         .description-title {
-          font-weight: 500;
           font-size: 15px;
+          font-weight: 500;
         }
 
         .description-icon {
@@ -332,11 +331,11 @@ button {
 
     .pat-input {
       position: relative;
+      overflow: hidden;
       display: flex;
       gap: 0 10px;
       align-items: center;
       padding: 0 5px 0 0;
-      overflow: hidden;
       background-color: var(--v2p-color-main-100);
       border: 1px solid var(--v2p-color-main-300);
       border-radius: 6px;
@@ -373,8 +372,8 @@ button {
         align-items: center;
         height: 100%;
         padding: 5px 10px;
-        color: var(--v2p-color-main-100);
         font-size: 12px;
+        color: var(--v2p-color-main-100);
         background-color: var(--v2p-color-main-800);
         border: none;
         border-radius: 5px;
@@ -393,9 +392,9 @@ button {
 
       > label {
         min-width: 95px;
-        color: var(--v2p-color-main-600);
-        font-weight: normal;
         font-size: inherit;
+        font-weight: normal;
+        color: var(--v2p-color-main-600);
       }
 
       > input {
@@ -503,8 +502,8 @@ a {
   }
 
   &.link {
-    text-underline-offset: var(--v2p-underline-offset);
     text-decoration: underline dashed;
+    text-underline-offset: var(--v2p-underline-offset);
 
     &:hover {
       text-decoration: underline;
@@ -515,19 +514,19 @@ a {
 
 .features {
   display: grid;
-  grid-template-rows: auto;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
   gap: 20px;
   padding: 10px;
 
   .feature {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 10px;
     background-color: var(--v2p-color-main-200);
-    cursor: pointer;
   }
 
   .feature-check-in {
@@ -535,8 +534,8 @@ a {
   }
 
   .feature-title {
-    font-weight: bold;
     font-size: 15px;
+    font-weight: bold;
   }
 
   .feature-content {
@@ -569,9 +568,9 @@ a {
 }
 
 .menu-wrapper {
+  overflow: hidden;
   width: 320px;
   margin-top: 20px;
-  overflow: hidden;
   background-color: var(--v2p-color-main-100);
   border-radius: 8px;
 }
@@ -581,6 +580,8 @@ a {
   --gap: 8px;
   --round: 6px;
 
+  pointer-events: none;
+  user-select: none;
   position: relative;
   top: -22px;
   left: 28px;
@@ -590,8 +591,6 @@ a {
   border: 1px solid var(--v2p-color-main-300);
   border-radius: var(--round);
   box-shadow: var(--v2p-widget-shadow);
-  user-select: none;
-  pointer-events: none;
 
   &.menu-root {
     position: relative;
@@ -643,8 +642,8 @@ a {
   .select-item {
     display: flex;
     justify-content: center;
-    color: #fff;
     font-weight: normal;
+    color: #fff;
     letter-spacing: 1px;
     background-color: var(--v2p-color-foreground);
   }
@@ -657,6 +656,6 @@ a {
 
 .empty-img-caption {
   margin-top: 5px;
-  color: var(--v2p-color-main-600);
   font-size: 12px;
+  color: var(--v2p-color-main-600);
 }

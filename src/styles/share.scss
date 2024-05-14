@@ -1,25 +1,27 @@
 @mixin line-clamp($lines: 1, $line-height: 1.4) {
-  display: -webkit-box;
   overflow: hidden;
+  display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: $lines;
   line-height: $line-height;
+  -webkit-line-clamp: $lines;
 }
 
 @mixin common-button() {
+  cursor: pointer;
+  user-select: none;
   position: relative;
   display: inline-flex;
   gap: 5px;
   align-items: center;
   height: 28px;
   padding: 0 12px;
-  color: var(--button-foreground-color);
-  font-weight: 500;
-  font-size: 14px;
   font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 28px;
-  white-space: nowrap;
+  color: var(--button-foreground-color);
   text-shadow: none;
+  white-space: nowrap;
   background: var(--button-background-color);
   border: none;
   border-radius: 6px;
@@ -27,16 +29,14 @@
   box-shadow:
     0 1.8px 0 var(--box-background-hover-color),
     0 1.8px 0 var(--button-background-color);
-  cursor: pointer;
   transition:
     color 0.25s,
     background-color 0.25s,
     box-shadow 0.25s;
-  user-select: none;
 
   &:is(:hover:enabled, :active:enabled) {
-    color: var(--button-foreground-hover-color);
     font-weight: 500;
+    color: var(--button-foreground-hover-color);
     text-shadow: none;
     background: var(--button-hover-color);
     border: none;
@@ -54,24 +54,24 @@
   }
 
   &:is(.disable_now, :disabled) {
-    color: var(--button-foreground-color);
+    pointer-events: none;
+    cursor: default;
     font-weight: 500;
+    color: var(--button-foreground-color);
     text-shadow: none;
+    opacity: 0.8;
     background: var(--button-background-color);
     box-shadow:
       0 1.8px 0 var(--box-background-hover-color),
       0 1.8px 0 var(--button-background-color);
-    cursor: default;
-    opacity: 0.8;
-    pointer-events: none;
   }
 
   kbd {
     position: relative;
     right: -4px;
     padding: 0 3px;
-    font-size: 90%;
     font-family: inherit;
+    font-size: 90%;
     line-height: initial;
     border: 1px solid var(--button-border-color);
     border-radius: 4px;
@@ -79,31 +79,31 @@
 }
 
 @mixin hover-button {
+  cursor: pointer;
+  user-select: none;
   position: relative;
   z-index: 1;
   margin: 0;
-  white-space: nowrap;
   text-decoration: none;
+  white-space: nowrap;
   background: none;
   background-color: transparent;
-  cursor: pointer;
   transition: color 0.2s;
-  user-select: none;
 
   &::before {
+    content: '';
     position: absolute;
-    inset: 0 -5px;
     z-index: -1;
-    background-color: var(--v2p-color-bg-hover-btn);
-    border-radius: 5px;
+    inset: 0 -5px;
     transform: scale(0.65);
     opacity: 0;
+    background-color: var(--v2p-color-bg-hover-btn);
+    border-radius: 5px;
     transition:
       background-color 0.2s,
       color 0.2s,
       transform 0.2s,
       opacity 0.2s;
-    content: '';
   }
 
   &:hover {
@@ -119,23 +119,23 @@
 }
 
 @mixin input($minHeight: unset, $maxHeight: 800px) {
+  resize: none;
+  overflow: hidden;
   height: unset;
   min-height: $minHeight !important;
   max-height: $maxHeight !important;
-  overflow: hidden;
-  color: currentColor;
   font-size: 15px;
+  color: currentColor;
   background-color: var(--v2p-color-bg-input);
   border: 1px solid var(--button-border-color);
   border-radius: 8px;
   transition: opacity 0.25s;
-  resize: none;
 
   @content;
 
   &::placeholder {
-    color: var(--v2p-color-main-500);
     font-size: 15px;
+    color: var(--v2p-color-main-500);
   }
 
   &:is(:focus, :focus-within) {
@@ -146,19 +146,19 @@
 }
 
 @mixin tooltip {
+  pointer-events: none;
   z-index: var(--zidx-tip);
+  overflow: hidden;
   width: max-content;
   min-width: 30px;
   padding: 2px 5px;
-  overflow: hidden;
-  color: var(--v2p-color-foreground);
   font-size: 12px;
-  white-space: nowrap;
+  color: var(--v2p-color-foreground);
   text-align: center;
+  white-space: nowrap;
   background-color: var(--v2p-color-bg-tooltip);
   border-radius: 4px;
   box-shadow: var(--v2p-widget-shadow);
-  pointer-events: none;
 }
 
 @mixin link {
@@ -169,10 +169,10 @@
 @mixin popup {
   font-size: 14px;
   background: var(--v2p-color-bg-widget);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--box-border-color);
   border-radius: 8px;
   box-shadow: var(--v2p-widget-shadow);
-  backdrop-filter: blur(16px);
 }
 
 @mixin underline-text {

@@ -22,16 +22,16 @@
 }
 
 body {
-  overflow: overlay;
   scrollbar-gutter: stable;
+  overflow: overlay;
 
   h1 {
     font-weight: bold;
   }
 
   a {
-    text-decoration: none;
     cursor: default;
+    text-decoration: none;
 
     &[href] {
       cursor: pointer;
@@ -103,8 +103,8 @@ body {
   }
 
   #Leftbar {
-    order: 1;
     float: none;
+    order: 1;
   }
 
   #Main {
@@ -115,8 +115,8 @@ body {
   }
 
   #Rightbar {
-    order: 3;
     float: none;
+    order: 3;
   }
 
   #search-container {
@@ -129,8 +129,8 @@ body {
     &::before {
       top: 0;
       left: 4px;
-      background-size: 14px 14px;
       opacity: 0.6;
+      background-size: 14px 14px;
       filter: none;
     }
 
@@ -139,22 +139,22 @@ body {
     }
 
     #search-result {
-      top: 42px;
       z-index: var(--zidx-serach);
-      color: var(--v2p-color-main-600);
+      top: 42px;
       font-size: 14px;
+      color: var(--v2p-color-main-600);
       background: var(--v2p-color-bg-widget);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--box-border-color);
       box-shadow: var(--v2p-widget-shadow);
-      backdrop-filter: blur(16px);
 
       .fade {
         color: var(--v2p-color-main-600);
       }
 
       .search-item {
-        color: var(--v2p-color-foreground);
         font-weight: bold;
+        color: var(--v2p-color-foreground);
         border-radius: 5px;
 
         &.active {
@@ -177,8 +177,8 @@ body {
 
     .header {
       > h1 {
-        font-weight: bold;
         font-size: 22px;
+        font-weight: bold;
       }
 
       .gray {
@@ -223,10 +223,10 @@ body {
 
   /* 帖主徽章 & 管理员徽章 & 自己徽章 */
   .badge {
+    user-select: none;
     padding: 2px 5px;
     font-weight: bold;
     border: 1px solid var(--v2p-color-accent-400);
-    user-select: none;
 
     &:first-child {
       border: 1px solid var(--v2p-color-accent-400);
@@ -259,16 +259,16 @@ body {
     &.mini {
       height: 1.2em;
       padding: 0 3px;
-      font-weight: normal;
       font-size: 12px;
+      font-weight: normal;
       line-height: 1;
     }
   }
 
   a.node:is(:active, :link, :visited) {
     padding: 5px 6px;
-    color: var(--v2p-color-font-secondary);
     font-size: 13px;
+    color: var(--v2p-color-font-secondary);
     background-color: var(--v2p-color-main-100);
     border-radius: 4px;
 
@@ -286,11 +286,11 @@ body {
 
   :is(.page_normal, .page_current) {
     &:is(:link, :visited) {
+      user-select: none;
       padding: 6px 9px;
       font-size: 14px;
       border: none;
       border-radius: 4px;
-      user-select: none;
     }
   }
 
@@ -306,10 +306,10 @@ body {
   }
 
   .page_current:is(:link, :visited) {
+    pointer-events: none;
     font-weight: bold;
     background-color: var(--box-background-hover-color);
     box-shadow: none;
-    pointer-events: none;
   }
 
   .page_input {
@@ -345,12 +345,12 @@ body {
   }
 
   .online {
+    user-select: none;
     padding: 6px 8px;
-    color: var(--v2p-color-bg-content);
     font-size: 13px;
+    color: var(--v2p-color-bg-content);
     background: var(--v2p-color-accent-400);
     border-radius: 5px;
-    user-select: none;
   }
 
   #topic_supplement {
@@ -399,8 +399,8 @@ body {
         }
 
         + label {
-          font-size: 13px;
           cursor: pointer;
+          font-size: 13px;
         }
       }
     }
@@ -596,11 +596,10 @@ body {
     }
 
     blockquote {
+      margin-inline: 0 0;
       padding: 0 1em;
       color: var(--v2p-color-main-500);
       border-left: 3px solid var(--v2p-color-border);
-      margin-inline-start: 0;
-      margin-inline-end: 0;
     }
   }
 
@@ -631,8 +630,8 @@ body {
     display: inline-flex;
     gap: 3px;
     align-items: center;
-    color: var(--v2p-color-foreground);
     font-weight: 600;
+    color: var(--v2p-color-foreground);
     text-shadow: none;
     background: var(--v2p-color-main-100);
 
@@ -672,16 +671,16 @@ body {
 
 .box {
   .tag {
-    &:link,
-    &:visited {
-      color: var(--v2p-color-font-secondary);
-      font-size: 12px;
-      background-color: var(--v2p-color-main-100);
-      border-radius: 5px;
-    }
-
     &::before {
       color: var(--v2p-color-main-500);
+    }
+
+    &:link,
+    &:visited {
+      font-size: 12px;
+      color: var(--v2p-color-font-secondary);
+      background-color: var(--v2p-color-main-100);
+      border-radius: 5px;
     }
 
     > li {
@@ -707,14 +706,14 @@ body {
     gap: 8px 14px;
     align-items: center;
     justify-content: flex-end;
-    font-weight: 400;
     font-size: 14px;
+    font-weight: 400;
 
     .top {
       height: 26px;
       padding: 0 6px;
-      color: var(--v2p-color-main-500);
       line-height: 26px;
+      color: var(--v2p-color-main-500);
       white-space: nowrap;
       border-radius: 4px;
 
@@ -786,15 +785,15 @@ body {
   .topic_buttons {
     display: flex;
     flex-wrap: wrap;
+    column-gap: 5px;
     align-items: center;
     padding: 8px 0;
-    column-gap: 5px;
     background: none;
 
     .topic_stats {
+      float: none;
       flex: 1;
       order: 99;
-      float: none;
       margin-left: 10px;
       padding: 0 !important;
       font-size: 12px;
@@ -808,11 +807,11 @@ body {
     a.tb:link {
       display: flex;
       flex-direction: row-reverse;
+      column-gap: 5px;
       align-items: center;
       padding: 5px;
-      white-space: nowrap;
       text-shadow: none;
-      column-gap: 5px;
+      white-space: nowrap;
       background: none;
       border-radius: 4px;
 
@@ -838,6 +837,16 @@ body {
   }
 
   .cell {
+    @mixin count {
+      user-select: none;
+      display: inline-block;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 400;
+      white-space: nowrap;
+      border-radius: 5px;
+    }
+
     .topic-link {
       color: var(--v2p-color-foreground);
       text-decoration: none;
@@ -848,19 +857,19 @@ body {
     }
 
     .topic_info {
+      pointer-events: none;
+      user-select: none;
       position: relative;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      user-select: none;
-      pointer-events: none;
 
       &::after {
+        content: '';
         position: absolute;
         z-index: 1;
-        background-color: var(--v2p-color-bg-content);
-        content: '';
         inset: 0 0 -6px;
+        background-color: var(--v2p-color-bg-content);
       }
 
       .votes,
@@ -868,25 +877,15 @@ body {
       strong:first-of-type,
       span:first-of-type,
       .v2p-topic-ignore-btn {
+        pointer-events: auto;
         position: relative;
         z-index: 2;
-        pointer-events: auto;
       }
 
       a[href^='/member'] {
-        color: var(--v2p-color-main-500);
         font-weight: 500;
+        color: var(--v2p-color-main-500);
       }
-    }
-
-    @mixin count {
-      display: inline-block;
-      padding: 5px 10px;
-      font-weight: 400;
-      font-size: 12px;
-      white-space: nowrap;
-      border-radius: 5px;
-      user-select: none;
     }
 
     .count_livid {
@@ -899,8 +898,8 @@ body {
     .count_orange {
       @include count;
 
-      color: var(--v2p-color-main-100);
       font-weight: bold;
+      color: var(--v2p-color-main-100);
       background-color: var(--v2p-color-orange-400);
     }
 
@@ -946,8 +945,8 @@ body {
     }
 
     .ago {
-      color: var(--v2p-color-main-400);
       font-size: 12px;
+      color: var(--v2p-color-main-400);
       white-space: nowrap;
     }
 
@@ -962,10 +961,10 @@ body {
           width: 40px;
 
           .avatar {
+            aspect-ratio: 1;
             width: 40px !important;
             height: 40px !important;
             border-radius: 5px;
-            aspect-ratio: 1;
           }
         }
       }
@@ -1032,9 +1031,9 @@ body {
           }
 
           .fr {
+            user-select: none;
             position: relative;
             top: -3px;
-            user-select: none;
 
             a {
               opacity: 0;
@@ -1053,21 +1052,22 @@ body {
     }
 
     .no {
+      user-select: none;
       position: relative;
       top: -4px;
       padding: 5px 10px;
-      color: var(--v2p-color-main-350);
       font-size: 12px;
+      color: var(--v2p-color-main-350);
       background-color: transparent;
       border-radius: 5px;
-      user-select: none;
     }
   }
 
   #Tabs {
+    user-select: none;
     position: sticky;
-    top: 0;
     z-index: var(--zidx-tabs);
+    top: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 6px 8px;
@@ -1075,7 +1075,6 @@ body {
     padding: 10px;
     background-color: var(--v2p-color-bg-content);
     border-bottom: 1px solid var(--box-border-color);
-    user-select: none;
 
     .tab {
       margin: 0;
@@ -1098,8 +1097,8 @@ body {
     a[href^='/member'] {
       position: relative;
       bottom: 1px;
-      color: var(--v2p-color-main-500);
       font-size: 13px;
+      color: var(--v2p-color-main-500);
       text-decoration: underline;
       text-underline-offset: 0.4ex;
     }
@@ -1110,9 +1109,9 @@ body {
   }
 
   .tab {
+    user-select: none;
     color: var(--v2p-color-foreground);
     background-color: transparent;
-    user-select: none;
 
     &:not(.v2p-hover-btn):hover {
       background-color: var(--v2p-color-main-100);
@@ -1120,18 +1119,18 @@ body {
   }
 
   .tab_current {
+    user-select: none;
     color: var(--box-background-color);
     background-color: var(--box-foreground-color);
-    user-select: none;
   }
 
   #reply-box {
     &.reply-box-sticky {
-      bottom: 20px;
       z-index: var(--zidx-reply-box);
+      bottom: 20px;
+      overflow: visible;
       margin: 0 -10px;
       padding: 0 22px;
-      overflow: visible;
       border: none;
       border-radius: var(--box-border-radius);
       outline: 2px solid var(--v2p-color-main-200);
@@ -1142,14 +1141,14 @@ body {
         background-color: transparent;
         border: none;
 
+        &::placeholder {
+          font-size: 14px;
+          color: var(--v2p-color-main-500);
+        }
+
         &:focus {
           background-color: var(--v2p-color-bg-content);
           outline: none;
-        }
-
-        &::placeholder {
-          color: var(--v2p-color-main-500);
-          font-size: 14px;
         }
       }
     }
@@ -1251,8 +1250,8 @@ body {
   top: 100%;
 
   a.dark {
-    font-weight: 400;
     font-size: 13px;
+    font-weight: 400;
 
     &:is(:link, :active, :visited, :hover) {
       color: var(--v2p-color-main-500);
