@@ -226,16 +226,18 @@ export function handlingTopicList() {
                 .remove()
               $topicPreview.append($topicReplyBox)
 
-              $topicPreview.append(`
-                <div class="v2p-topic-reply-tip">
-                  <a
-                    href="${linkHref || ''}"
-                    style="color: currentColor;"
-                  >
-                      在主题内查看完整评论...
-                  </a>
-                </div>
-              `)
+              if (topic.replies > 100) {
+                $topicPreview.append(`
+                  <div class="v2p-topic-reply-tip">
+                    <a
+                      href="${linkHref || ''}"
+                      style="color: currentColor;"
+                    >
+                        在主题内查看完整评论...
+                    </a>
+                  </div>
+                `)
+              }
             }
 
             if (options.openInNewTab) {
