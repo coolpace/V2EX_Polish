@@ -63,8 +63,18 @@ export function createModal(props: CreateModalProps): ModalControl {
   // 用于判定是否已经绑定了事件, 避免重复绑定。
   let boundEvent = false
 
-  const maskClickHandler = (ev: JQuery.MouseUpEvent) => {
-    if (ev.currentTarget === $mask.get(0) && ev.currentTarget === ev.target) {
+  let mouseDownTarget: HTMLElement
+
+  const mouseDownHandler = (ev: JQuery.MouseDownEvent) => {
+    mouseDownTarget = ev.target
+  }
+
+  const mouseUpHandler = (ev: JQuery.MouseUpEvent) => {
+    if (
+      mouseDownTarget === $mask.get(0) &&
+      ev.target === $mask.get(0) &&
+      ev.currentTarget === ev.target
+    ) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleModalClose()
     }
@@ -78,7 +88,8 @@ export function createModal(props: CreateModalProps): ModalControl {
   }
 
   const handleModalClose = () => {
-    $mask.off('mouseup', maskClickHandler)
+    $mask.off('mousedown', mouseDownHandler)
+    $mask.off('mouseup', mouseUpHandler)
     $(document).off('keydown', keyupHandler)
     boundEvent = false
 
@@ -92,7 +103,8 @@ export function createModal(props: CreateModalProps): ModalControl {
     // Hack: 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
     setTimeout(() => {
       if (!boundEvent) {
-        $mask.on('mouseup', maskClickHandler)
+        $mask.on('mousedown', mouseDownHandler)
+        $mask.on('mouseup', mouseUpHandler)
         $(document).on('keydown', keyupHandler)
         boundEvent = true
       }
