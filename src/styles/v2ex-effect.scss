@@ -194,6 +194,10 @@ body {
   }
 }
 
+#Main.v2p-topic-preview > .box {
+  border: 1px solid var(--v2p-color-main-200);
+}
+
 a.v2p-topic-preview-title-link {
   &:hover {
     @include share.link;
