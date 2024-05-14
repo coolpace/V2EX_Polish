@@ -27,18 +27,18 @@
 
 :where(body) {
   font-family: system-ui, sans-serif;
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
 }
 
 :where(input, button, textarea, select, textarea) {
   margin: 0;
   padding: 0;
-  color: inherit;
-  font-weight: inherit;
-  font-size: 100%;
   font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
   line-height: inherit;
+  color: inherit;
 }
 
 :where(textarea) {
@@ -50,9 +50,9 @@
 }
 
 :where(button, [type='button'], [type='reset'], [type='submit']) {
+  appearance: button;
   background-color: transparent;
   background-image: none;
-  appearance: button;
 }
 
 :where(:disabled) {
@@ -64,8 +64,8 @@
 }
 
 :where(h1, h2, h3, h4, h5, h6) {
-  font-weight: inherit;
   font-size: inherit;
+  font-weight: inherit;
 }
 
 :where(a) {
@@ -106,12 +106,12 @@
 }
 
 :where(hr) {
-  height: 0;
   overflow: visible;
+  height: 0;
+  block-size: 0;
   color: inherit;
   border: none;
   border-block-start: 1px solid;
-  block-size: 0;
 }
 
 :where(:focus-visible) {
