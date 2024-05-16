@@ -85,6 +85,13 @@ body {
   font-weight: 600;
 }
 
+.backup-tip {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: var(--v2p-color-main-100);
+  border-radius: 5px;
+}
+
 #options-form {
   @at-root {
     .options-form-inner {
