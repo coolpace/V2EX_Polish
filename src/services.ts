@@ -15,9 +15,10 @@ import type {
 import { getStorage, setStorage } from './utils'
 
 // 动态获取 V2EX 的域名，防止跨域。
-const V2EX_ORIGIN = window.location.origin.includes('v2ex.com')
-  ? window.location.origin
-  : V2EX.Origin
+export const V2EX_ORIGIN =
+  typeof window !== 'undefined' && window.location.origin.includes('v2ex.com')
+    ? window.location.origin
+    : V2EX.Origin
 
 const V2EX_LEGACY_API = `${V2EX_ORIGIN}/api`
 const V2EX_API = `${V2EX_ORIGIN}/api/v2`

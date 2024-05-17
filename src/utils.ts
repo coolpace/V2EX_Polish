@@ -1,4 +1,5 @@
-import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
+import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
+import { V2EX_ORIGIN } from './services'
 import type { SettingsSyncInfo, StorageItems, StorageSettings } from './types'
 
 /**
@@ -184,7 +185,7 @@ export async function getV2P_Settings(): Promise<
   let noteId: string | undefined
 
   {
-    const res = await fetch(`${V2EX.Origin}/notes`)
+    const res = await fetch(`${V2EX_ORIGIN}/notes`)
     const htmlText = await res.text()
     const $page = $(htmlText)
     const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
@@ -206,7 +207,7 @@ export async function getV2P_Settings(): Promise<
   }
 
   if (noteId) {
-    const res = await fetch(`${V2EX.Origin}/notes/edit/${noteId}`)
+    const res = await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`)
     const htmlText = await res.text()
 
     const $editor = $(htmlText).find('#note_content.note_editor')
@@ -251,7 +252,7 @@ export async function setV2P_Settings(
   if (updating) {
     const { noteId } = data
 
-    await fetch(`${V2EX.Origin}/notes/edit/${noteId}`, {
+    await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, {
       method: 'POST',
       body: formData,
       signal,
@@ -260,7 +261,7 @@ export async function setV2P_Settings(
     // 如果是第一次备份，则新建一个 V2EX 记事本来存储。
     formData.append('parent_id', '0')
 
-    await fetch(`${V2EX.Origin}/notes/new`, {
+    await fetch(`${V2EX_ORIGIN}/notes/new`, {
       method: 'POST',
       body: formData,
       signal,
