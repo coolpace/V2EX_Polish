@@ -3,7 +3,7 @@
 
   "name": "V2EX Polish",
 
-  "version": "1.10.1",
+  "version": "1.10.2",
 
   "description": "专为 V2EX 用户设计，提供了丰富的扩展功能。",
 
@@ -19,7 +19,7 @@
     "https://hk.v2ex.com/*",
     "https://global.v2ex.com/*",
     "https://fast.v2ex.com/*",
-    "https://s.v2ex.com/*",  
+    "https://s.v2ex.com/*",
     "https://origin.v2ex.com/*",
     "https://staging.v2ex.com/*"
   ],
