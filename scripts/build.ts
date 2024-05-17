@@ -17,15 +17,16 @@ function deleteFolderRecursive(folderPath: string) {
   }
 }
 
-function build({
-  source,
-  target,
-  excludeFile: exclude,
-}: {
+interface BuildParams {
+  /** 存放需要构建的源码的文件夹名称。 */
   source: string
+  /** 构建输出的文件夹名称。 */
   target: string
+  /** 不需要包含的文件。 */
   excludeFile?: string
-}) {
+}
+
+function build({ source, target, excludeFile: exclude }: BuildParams) {
   if (!fs.existsSync(source)) {
     throw new Error('源文件夹不存在。')
   }
