@@ -35,6 +35,7 @@ const allowedHosts = [
 const commonRegex = patternToRegex(...allowedHosts.map((host) => `${host}/*`))
 const topicRegex = patternToRegex(...allowedHosts.map((host) => `${host}/t/*`))
 const writeRegex = patternToRegex(...allowedHosts.map((host) => `${host}/write/*`))
+
 runAfterLoaded(() => {
   const url = window.location.href
 
