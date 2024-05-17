@@ -13,10 +13,15 @@
     "https://v2ex.com/*",
     "https://www.v2ex.com/*",
     "https://cn.v2ex.com/*",
+    "https://jp.v2ex.com/*",
+    "https://de.v2ex.com/*",
+    "https://us.v2ex.com/*",
+    "https://hk.v2ex.com/*",
     "https://global.v2ex.com/*",
     "https://fast.v2ex.com/*",
-    "https://hk.v2ex.com/*",
-    "https://s.v2ex.com/*"
+    "https://s.v2ex.com/*",  
+    "https://origin.v2ex.com/*",
+    "https://staging.v2ex.com/*"
   ],
 
   "icons": {
@@ -32,10 +37,15 @@
         "https://v2ex.com/*",
         "https://www.v2ex.com/*",
         "https://cn.v2ex.com/*",
+        "https://jp.v2ex.com/*",
+        "https://de.v2ex.com/*",
+        "https://us.v2ex.com/*",
+        "https://hk.v2ex.com/*",
         "https://global.v2ex.com/*",
         "https://fast.v2ex.com/*",
-        "https://hk.v2ex.com/*",
-        "https://s.v2ex.com/*"
+        "https://s.v2ex.com/*",
+        "https://origin.v2ex.com/*",
+        "https://staging.v2ex.com/*"
       ],
       "css": ["css/v2ex-theme-var.css", "css/v2ex-theme-default.css", "css/v2ex-theme-mobile.css"],
       "run_at": "document_start",
@@ -46,10 +56,15 @@
         "https://v2ex.com/*",
         "https://www.v2ex.com/*",
         "https://cn.v2ex.com/*",
+        "https://jp.v2ex.com/*",
+        "https://de.v2ex.com/*",
+        "https://us.v2ex.com/*",
+        "https://hk.v2ex.com/*",
         "https://global.v2ex.com/*",
         "https://fast.v2ex.com/*",
-        "https://hk.v2ex.com/*",
-        "https://s.v2ex.com/*"
+        "https://s.v2ex.com/*",
+        "https://origin.v2ex.com/*",
+        "https://staging.v2ex.com/*"
       ],
       "js": ["scripts/polyfill.js"],
       "run_at": "document_end",
@@ -61,10 +76,15 @@
         "https://v2ex.com/*",
         "https://www.v2ex.com/*",
         "https://cn.v2ex.com/*",
+        "https://jp.v2ex.com/*",
+        "https://de.v2ex.com/*",
+        "https://us.v2ex.com/*",
+        "https://hk.v2ex.com/*",
         "https://global.v2ex.com/*",
         "https://fast.v2ex.com/*",
-        "https://hk.v2ex.com/*",
-        "https://s.v2ex.com/*"
+        "https://s.v2ex.com/*",
+        "https://origin.v2ex.com/*",
+        "https://staging.v2ex.com/*"
       ],
       "css": ["css/v2ex-effect.css"],
       "js": ["scripts/jquery.min.js", "scripts/common.min.js"],
@@ -75,10 +95,15 @@
         "https://v2ex.com/*",
         "https://www.v2ex.com/*",
         "https://cn.v2ex.com/*",
+        "https://jp.v2ex.com/*",
+        "https://de.v2ex.com/*",
+        "https://us.v2ex.com/*",
+        "https://hk.v2ex.com/*",
         "https://global.v2ex.com/*",
         "https://fast.v2ex.com/*",
-        "https://hk.v2ex.com/*",
-        "https://s.v2ex.com/*"
+        "https://s.v2ex.com/*",
+        "https://origin.v2ex.com/*",
+        "https://staging.v2ex.com/*"
       ],
       "exclude_matches": [
         "*://*/t/*",
@@ -95,10 +120,15 @@
         "https://v2ex.com/t/*",
         "https://www.v2ex.com/t/*",
         "https://cn.v2ex.com/t/*",
+        "https://jp.v2ex.com/t/*",
+        "https://de.v2ex.com/t/*",
+        "https://us.v2ex.com/t/*",
+        "https://hk.v2ex.com/t/*",
         "https://global.v2ex.com/t/*",
         "https://fast.v2ex.com/t/*",
-        "https://hk.v2ex.com/t/*",
-        "https://s.v2ex.com/t/*"
+        "https://s.v2ex.com/t/*",
+        "https://origin.v2ex.com/t/*",
+        "https://staging.v2ex.com/t/*"
       ],
       "js": ["scripts/jquery.min.js", "scripts/v2ex-topic.min.js"],
       "all_frames": true
@@ -108,10 +138,15 @@
         "https://v2ex.com/write/*",
         "https://www.v2ex.com/write/*",
         "https://cn.v2ex.com/write/*",
+        "https://jp.v2ex.com/write/*",
+        "https://de.v2ex.com/write/*",
+        "https://us.v2ex.com/write/*",
+        "https://hk.v2ex.com/write/*",
         "https://global.v2ex.com/write/*",
         "https://fast.v2ex.com/write/*",
-        "https://hk.v2ex.com/write/*",
-        "https://s.v2ex.com/write/*"
+        "https://s.v2ex.com/write/*",
+        "https://origin.v2ex.com/write/*",
+        "https://staging.v2ex.com/write/*"
       ],
       "js": ["scripts/jquery.min.js", "scripts/v2ex-write.min.js"],
       "all_frames": true
@@ -121,10 +156,15 @@
         "https://v2ex.com/member/*",
         "https://www.v2ex.com/member/*",
         "https://cn.v2ex.com/member/*",
+        "https://jp.v2ex.com/member/*",
+        "https://de.v2ex.com/member/*",
+        "https://us.v2ex.com/member/*",
+        "https://hk.v2ex.com/member/*",
         "https://global.v2ex.com/member/*",
         "https://fast.v2ex.com/member/*",
-        "https://hk.v2ex.com/member/*",
-        "https://s.v2ex.com/member/*"
+        "https://s.v2ex.com/member/*",
+        "https://origin.v2ex.com/member/*",
+        "https://staging.v2ex.com/member/*"
       ],
       "js": ["scripts/jquery.min.js", "scripts/v2ex-member.min.js"],
       "all_frames": true
@@ -135,10 +175,15 @@
         "https://v2ex.com/*",
         "https://www.v2ex.com/*",
         "https://cn.v2ex.com/*",
+        "https://jp.v2ex.com/*",
+        "https://de.v2ex.com/*",
+        "https://us.v2ex.com/*",
+        "https://hk.v2ex.com/*",
         "https://global.v2ex.com/*",
         "https://fast.v2ex.com/*",
-        "https://hk.v2ex.com/*",
-        "https://s.v2ex.com/*"
+        "https://s.v2ex.com/*",
+        "https://origin.v2ex.com/*",
+        "https://staging.v2ex.com/*"
       ],
       "js": ["scripts/toggle-icon.min.js"],
       "all_frames": true
@@ -155,10 +200,15 @@
         "https://v2ex.com/*",
         "https://www.v2ex.com/*",
         "https://cn.v2ex.com/*",
+        "https://jp.v2ex.com/*",
+        "https://de.v2ex.com/*",
+        "https://us.v2ex.com/*",
+        "https://hk.v2ex.com/*",
         "https://global.v2ex.com/*",
         "https://fast.v2ex.com/*",
-        "https://hk.v2ex.com/*",
-        "https://s.v2ex.com/*"
+        "https://s.v2ex.com/*",
+        "https://origin.v2ex.com/*",
+        "https://staging.v2ex.com/*"
       ],
       "resources": ["scripts/web_accessible_resources.min.js"]
     }
