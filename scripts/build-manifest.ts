@@ -146,15 +146,18 @@ Object.assign(manifestFirefox, {
 manifestFirefox.permissions = manifestFirefox.permissions?.filter(
   (permission) => permission !== 'sidePanel'
 )
-const serviceWorker = manifestFirefox.background?.service_worker
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-/** @ts-expect-error */
-delete manifestFirefox.background.service_worker
+if (manifestFirefox.background) {
+  const serviceWorker = manifestFirefox.background.service_worker
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-/** @ts-expect-error */
-manifestFirefox.background['scripts'] = [serviceWorker]
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  /** @ts-expect-error */
+  delete manifestFirefox.background.service_worker
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  /** @ts-expect-error */
+  manifestFirefox.background['scripts'] = [serviceWorker]
+}
 
 fs.writeFile(
   path.join('extension', 'manifest-firefox.json'),
