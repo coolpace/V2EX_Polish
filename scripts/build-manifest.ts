@@ -16,7 +16,9 @@ export const HOSTS = [
   'staging.v2ex.com',
 ]
 
-const generateManifest = () => {
+type Manifest = chrome.runtime.ManifestV3
+
+const generateManifest = (): Manifest => {
   const getMatches = (surrfix?: string) =>
     HOSTS.map((host) => `https://${host}${surrfix ? `/${surrfix}` : ''}/*`)
 
@@ -123,9 +125,7 @@ const generateManifest = () => {
   }
 }
 
-type Manifest = ReturnType<typeof generateManifest>
-
-const manifest: Manifest = generateManifest()
+const manifest = generateManifest()
 
 fs.writeFile(path.join('extension', 'manifest.json'), JSON.stringify(manifest), 'utf8', (err) => {
   if (err) {
@@ -143,10 +143,10 @@ Object.assign(manifestFirefox, {
   },
 })
 
-manifestFirefox.permissions = manifestFirefox.permissions.filter(
+manifestFirefox.permissions = manifestFirefox.permissions?.filter(
   (permission) => permission !== 'sidePanel'
 )
-const serviceWorker = manifestFirefox.background.service_worker
+const serviceWorker = manifestFirefox.background?.service_worker
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 /** @ts-expect-error */
