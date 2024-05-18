@@ -27,9 +27,15 @@ const allowedHosts = [
   'https://v2ex.com',
   'https://www.v2ex.com',
   'https://cn.v2ex.com',
+  'https://jp.v2ex.com',
+  'https://de.v2ex.com',
+  'https://us.v2ex.com',
+  'https://hk.v2ex.com',
   'https://global.v2ex.com',
   'https://fast.v2ex.com',
-  'https://hk.v2ex.com',
+  'https://s.v2ex.com',
+  'https://origin.v2ex.com',
+  'https://staging.v2ex.com',
 ]
 
 const commonRegex = patternToRegex(...allowedHosts.map((host) => `${host}/*`))
