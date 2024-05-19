@@ -1,6 +1,6 @@
 import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
-import { $commentTableRows, $infoCard, $replyBox } from '../globals'
+import { $commentTableRows, $infoCard, $replyBox, $topicHeader } from '../globals'
 import { loadIcons } from '../helpers'
 import { handlingComments } from './comment'
 import { handlingContent } from './content'
@@ -15,8 +15,12 @@ void (async () => {
 
   handlingLayout()
 
-  // 支持新页签打开用户主页链接。
-  $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
+  if (options.openInNewTab) {
+    $topicHeader.find('a[href^="/member/"]').prop('target', '_blank')
+
+    // 支持新页签打开用户主页链接。
+    $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
+  }
 
   if (options.hideAccount) {
     $infoCard.find('a[href^="/member/"]').css('opacity', '0')
