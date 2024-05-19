@@ -1136,23 +1136,6 @@ body {
       outline: 2px solid var(--v2p-color-main-200);
     }
 
-    .v2p-reply-wrap {
-      #reply_content {
-        background-color: transparent;
-        border: none;
-
-        &::placeholder {
-          font-size: 14px;
-          color: var(--v2p-color-main-500);
-        }
-
-        &:focus {
-          background-color: var(--v2p-color-bg-content);
-          outline: none;
-        }
-      }
-    }
-
     .flex-one-row:last-of-type {
       flex-direction: row-reverse;
       gap: 10px;

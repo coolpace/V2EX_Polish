@@ -805,6 +805,21 @@ a.v2p-topic-preview-title-link {
 
     .v2p-reply-wrap {
       @include share.input(140px);
+
+      #reply_content {
+        background-color: transparent;
+        border: none;
+
+        &::placeholder {
+          font-size: 14px;
+          color: var(--v2p-color-main-500);
+        }
+
+        &:focus {
+          background-color: var(--v2p-color-bg-content);
+          outline: none;
+        }
+      }
     }
 
     .v2p-reply-upload-bar {
