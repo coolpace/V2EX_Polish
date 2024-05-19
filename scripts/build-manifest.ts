@@ -1,6 +1,12 @@
+/**
+ * 为了方便兼容 Chrome 和 Firefox，并且方便管理和修改 manifest.json，
+ * 这个脚本会帮助生成 manifest.json。
+ */
+
 import fs from 'node:fs'
 import path from 'node:path'
 
+/** 扩展能够识别的 V2EX 域名列表。 */
 export const HOSTS = [
   'v2ex.com',
   'www.v2ex.com',
@@ -32,7 +38,7 @@ const generateManifest = (): Manifest => {
 
     name: 'V2EX Polish',
 
-    version: '1.10.2',
+    version: '1.10.2', // <- 在发布前，需要手动修改版本。
 
     description: '专为 V2EX 用户设计，提供了丰富的扩展功能。',
 
