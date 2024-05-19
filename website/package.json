@@ -18,35 +18,35 @@
     "@splitbee/web": "^0.3.0",
     "cheerio": "1.0.0-rc.12",
     "contentlayer": "^0.3.4",
-    "date-fns": "^3.3.1",
+    "date-fns": "^3.6.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "html-to-image": "^1.11.11",
-    "lucide-react": "^0.316.0",
-    "next": "^14.1.0",
+    "lucide-react": "^0.378.0",
+    "next": "^14.2.3",
     "next-contentlayer": "^0.3.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-use-event-hook": "^0.9.6",
-    "valibot": "^0.27.1"
+    "valibot": "^0.30.0"
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.2.1",
     "@tailwindcss/container-queries": "^0.1.1",
-    "@tailwindcss/typography": "^0.5.10",
-    "@types/mdx": "^2.0.10",
-    "@types/react": "18.2.48",
-    "@types/react-dom": "^18.2.18",
-    "autoprefixer": "^10.4.17",
+    "@tailwindcss/typography": "^0.5.13",
+    "@types/mdx": "^2.0.13",
+    "@types/react": "18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.33",
-    "postcss-import": "^16.0.0",
-    "prefer-code-style": "1.5.13",
-    "stylelint": "^15.11.0",
-    "tailwindcss": "^3.4.1",
-    "typescript": "5.3.3"
+    "postcss": "^8.4.38",
+    "postcss-import": "^16.1.0",
+    "prefer-code-style": "2.1.1",
+    "stylelint": "^16.5.0",
+    "tailwindcss": "^3.4.3",
+    "typescript": "5.4.5"
   },
   "engines": {
     "node": ">=18",
-    "pnpm": "^8"
+    "pnpm": "^8 || ^9"
   }
 }

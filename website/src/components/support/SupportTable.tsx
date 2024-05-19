@@ -10,6 +10,20 @@ interface DonationData {
 
 export const donationList: DonationData[] = [
   {
+    from: '猎户星座',
+    money: '6',
+    time: '2024/05/11',
+    message: '赞！！！',
+    channel: '微信赞赏',
+  },
+  {
+    from: '*强',
+    money: '6',
+    time: '2024/05/07',
+    message: 'v2插件👍',
+    channel: '微信转账',
+  },
+  {
     from: '余*',
     money: '66',
     time: '2024/02/28',

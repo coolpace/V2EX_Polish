@@ -244,10 +244,10 @@ export function ReplyItem(props: {
           <span className="text-sm font-semibold text-main-600">{props.name}</span>
           {props.isOp && (
             <span className="inline-flex items-center overflow-hidden rounded border border-solid border-emerald-400 text-xs font-semibold">
-              <span className="bg-emerald-50 px-1 py-[1px] text-emerald-400 group-[.theme-dark]:bg-emerald-900">
+              <span className="bg-emerald-50 px-1 py-px text-emerald-400 group-[.theme-dark]:bg-emerald-900">
                 OP
               </span>
-              <span className="bg-emerald-400 px-1 py-[1px] text-content">YOU</span>
+              <span className="bg-emerald-400 px-1 py-px text-content">YOU</span>
             </span>
           )}
           <span className="ml-1 text-main-500">{props.time}</span>
