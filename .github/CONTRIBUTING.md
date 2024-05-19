@@ -17,7 +17,7 @@
 │   ├── services # API 服务
 │   ├── types.ts # TS 类型定义
 │   └── utils.ts # 工具函数
-├── website # 官网（基于 Next.js）
+├── website # 产品官网（基于 Next.js）
 ├── scripts # 与项目构建相关的脚本
 └── tsup.config.ts # tsup 配置
 ```
@@ -26,28 +26,33 @@
 
 ### 本地开发
 
-本项目使用 [web-ext](https://github.com/mozilla/web-ext) 帮助开发，会在代码改动后自动重新加载扩展，所以不需要每次都在扩展程序页面中手动刷新。
+本项目使用 [web-ext](https://github.com/mozilla/web-ext) 帮助开发，会在代码改动后自动重新加载扩展，所以不需要每次都在扩展程序页面中手动刷新扩展。
 
-以下是具体的开发流程：
+#### 如果使用 web-ext，在运行 `pnpm dev` 后，会自动打开 Chrome 浏览器，并自动加载扩展。
+
+#### 如果不使用 web-ext，则可以遵循以下的开发流程：
 
 1. `pnpm install` 安装依赖。
 1. `pnpm dev` 启动本地开发服务器。
 1. 打开 Chrome 浏览器，输入 `chrome://extensions/` 进入扩展程序页面。
 1. 点击右上角的开发者模式，然后点击 `加载已解压的扩展程序`，选择 `extension` 文件夹。
 1. 编辑 `src` 目录中的代码，保存文件后会自动编译。
-1. 在扩展程序页面中，点击刷新按钮，接着再刷新目标页面查看效果（如果使用了 web-ext，这一步可省略）。
+1. 在扩展程序页面中，点击刷新按钮，接着再刷新目标页面查看效果。
 
 ### 生产构建
 
-在发布前，需要手动修改 `/extension/manifest.json` 中的 `version`，然后执行 `pnpm build`，这可以分别构建出浏览器（Chrome/Firefox）扩展和油猴脚本。
+在发布前，进入 `/scripts/build-manifest.ts`，修改其中的 `version`，然后执行 `pnpm build`，这可以分别构建出浏览器（Chrome/Firefox）扩展和油猴脚本。
 
-`pnpm build` 其实包含了多条命令的执行，包括编译输出 JS 脚本、样式、打包产物。执行完这条命令之后，会在根目录下生成 `build-chrome` 和 `build-firefox` 目录，这两个目录下的 `v2ex_polish-[版本号].zip` 就是可以上传到扩展平台的最终产物。此外还会生成 `dist` 目录，其中包含了油猴脚本的 JS 脚本。
+`pnpm build` 其实包含了多条命令的执行，包括编译输出 JS 脚本、样式、打包产物。执行完这条命令之后，会在根目录下生成 `build-chrome` 和 `build-firefox` 目录，这两个目录下的 `v2ex_polish-[版本号].zip` 就是可以上传到扩展平台的最终产物。
+
+此外，还会生成 `dist` 目录，其中包含了油猴脚本的 JS 脚本，可以直接粘贴到油猴脚本编辑器中，然后发布。
 
 <details>
   <summary>项目脚本解释：</summary>
 
 | 脚本名称            | 描述                     |
 | ------------------- | ------------------------ |
+| `build:manifest`    | 构建 manifest.json       |
 | `build:style`       | 构建浏览器扩展用到的样式 |
 | `build:ext`         | 构建浏览器扩展           |
 | `build:userscript`  | 构建油猴脚本             |
