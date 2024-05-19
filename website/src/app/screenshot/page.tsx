@@ -44,7 +44,7 @@ export default function FeaturesPage() {
       </FeaturesBg>
 
       <FeaturesBg className="flex items-center gap-10 p-16">
-        <div className="basis-[40%]">
+        <div className="basis-2/5">
           <div className="text-5xl font-bold">楼中楼 - 嵌套回复</div>
           <div className="mt-10 text-3xl leading-relaxed">
             主题下的评论回复支持嵌套层级展示，更轻松地跟踪和回复其他用户的评论。
@@ -149,7 +149,7 @@ export default function FeaturesPage() {
       </FeaturesBg>
 
       <FeaturesBg className="flex items-center gap-10 p-16">
-        <div className="basis-[40%]">
+        <div className="basis-2/5">
           <div className="text-5xl font-bold">快捷弹窗</div>
           <div className="mt-10 text-3xl leading-relaxed">
             随时随地查看 V2EX 主题列表，无需打开网页。
@@ -213,7 +213,7 @@ export default function FeaturesPage() {
       </FeaturesBg>
 
       <FeaturesBg className="flex items-center gap-10 p-16">
-        <div className="basis-[40%]">
+        <div className="basis-2/5">
           <div className="text-5xl font-bold">预览回复</div>
           <div className="mt-10 text-3xl leading-relaxed">
             预览即将发送的内容，保证内容符合你的要求。
