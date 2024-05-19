@@ -16,6 +16,7 @@ interface ProcessAvatar {
   commentData: Pick<CommentData, 'memberName' | 'memberAvatar' | 'memberLink'>
   /** 是否要包裹一层可点击链接。 */
   shouldWrap?: boolean
+  openInNewTab?: boolean
   /** 点击「添加用户标签」按钮的回调。 */
   onSetTagsClick?: () => void
 }
@@ -25,7 +26,14 @@ interface ProcessAvatar {
  *  - 鼠标悬浮头像会展示该用户的信息。
  */
 export function processAvatar(params: ProcessAvatar) {
-  const { $trigger, popupControl, commentData, shouldWrap = true, onSetTagsClick } = params
+  const {
+    $trigger,
+    popupControl,
+    commentData,
+    shouldWrap = true,
+    openInNewTab = false,
+    onSetTagsClick,
+  } = params
 
   const { memberName, memberAvatar, memberLink } = commentData
 
@@ -39,14 +47,14 @@ export function processAvatar(params: ProcessAvatar) {
       <div class="v2p-member-card">
         <div class="v2p-info">
           <div class="v2p-info-left">
-            <a class="v2p-avatar-box" href="${memberLink}">
+            <a class="v2p-avatar-box" href="${memberLink}" target="${openInNewTab ? '_blank' : '_self'}">
               <img class="v2p-avatar" src="${memberAvatar}">
             </a>
           </div>
 
           <div class="v2p-info-right">
             <div class="v2p-username">
-              <a href="${memberLink}">${memberName}</a>
+              <a href="${memberLink}" target="${openInNewTab ? '_blank' : '_self'}">${memberName}</a>
             </div>
             <div class="v2p-no v2p-loading"></div>
             <div class="v2p-created-date v2p-loading"></div>

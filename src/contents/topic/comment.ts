@@ -516,6 +516,7 @@ export async function handlingComments() {
         $trigger: $cellDom.find('.avatar, .dark'),
         popupControl,
         commentData: currentComment,
+        openInNewTab: options.openInNewTab,
       })
 
       if (memberName === loginName) {
@@ -692,6 +693,7 @@ export async function handlingComments() {
         $trigger: $opAvatar,
         popupControl,
         commentData: { memberName, memberAvatar, memberLink },
+        openInNewTab: options.openInNewTab,
       })
 
       processAvatar({
@@ -699,6 +701,7 @@ export async function handlingComments() {
         popupControl,
         commentData: { memberName, memberAvatar, memberLink },
         shouldWrap: false,
+        openInNewTab: options.openInNewTab,
       })
 
       fetchUserInfo(memberName).then((memberData) => {
