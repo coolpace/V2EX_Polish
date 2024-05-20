@@ -634,11 +634,15 @@ export async function handlingComments() {
             return
           }
 
+          const moreThanOneRefMember = refMemberNames.length > 1
+
           if (options.nestedReply.multipleInsideOne === 'off' && refMemberNames.length > 1) {
             return
           }
 
-          for (const refName of refMemberNames) {
+          for (const refName of moreThanOneRefMember
+            ? refMemberNames.toReversed()
+            : refMemberNames) {
             // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
             for (let j = i - 1; j >= 0; j--) {
               const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
@@ -646,7 +650,9 @@ export async function handlingComments() {
               if (compareName === refName) {
                 let refCommentIdx = j
 
-                const firstRefFloor = refFloors?.at(0)
+                const firstRefFloor = moreThanOneRefMember
+                  ? refFloors?.toReversed().at(0)
+                  : refFloors?.at(0)
 
                 // 找到了指定回复的用户后，发现跟指定楼层对不上，则继续寻找。
                 // 如果手动指定了楼层，那么就以指定的楼层为准（一般来说，由用户指定会更精确），否则就以第一个引用的用户的评论的楼层为准。
