@@ -318,6 +318,7 @@ body {
 
   .dock_area {
     background: var(--v2p-color-main-100);
+    margin: 12px 0;
   }
 
   .member-activity-bar {
@@ -737,6 +738,7 @@ body {
 #Main {
   .box {
     padding: 0 12px;
+    overflow: auto;
 
     &.node-header {
       > .cell {
