@@ -9,7 +9,8 @@
   "files.readonlyInclude": {
     "dist/**/*": true,
     "extension/css/*": true,
-    "extension/scripts/*": true
+    "extension/scripts/*": true,
+    "extension/manifest*.json": true
   },
   "files.readonlyExclude": {
     "extension/scripts/polyfill.js": true
