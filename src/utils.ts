@@ -1,6 +1,11 @@
-import { defaultOptions, EXTENSION_NAME, StorageKey } from './constants'
-import { V2EX_ORIGIN } from './services'
+import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
 import type { SettingsSyncInfo, StorageItems, StorageSettings } from './types'
+
+// 动态获取 V2EX 的域名，防止跨域。
+export const V2EX_ORIGIN =
+  typeof window !== 'undefined' && window.location.origin.includes('v2ex.com')
+    ? window.location.origin
+    : V2EX.Origin
 
 /**
  * 获取用户的操作系统。

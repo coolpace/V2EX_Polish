@@ -12,13 +12,7 @@ import type {
   TopicReply,
   V2EX_Response,
 } from './types'
-import { getStorage, setStorage } from './utils'
-
-// 动态获取 V2EX 的域名，防止跨域。
-export const V2EX_ORIGIN =
-  typeof window !== 'undefined' && window.location.origin.includes('v2ex.com')
-    ? window.location.origin
-    : V2EX.Origin
+import { getStorage, setStorage, V2EX_ORIGIN } from './utils'
 
 const V2EX_LEGACY_API = `${V2EX_ORIGIN}/api`
 const V2EX_API = `${V2EX_ORIGIN}/api/v2`
