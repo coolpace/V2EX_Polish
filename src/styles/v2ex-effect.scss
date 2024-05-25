@@ -224,7 +224,7 @@ a.v2p-topic-preview-title-link {
   inset: 0;
   overflow: hidden;
   overflow-y: auto;
-  padding: 60px;
+  padding: min(2vh, 60px);
   background-color: var(--v2p-color-mask);
 }
 
