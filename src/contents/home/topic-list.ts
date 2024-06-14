@@ -8,6 +8,7 @@ import { iconLoading, iconLogo } from '../../icons'
 import { crawlTopicPage, fetchTopic } from '../../services'
 import type { Topic } from '../../types'
 import { formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
+import { getCommentDataList, handleNestedComment } from '../dom'
 import { $topicList } from '../globals'
 import { addToReadingList, isV2EX_RequestError } from '../helpers'
 
@@ -224,6 +225,14 @@ export function handlingTopicList() {
                   '.cell:first-of-type, .cell.ps_container, .cell > table > tbody > tr > td:last-of-type > .fr'
                 )
                 .remove()
+              const $commentCells = $topicReplyBox.find('.cell[id^="r_"]')
+              const $commentTableRows = $commentCells.find('> table > tbody > tr')
+              const commentDataList = getCommentDataList({
+                options,
+                $commentTableRows,
+                $commentCells,
+              })
+              handleNestedComment({ options, $commentCells, commentDataList })
               $topicPreview.append($topicReplyBox)
 
               if (topic.replies > 100) {
