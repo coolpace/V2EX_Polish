@@ -1072,14 +1072,24 @@ body {
     top: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 8px;
+    gap: 5px 3px;
     align-items: center;
     padding: 10px;
     background-color: var(--v2p-color-bg-content);
     border-bottom: 1px solid var(--box-border-color);
 
+    .tab_current {
+      margin-right: 0;
+    }
+
     .tab {
       margin: 0;
+
+      &.v2p-hover-btn {
+        &::before {
+          inset: 0;
+        }
+      }
     }
   }
 
