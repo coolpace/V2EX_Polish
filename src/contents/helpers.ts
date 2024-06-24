@@ -165,6 +165,19 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
 }
 
 /**
+ * 对字符串进行自定义转义处理。
+ *
+ * 该函数的目的是为了将字符串中的非字母数字字符转换为百分比编码的形式，
+ * 以确保字符串可以在某些特定的环境下安全地使用，比如 URL 参数的编码。
+ */
+function customEscape(str: string) {
+  return str.replace(/[^a-zA-Z0-9]/g, function (c) {
+    // 对匹配到的字符转换为ASCII码，并使用百分比编码形式返回。
+    return '%' + c.charCodeAt(0).toString(16)
+  })
+}
+
+/**
  * 解析主题内容页面内所有可能的 Base64 字符串。
  */
 export function decodeBase64TopicPage() {
@@ -226,7 +239,7 @@ export function decodeBase64TopicPage() {
       }
 
       try {
-        const decodedStr = decodeURIComponent(window.atob(text))
+        const decodedStr = decodeURIComponent(customEscape(window.atob(text)))
         count += 1
         return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
       } catch (err) {
