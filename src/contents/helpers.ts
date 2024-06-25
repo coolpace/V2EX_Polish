@@ -167,14 +167,14 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
 /**
  * 对字符串进行自定义转义处理。
  *
- * 该函数的目的是为了将字符串中的非字母数字字符转换为百分比编码的形式，
- * 以确保字符串可以在某些特定的环境下安全地使用，比如 URL 参数的编码。
+ * 该函数旨在对字符串中的非ASCII字符进行转义，使其能够安全地在特定环境中使用，比如 URL、HTML 等。
+ * 转义规则是将非 ASCII 字符转换为 %xx 的形式，其中xx是字符的 16 进制值。
  */
 function customEscape(str: string) {
-  return str.replace(/[^a-zA-Z0-9]/g, function (c) {
-    // 对匹配到的字符转换为ASCII码，并使用百分比编码形式返回。
-    return '%' + c.charCodeAt(0).toString(16)
-  })
+  return str.replace(
+    /[^a-zA-Z0-9_.!~*'()-]/g,
+    (c) => `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`
+  )
 }
 
 /**
