@@ -128,6 +128,7 @@ void (async function init() {
     const renderTagsContent = async () => {
       const storage = await getStorage(false)
       const tagData = storage[StorageKey.MemberTag]
+      const bytesUsed = await chrome.storage.sync.getBytesInUse([StorageKey.MemberTag])
 
       $contentTags.empty()
 
@@ -137,7 +138,11 @@ void (async function init() {
         if (count > 0) {
           const $tagList = $(`
             <div class="tags-list-wrapper">
-              <div class="tags-tip">已设置 ${count} 条用户标签</div>
+              <div class="tags-tip">
+                已设置 ${count} 条用户标签
+
+                <span class="usage">用量：${(bytesUsed / 1024).toFixed(2)}KB / 8KB</span>
+              </div>
               <hr class="tags-divider" />
               <ul class="tags-list">
                 ${Object.entries(tagData)
