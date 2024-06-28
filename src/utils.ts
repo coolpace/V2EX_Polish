@@ -317,8 +317,8 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
           }
           resolve(data)
         })
-        .catch((err: Error) => {
-          reject(err)
+        .catch(() => {
+          reject(new Error('获取扩展配置失败。'))
         })
     }
   })
