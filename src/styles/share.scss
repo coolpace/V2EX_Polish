@@ -2,8 +2,8 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  line-height: $line-height;
   -webkit-line-clamp: $lines;
+  line-height: $line-height;
 }
 
 @mixin common-button() {

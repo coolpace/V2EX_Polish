@@ -139,7 +139,7 @@ void (async function init() {
           const $tagList = $(`
             <div class="tags-list-wrapper">
               <div class="tags-tip">
-                已设置 ${count} 条用户标签
+                <span>已设置 ${count} 条用户标签</span>
 
                 <span class="usage">用量：${(bytesUsed / 1024).toFixed(2)}KB / 8KB</span>
               </div>
