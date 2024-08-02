@@ -130,13 +130,20 @@ export function handlingTopicList() {
 
                 topicDataCache.set(topicId, data)
                 cacheData = data
-              } catch {
-                const $errorTip = $(
-                  '<div style="padding: 20px; text-align: center;">加载主题失败，<a class="v2p-topic-preview-retry">点击重试</a>。</div>'
-                )
-                $errorTip.find('.v2p-topic-preview-retry').on('click', () => {
-                  load()
-                })
+              } catch (err) {
+                const $errorTip = $('<div style="padding: 20px; text-align: center;">')
+
+                if (err instanceof Error && err.message === 'Invalid token') {
+                  $errorTip.html(
+                    'Token 已失效，请<a class="v2p-topic-preview-retry" href="https://www.v2ex.com/settings/tokens" target="_blank">重新设置</a>。'
+                  )
+                } else {
+                  $errorTip.html('加载主题失败，<a class="v2p-topic-preview-retry">点击重试</a>。')
+                  $errorTip.find('.v2p-topic-preview-retry').on('click', () => {
+                    load()
+                  })
+                }
+
                 modal.$content.empty().append($errorTip)
               }
             } catch (err) {
