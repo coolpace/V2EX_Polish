@@ -1,4 +1,4 @@
-import { createIcons, Plus, Settings, Tags, X } from 'lucide'
+import { CircleHelp, createIcons, Plus, Settings, Tags, X } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
 import { setMemberTags } from '../contents/helpers'
@@ -13,6 +13,7 @@ function loadIcons() {
       Tags,
       Plus,
       X,
+      CircleHelp,
     },
   })
 }
@@ -141,7 +142,18 @@ void (async function init() {
               <div class="tags-tip">
                 <span>已设置 ${count} 条用户标签</span>
 
-                <span class="usage">用量：${(bytesUsed / 1024).toFixed(2)}KB / 8KB</span>
+                <div class="usage">
+                  用量：${(bytesUsed / 1024).toFixed(2)}KB / 8KB
+                  <div class="usage-help">
+                    <span data-lucide="circle-help"></span>
+                    <div class="usage-popover">
+                      <div class="usage-popover-title">用量限制</div>
+                      <div class="usage-popover-content">
+                        由于浏览器的存储空间限制，你只能存储 8KB 的用户标签数据。
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <hr class="tags-divider" />
               <ul class="tags-list">

@@ -19,7 +19,7 @@ body {
 
 .side {
   overflow-y: auto;
-  width: 300px;
+  width: 260px;
   height: 100%;
   background-color: var(--v2p-color-main-50);
   border-right: 1px solid var(--v2p-color-main-200);
@@ -210,8 +210,48 @@ fieldset {
   align-items: center;
 
   .usage {
+    display: flex;
+    gap: 10px;
+    align-items: center;
     margin-left: auto;
     color: var(--v2p-color-main-500);
+
+    .usage-help {
+      cursor: help;
+      position: relative;
+      z-index: 1;
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+
+      &:hover {
+        .usage-popover {
+          visibility: visible;
+        }
+      }
+
+      .usage-popover {
+        position: absolute;
+        top: calc(100% + 5px);
+        right: -5px;
+        min-width: 180px;
+        padding: 10px;
+        font-size: 12px;
+        visibility: hidden;
+        background-color: var(--v2p-color-bg-content);
+        border-radius: 5px;
+        box-shadow: 0 0 10px var(--v2p-color-main-200);
+
+        .usage-popover-title {
+          font-size: 13px;
+          font-weight: 600;
+        }
+
+        .usage-popover-content {
+          margin-top: 5px;
+        }
+      }
+    }
   }
 }
 
