@@ -242,6 +242,7 @@ export const defaultOptions: Options = {
     autoFold: true,
     hideReplyTime: true,
     hideRefName: true,
+    showImgInPage: true,
   },
   nestedReply: {
     display: 'indent',

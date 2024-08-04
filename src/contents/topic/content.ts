@@ -1,4 +1,5 @@
 import { createButton } from '../../components/button'
+import { createModal } from '../../components/modal'
 import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
@@ -248,4 +249,54 @@ export function openTagsSetter(
       updateMemberTag({ memberName, memberAvatar, tags, options, ...callbacks })
     }
   })()
+}
+
+export function handlingCommentImg() {
+  const $imgs = $('.embedded_image')
+
+  if ($imgs.length > 0) {
+    const modal = createModal({
+      root: $(document.body),
+      onMount: ({ $main, $header, $content }) => {
+        $main.css({
+          width: 'auto',
+          height: 'auto',
+          display: 'flex',
+          'justify-content': 'center',
+          'background-color': 'transparent',
+          'pointer-events': 'none',
+        })
+        $header.remove()
+        $content.css({
+          display: 'flex',
+          'justify-content': 'center',
+          'align-items': 'center',
+          'pointer-events': 'none',
+        })
+      },
+      onOpen: ({ $content }) => {
+        $content.empty()
+      },
+    })
+
+    $imgs.each((_, img) => {
+      const $img = $(img)
+
+      if (img instanceof HTMLImageElement) {
+        if (img.clientWidth !== img.naturalWidth) {
+          $img.parent().removeAttr('href')
+
+          $img.css({ cursor: 'zoom-in' })
+
+          $img.on('click', () => {
+            const $clonedImg = $img.clone()
+            $clonedImg.css({ cursor: 'default', 'pointer-events': 'auto' })
+
+            modal.open()
+            modal.$content.append($clonedImg)
+          })
+        }
+      }
+    })
+  }
 }
