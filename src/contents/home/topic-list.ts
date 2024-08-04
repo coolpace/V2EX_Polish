@@ -4,7 +4,7 @@ import { createButton } from '../../components/button'
 import { createModal } from '../../components/modal'
 import { createToast } from '../../components/toast'
 import { RequestMessage, StorageKey, V2EX } from '../../constants'
-import { iconLoading, iconLogo } from '../../icons'
+import { iconLogo } from '../../icons'
 import { crawlTopicPage, fetchTopic } from '../../services'
 import type { Topic } from '../../types'
 import { formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
@@ -109,8 +109,52 @@ export function handlingTopicList() {
               abortController = new AbortController()
 
               modal.$content.empty().append(`
-                <div class="v2p-modal-loading">
-                  <div class="v2p-icon-loading">${iconLoading}</div>
+                <div class="v2p-tpr-loading">
+                  <div class="v2p-tpr-info">
+                    <div class="v2p-tpr v2p-tpr-info-avatar"></div>
+                    <div class="v2p-tpr v2p-tpr-info-text"></div>
+                  </div>
+  
+                  <div class="v2p-tpr-content">
+                    <div class="v2p-tpr v2p-tpr-content-p"></div>
+                    <div class="v2p-tpr v2p-tpr-content-p"></div>
+                    <div class="v2p-tpr v2p-tpr-content-p" style="width: 70%;"></div>
+                  </div>
+  
+                  <div class="v2p-tpr-cmt">
+                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                    <div class="v2p-tpr-cmt-right">
+                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
+                    </div>
+                  </div>
+  
+                  <div class="v2p-tpr-cmt" style="opacity: 0.8;">
+                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                    <div class="v2p-tpr-cmt-right">
+                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
+                    </div>
+                  </div>
+  
+                  <div class="v2p-tpr-cmt" style="opacity: 0.6;">
+                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                    <div class="v2p-tpr-cmt-right">
+                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
+                    </div>
+                  </div>
+                  <div class="v2p-tpr-cmt" style="opacity: 0.4;">
+                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                    <div class="v2p-tpr-cmt-right">
+                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
+                    </div>
+                  </div>
                 </div>
               `)
 
