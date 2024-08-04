@@ -3,6 +3,7 @@ import { createButton } from './button'
 interface ModalElements {
   $mask: JQuery
   $main: JQuery
+  $header: JQuery
   $container: JQuery
   $title: JQuery
   $actions: JQuery
@@ -26,7 +27,7 @@ interface CreateModalProps {
  * 创建 modal 框。
  */
 export function createModal(props: CreateModalProps): ModalControl {
-  const { root, title, onOpen, onClose, onMount } = props
+  const { root, title, onMount, onOpen, onClose } = props
 
   const $mask = $('<div class="v2p-modal-mask">')
 
@@ -54,6 +55,7 @@ export function createModal(props: CreateModalProps): ModalControl {
   const modalElements = {
     $mask,
     $main,
+    $header,
     $container,
     $title,
     $actions,

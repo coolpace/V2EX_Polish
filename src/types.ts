@@ -47,6 +47,8 @@ export interface Options {
     hideReplyTime?: boolean
     /** 是否隐藏 @ 提及用户名。 */
     hideRefName?: boolean
+    /** 在主题中点击图片时，是否在页内预览图片大图。 */
+    showImgInPage?: boolean
   }
   /** 嵌套回复设置。 */
   nestedReply: {
