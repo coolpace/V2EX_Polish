@@ -9,10 +9,6 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  if (options.hideAccount) {
-    $infoCard.find('a[href^="/member/"]').css('opacity', '0')
-  }
-
   {
     $('#Main .tab').addClass('v2p-hover-btn')
 

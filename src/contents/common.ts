@@ -9,7 +9,7 @@ import {
   injectScript,
   setStorage,
 } from '../utils'
-import { $wrapper } from './globals'
+import { $infoCard, $wrapper } from './globals'
 import { loadIcons, postTask } from './helpers'
 
 if ($('#site-header').length > 0) {
@@ -154,6 +154,8 @@ void (async () => {
     link.prop('href', 'https://v2p.app/favicon.svg')
 
     $('#Logo').css('opacity', '0')
+    $('#Top').find('a[href^="/member/"]').remove()
+    $infoCard.find('a[href^="/member/"]').css('opacity', '0')
   }
 
   {
