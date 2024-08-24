@@ -12,8 +12,8 @@ importers:
         specifier: 1.4.5
         version: 1.4.5
       lucide:
-        specifier: 0.428.0
-        version: 0.428.0
+        specifier: 0.433.0
+        version: 0.433.0
       webext-patterns:
         specifier: 1.5.0
         version: 1.5.0
@@ -34,17 +34,17 @@ importers:
         specifier: ^20.14.12
         version: 20.14.12
       bun:
-        specifier: ^1.1.24
-        version: 1.1.24
+        specifier: ^1.1.26
+        version: 1.1.26
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
       postcss-scss:
         specifier: ^4.0.9
-        version: 4.0.9(postcss@8.4.40)
+        version: 4.0.9(postcss@8.4.41)
       prefer-code-style:
         specifier: 2.1.7
-        version: 2.1.7(postcss@8.4.40)(stylelint@16.8.2(typescript@5.5.4))(tailwindcss@3.4.10)(typescript@5.5.4)
+        version: 2.1.7(postcss@8.4.41)(stylelint@16.8.2(typescript@5.5.4))(tailwindcss@3.4.10)(typescript@5.5.4)
       sass:
         specifier: ^1.77.8
         version: 1.77.8
@@ -53,7 +53,7 @@ importers:
         version: 16.8.2(typescript@5.5.4)
       tsup:
         specifier: ^8.2.4
-        version: 8.2.4(jiti@1.21.6)(postcss@8.4.40)(typescript@5.5.4)(yaml@2.5.0)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(typescript@5.5.4)(yaml@2.5.0)
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -471,43 +471,43 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@oven/bun-darwin-aarch64@1.1.24':
-    resolution: {integrity: sha512-tT4omX5C9X4tlS0uLiypb6uECTbKjg3/dRNBjAROyL8tLJdndNR0SksfS7IQz0vD4zzifk98ZEsDML4gt+LFgQ==}
+  '@oven/bun-darwin-aarch64@1.1.26':
+    resolution: {integrity: sha512-E8/3i0RIvsIWS+kyeIlbwBh+4qB5DsQIfcO6xr4p3t7tEzvRWnrFkJrbJthru/eB1UsVV9PJ/hsxTrp3m3za4A==}
     cpu: [arm64]
     os: [darwin]
 
-  '@oven/bun-darwin-x64-baseline@1.1.24':
-    resolution: {integrity: sha512-jp7VhUDNA58scDHF8CKSClUdeWmWGiCWwxcrqs/81jNiARKCb+wjy+nEXWjc8KOB45NAhGaB3BBbl6EM3GzIDw==}
+  '@oven/bun-darwin-x64-baseline@1.1.26':
+    resolution: {integrity: sha512-36HQlQfbrwP//xOS5VFN9AR/iH6BDQo3y8j5282DmRO+h6jylwlg+2+Sfz+1uXDOLDQWCbnNv3Mpl8+Ltso6cQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@oven/bun-darwin-x64@1.1.24':
-    resolution: {integrity: sha512-jSt9jL0mE1zh/8OEWR6fdnGaDF8iWnMwd2a4N2qRuWcr8/QCEjvfK4iJPaJ6f8W06z01CxO5+O4pMF94s6z3pw==}
+  '@oven/bun-darwin-x64@1.1.26':
+    resolution: {integrity: sha512-ENRAAGBr2zh0VfETZXqcNPO3ZnnKDX3U6E/oWY+J70uWa9dJqRlRaj1oLB63AGoYJBNdhEcsSmTAk7toCJ+PGQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@oven/bun-linux-aarch64@1.1.24':
-    resolution: {integrity: sha512-yw/OHSEqygnWJelfuXJP3hSjNVzJ7adxL/Z9vxQPMYi7c7zdfMiggoH9V4U1VIcggfoMH1Gfc5lVpKowuJsSBA==}
+  '@oven/bun-linux-aarch64@1.1.26':
+    resolution: {integrity: sha512-MqE/ClaEMW6B5i5UIYJnHbadWLt6QQQHV3NBlXd78Mhx1OiZY0YmARQmAItPUp9mxIEgGuA2QyrKvgGD3pzWPQ==}
     cpu: [arm64]
     os: [linux]
 
-  '@oven/bun-linux-x64-baseline@1.1.24':
-    resolution: {integrity: sha512-L2p9MOY7ug1RzaMYcAknEefMPw+w0LPR9qv780G/SO0uBe1JGl3IzO6/hsPnjj65uT/nNuR+YJXeZbH6p1iwfQ==}
+  '@oven/bun-linux-x64-baseline@1.1.26':
+    resolution: {integrity: sha512-jQeSLodwfQu5pG529jYG73VSFq26hdrTspxo9E/1B1WvwKrs2Vtz3w32zv+JWH+gvZqc28A/yK6pAmzQMiscNg==}
     cpu: [x64]
     os: [linux]
 
-  '@oven/bun-linux-x64@1.1.24':
-    resolution: {integrity: sha512-U8j716mLJFG5KsFypWgE+uNULo3Y5R0tgP7vEPnPAL4lvwt7IM4Jg1LyxzcEm0jDVrJU3TNaYsu4bsxVVAxmSg==}
+  '@oven/bun-linux-x64@1.1.26':
+    resolution: {integrity: sha512-sD/ZegJpnBg93qsKsiGnJgTROc68CWONwZpvtL65cBROLBqKb965ofhPUaM5oV8HckfaTDmT37cks59hG+tHvw==}
     cpu: [x64]
     os: [linux]
 
-  '@oven/bun-windows-x64-baseline@1.1.24':
-    resolution: {integrity: sha512-Yznr5LJb8Q3MoyG9dM3UosnJSHwOe8AL1AA9fpkVC+TdTl6lmXxjk6JUsE4THQDloRYGN9eqpLLJbK7O6t0aUQ==}
+  '@oven/bun-windows-x64-baseline@1.1.26':
+    resolution: {integrity: sha512-qb593xu9WIKBCHd47z7ZaZTC9h8r4T6qDbBV/XGLhxdZEJb24ePWdhW8WoHxa9hsATio9SByozqwblXb2tJncw==}
     cpu: [x64]
     os: [win32]
 
-  '@oven/bun-windows-x64@1.1.24':
-    resolution: {integrity: sha512-8DWCMsavfxAYuJRMRV5M8Tkhttjh/vJo9DEIEBVOfKbKQHoqOnlmXgK7FBPNTqyVzKpmv+W80bTrRoxlnTnk7A==}
+  '@oven/bun-windows-x64@1.1.26':
+    resolution: {integrity: sha512-EkyW6JYnZPFxD9XsdEDqFxVCnWnAoyacUAiOEUYAiz8LsnbHLMlOfbdw7KYzvm7UPFoEkUZKD78eSdpg6q6c+Q==}
     cpu: [x64]
     os: [win32]
 
@@ -956,8 +956,8 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
-  bun@1.1.24:
-    resolution: {integrity: sha512-vZt5zNVaoNTSlNprdVdQVZInBcGC2QSik6o9ZsMzuYiiUEAEqpRwwMXAYDUN85mt2FNnsGvmk/8xVlUXS7IzEw==}
+  bun@1.1.26:
+    resolution: {integrity: sha512-dWSewAqE7sVbYmflJxgG47dW4vmsbar7VAnQ4ao45y3ulr3n7CwdsMLFnzd28jhPRtF+rsaVK2y4OLIkP3OD4A==}
     cpu: [arm64, x64]
     os: [darwin, linux, win32]
     hasBin: true
@@ -2367,8 +2367,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide@0.428.0:
-    resolution: {integrity: sha512-VSWG1+xQc+fZhkWlIIub4knnvtZEtVmQEtJ8Nj+bYW6xYHcq+AbcWK1wekQh85cfcy7vuYm0fVOLPN79TZ83kQ==}
+  lucide@0.433.0:
+    resolution: {integrity: sha512-RoyCuCYA0H1Fs0ImTjdpWCcpzvEGnKg5wLqlmAGLYLMJ0/YvjkbLSxbsFRJcZMDoWTBz1IiZ+6sHjJwuoIXURw==}
 
   make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
@@ -2411,6 +2411,10 @@ packages:
 
   micromatch@4.0.7:
     resolution: {integrity: sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==}
+    engines: {node: '>=8.6'}
+
+  micromatch@4.0.8:
+    resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
   mimic-fn@2.1.0:
@@ -4115,28 +4119,28 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  '@oven/bun-darwin-aarch64@1.1.24':
+  '@oven/bun-darwin-aarch64@1.1.26':
     optional: true
 
-  '@oven/bun-darwin-x64-baseline@1.1.24':
+  '@oven/bun-darwin-x64-baseline@1.1.26':
     optional: true
 
-  '@oven/bun-darwin-x64@1.1.24':
+  '@oven/bun-darwin-x64@1.1.26':
     optional: true
 
-  '@oven/bun-linux-aarch64@1.1.24':
+  '@oven/bun-linux-aarch64@1.1.26':
     optional: true
 
-  '@oven/bun-linux-x64-baseline@1.1.24':
+  '@oven/bun-linux-x64-baseline@1.1.26':
     optional: true
 
-  '@oven/bun-linux-x64@1.1.24':
+  '@oven/bun-linux-x64@1.1.26':
     optional: true
 
-  '@oven/bun-windows-x64-baseline@1.1.24':
+  '@oven/bun-windows-x64-baseline@1.1.26':
     optional: true
 
-  '@oven/bun-windows-x64@1.1.24':
+  '@oven/bun-windows-x64@1.1.26':
     optional: true
 
   '@pkgjs/parseargs@0.11.0':
@@ -4619,16 +4623,16 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  bun@1.1.24:
+  bun@1.1.26:
     optionalDependencies:
-      '@oven/bun-darwin-aarch64': 1.1.24
-      '@oven/bun-darwin-x64': 1.1.24
-      '@oven/bun-darwin-x64-baseline': 1.1.24
-      '@oven/bun-linux-aarch64': 1.1.24
-      '@oven/bun-linux-x64': 1.1.24
-      '@oven/bun-linux-x64-baseline': 1.1.24
-      '@oven/bun-windows-x64': 1.1.24
-      '@oven/bun-windows-x64-baseline': 1.1.24
+      '@oven/bun-darwin-aarch64': 1.1.26
+      '@oven/bun-darwin-x64': 1.1.26
+      '@oven/bun-darwin-x64-baseline': 1.1.26
+      '@oven/bun-linux-aarch64': 1.1.26
+      '@oven/bun-linux-x64': 1.1.26
+      '@oven/bun-linux-x64-baseline': 1.1.26
+      '@oven/bun-windows-x64': 1.1.26
+      '@oven/bun-windows-x64-baseline': 1.1.26
 
   bundle-name@3.0.0:
     dependencies:
@@ -6253,7 +6257,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide@0.428.0: {}
+  lucide@0.433.0: {}
 
   make-error@1.3.6: {}
 
@@ -6287,6 +6291,11 @@ snapshots:
       picomatch: 2.3.1
 
   micromatch@4.0.7:
+    dependencies:
+      braces: 3.0.3
+      picomatch: 2.3.1
+
+  micromatch@4.0.8:
     dependencies:
       braces: 3.0.3
       picomatch: 2.3.1
@@ -6643,12 +6652,12 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.41
 
-  postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.40)(yaml@2.5.0):
+  postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.41)(yaml@2.5.0):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
       jiti: 1.21.6
-      postcss: 8.4.40
+      postcss: 8.4.41
       yaml: 2.5.0
 
   postcss-media-query-parser@0.2.3: {}
@@ -6666,9 +6675,9 @@ snapshots:
     dependencies:
       postcss: 8.4.41
 
-  postcss-scss@4.0.9(postcss@8.4.40):
+  postcss-scss@4.0.9(postcss@8.4.41):
     dependencies:
-      postcss: 8.4.40
+      postcss: 8.4.41
 
   postcss-selector-parser@6.1.1:
     dependencies:
@@ -6698,7 +6707,7 @@ snapshots:
       picocolors: 1.0.1
       source-map-js: 1.2.0
 
-  prefer-code-style@2.1.7(postcss@8.4.40)(stylelint@16.8.2(typescript@5.5.4))(tailwindcss@3.4.10)(typescript@5.5.4):
+  prefer-code-style@2.1.7(postcss@8.4.41)(stylelint@16.8.2(typescript@5.5.4))(tailwindcss@3.4.10)(typescript@5.5.4):
     dependencies:
       '@babel/core': 7.24.9
       '@babel/eslint-parser': 7.25.0(@babel/core@7.24.9)(eslint@8.57.0)
@@ -6722,7 +6731,7 @@ snapshots:
       stylelint-config-prettier: 9.0.5(stylelint@16.8.2(typescript@5.5.4))
       stylelint-config-recommended: 14.0.1(stylelint@16.8.2(typescript@5.5.4))
       stylelint-config-standard: 36.0.1(stylelint@16.8.2(typescript@5.5.4))
-      stylelint-less: 3.0.1(postcss@8.4.40)(stylelint@16.8.2(typescript@5.5.4))
+      stylelint-less: 3.0.1(postcss@8.4.41)(stylelint@16.8.2(typescript@5.5.4))
       stylelint-order: 6.0.4(stylelint@16.8.2(typescript@5.5.4))
       stylelint-prettier: 5.0.2(prettier@3.3.3)(stylelint@16.8.2(typescript@5.5.4))
       stylelint-scss: 6.4.1(stylelint@16.8.2(typescript@5.5.4))
@@ -7257,9 +7266,9 @@ snapshots:
       stylelint: 16.8.2(typescript@5.5.4)
       stylelint-config-recommended: 14.0.1(stylelint@16.8.2(typescript@5.5.4))
 
-  stylelint-less@3.0.1(postcss@8.4.40)(stylelint@16.8.2(typescript@5.5.4)):
+  stylelint-less@3.0.1(postcss@8.4.41)(stylelint@16.8.2(typescript@5.5.4)):
     dependencies:
-      postcss: 8.4.40
+      postcss: 8.4.41
       postcss-resolve-nested-selector: 0.1.4
       postcss-value-parser: 4.2.0
       stylelint: 16.8.2(typescript@5.5.4)
@@ -7387,7 +7396,7 @@ snapshots:
       is-glob: 4.0.3
       jiti: 1.21.6
       lilconfig: 2.1.0
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.0.1
@@ -7453,7 +7462,7 @@ snapshots:
 
   tslib@2.6.3: {}
 
-  tsup@8.2.4(jiti@1.21.6)(postcss@8.4.40)(typescript@5.5.4)(yaml@2.5.0):
+  tsup@8.2.4(jiti@1.21.6)(postcss@8.4.41)(typescript@5.5.4)(yaml@2.5.0):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -7465,14 +7474,14 @@ snapshots:
       globby: 11.1.0
       joycon: 3.1.1
       picocolors: 1.0.1
-      postcss-load-config: 6.0.1(jiti@1.21.6)(postcss@8.4.40)(yaml@2.5.0)
+      postcss-load-config: 6.0.1(jiti@1.21.6)(postcss@8.4.41)(yaml@2.5.0)
       resolve-from: 5.0.0
       rollup: 4.21.0
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
-      postcss: 8.4.40
+      postcss: 8.4.41
       typescript: 5.5.4
     transitivePeerDependencies:
       - jiti

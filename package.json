@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "1.4.5",
-    "lucide": "0.428.0",
+    "lucide": "0.433.0",
     "webext-patterns": "1.5.0"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "@types/firefox-webext-browser": "^120.0.4",
     "@types/jquery": "^3.5.30",
     "@types/node": "^20.14.12",
-    "bun": "^1.1.24",
+    "bun": "^1.1.26",
     "npm-run-all": "^4.1.5",
     "postcss-scss": "^4.0.9",
     "prefer-code-style": "2.1.7",
