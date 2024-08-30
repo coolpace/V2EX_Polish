@@ -45,7 +45,7 @@
     "postcss-scss": "^4.0.9",
     "prefer-code-style": "2.1.7",
     "sass": "^1.77.8",
-    "stylelint": "^16.8.2",
+    "stylelint": "^16.9.0",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
     "web-ext": "^8.2.0"
