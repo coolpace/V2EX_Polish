@@ -51,6 +51,8 @@ export function getCommentDataList({
       if (refMemberNames) {
         const canHideRefName =
           options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
+
+        // 如果设置了「隐藏 @ 用户名 」，则把 @ 用户名 提取出来，并使用 span 包裹。
         if (canHideRefName) {
           if (refMemberNames.length === 1) {
             contentHtml = $content.html()

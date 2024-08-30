@@ -1024,9 +1024,13 @@ a.v2p-topic-preview-title-link {
   cursor: pointer;
 }
 
-.v2p-member-ref {
-  display: none;
+.v2p-indent {
+  .v2p-member-ref {
+    display: none; // 只有在嵌套回复中才能隐藏 @ 用户。
+  }
+}
 
+.v2p-member-ref {
   + br {
     display: none;
 
