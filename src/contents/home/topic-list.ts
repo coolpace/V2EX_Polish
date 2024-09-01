@@ -305,6 +305,7 @@ export function handlingTopicList() {
             }
 
             modal.$content.empty().append($topicPreview)
+            modal.$content.trigger('click')
           }
         }
 
