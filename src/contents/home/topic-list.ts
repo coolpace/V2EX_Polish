@@ -305,7 +305,11 @@ export function handlingTopicList() {
             }
 
             modal.$content.empty().append($topicPreview)
-            modal.$content.trigger('click')
+
+            // 默认情况下，div 不是可聚焦的元素，设置 tabindex 属性后，用户可以使用 focus() 聚焦到该元素。
+            modal.$content.attr('tabindex', '0')
+
+            modal.$content.trigger('focus')
           }
         }
 
