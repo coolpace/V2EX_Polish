@@ -1019,7 +1019,11 @@ a.v2p-topic-preview-title-link {
 }
 
 .v2p-preview-retry,
-.v2p-topic-preview-retry {
+.v2p-topic-preview-retry,
+a.v2p-preview-retry,
+a.v2p-topic-preview-retry,
+a:link.v2p-preview-retry,
+a:link.v2p-topic-preview-retry {
   @include share.underline-text;
 
   cursor: pointer;
