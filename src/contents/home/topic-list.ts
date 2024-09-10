@@ -10,7 +10,7 @@ import type { Topic } from '../../types'
 import { formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
 import { $topicList } from '../globals'
-import { addToReadingList, isV2EX_RequestError } from '../helpers'
+import { addToReadingList } from '../helpers'
 
 const invalidTemplate = (tip: string) => `
 <div class="v2p-no-pat">
@@ -105,10 +105,9 @@ export function handlingTopicList() {
             !cacheData ||
             Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 在同一个页面中且不刷新的情况下，缓存超时时间为十分钟。
           ) {
-            try {
-              abortController = new AbortController()
+            abortController = new AbortController()
 
-              modal.$content.empty().append(`
+            modal.$content.empty().append(`
                 <div class="v2p-tpr-loading">
                   <div class="v2p-tpr-info">
                     <div class="v2p-tpr v2p-tpr-info-avatar"></div>
@@ -158,50 +157,46 @@ export function handlingTopicList() {
                 </div>
               `)
 
-              const promises = [
-                fetchTopic(topicId, { signal: abortController.signal }),
-                crawlTopicPage(`/t/${topicId}`),
-              ] as const
+            const promises = [
+              fetchTopic(topicId, { signal: abortController.signal }),
+              crawlTopicPage(`/t/${topicId}`),
+            ] as const
 
-              try {
-                const [{ result: topic }, topicPageText] = await Promise.all(promises)
+            try {
+              const [{ result: topic }, topicPageText] = await Promise.all(promises)
 
-                const data: TopicData = {
-                  topic,
-                  cacheTime: Date.now(),
-                  topicPageText,
-                }
-
-                topicDataCache.set(topicId, data)
-                cacheData = data
-              } catch (err) {
-                const $errorTip = $('<div style="padding: 20px; text-align: center;">')
-
-                if (err instanceof Error && err.message === 'Invalid token') {
-                  $errorTip.html(
-                    'Token 已失效，请<a class="v2p-topic-preview-retry" href="https://www.v2ex.com/settings/tokens" target="_blank">重新设置</a>。'
-                  )
-                } else {
-                  $errorTip.html('加载主题失败，<a class="v2p-topic-preview-retry">点击重试</a>。')
-                  $errorTip.find('.v2p-topic-preview-retry').on('click', () => {
-                    load()
-                  })
-                }
-
-                modal.$content.empty().append($errorTip)
+              const data: TopicData = {
+                topic,
+                cacheTime: Date.now(),
+                topicPageText,
               }
+
+              topicDataCache.set(topicId, data)
+              cacheData = data
             } catch (err) {
-              if (isV2EX_RequestError(err)) {
-                const message = err.cause.message
+              const $errorTip = $('<div style="padding: 20px; text-align: center;">')
+
+              if (err instanceof Error) {
                 if (
-                  /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-                  message === RequestMessage.TokenExpired ||
-                  message === RequestMessage.InvalidToken
-                  /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+                  err.message === RequestMessage.InvalidToken ||
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+                  err.message === RequestMessage.TokenExpired
                 ) {
-                  modal.$content.empty().append(invalidTemplate('您的 PAT 已失效，请重新设置。'))
+                  $errorTip.html(
+                    invalidTemplate(
+                      '您的 Token 已失效，请<a class="v2p-topic-preview-retry" href="https://www.v2ex.com/settings/tokens" target="_blank">重新设置</a>。'
+                    )
+                  )
                 }
+              } else {
+                $errorTip.html('加载主题失败，<a class="v2p-topic-preview-retry">点击重试</a>。')
+                $errorTip.find('.v2p-topic-preview-retry').on('click', () => {
+                  load()
+                })
               }
+
+              modal.$content.empty().append($errorTip)
             }
           }
 
