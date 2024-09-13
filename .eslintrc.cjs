@@ -21,6 +21,7 @@ module.exports = {
     'extension/scripts/**/*.min.js',
     'src/user-scripts/style.ts',
     'website/**/*',
+    'chrome-profile/**/*',
   ],
 
   overrides: [
