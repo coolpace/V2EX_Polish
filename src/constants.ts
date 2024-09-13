@@ -24,6 +24,7 @@ export const enum Menu {
 }
 
 export const enum PopularEmoji {
+  // B 站表情。
   脱单doge = '[脱单doge]',
   辣眼睛 = '[辣眼睛]',
   跪了 = '[跪了]',
@@ -42,6 +43,15 @@ export const enum PopularEmoji {
   歪嘴 = '[歪嘴]',
   星星眼 = '[星星眼]',
   OK = '[OK]',
+  调皮 = '[调皮]',
+  笑哭 = '[笑哭]',
+  嗑瓜子 = '[嗑瓜子]',
+  喜极而泣 = '[喜极而泣]',
+  惊讶 = '[惊讶]',
+  给心心 = '[给心心]',
+  呆 = '[呆]',
+
+  // 小红薯表情。
   哭惹 = '[哭惹R]',
   哇 = '[哇R]',
   汗颜 = '[汗颜R]',
@@ -51,6 +61,7 @@ export const enum PopularEmoji {
 }
 
 export const emojiLinks = {
+  // B 站表情。
   [PopularEmoji.脱单doge]: {
     ld: 'https://i.imgur.com/L62ZP7V.png',
     hd: 'https://i.imgur.com/3mPhudo.png',
@@ -123,6 +134,36 @@ export const emojiLinks = {
     ld: 'https://i.imgur.com/Ac88cMm.png',
     hd: 'https://i.imgur.com/nkoevMu.png',
   },
+  [PopularEmoji.调皮]: {
+    ld: 'https://i.imgur.com/O6ZZSLk.png',
+    hd: 'https://i.imgur.com/ggHTLzH.png',
+  },
+  [PopularEmoji.笑哭]: {
+    ld: 'https://i.imgur.com/NIvxivj.png',
+    hd: 'https://i.imgur.com/h8edr5G.png',
+  },
+  [PopularEmoji.嗑瓜子]: {
+    ld: 'https://i.imgur.com/rjR4rdr.png',
+    hd: 'https://i.imgur.com/GMzq0tq.png',
+  },
+  [PopularEmoji.喜极而泣]: {
+    ld: 'https://i.imgur.com/N9E3iZ2.png',
+    hd: 'https://i.imgur.com/L1N27tb.png',
+  },
+  [PopularEmoji.惊讶]: {
+    ld: 'https://i.imgur.com/aptfuiN.png',
+    hd: 'https://i.imgur.com/cuzxGOI.png',
+  },
+  [PopularEmoji.给心心]: {
+    ld: 'https://i.imgur.com/4aXVwxJ.png',
+    hd: 'https://i.imgur.com/q663Mor.png',
+  },
+  [PopularEmoji.呆]: {
+    ld: 'https://i.imgur.com/c1Q76Cd.png',
+    hd: 'https://i.imgur.com/xMXlmxm.png',
+  },
+
+  // 小红薯表情。
   [PopularEmoji.哭惹]: {
     ld: 'https://i.imgur.com/HgxsUD2.png',
     hd: 'https://i.imgur.com/0aOdQJd.png',
@@ -178,6 +219,13 @@ export const emoticons = [
       PopularEmoji.大哭,
       PopularEmoji.酸了,
       PopularEmoji.歪嘴,
+      PopularEmoji.调皮,
+      PopularEmoji.笑哭,
+      PopularEmoji.嗑瓜子,
+      PopularEmoji.喜极而泣,
+      PopularEmoji.惊讶,
+      PopularEmoji.给心心,
+      PopularEmoji.呆,
       PopularEmoji.跪了,
       PopularEmoji.响指,
 
