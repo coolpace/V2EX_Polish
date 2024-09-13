@@ -590,6 +590,8 @@ export async function handlingComments() {
   }
 
   if (options.replyContent.showImgInPage) {
-    handlingCommentImg()
+    window.requestIdleCallback(() => {
+      handlingCommentImg()
+    })
   }
 }
