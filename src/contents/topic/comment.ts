@@ -22,7 +22,12 @@ import {
 } from '../globals'
 import { insertTextToReplyInput, loadIcons } from '../helpers'
 import { memberDataCache, processAvatar } from './avatar'
-import { handlingCommentImg, processReplyContent, updateMemberTag } from './content'
+import {
+  handlingCommentImg,
+  handlingEmojiReplace,
+  processReplyContent,
+  updateMemberTag,
+} from './content'
 
 /** 每一页的回复列表数据 */
 let commentDataList: readonly CommentData[] = []
@@ -594,4 +599,8 @@ export async function handlingComments() {
       handlingCommentImg()
     })
   }
+
+  window.requestIdleCallback(() => {
+    handlingEmojiReplace()
+  })
 }

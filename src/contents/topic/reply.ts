@@ -1,7 +1,7 @@
 import { createButton } from '../../components/button'
 import { bindImageUpload } from '../../components/image-upload'
 import { createPopup } from '../../components/popup'
-import { biliEmojiLink, emoticons, type PopularEmoji } from '../../constants'
+import { emojiLinks, emoticons, type PopularEmoji } from '../../constants'
 import { getCommentPreview } from '../../services'
 import { getOS } from '../../utils'
 import { $replyBox, $replyForm, $replyTextArea } from '../globals'
@@ -55,7 +55,7 @@ function handlingReplyActions() {
           const emoticon = emoticonSpan.clone()
 
           if (emojiGroup.title === '流行') {
-            const emojiLink = biliEmojiLink[emoji as PopularEmoji]
+            const emojiLink = emojiLinks[emoji as PopularEmoji].hd
             emoticon.html(`<img src="${emojiLink}" />`).prop('title', emoji)
           } else {
             emoticon.text(emoji)

@@ -1,6 +1,12 @@
 import { createButton } from '../../components/button'
 import { createModal } from '../../components/modal'
-import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
+import {
+  emojiLinks,
+  Links,
+  MAX_CONTENT_HEIGHT,
+  READABLE_CONTENT_HEIGHT,
+  StorageKey,
+} from '../../constants'
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
 import { $commentCells, $topicContentBox, $topicHeader, topicId, topicOwnerName } from '../globals'
@@ -294,6 +300,39 @@ export function handlingCommentImg() {
 
             modal.open()
             modal.$content.append($clonedImg)
+          })
+        }
+      }
+    })
+  }
+}
+
+/**
+ * 将低清表情图片转换成高清表情图片。
+ */
+export function handlingEmojiReplace() {
+  const srcMap = new Map<string, string>()
+
+  Object.values(emojiLinks).forEach(({ ld, hd }) => {
+    srcMap.set(ld, hd)
+  })
+
+  const $embedImages = $commentCells.find(`.reply_content .embedded_image`)
+
+  if ($embedImages.length > 0) {
+    $embedImages.each((_, img) => {
+      const $img = $(img)
+
+      const src = $img.attr('src')
+
+      if (typeof src === 'string') {
+        const hd = srcMap.get(src)
+
+        if (typeof hd === 'string') {
+          $img.attr('src', hd)
+          $img.css({
+            width: '20px',
+            height: '20px',
           })
         }
       }

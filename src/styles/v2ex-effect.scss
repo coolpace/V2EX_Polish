@@ -713,6 +713,10 @@ a.v2p-topic-preview-title-link {
   &:hover {
     background-color: var(--box-background-hover-color);
   }
+
+  > img {
+    height: 100%;
+  }
 }
 
 .v2p-decode {

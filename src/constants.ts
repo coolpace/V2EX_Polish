@@ -50,32 +50,112 @@ export const enum PopularEmoji {
   偷笑 = '[偷笑R]',
 }
 
-export const biliEmojiLink = {
-  [PopularEmoji.脱单doge]: 'https://i.imgur.com/L62ZP7V.png',
-  [PopularEmoji.doge]: 'https://i.imgur.com/agAJ0Rd.png',
-  [PopularEmoji.辣眼睛]: 'https://i.imgur.com/n119Wvk.png',
-  [PopularEmoji.疑惑]: 'https://i.imgur.com/U3hKhrT.png',
-  [PopularEmoji.捂脸]: 'https://i.imgur.com/14cwgsI.png',
-  [PopularEmoji.哦呼]: 'https://i.imgur.com/km62MY2.png',
-  [PopularEmoji.傲娇]: 'https://i.imgur.com/TkdeN49.png',
-  [PopularEmoji.思考]: 'https://i.imgur.com/MAyk5GN.png',
-  [PopularEmoji.吃瓜]: 'https://i.imgur.com/Ug1iMq4.png',
-  [PopularEmoji.无语]: 'https://i.imgur.com/e1q9ScT.png',
-  [PopularEmoji.大哭]: 'https://i.imgur.com/YGIx7lh.png',
-  [PopularEmoji.酸了]: 'https://i.imgur.com/5FDsp6L.png',
-  [PopularEmoji.打call]: 'https://i.imgur.com/pmNOo2w.png',
-  [PopularEmoji.歪嘴]: 'https://i.imgur.com/XzEYBoY.png',
-  [PopularEmoji.星星眼]: 'https://i.imgur.com/2spsghH.png',
-  [PopularEmoji.OK]: 'https://i.imgur.com/6DMydmQ.png',
-  [PopularEmoji.跪了]: 'https://i.imgur.com/TYtySHv.png',
-  [PopularEmoji.响指]: 'https://i.imgur.com/Ac88cMm.png',
-  [PopularEmoji.哭惹]: 'https://i.imgur.com/HgxsUD2.png',
-  [PopularEmoji.哇]: 'https://i.imgur.com/OZySWIG.png',
-  [PopularEmoji.汗颜]: 'https://i.imgur.com/jrVZoLi.png',
-  [PopularEmoji.害羞]: 'https://i.imgur.com/OVQjxIr.png',
-  [PopularEmoji.萌萌哒]: 'https://i.imgur.com/Ue1kikn.png',
-  [PopularEmoji.偷笑]: 'https://i.imgur.com/aF7QiE5.png',
-} as const satisfies Record<PopularEmoji, string>
+export const emojiLinks = {
+  [PopularEmoji.脱单doge]: {
+    ld: 'https://i.imgur.com/L62ZP7V.png',
+    hd: 'https://i.imgur.com/3mPhudo.png',
+  },
+  [PopularEmoji.doge]: {
+    ld: 'https://i.imgur.com/agAJ0Rd.png',
+    hd: 'https://i.imgur.com/HZL0hOa.png',
+  },
+  [PopularEmoji.辣眼睛]: {
+    ld: 'https://i.imgur.com/n119Wvk.png',
+    hd: 'https://i.imgur.com/A5WXoZJ.png',
+  },
+  [PopularEmoji.疑惑]: {
+    ld: 'https://i.imgur.com/U3hKhrT.png',
+    hd: 'https://i.imgur.com/3gCygBS.png',
+  },
+  [PopularEmoji.捂脸]: {
+    ld: 'https://i.imgur.com/14cwgsI.png',
+    hd: 'https://i.imgur.com/fLp3t8s.png',
+  },
+  [PopularEmoji.哦呼]: {
+    ld: 'https://i.imgur.com/km62MY2.png',
+    hd: 'https://i.imgur.com/CXXgF4E.png',
+  },
+  [PopularEmoji.傲娇]: {
+    ld: 'https://i.imgur.com/TkdeN49.png',
+    hd: 'https://i.imgur.com/m7IlCrD.png',
+  },
+  [PopularEmoji.思考]: {
+    ld: 'https://i.imgur.com/MAyk5GN.png',
+    hd: 'https://i.imgur.com/eRJTCx7.png',
+  },
+  [PopularEmoji.吃瓜]: {
+    ld: 'https://i.imgur.com/Ug1iMq4.png',
+    hd: 'https://i.imgur.com/Gy3nwkC.png',
+  },
+  [PopularEmoji.无语]: {
+    ld: 'https://i.imgur.com/e1q9ScT.png',
+    hd: 'https://i.imgur.com/wMfcBqD.png',
+  },
+  [PopularEmoji.大哭]: {
+    ld: 'https://i.imgur.com/YGIx7lh.png',
+    hd: 'https://i.imgur.com/SNHJxtv.png',
+  },
+  [PopularEmoji.酸了]: {
+    ld: 'https://i.imgur.com/5FDsp6L.png',
+    hd: 'https://i.imgur.com/wnQBodT.png',
+  },
+  [PopularEmoji.打call]: {
+    ld: 'https://i.imgur.com/pmNOo2w.png',
+    hd: 'https://i.imgur.com/4GfTlV0.png',
+  },
+  [PopularEmoji.歪嘴]: {
+    ld: 'https://i.imgur.com/XzEYBoY.png',
+    hd: 'https://i.imgur.com/84ycU43.png',
+  },
+  [PopularEmoji.星星眼]: {
+    ld: 'https://i.imgur.com/2spsghH.png',
+    hd: 'https://i.imgur.com/oEIJRru.png',
+  },
+  [PopularEmoji.OK]: {
+    ld: 'https://i.imgur.com/6DMydmQ.png',
+    hd: 'https://i.imgur.com/PE2dyjY.png',
+  },
+  [PopularEmoji.跪了]: {
+    ld: 'https://i.imgur.com/TYtySHv.png',
+    hd: 'https://i.imgur.com/0pjsMf0.png',
+  },
+  [PopularEmoji.响指]: {
+    ld: 'https://i.imgur.com/Ac88cMm.png',
+    hd: 'https://i.imgur.com/nkoevMu.png',
+  },
+  [PopularEmoji.哭惹]: {
+    ld: 'https://i.imgur.com/HgxsUD2.png',
+    hd: 'https://i.imgur.com/0aOdQJd.png',
+  },
+  [PopularEmoji.哇]: {
+    ld: 'https://i.imgur.com/OZySWIG.png',
+    hd: 'https://i.imgur.com/ngoi2I6.png',
+  },
+  [PopularEmoji.汗颜]: {
+    ld: 'https://i.imgur.com/jrVZoLi.png',
+    hd: 'https://i.imgur.com/O8alqc1.png',
+  },
+  [PopularEmoji.害羞]: {
+    ld: 'https://i.imgur.com/OVQjxIr.png',
+    hd: 'https://i.imgur.com/1PeoVR5.png',
+  },
+  [PopularEmoji.萌萌哒]: {
+    ld: 'https://i.imgur.com/Ue1kikn.png',
+    hd: 'https://i.imgur.com/vOHzwus.png',
+  },
+  [PopularEmoji.偷笑]: {
+    ld: 'https://i.imgur.com/aF7QiE5.png',
+    hd: 'https://i.imgur.com/WneGpK9.png',
+  },
+} as const satisfies Record<
+  PopularEmoji,
+  {
+    /** 低清图。 */
+    ld: string
+    /** 高清图。 */
+    hd: string
+  }
+>
 
 /** 表情数据 */
 export const emoticons = [
@@ -184,7 +264,7 @@ export const emoticons = [
   },
 ] as const satisfies readonly { title: string; list: readonly string[] }[]
 
-/** 关于扩展的超链接 */
+/** 关于扩展的超链接。 */
 export const enum Links {
   /** 官网主页 */
   Home = 'https://v2p.app',
@@ -201,7 +281,7 @@ export const MAX_CONTENT_HEIGHT = 550
 
 export const READING_CONTENT_LIMIT = 150
 
-/** Popup 中缓存的主题列表数据的过期时间 */
+/** Popup 中缓存的主题列表数据的过期时间。 */
 export const dataExpiryTime = 60 * 60 * 1000
 
 /** 请求 V2EX API 返回的特定信息 */
@@ -226,7 +306,7 @@ export const imgurClientIdPool = [
   '81be04b9e4a08ce',
 ] as const satisfies readonly string[]
 
-/** 扩展初始化提供的默认选项 */
+/** 扩展初始化提供的默认选项。 */
 export const defaultOptions: Options = {
   openInNewTab: false,
   autoCheckIn: {

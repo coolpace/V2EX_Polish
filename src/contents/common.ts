@@ -1,3 +1,5 @@
+import './polyfill'
+
 import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData } from '../types'
