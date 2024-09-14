@@ -2,8 +2,8 @@ import { StorageKey } from '../../constants'
 import { getStorage, isSameDay } from '../../utils'
 import { $infoCard } from '../globals'
 import { loadIcons } from '../helpers'
-import { handlingHotTopics } from './hot-topics'
-import { handlingTopicList } from './topic-list'
+import { handleHotTopics } from './hot-topics'
+import { handleTopicList } from './topic-list'
 
 void (async () => {
   const storage = await getStorage()
@@ -20,7 +20,7 @@ void (async () => {
     }
   }
 
-  handlingTopicList()
+  handleTopicList()
 
   {
     const dailyInfo = storage[StorageKey.Daily]
@@ -38,7 +38,7 @@ void (async () => {
     }
   }
 
-  handlingHotTopics()
+  handleHotTopics()
 
   loadIcons()
 })()

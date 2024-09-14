@@ -1,7 +1,7 @@
 import { bindImageUpload } from '../../components/image-upload'
 import { postTask } from '../helpers'
 
-export function handlingWrite() {
+export function handleWrite() {
   bindImageUpload({
     $wrapper: $('#workspace'),
     insertText: (text: string) => {

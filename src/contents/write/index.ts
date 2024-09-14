@@ -1,6 +1,6 @@
 import { loadIcons } from '../helpers'
-import { handlingWrite } from './write'
+import { handleWrite } from './write'
 
-handlingWrite()
+handleWrite()
 
 loadIcons()

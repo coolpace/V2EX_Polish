@@ -65,7 +65,7 @@ export function toggleTopicLayout() {
 /**
  * 控制主题布局水平分屏显示。
  */
-export function handlingLayout() {
+export function handleLayout() {
   const storage = getStorageSync()
   const options = storage[StorageKey.Options]
 

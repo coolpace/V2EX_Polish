@@ -39,7 +39,7 @@ interface TopicData {
   cacheTime: number
 }
 
-export function handlingTopicList() {
+export function handleTopicList() {
   const runEnv = getRunEnv()
 
   if (!runEnv) {

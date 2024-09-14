@@ -4,7 +4,7 @@ import { getHotTopics } from '../../services'
 import type { HotTopic } from '../../types'
 import { $wrapper } from '../globals'
 
-export function handlingHotTopics() {
+export function handleHotTopics() {
   const $topicsHot = $('#TopicsHot')
   const $hotHeader = $topicsHot.find('> .cell:first-of-type').addClass('v2p-topics-hot-header')
   $hotHeader.find('.fade').text('热议主题')

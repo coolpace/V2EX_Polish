@@ -22,12 +22,7 @@ import {
 } from '../globals'
 import { insertTextToReplyInput, loadIcons } from '../helpers'
 import { memberDataCache, processAvatar } from './avatar'
-import {
-  handlingCommentImg,
-  handlingEmojiReplace,
-  processReplyContent,
-  updateMemberTag,
-} from './content'
+import { handleEmojiReplace, handleTopicImg, processReplyContent, updateMemberTag } from './content'
 
 /** 每一页的回复列表数据 */
 let commentDataList: readonly CommentData[] = []
@@ -35,7 +30,7 @@ let commentDataList: readonly CommentData[] = []
 /**
  * 设置经过筛选后的回复。
  */
-function handlingFilteredComments() {
+function handleFilteredComments() {
   const iconHeart = createElement(Heart)
   iconHeart.setAttribute('width', '100%')
   iconHeart.setAttribute('height', '100%')
@@ -364,7 +359,7 @@ const popupControl = createPopup({
   offsetOptions: { mainAxis: 8, crossAxis: -4 },
 })
 
-export async function handlingComments() {
+export async function handleComments() {
   const storage = getStorageSync()
 
   const tagData = storage[StorageKey.MemberTag]
@@ -437,6 +432,7 @@ export async function handlingComments() {
 
   commentDataList = getCommentDataList({ options, $commentTableRows, $commentCells })
 
+  // MARK: 处理每一条回复。
   // 👇此区块的逻辑需要在处理嵌套评论前执行。
   {
     const memberNames = new Set<Member['username']>([topicOwnerName])
@@ -495,7 +491,7 @@ export async function handlingComments() {
     }
 
     updateCommentCells()
-    handlingFilteredComments()
+    handleFilteredComments()
 
     // 处理「点击感谢回复」的逻辑。
     $('.v2p-control-thank').on('click', (ev) => {
@@ -549,8 +545,10 @@ export async function handlingComments() {
     })
   }
 
+  // MARK: 处理嵌套回复
   handleNestedComment({ options, $commentCells, commentDataList })
 
+  // MARK: 鼠标悬浮展示用户弹框
   // 让主题内容区的头像在鼠标悬浮时也能展示用户信息弹框。
   {
     const $opAvatar = $topicHeader.find('.avatar')
@@ -579,6 +577,7 @@ export async function handlingComments() {
         openInNewTab: options.openInNewTab,
       })
 
+      // MARK: 获取用户注册时间信息
       fetchUserInfo(memberName).then((memberData) => {
         memberDataCache.set(memberName, memberData)
         const diffInDays = (Date.now() / 1000 - memberData.created) / (60 * 60 * 24)
@@ -596,11 +595,11 @@ export async function handlingComments() {
 
   if (options.replyContent.showImgInPage) {
     window.requestIdleCallback(() => {
-      handlingCommentImg()
+      handleTopicImg()
     })
   }
 
   window.requestIdleCallback(() => {
-    handlingEmojiReplace()
+    handleEmojiReplace()
   })
 }
