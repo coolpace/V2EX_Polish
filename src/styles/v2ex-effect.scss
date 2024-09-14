@@ -370,6 +370,7 @@ a.v2p-topic-preview-title-link {
     .v2p-modal-content {
       position: relative;
       overflow-y: auto;
+      overscroll-behavior-y: contain; // 防止滚动穿透。
       flex: 1;
       outline: none;
     }
