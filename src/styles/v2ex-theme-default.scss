@@ -465,6 +465,10 @@ body {
       &:hover {
         background-color: var(--v2p-color-main-200);
       }
+
+      &:has(> .embedded_image) {
+        background-color: transparent;
+      }
     }
 
     // MARK: 站内链接。
