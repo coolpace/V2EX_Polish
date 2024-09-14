@@ -15,7 +15,7 @@ import { toggleTopicLayout } from './layout'
 /**
  * 右侧用户信息卡片中的工具栏。
  */
-export function handlingTools() {
+export function handleTools() {
   const storage = getStorageSync()
   const options = storage[StorageKey.Options]
 

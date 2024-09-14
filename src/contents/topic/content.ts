@@ -15,7 +15,7 @@ import { getTagsText, loadIcons, setMemberTags } from '../helpers'
 /**
  * 处理主题的正文内容。
  */
-export function handlingContent() {
+export function handleContent() {
   const storage = getStorageSync()
   const options = storage[StorageKey.Options]
 
@@ -257,7 +257,10 @@ export function openTagsSetter(
   })()
 }
 
-export function handlingCommentImg() {
+/**
+ * 处理主题中的图片, 点击图片会弹出图片放大预览。
+ */
+export function handleTopicImg() {
   const $imgs = $('.embedded_image')
 
   if ($imgs.length > 0) {
@@ -310,7 +313,7 @@ export function handlingCommentImg() {
 /**
  * 将低清表情图片转换成高清表情图片。
  */
-export function handlingEmojiReplace() {
+export function handleEmojiReplace() {
   const srcMap = new Map<string, string>()
 
   Object.values(emojiLinks).forEach(({ ld, hd }) => {

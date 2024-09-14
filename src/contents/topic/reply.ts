@@ -7,7 +7,7 @@ import { getOS } from '../../utils'
 import { $replyBox, $replyForm, $replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput, transformEmoji } from '../helpers'
 
-function handlingReplyActions() {
+function handleReplyActions() {
   const os = getOS()
 
   const replyBtnText = `回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd>`
@@ -212,5 +212,5 @@ export function handleReply() {
   // 移除原站的“请尽量让自己的回复能够对别人有帮助”。
   $('.flex-one-row:last-of-type > .gray').text('')
 
-  handlingReplyActions()
+  handleReplyActions()
 }
