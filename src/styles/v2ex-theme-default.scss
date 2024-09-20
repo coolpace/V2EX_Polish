@@ -968,9 +968,11 @@ body {
           width: 40px;
 
           .avatar {
+            display: inline-block;
             aspect-ratio: 1;
             width: 40px !important;
             height: 40px !important;
+            background-color: var(--v2p-color-main-300);
             border-radius: 5px;
           }
         }
