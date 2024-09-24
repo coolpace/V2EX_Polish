@@ -49,7 +49,7 @@ body {
   }
 
   #Top {
-    height: 55px;
+    height: var(--v2p-nav-height);
     background-color: var(--v2p-color-bg-content);
     border: none;
   }
@@ -752,7 +752,7 @@ body {
     }
 
     .cell {
-      padding: 20px 10px;
+      padding: var(--v2p-tp-item-x) var(--v2p-tp-item-y);
       background-image: none !important;
     }
 
@@ -912,7 +912,8 @@ body {
 
     .item_title {
       .topic-link {
-        font-weight: bold;
+        font-size: 15px;
+        font-weight: 600;
       }
     }
   }
@@ -1081,7 +1082,7 @@ body {
     flex-wrap: wrap;
     gap: 5px 3px;
     align-items: center;
-    padding: 10px;
+    padding: var(--v2p-tp-tabs-pd);
     background-color: var(--v2p-color-bg-content);
     border-bottom: 1px solid var(--box-border-color);
 

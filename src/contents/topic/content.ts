@@ -9,7 +9,14 @@ import {
 } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
 import { getStorage, getStorageSync } from '../../utils'
-import { $commentCells, $topicContentBox, $topicHeader, topicId, topicOwnerName } from '../globals'
+import {
+  $body,
+  $commentCells,
+  $topicContentBox,
+  $topicHeader,
+  topicId,
+  topicOwnerName,
+} from '../globals'
 import { getTagsText, loadIcons, setMemberTags } from '../helpers'
 
 /**
@@ -265,7 +272,7 @@ export function handleTopicImg() {
 
   if ($imgs.length > 0) {
     const modal = createModal({
-      root: $(document.body),
+      root: $body,
       onMount: ({ $main, $header, $content }) => {
         $main.css({
           width: 'auto',

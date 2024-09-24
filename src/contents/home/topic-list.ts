@@ -9,7 +9,7 @@ import { crawlTopicPage, fetchTopic } from '../../services'
 import type { Topic } from '../../types'
 import { formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
-import { $topicList } from '../globals'
+import { $body, $topicList } from '../globals'
 import { addToReadingList } from '../helpers'
 
 const invalidTemplate = (tip: string) => `
@@ -64,7 +64,7 @@ export function handleTopicList() {
   }
 
   const modal = createModal({
-    root: $(document.body),
+    root: $body,
     onMount: ({ $actions }) => {
       $actions.prepend($detailBtn)
     },
