@@ -31,6 +31,8 @@ export interface Options {
   theme: {
     /** 是否自动跟随系统切换主题。 */
     autoSwitch: boolean
+    /** 主题。 */
+    type?: 'compact'
   }
   /** 主题回复设置。 */
   reply: {

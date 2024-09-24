@@ -4,6 +4,7 @@ import { StorageKey, V2EX } from '../constants'
 import { setMemberTags } from '../contents/helpers'
 import type { Options } from '../types'
 import { getStorage, setStorage } from '../utils'
+import { $body } from '../contents/globals'
 
 function loadIcons() {
   createIcons({
@@ -73,14 +74,14 @@ void (async function init() {
   const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
   if (perfersDark.matches) {
-    $(document.body).addClass('v2p-theme-dark')
+    $body.addClass('v2p-theme-dark')
   }
 
   perfersDark.addEventListener('change', ({ matches }) => {
     if (matches) {
-      $(document.body).addClass('v2p-theme-dark')
+      $body.addClass('v2p-theme-dark')
     } else {
-      $(document.body).removeClass('v2p-theme-dark')
+      $body.removeClass('v2p-theme-dark')
     }
   })
 

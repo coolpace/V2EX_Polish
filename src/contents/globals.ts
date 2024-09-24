@@ -1,3 +1,4 @@
+export const $body = $(document.body)
 export const $wrapper = $('#Wrapper')
 export const $wrapperContent = $wrapper.find('> .content')
 

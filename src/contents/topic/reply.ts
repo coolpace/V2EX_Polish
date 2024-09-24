@@ -4,7 +4,7 @@ import { createPopup } from '../../components/popup'
 import { emojiLinks, emoticons, type PopularEmoji } from '../../constants'
 import { getCommentPreview } from '../../services'
 import { getOS } from '../../utils'
-import { $replyBox, $replyForm, $replyTextArea } from '../globals'
+import { $body, $replyBox, $replyForm, $replyTextArea } from '../globals'
 import { focusReplyInput, insertTextToReplyInput, transformEmoji } from '../helpers'
 
 function handleReplyActions() {
@@ -104,10 +104,10 @@ function handleReplyActions() {
       content: $emojiContent,
       options: { placement: 'right-end' },
       onOpen: () => {
-        $(document.body).on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
+        $body.on('keydown', keyupHandler) // 在 body 上监听，因为需要比关闭评论框的快捷键(Esc)先执行，否则会先关闭评论框。
       },
       onClose: () => {
-        $(document.body).off('keydown', keyupHandler)
+        $body.off('keydown', keyupHandler)
       },
     })
   }
