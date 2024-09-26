@@ -1,3 +1,5 @@
+import { $body } from '../contents/globals'
+
 interface CreateToastProps {
   message: string
   duration?: number
@@ -18,7 +20,7 @@ export function createToast(props: CreateToastProps): ToastControl {
 
   const $toast = $(`<div class="v2p-toast">${message}</div>`).hide()
 
-  $(document.body).append($toast)
+  $body.append($toast)
 
   $toast.fadeIn('fast')
 

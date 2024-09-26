@@ -49,6 +49,7 @@ import {
 } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
+import { $body } from '../contents/globals'
 
 interface LastFetchUnreadMsgInfoInfo {
   time: number
@@ -70,8 +71,6 @@ function loadIcons() {
 }
 
 function toggleTheme(mode?: 'dark' | 'light') {
-  const $body = $(document.body)
-
   if (mode === 'dark') {
     $body.addClass('v2p-theme-dark')
   } else {
@@ -181,7 +180,7 @@ function loadSettings() {
     })
 
     $('#theme-toggle').on('click', () => {
-      const shouldDark = !$(document.body).hasClass('v2p-theme-dark')
+      const shouldDark = !$body.hasClass('v2p-theme-dark')
       const themeMode = shouldDark ? 'dark' : 'light'
       window.localStorage.setItem('v2p_popup_theme', themeMode)
       toggleTheme(themeMode)
