@@ -11,19 +11,24 @@ import {
   injectScript,
   setStorage,
 } from '../utils'
-import { $infoCard, $wrapper } from './globals'
+import { $body, $infoCard, $wrapper } from './globals'
 import { loadIcons, postTask } from './helpers'
 
 if ($('#site-header').length > 0) {
-  $(document.body).addClass('v2p-mobile')
+  $body.addClass('v2p-mobile')
 }
 
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
+  if (options.theme.type === 'compact') {
+    $body.addClass('v2p-theme-compact')
+  }
+
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
+  // 处理自动切换「明/暗」主题。
   if (options.theme.autoSwitch) {
     const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
@@ -52,10 +57,10 @@ void (async () => {
       }
 
       if (preferDark) {
-        $(document.body).addClass('v2p-theme-dark')
+        $body.addClass('v2p-theme-dark')
         $wrapper.addClass('Night')
       } else {
-        $(document.body).removeClass('v2p-theme-dark')
+        $body.removeClass('v2p-theme-dark')
         $wrapper.removeClass('Night')
       }
     }
@@ -72,9 +77,9 @@ void (async () => {
     })
   }
 
-  // 当发现远程的配置有更新时，自动同步到本地。
   const syncInfo = storage[StorageKey.SyncInfo]
 
+  // 当发现远程的配置有更新时，自动同步到本地。
   if (syncInfo) {
     const lastCheckTime = syncInfo.lastCheckTime
     const twoHours = 2 * 60 * 1000 * 60

@@ -13,6 +13,10 @@
   --v2p-underline-offset: 0.5ex;
   --v2p-layout-column-gap: 25px;
   --v2p-layout-row-gap: 20px;
+  --v2p-nav-height: 55px;
+  --v2p-tp-item-x: 20px;
+  --v2p-tp-item-y: 10px;
+  --v2p-tp-tabs-pd: 10px;
 
   @mixin dark-mode {
     // 基础色：
