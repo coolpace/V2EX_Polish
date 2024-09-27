@@ -22,8 +22,12 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  if (options.theme.type === 'compact') {
+  if (options.theme.mode === 'compact') {
     $body.addClass('v2p-theme-compact')
+  }
+
+  if (options.theme.type !== 'dawn') {
+    $body.addClass('v2p-theme-dawn')
   }
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
