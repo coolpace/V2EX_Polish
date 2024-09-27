@@ -1,0 +1,40 @@
+body.v2p-theme-dawn {
+  // 基础色：
+  --v2p-color-main-50: #faf8e1;
+  --v2p-color-main-100: #f9f5c4;
+  --v2p-color-main-200: #f5e9a0;
+  --v2p-color-main-300: #f0dc77;
+  --v2p-color-main-350: #e0def4;
+  --v2p-color-main-400: #908caa;
+  --v2p-color-main-500: #6e6a86;
+  --v2p-color-main-600: #26233a;
+  --v2p-color-main-700: #1f1d2e;
+  --v2p-color-main-800: #191724;
+
+  // 特别色：
+  --v2p-color-background: #faf4ed;
+  --v2p-color-foreground: #585379;
+  --v2p-color-font-secondary: #6e6a86;
+  --v2p-color-bg-content: #fffbf5;
+  --v2p-color-bg-footer: var(--v2p-color-bg-content);
+  --v2p-color-bg-hover-btn: var(--v2p-color-main-200);
+  --v2p-color-bg-subtle: rgb(236 253 245 / 90%);
+  --v2p-color-bg-input: var(--v2p-color-main-50);
+  --v2p-color-bg-search: var(--v2p-color-main-100);
+  --v2p-color-bg-search-active: var(--v2p-color-main-200);
+  --v2p-color-bg-widget: rgb(255 255 255 / 70%);
+  --v2p-color-bg-reply: var(--v2p-color-main-100);
+  --v2p-color-bg-tooltip: var(--v2p-color-bg-content);
+  --v2p-color-heart: #eb6f92;
+  --v2p-color-heart-fill: rgb(235 111 146 / 50%);
+  --v2p-color-mask: rgb(0 0 0 / 25%);
+  --v2p-color-divider: var(--v2p-color-main-200);
+  --v2p-color-border: rgb(152 147 165 / 20%);
+  --v2p-color-border-darker: var(--v2p-color-main-300);
+  --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
+  --v2p-widget-shadow: 0 9px 24px -3px rgb(0 0 0 / 6%), 0 4px 8px -1px rgb(0 0 0 /12%);
+  --v2p-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
+    0 9px 28px 8px rgb(0 0 0 / 5%);
+  --v2p-color-error: #eb6f92;
+  --v2p-color-bg-error: #fee2e2;
+}
