@@ -25,6 +25,10 @@ body {
   scrollbar-gutter: stable;
   overflow: overlay;
 
+  &.v2p-theme-default {
+    visibility: visible;
+  }
+
   h1 {
     font-weight: bold;
   }
@@ -430,6 +434,18 @@ body {
     }
   }
 
+  // MARK: 设置页表单。
+  // https://www.v2ex.com/settings
+  form[action^='/settings'] {
+    .sl {
+      border-color: var(--v2p-color-input-border);
+
+      &:focus {
+        border-color: var(--v2p-color-input-border);
+      }
+    }
+  }
+
   // 输入框：https://www.v2ex.com/notes ｜ https://www.v2ex.com/t
   .alt {
     background-color: var(--v2p-color-bg-input);
@@ -719,7 +735,7 @@ body {
       height: 26px;
       padding: 0 6px;
       line-height: 26px;
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-button-foreground);
       white-space: nowrap;
       border-radius: 4px;
 

@@ -1,19 +1,10 @@
 body.v2p-theme-dawn {
-  // 基础色：
-  --v2p-color-main-50: #faf8e1;
-  --v2p-color-main-100: #f9f5c4;
-  --v2p-color-main-200: #f5e9a0;
-  --v2p-color-main-300: #f0dc77;
-  --v2p-color-main-350: #e0def4;
-  --v2p-color-main-400: #908caa;
-  --v2p-color-main-500: #6e6a86;
-  --v2p-color-main-600: #26233a;
-  --v2p-color-main-700: #1f1d2e;
-  --v2p-color-main-800: #191724;
-
   // 特别色：
   --v2p-color-background: #faf4ed;
   --v2p-color-foreground: #585379;
+  --v2p-color-selection-foreground: var(--v2p-color-foreground);
+  --v2p-color-selection-background: rgb(152 147 165 / 20%);
+  --v2p-color-selection-background-img: var(--v2p-color-main-500);
   --v2p-color-font-secondary: #6e6a86;
   --v2p-color-bg-content: #fffbf5;
   --v2p-color-bg-footer: var(--v2p-color-bg-content);
@@ -30,6 +21,7 @@ body.v2p-theme-dawn {
   --v2p-color-mask: rgb(0 0 0 / 25%);
   --v2p-color-divider: var(--v2p-color-main-200);
   --v2p-color-border: rgb(152 147 165 / 20%);
+  --v2p-color-input-border: rgb(152 147 165 / 20%);
   --v2p-color-border-darker: var(--v2p-color-main-300);
   --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
   --v2p-widget-shadow: 0 9px 24px -3px rgb(0 0 0 / 6%), 0 4px 8px -1px rgb(0 0 0 /12%);
@@ -37,4 +29,6 @@ body.v2p-theme-dawn {
     0 9px 28px 8px rgb(0 0 0 / 5%);
   --v2p-color-error: #eb6f92;
   --v2p-color-bg-error: #fee2e2;
+
+  visibility: visible;
 }
