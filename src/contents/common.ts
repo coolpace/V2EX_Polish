@@ -26,8 +26,10 @@ void (async () => {
     $body.addClass('v2p-theme-compact')
   }
 
-  if (options.theme.type !== 'dawn') {
+  if (options.theme.type === 'dawn') {
     $body.addClass('v2p-theme-dawn')
+  } else {
+    $body.addClass('v2p-theme-default')
   }
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')

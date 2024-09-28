@@ -19,7 +19,7 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 28px;
-  color: var(--button-foreground-color);
+  color: var(--v2p-color-button-foreground);
   text-shadow: none;
   white-space: nowrap;
   background: var(--button-background-color);
@@ -44,7 +44,7 @@
   }
 
   &:is(.hover_now, .disable_now) {
-    color: var(--button-foreground-color) !important;
+    color: var(--v2p-color-button-foreground) !important;
     text-shadow: none !important;
     background: var(--button-background-color) !important;
     border: none !important;
@@ -57,7 +57,7 @@
     pointer-events: none;
     cursor: default;
     font-weight: 500;
-    color: var(--button-foreground-color);
+    color: var(--v2p-color-button-foreground);
     text-shadow: none;
     opacity: 0.8;
     background: var(--button-background-color);

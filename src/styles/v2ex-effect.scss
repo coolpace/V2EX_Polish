@@ -121,7 +121,7 @@ body {
   top: -1px;
   margin-left: 10px;
   font-size: 14px;
-  color: var(--button-foreground-color);
+  color: var(--v2p-color-button-foreground);
   visibility: hidden;
   background-color: var(--button-hover-color);
   border: none;
@@ -793,7 +793,7 @@ a.v2p-topic-preview-title-link {
   // 加深嵌套回复中「展开按钮」的背景色。
   .v2p-reply-content {
     .v2p-expand-btn.normal.button {
-      color: var(--button-foreground-color);
+      color: var(--v2p-color-button-foreground);
       background: var(--button-hover-color);
       box-shadow: var(--button-hover-shadow);
     }
