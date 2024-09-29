@@ -437,7 +437,8 @@ body {
   // MARK: 设置页表单。
   // https://www.v2ex.com/settings
   form[action^='/settings'] {
-    .sl {
+    .sl,
+    .ml {
       border-color: var(--v2p-color-input-border);
 
       &:focus {
@@ -1001,7 +1002,7 @@ body {
 
         position: relative;
         z-index: var(--zidx-expand-btn);
-        padding: 15px 0 0 15px;
+        padding: var(--v2p-tp-nested-pd) 0 0 var(--v2p-tp-nested-pd);
         border: none;
         border-radius: 0;
         box-shadow: -2.4px 0 var(--v2p-color-border-darker);
@@ -1012,7 +1013,7 @@ body {
           box-shadow: none;
 
           &.v2p-indent {
-            padding-left: 15px; /* 取消靠左对齐，逐层缩进 */
+            padding-left: var(--v2p-tp-nested-pd); /* 取消靠左对齐，逐层缩进 */
             border-left: 1px solid var(--v2p-color-border-darker);
           }
         }

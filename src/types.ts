@@ -29,11 +29,12 @@ export interface Options {
   }
   /** 颜色主题设置。 */
   theme: {
+    /** 主题。 */
+    type?: 'default' | 'dawn'
     /** 是否自动跟随系统切换主题。 */
     autoSwitch: boolean
-    mode?: 'compact'
-    /** 主题。 */
-    type?: 'dawn'
+    /** 主题间距模式。 */
+    mode?: 'default' | 'compact'
   }
   /** 主题回复设置。 */
   reply: {
