@@ -7,7 +7,7 @@ body {
 body {
   font-size: 16px;
 
-  &.v2p-theme-dark {
+  &.v2p-theme-dark-default {
     color-scheme: dark;
   }
 }
@@ -21,8 +21,8 @@ body {
   overflow-y: auto;
   width: 260px;
   height: 100%;
-  background-color: var(--v2p-color-main-50);
-  border-right: 1px solid var(--v2p-color-main-200);
+  background-color: var(--v2p-color-background);
+  border-right: 1px solid var(--v2p-color-divider);
 }
 
 .side-header {
@@ -66,7 +66,7 @@ body {
 }
 
 .menu-item.active {
-  background-color: var(--v2p-color-main-200);
+  background-color: var(--v2p-color-button-background-hover);
 }
 
 .content {
@@ -88,8 +88,124 @@ body {
 .backup-tip {
   margin-bottom: 20px;
   padding: 10px;
-  background-color: var(--v2p-color-main-100);
+  background-color: var(--v2p-color-button-background);
   border-radius: 5px;
+}
+
+.theme-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .form-radio {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--v2p-color-divider);
+    border-radius: 8px;
+  }
+
+  .combo {
+    margin-left: 0;
+  }
+
+  @at-root {
+    .theme-opt-input {
+      position: absolute;
+      bottom: 9px;
+      left: 10px;
+    }
+
+    .theme-pv {
+      font-size: 13px;
+
+      .theme-pv-view {
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: 16 / 9;
+        width: 260px;
+        min-height: 100px;
+        background-color: var(--v2p-color-background);
+
+        .tpv-header {
+          display: flex;
+          gap: 10px;
+          padding: 8px 10px;
+          background-color: var(--v2p-color-bg-content);
+
+          .tpv-header-item {
+            width: 30px;
+            height: 6px;
+            background-color: var(--v2p-color-bg-avatar);
+            border-radius: 999px;
+          }
+        }
+
+        .tpv-main {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          padding: 10px;
+
+          .tpv-main-top {
+            padding-bottom: 10px;
+
+            .tpv-top-line {
+              width: 30%;
+              height: 8px;
+              background-color: var(--v2p-color-bg-avatar);
+              border-radius: 999px;
+            }
+          }
+
+          .tpv-main-content {
+            display: flex;
+            flex: 1;
+            gap: 10px;
+            height: 80%;
+
+            .tpv-main-left {
+              position: relative;
+              flex: 1;
+              background-color: var(--v2p-color-bg-content);
+              border-radius: 5px;
+
+              .tpv-main-line {
+                position: absolute;
+                top: 15px;
+                width: 100%;
+                padding: 5px;
+                background-color: var(--v2p-color-accent-50);
+
+                .tpv-main-line-inner {
+                  width: 25%;
+                  height: 8px;
+                  background-color: var(--v2p-color-accent-400);
+                  border-radius: 999px;
+                }
+              }
+            }
+
+            .tpv-main-right {
+              width: 25%;
+              height: 65%;
+              background-color: var(--v2p-color-bg-content);
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+
+      .theme-pv-footer {
+        padding: 5px 10px;
+
+        .theme-type-name {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
 }
 
 #options-form {
@@ -155,7 +271,7 @@ body {
     }
 
     hr {
-      color: var(--v2p-color-main-200);
+      color: var(--v2p-color-divider);
     }
   }
 }
@@ -240,7 +356,7 @@ fieldset {
         visibility: hidden;
         background-color: var(--v2p-color-bg-content);
         border-radius: 5px;
-        box-shadow: 0 0 10px var(--v2p-color-main-200);
+        box-shadow: 0 0 10px var(--v2p-color-divider);
 
         .usage-popover-title {
           font-size: 13px;
@@ -420,7 +536,7 @@ fieldset {
     padding: 0 12px;
     font-family: inherit;
     font-weight: 500;
-    color: var(--button-foreground-color);
+    color: var(--v2p-color-button-foreground);
     text-shadow: none;
     white-space: nowrap;
     background: var(--button-background-color);

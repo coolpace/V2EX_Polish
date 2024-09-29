@@ -8,6 +8,8 @@
 
     <link rel="stylesheet" href="../css/reset.css" />
     <link rel="stylesheet" href="../css/v2ex-theme-var.css" />
+    <link rel="stylesheet" href="../css/v2ex-theme-dark.css" />
+    <link rel="stylesheet" href="../css/v2ex-theme-dawn.css" />
     <link rel="stylesheet" href="../css/options.css" />
   </head>
 
@@ -63,10 +65,89 @@
 
               <fieldset>
                 <legend>颜色主题</legend>
+
+                <div class="theme-select">
+                  <div class="form-radio">
+                    <input
+                      id="theme_type_default"
+                      class="theme-opt-input"
+                      type="radio"
+                      name="theme.type"
+                      value="light-default"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label
+                        for="theme_type_default"
+                        class="theme-option v2p-theme-light-default"
+                      ></label>
+                    </div>
+                  </div>
+
+                  <div class="form-radio">
+                    <input
+                      id="theme_type_dark"
+                      class="theme-opt-input"
+                      type="radio"
+                      name="theme.type"
+                      value="dark-default"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label
+                        for="theme_type_dark"
+                        class="theme-option v2p-theme-dark-default"
+                      ></label>
+                    </div>
+                  </div>
+
+                  <div class="form-radio">
+                    <input
+                      id="theme_type_dawn"
+                      class="theme-opt-input"
+                      type="radio"
+                      name="theme.type"
+                      value="dawn"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="theme_type_dawn" class="theme-option v2p-theme-dawn"></label>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="form-checkbox">
-                  <input type="checkbox" id="autoSwitch" checked="false" />
+                  <input type="checkbox" id="theme_autoSwitch" checked="false" />
                   <div class="combo">
-                    <label for="autoSwitch">自动跟随系统切换浅色/深色模式</label>
+                    <label for="theme_autoSwitch">自动跟随系统切换浅色/深色模式</label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>间距模式</legend>
+                <div class="form-radio">
+                  <input
+                    type="radio"
+                    id="theme_mode_default"
+                    name="theme.mode"
+                    value="default"
+                    checked="false"
+                  />
+                  <div class="combo">
+                    <label for="theme_mode_default">自然</label>
+                  </div>
+                </div>
+                <div class="form-radio">
+                  <input
+                    type="radio"
+                    id="theme_mode_compact"
+                    name="theme.mode"
+                    value="compact"
+                    checked="false"
+                  />
+                  <div class="combo">
+                    <label for="theme_mode_compact">紧凑</label>
                   </div>
                 </div>
               </fieldset>
@@ -295,6 +376,35 @@
         <div data-content-key="tags"></div>
       </div>
     </div>
+
+    <template id="theme-option-content">
+      <div class="theme-pv">
+        <div class="theme-pv-view">
+          <div class="tpv-header">
+            <div class="tpv-header-item"></div>
+            <div class="tpv-header-item"></div>
+            <div class="tpv-header-item"></div>
+          </div>
+          <div class="tpv-main">
+            <div class="tpv-main-top">
+              <div class="tpv-top-line"></div>
+            </div>
+
+            <div class="tpv-main-content">
+              <div class="tpv-main-left">
+                <div class="tpv-main-line">
+                  <div class="tpv-main-line-inner"></div>
+                </div>
+              </div>
+              <div class="tpv-main-right"></div>
+            </div>
+          </div>
+        </div>
+        <div class="theme-pv-footer">
+          <div class="theme-type-name"></div>
+        </div>
+      </div>
+    </template>
 
     <template id="tags-empty">
       <div class="tags-empty-block">

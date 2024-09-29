@@ -17,80 +17,9 @@
   --v2p-tp-item-x: 20px;
   --v2p-tp-item-y: 10px;
   --v2p-tp-tabs-pd: 10px;
+  --v2p-tp-nested-pd: 15px;
 
-  @mixin dark-mode {
-    // 基础色：
-    --v2p-color-main-50: unset;
-    --v2p-color-main-100: #2d333b;
-    --v2p-color-main-200: #374151;
-    --v2p-color-main-300: #374151;
-    --v2p-color-main-350: #6b7280cc;
-    --v2p-color-main-400: #6b7280;
-    --v2p-color-main-500: #9ca3af;
-    --v2p-color-main-600: #9ca3af;
-    --v2p-color-main-700: #d1d5db;
-    --v2p-color-main-800: #e5e7eb;
-    --v2p-color-main-900: #111827;
-    --v2p-color-main-950: #030712;
-    --v2p-color-accent-50: #064e3b;
-    --v2p-color-accent-100: #065f46;
-    --v2p-color-accent-200: #047857;
-    --v2p-color-accent-300: #059669;
-    --v2p-color-accent-400: #10b981;
-    --v2p-color-accent-500: #34d399;
-    --v2p-color-accent-600: #6ee7b7;
-    --v2p-color-orange-50: #593600;
-    --v2p-color-orange-100: #9a3412;
-    --v2p-color-orange-400: #fbe090;
-
-    // 特别色：
-    --v2p-color-background: #1c2128;
-    --v2p-color-foreground: #adbac7;
-    --v2p-color-font-secondary: var(--v2p-color-main-600);
-    --v2p-color-bg-content: #22272e;
-    --v2p-color-bg-subtle: rgb(6 78 59 / 30%);
-    --v2p-color-bg-input: var(--v2p-color-background);
-    --v2p-color-bg-search: var(--v2p-color-main-100);
-    --v2p-color-bg-search-active: var(--v2p-color-main-200);
-    --v2p-color-bg-widget: var(--v2p-color-bg-content);
-    --v2p-color-bg-reply: var(--v2p-color-main-100);
-    --v2p-color-bg-tooltip: var(--v2p-color-main-100);
-    --v2p-color-heart: #ef4444;
-    --v2p-color-heart-fill: #fca5a5;
-    --v2p-color-mask: rgb(99 110 123 / 40%);
-    --v2p-color-border: #444c56;
-    --v2p-color-border-darker: #444c56;
-    --v2p-box-shadow: 0 0 0 1px var(--v2p-color-border);
-    --v2p-toast-shadow: none;
-
-    // V2EX 原有的 CSS 变量：
-    --link-color: var(--v2p-color-foreground);
-    --box-background-color: var(--v2p-color-bg-content);
-    --box-background-alt-color: var(--v2p-color-main-100);
-    --box-background-hover-color: var(--v2p-color-main-300);
-    --button-background-color: #373e47;
-    --button-background-hover-color: #444c56;
-    --button-hover-color: var(--button-background-hover-color);
-    --button-foreground-color: var(--v2p-color-foreground);
-    --button-foreground-hover-color: var(--v2p-color-foreground);
-    --button-border-color: var(--v2p-color-border);
-    --button-border-hover-color: #768390;
-
-    #Logo {
-      background-image: url('https://www.v2ex.com/static/img/v2ex-alt@2x.png');
-    }
-
-    ::selection {
-      color: var(--v2p-color-background, #1c2128);
-      background-color: var(--v2p-color-foreground, #adbac7);
-    }
-
-    img::selection {
-      background-color: var(--v2p-color-foreground, #adbac7);
-    }
-  }
-
-  body {
+  @mixin light-mode {
     // 基础色（参考自 TailwindCSS Slate）：
     --v2p-color-main-50: #f7f9fb;
     --v2p-color-main-100: #f1f5f9;
@@ -113,10 +42,22 @@
     --v2p-color-orange-100: #ffedd5;
     --v2p-color-orange-400: #fb923c;
 
-    // 特别色：
+    // ====
     --v2p-color-background: #f2f3f5;
     --v2p-color-foreground: var(--v2p-color-main-800);
+    --v2p-color-selection-foreground: var(--v2p-color-main-100);
+    --v2p-color-selection-background: var(--v2p-color-main-700);
+    --v2p-color-selection-background-img: var(--v2p-color-main-500);
     --v2p-color-font-secondary: var(--v2p-color-main-500);
+
+    // ==== 按钮 ====
+    --v2p-color-button-background: var(--v2p-color-main-100);
+    --v2p-color-button-foreground: var(--v2p-color-main-500);
+    --v2p-color-button-background-hover: var(--v2p-color-main-200);
+    --v2p-color-button-foreground-hover: var(--v2p-color-main-600);
+    // ---- 按钮 ----
+
+    // ==== 背景 ====
     --v2p-color-bg-content: #fff;
     --v2p-color-bg-footer: var(--v2p-color-bg-content);
     --v2p-color-bg-hover-btn: var(--v2p-color-main-200);
@@ -127,18 +68,30 @@
     --v2p-color-bg-widget: rgb(255 255 255 / 70%);
     --v2p-color-bg-reply: var(--v2p-color-main-100);
     --v2p-color-bg-tooltip: var(--v2p-color-bg-content);
+    --v2p-color-bg-tabs: var(--v2p-color-main-100);
+    --v2p-color-bg-tpr: var(--v2p-color-main-100);
+    --v2p-color-bg-avatar: var(--v2p-color-main-300);
+    // ---- 背景 ----
+
+    --v2p-color-tabs: var(--v2p-color-foreground);
     --v2p-color-heart: #ef4444;
     --v2p-color-heart-fill: #fee2e2;
     --v2p-color-mask: rgb(0 0 0 / 25%);
     --v2p-color-divider: var(--v2p-color-main-200);
     --v2p-color-border: var(--v2p-color-main-200);
+    --v2p-color-input-border: var(--v2p-color-main-300);
     --v2p-color-border-darker: var(--v2p-color-main-300);
+    --v2p-color-link-visited: var(--v2p-color-main-400);
+    --v2p-color-error: #ef4444;
+    --v2p-color-bg-error: #fee2e2;
+    --v2p-color-cell-num: var(--v2p-color-main-350);
+
+    // ==== 阴影 ====
     --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
     --v2p-widget-shadow: 0 9px 24px -3px rgb(0 0 0 / 6%), 0 4px 8px -1px rgb(0 0 0 /12%);
     --v2p-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
       0 9px 28px 8px rgb(0 0 0 / 5%);
-    --v2p-color-error: #ef4444;
-    --v2p-color-bg-error: #fee2e2;
+    // ---- 阴影 ----
 
     // V2EX 原有的 CSS 变量：
     --color-fade: var(--v2p-color-font-secondary);
@@ -154,46 +107,41 @@
     --box-background-hover-color: var(--v2p-color-main-200);
     --box-border-focus-color: var(--v2p-color-main-200);
     --box-border-radius: 10px;
-    --button-background-color: var(--v2p-color-main-100);
-    --button-background-hover-color: var(--v2p-color-main-200);
-    --button-hover-color: var(--button-background-hover-color);
-    --button-foreground-color: var(--v2p-color-main-500);
-    --button-foreground-hover-color: var(--v2p-color-main-600);
+    --button-background-color: var(--v2p-color-button-background);
+    --button-foreground-color: var(--v2p-color-button-foreground);
+    --button-hover-color: var(--v2p-color-button-background-hover);
+    --button-background-hover-color: var(--v2p-color-button-background-hover);
+    --button-foreground-hover-color: var(--v2p-color-button-foreground-hover);
     --button-border-color: var(--v2p-color-main-300);
     --button-border-hover-color: var(--v2p-color-main-400);
+  }
 
+  body {
     font-family: system-ui, sans-serif;
     color: var(--v2p-color-foreground);
+    visibility: hidden;
     background-color: var(--v2p-color-background);
+
+    &.v2p-theme-light-default,
+    .v2p-theme-light-default {
+      @include light-mode;
+
+      visibility: visible;
+    }
 
     #Logo {
       background-image: url('https://www.v2ex.com/static/img/v2ex@2x.png');
     }
 
     ::selection {
-      color: var(--v2p-color-main-100, #f1f5f9);
-      background-color: var(--v2p-color-main-700, #334155);
+      color: var(--v2p-color-selection-foreground);
+      background-color: var(--v2p-color-selection-background);
     }
 
     img::selection {
-      background-color: var(--v2p-color-main-500, #64748b);
+      background-color: var(--v2p-color-selection-background-img);
     }
-  }
 
-  body.v2p-theme-dark,
-  &[data-darkreader-scheme='dark'] body {
-    @include dark-mode;
-  }
-
-  @supports selector(:has(*)) {
-    body:has(#Wrapper.Night) {
-      @include dark-mode;
-    }
-  }
-
-  @supports not selector(:has(*)) {
-    #Wrapper.Night {
-      @include dark-mode;
-    }
+    @include light-mode;
   }
 }

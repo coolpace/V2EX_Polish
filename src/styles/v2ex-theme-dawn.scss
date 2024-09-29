@@ -1,0 +1,89 @@
+body.v2p-theme-dawn,
+.v2p-theme-dawn {
+  // 色板：
+  --v2p-color-base: 32deg 57% 95%;
+  --v2p-color-surface: 35deg 100% 98%;
+  --v2p-color-overlay: 33deg 43% 91%;
+  --v2p-color-muted: 257deg 9% 61%;
+  --v2p-color-subtle: 248deg 12% 52%;
+  --v2p-color-text: 248deg 19% 40%;
+  --v2p-color-love: 343deg 35% 55%;
+  --v2p-color-gold: 35deg 81% 56%;
+  --v2p-color-rose: 3deg 53% 67%;
+  --v2p-color-pine: 197deg 53% 34%;
+  --v2p-color-foam: 189deg 30% 48%;
+  --v2p-color-iris: 268deg 21% 57%;
+
+  // ====
+  --v2p-color-accent-50: hsl(var(--v2p-color-foam) / 10%);
+  --v2p-color-accent-100: hsl(var(--v2p-color-foam) / 20%);
+  --v2p-color-accent-200: hsl(var(--v2p-color-foam) / 30%);
+  --v2p-color-accent-300: hsl(var(--v2p-color-foam) / 40%);
+  --v2p-color-accent-400: hsl(var(--v2p-color-foam) / 50%);
+  --v2p-color-accent-500: hsl(var(--v2p-color-foam) / 65%);
+  --v2p-color-accent-600: hsl(var(--v2p-color-foam) / 80%);
+
+  // ====
+  --v2p-color-background: hsl(var(--v2p-color-base));
+  --v2p-color-foreground: hsl(var(--v2p-color-text));
+  --v2p-color-selection-foreground: var(--v2p-color-foreground);
+  --v2p-color-selection-background: hsl(var(--v2p-color-muted) / 20%);
+  --v2p-color-selection-background-img: hsl(var(--v2p-color-muted) / 60%);
+  --v2p-color-font-secondary: hsl(var(--v2p-color-subtle));
+
+  // ==== 按钮 ====
+  --v2p-color-button-background: hsl(var(--v2p-color-text) / 10%);
+  --v2p-color-button-foreground: var(--v2p-color-foreground);
+  --v2p-color-button-background-hover: hsl(var(--v2p-color-text) / 15%);
+  --v2p-color-button-foreground-hover: var(--v2p-color-foreground);
+  // ---- 按钮 ----
+
+  // ==== 背景 ====
+  --v2p-color-bg-content: hsl(var(--v2p-color-surface));
+  --v2p-color-bg-footer: var(--v2p-color-bg-content);
+  --v2p-color-bg-hover-btn: rgb(152 147 165 / 10%);
+  --v2p-color-bg-subtle: hsl(var(--v2p-color-pine) / 10%);
+  --v2p-color-bg-input: hsl(var(--v2p-color-overlay) / 40%);
+  --v2p-color-bg-search: hsl(var(--v2p-color-overlay) / 60%);
+  --v2p-color-bg-search-active: hsl(var(--v2p-color-overlay) / 90%);
+  --v2p-color-bg-widget: rgb(255 255 255 / 70%);
+  --v2p-color-bg-reply: #faf4ed;
+  --v2p-color-bg-tooltip: var(--v2p-color-bg-content);
+  --v2p-color-bg-tabs: hsl(var(--v2p-color-pine) / 10%);
+  --v2p-color-bg-tpr: hsl(var(--v2p-color-text) / 10%);
+  --v2p-color-bg-avatar: hsl(var(--v2p-color-overlay));
+  // ---- 背景 ----
+
+  --v2p-color-tabs: hsl(var(--v2p-color-pine));
+  --v2p-color-heart: #eb6f92;
+  --v2p-color-heart-fill: rgb(235 111 146 / 50%);
+  --v2p-color-mask: rgb(0 0 0 / 25%);
+  --v2p-color-divider: hsl(var(--v2p-color-muted) / 20%);
+  --v2p-color-border: hsl(var(--v2p-color-muted) / 20%);
+  --v2p-color-input-border: rgb(152 147 165 / 20%);
+  --v2p-color-border-darker: #f2e9e1;
+  --v2p-color-link-visited: hsl(var(--v2p-color-subtle));
+  --v2p-color-error: #eb6f92;
+  --v2p-color-bg-error: #fee2e2;
+  --v2p-color-cell-num: hsl(var(--v2p-color-subtle));
+
+  // ==== 阴影 ====
+  --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
+  --v2p-widget-shadow: 0 9px 24px -3px rgb(0 0 0 / 6%), 0 4px 8px -1px rgb(0 0 0 /12%);
+  --v2p-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
+    0 9px 28px 8px rgb(0 0 0 / 5%);
+  // ---- 阴影 ----
+
+  visibility: visible;
+
+  .button {
+    &.special {
+      &:hover {
+        &,
+        &:enabled {
+          text-shadow: none;
+        }
+      }
+    }
+  }
+}
