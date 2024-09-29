@@ -69,76 +69,49 @@
                 <div class="theme-select">
                   <div class="form-radio">
                     <input
-                      type="radio"
                       id="theme_type_default"
+                      class="theme-opt-input"
+                      type="radio"
                       name="theme.type"
-                      value="default"
+                      value="light-default"
                       checked="false"
                     />
                     <div class="combo">
-                      <label for="theme_type_default">
-                        <div class="theme-pv">
-                          <div class="theme-pv-view">
-                            <div class="tpv-header">
-                              <div class="tpv-header-item"></div>
-                              <div class="tpv-header-item"></div>
-                              <div class="tpv-header-item"></div>
-                            </div>
-                            <div class="tpv-main">
-                              <div class="tpv-main-top">
-                                <div class="tpv-top-line"></div>
-                              </div>
-
-                              <div class="tpv-main-content">
-                                <div class="tpv-main-left">
-                                  <div class="tpv-main-line">
-                                    <div class="tpv-main-line-inner"></div>
-                                  </div>
-                                </div>
-                                <div class="tpv-main-right"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="theme-pv-footer">Light default</div>
-                        </div>
-                      </label>
+                      <label
+                        for="theme_type_default"
+                        class="theme-option v2p-theme-light-default"
+                      ></label>
                     </div>
                   </div>
+
                   <div class="form-radio">
                     <input
+                      id="theme_type_dark"
+                      class="theme-opt-input"
                       type="radio"
-                      id="theme_type_dawn"
                       name="theme.type"
-                      value="compact"
+                      value="dark-default"
                       checked="false"
                     />
                     <div class="combo">
-                      <label for="theme_type_dawn" class="v2p-theme-dawn">
-                        <div class="theme-pv">
-                          <div class="theme-pv-view">
-                            <div class="tpv-header">
-                              <div class="tpv-header-item"></div>
-                              <div class="tpv-header-item"></div>
-                              <div class="tpv-header-item"></div>
-                            </div>
-                            <div class="tpv-main">
-                              <div class="tpv-main-top">
-                                <div class="tpv-top-line"></div>
-                              </div>
+                      <label
+                        for="theme_type_dark"
+                        class="theme-option v2p-theme-dark-default"
+                      ></label>
+                    </div>
+                  </div>
 
-                              <div class="tpv-main-content">
-                                <div class="tpv-main-left">
-                                  <div class="tpv-main-line">
-                                    <div class="tpv-main-line-inner"></div>
-                                  </div>
-                                </div>
-                                <div class="tpv-main-right"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="theme-pv-footer">Rose Pine Dawn</div>
-                        </div>
-                      </label>
+                  <div class="form-radio">
+                    <input
+                      id="theme_type_dawn"
+                      class="theme-opt-input"
+                      type="radio"
+                      name="theme.type"
+                      value="dawn"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="theme_type_dawn" class="theme-option v2p-theme-dawn"></label>
                     </div>
                   </div>
                 </div>
@@ -152,7 +125,7 @@
               </fieldset>
 
               <fieldset>
-                <legend>模式</legend>
+                <legend>间距模式</legend>
                 <div class="form-radio">
                   <input
                     type="radio"
@@ -162,7 +135,7 @@
                     checked="false"
                   />
                   <div class="combo">
-                    <label for="theme_mode_default">默认</label>
+                    <label for="theme_mode_default">自然</label>
                   </div>
                 </div>
                 <div class="form-radio">
@@ -403,6 +376,35 @@
         <div data-content-key="tags"></div>
       </div>
     </div>
+
+    <template id="theme-option-content">
+      <div class="theme-pv">
+        <div class="theme-pv-view">
+          <div class="tpv-header">
+            <div class="tpv-header-item"></div>
+            <div class="tpv-header-item"></div>
+            <div class="tpv-header-item"></div>
+          </div>
+          <div class="tpv-main">
+            <div class="tpv-main-top">
+              <div class="tpv-top-line"></div>
+            </div>
+
+            <div class="tpv-main-content">
+              <div class="tpv-main-left">
+                <div class="tpv-main-line">
+                  <div class="tpv-main-line-inner"></div>
+                </div>
+              </div>
+              <div class="tpv-main-right"></div>
+            </div>
+          </div>
+        </div>
+        <div class="theme-pv-footer">
+          <div class="theme-type-name"></div>
+        </div>
+      </div>
+    </template>
 
     <template id="tags-empty">
       <div class="tags-empty-block">

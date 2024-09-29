@@ -83,8 +83,8 @@
     }
   }
 
-  body.v2p-theme-dark,
-  .v2p-theme-dark,
+  body.v2p-theme-dark-default,
+  .v2p-theme-dark-default,
   &[data-darkreader-scheme='dark'] body {
     @include dark-mode;
   }

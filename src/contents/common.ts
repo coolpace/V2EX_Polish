@@ -27,8 +27,7 @@ void (async () => {
   }
 
   if (options.theme.type === 'dark-default') {
-    console.log(123)
-    $body.addClass('v2p-theme-dark')
+    $body.addClass('v2p-theme-dark-default')
   } else if (options.theme.type === 'dawn') {
     $body.addClass('v2p-theme-dawn')
   } else {
@@ -66,10 +65,10 @@ void (async () => {
       }
 
       if (preferDark) {
-        $body.addClass('v2p-theme-dark')
+        $body.addClass('v2p-theme-dark-default')
         $wrapper.addClass('Night')
       } else {
-        $body.removeClass('v2p-theme-dark')
+        $body.removeClass('v2p-theme-dark-default')
         $wrapper.removeClass('Night')
       }
     }

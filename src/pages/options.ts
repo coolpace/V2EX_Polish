@@ -19,7 +19,7 @@ function loadIcons() {
   })
 }
 
-const saveOptions = async () => {
+async function saveOptions() {
   const currentOptions: Options = {
     openInNewTab: $('#openInNewTab').prop('checked'),
     autoCheckIn: {
@@ -103,21 +103,57 @@ const saveOptions = async () => {
   await setStorage(StorageKey.Options, currentOptions)
 }
 
-void (async function init() {
-  const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+function getThemeTypeFromClassList(classList: DOMTokenList) {
+  const themeType = Array.from(classList)
+    .find((it) => it.startsWith('v2p-theme-'))
+    ?.replace('v2p-theme-', '')
 
-  if (perfersDark.matches) {
-    $body.addClass('v2p-theme-dark')
-  }
+  return themeType
+}
 
-  perfersDark.addEventListener('change', ({ matches }) => {
-    if (matches) {
-      $body.addClass('v2p-theme-dark')
-    } else {
-      $body.removeClass('v2p-theme-dark')
+function setThemeOptions() {
+  $('.theme-option').each((_, ele) => {
+    const themeType = getThemeTypeFromClassList(ele.classList)
+
+    const $content = $($('#theme-option-content').clone().html())
+    const $typeName = $content.find('.theme-type-name')
+
+    if (themeType === 'light-default') {
+      $typeName.text('Light default')
+    } else if (themeType === 'dark-default') {
+      $typeName.text('Dark default')
+    } else if (themeType === 'dawn') {
+      $typeName.text('Rose Pine Dawn')
     }
-  })
 
+    $(ele).append($content)
+  })
+}
+
+function setTheme({ autoSwitch, themeType }: { autoSwitch?: boolean; themeType?: string }) {
+  if (autoSwitch) {
+    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+    if (perfersDark.matches) {
+      $body.addClass('v2p-theme-dark-default')
+    }
+
+    perfersDark.addEventListener('change', ({ matches }) => {
+      if (matches) {
+        $body.addClass('v2p-theme-dark-default')
+      } else {
+        $body.removeClass('v2p-theme-dark-default')
+      }
+    })
+  } else {
+    if (themeType) {
+      $body.addClass(`v2p-theme-${themeType}`)
+    }
+  }
+}
+
+void (async function init() {
+  setThemeOptions()
   loadIcons()
 
   const storage = await getStorage()
@@ -125,6 +161,8 @@ void (async function init() {
   // 初始化设置表单的值。
   {
     const options = storage[StorageKey.Options]
+
+    setTheme({ autoSwitch: options.theme.autoSwitch, themeType: options.theme.type })
 
     $('#openInNewTab').prop('checked', options.openInNewTab)
     $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
@@ -403,4 +441,18 @@ void (async function init() {
       }
     })
   }
+
+  $('.theme-select .form-radio').on('click', (ev) => {
+    const classList = $(ev.target).find('.theme-option').get(0)?.classList
+
+    console.log(classList)
+    if (classList) {
+      const themeType = getThemeTypeFromClassList(classList)
+
+      console.log(themeType)
+      setTheme({
+        themeType,
+      })
+    }
+  })
 })()
