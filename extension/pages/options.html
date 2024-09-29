@@ -63,10 +63,66 @@
 
               <fieldset>
                 <legend>颜色主题</legend>
+
+                <div class="theme-select">
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="theme_type_default"
+                      name="theme.type"
+                      value="default"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="theme_type_default">默认</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="theme_type_dawn"
+                      name="theme.type"
+                      value="compact"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="theme_type_dawn">护眼</label>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="form-checkbox">
-                  <input type="checkbox" id="autoSwitch" checked="false" />
+                  <input type="checkbox" id="theme_autoSwitch" checked="false" />
                   <div class="combo">
-                    <label for="autoSwitch">自动跟随系统切换浅色/深色模式</label>
+                    <label for="theme_autoSwitch">自动跟随系统切换浅色/深色模式</label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>模式</legend>
+                <div class="form-radio">
+                  <input
+                    type="radio"
+                    id="theme_mode_default"
+                    name="theme.mode"
+                    value="default"
+                    checked="false"
+                  />
+                  <div class="combo">
+                    <label for="theme_mode_default">默认</label>
+                  </div>
+                </div>
+                <div class="form-radio">
+                  <input
+                    type="radio"
+                    id="theme_mode_compact"
+                    name="theme.mode"
+                    value="compact"
+                    checked="false"
+                  />
+                  <div class="combo">
+                    <label for="theme_mode_compact">紧凑</label>
                   </div>
                 </div>
               </fieldset>

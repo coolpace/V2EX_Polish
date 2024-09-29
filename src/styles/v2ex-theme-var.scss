@@ -17,6 +17,7 @@
   --v2p-tp-item-x: 20px;
   --v2p-tp-item-y: 10px;
   --v2p-tp-tabs-pd: 10px;
+  --v2p-tp-nested-pd: 15px;
 
   body {
     // 基础色（参考自 TailwindCSS Slate）：
@@ -100,7 +101,7 @@
 
     font-family: system-ui, sans-serif;
     color: var(--v2p-color-foreground);
-    visibility: hidden;
+    // visibility: hidden;
     background-color: var(--v2p-color-background);
 
     #Logo {

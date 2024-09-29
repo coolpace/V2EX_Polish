@@ -4,6 +4,9 @@ body.v2p-theme-compact {
   --v2p-tp-item-x: 12px;
   --v2p-tp-item-y: 0px;
   --v2p-tp-tabs-pd: 6px;
+  --v2p-tp-nested-pd: 10px;
+
+  visibility: visible;
 
   #Main {
     .cell {

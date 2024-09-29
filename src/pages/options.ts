@@ -1,10 +1,10 @@
 import { CircleHelp, createIcons, Plus, Settings, Tags, X } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
+import { $body } from '../contents/globals'
 import { setMemberTags } from '../contents/helpers'
 import type { Options } from '../types'
 import { getStorage, setStorage } from '../utils'
-import { $body } from '../contents/globals'
 
 function loadIcons() {
   createIcons({
@@ -26,7 +26,35 @@ const saveOptions = async () => {
       enabled: $('#autoCheckIn').prop('checked'),
     },
     theme: {
-      autoSwitch: $('#autoSwitch').prop('checked'),
+      type: (() => {
+        const isDefault = $('#theme_type_default').prop('checked')
+        const isDawn = $('#theme_type_dawn').prop('checked')
+
+        if (isDefault) {
+          return 'default'
+        }
+
+        if (isDawn) {
+          return 'dawn'
+        }
+
+        return undefined
+      })(),
+      autoSwitch: $('#theme_autoSwitch').prop('checked'),
+      mode: (() => {
+        const isDefault = $('#theme_mode_default').prop('checked')
+        const isCompact = $('#theme_mode_compact').prop('checked')
+
+        if (isDefault) {
+          return 'default'
+        }
+
+        if (isCompact) {
+          return 'compact'
+        }
+
+        return undefined
+      })(),
     },
     reply: {
       preload: (() => {
@@ -34,11 +62,11 @@ const saveOptions = async () => {
         const auto = $('#reply_preload_auto').prop('checked')
 
         if (off) {
-          return 'off' as const
+          return 'off'
         }
 
         if (auto) {
-          return 'auto' as const
+          return 'auto'
         }
 
         return undefined
@@ -95,7 +123,19 @@ void (async function init() {
 
     $('#openInNewTab').prop('checked', options.openInNewTab)
     $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
-    $('#autoSwitch').prop('checked', options.theme.autoSwitch)
+
+    $('#theme_type_default').prop(
+      'checked',
+      !options.theme.type || options.theme.type === 'default'
+    )
+    $('#theme_type_dawn').prop('checked', options.theme.type === 'dawn')
+    $('#theme_autoSwitch').prop('checked', options.theme.autoSwitch)
+    $('#theme_mode_default').prop(
+      'checked',
+      !options.theme.mode || options.theme.mode === 'default'
+    )
+    $('#theme_mode_compact').prop('checked', options.theme.mode === 'compact')
+
     $('#autoFold').prop('checked', options.replyContent.autoFold)
     $('#hideReplyTime').prop('checked', options.replyContent.hideReplyTime)
     $('#hideRefName').prop('checked', options.replyContent.hideRefName)

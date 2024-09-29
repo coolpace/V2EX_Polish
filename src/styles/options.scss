@@ -92,6 +92,13 @@ body {
   border-radius: 5px;
 }
 
+.theme-select {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 #options-form {
   @at-root {
     .options-form-inner {
