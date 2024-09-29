@@ -1,14 +1,32 @@
 body.v2p-theme-dawn {
-  // 特别色：
-  --v2p-color-background: #faf4ed;
-  --v2p-color-foreground: #585379;
+  // 色板：
+  --v2p-color-base: 32deg 57% 95%;
+  --v2p-color-surface: 35deg 100% 98%;
+  --v2p-color-overlay: 33deg 43% 91%;
+  --v2p-color-muted: 257deg 9% 61%;
+  --v2p-color-subtle: 248deg 12% 52%;
+  --v2p-color-text: 248deg 19% 40%;
+  --v2p-color-love: 343deg 35% 55%;
+  --v2p-color-gold: 35deg 81% 56%;
+  --v2p-color-rose: 3deg 53% 67%;
+  --v2p-color-pine: 197deg 53% 34%;
+  --v2p-color-foam: 189deg 30% 48%;
+  --v2p-color-iris: 268deg 21% 57%;
+
+  // 组件色：
+  --v2p-color-background: hsl(var(--v2p-color-base));
+  --v2p-color-foreground: hsl(var(--v2p-color-text));
   --v2p-color-selection-foreground: var(--v2p-color-foreground);
-  --v2p-color-selection-background: rgb(152 147 165 / 20%);
-  --v2p-color-selection-background-img: var(--v2p-color-main-500);
-  --v2p-color-font-secondary: #6e6a86;
-  --v2p-color-bg-content: #fffbf5;
+  --v2p-color-selection-background: hsl(var(--v2p-color-muted) / 20%);
+  --v2p-color-selection-background-img: hsl(var(--v2p-color-muted) / 60%);
+  --v2p-color-button-background: hsl(var(--v2p-color-text) / 10%);
+  --v2p-color-button-foreground: var(--v2p-color-foreground);
+  --v2p-color-button-background-hover: #444c56;
+  --v2p-color-button-foreground-hover: var(--v2p-color-foreground);
+  --v2p-color-font-secondary: hsl(var(--v2p-color-subtle));
+  --v2p-color-bg-content: hsl(var(--v2p-color-surface));
   --v2p-color-bg-footer: var(--v2p-color-bg-content);
-  --v2p-color-bg-hover-btn: var(--v2p-color-main-200);
+  --v2p-color-bg-hover-btn: rgb(152 147 165 / 10%);
   --v2p-color-bg-subtle: rgb(236 253 245 / 90%);
   --v2p-color-bg-input: var(--v2p-color-main-50);
   --v2p-color-bg-search: var(--v2p-color-main-100);

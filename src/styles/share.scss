@@ -22,7 +22,7 @@
   color: var(--v2p-color-button-foreground);
   text-shadow: none;
   white-space: nowrap;
-  background: var(--button-background-color);
+  background: var(--v2p-color-button-background);
   border: none;
   border-radius: 6px;
   outline: none;
@@ -36,9 +36,9 @@
 
   &:is(:hover:enabled, :active:enabled) {
     font-weight: 500;
-    color: var(--button-foreground-hover-color);
+    color: var(--v2p-color-button-foreground-hover);
     text-shadow: none;
-    background: var(--button-hover-color);
+    background: var(--v2p-color-button-background-hover);
     border: none;
     box-shadow: var(--button-hover-shadow);
   }

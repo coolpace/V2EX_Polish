@@ -27,7 +27,10 @@
     // 特别色：
     --v2p-color-background: #1c2128;
     --v2p-color-foreground: #adbac7;
+    --v2p-color-button-background: #373e47;
     --v2p-color-button-foreground: var(--v2p-color-foreground);
+    --v2p-color-button-background-hover: #444c56;
+    --v2p-color-button-foreground-hover: var(--v2p-color-foreground);
     --v2p-color-font-secondary: var(--v2p-color-main-600);
     --v2p-color-bg-content: #22272e;
     --v2p-color-bg-subtle: rgb(6 78 59 / 30%);
@@ -48,14 +51,9 @@
 
     // V2EX 原有的 CSS 变量：
     --link-color: var(--v2p-color-foreground);
-    --box-background-color: var(--v2p-color-bg-content);
     --box-background-alt-color: var(--v2p-color-main-100);
     --box-background-hover-color: var(--v2p-color-main-300);
-    --button-background-color: #373e47;
-    --button-background-hover-color: #444c56;
     --button-hover-color: var(--button-background-hover-color);
-    --button-foreground-color: var(--v2p-color-button-foreground);
-    --button-foreground-hover-color: var(--v2p-color-foreground);
     --button-border-color: var(--v2p-color-border);
     --button-border-hover-color: #768390;
 
