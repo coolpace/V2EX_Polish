@@ -1,10 +1,10 @@
 import { CircleHelp, createIcons, Plus, Settings, Tags, X } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
+import { $body } from '../contents/globals'
 import { setMemberTags } from '../contents/helpers'
 import type { Options } from '../types'
 import { getStorage, setStorage } from '../utils'
-import { $body } from '../contents/globals'
 
 function loadIcons() {
   createIcons({
@@ -19,14 +19,47 @@ function loadIcons() {
   })
 }
 
-const saveOptions = async () => {
+async function saveOptions() {
   const currentOptions: Options = {
     openInNewTab: $('#openInNewTab').prop('checked'),
     autoCheckIn: {
       enabled: $('#autoCheckIn').prop('checked'),
     },
     theme: {
-      autoSwitch: $('#autoSwitch').prop('checked'),
+      type: (() => {
+        const isLightDefault = $('#theme_type_default').prop('checked')
+        const isDarkDefault = $('#theme_type_dark').prop('checked')
+        const isDawn = $('#theme_type_dawn').prop('checked')
+
+        if (isLightDefault) {
+          return 'light-default'
+        }
+
+        if (isDarkDefault) {
+          return 'dark-default'
+        }
+
+        if (isDawn) {
+          return 'dawn'
+        }
+
+        return undefined
+      })(),
+      autoSwitch: $('#theme_autoSwitch').prop('checked'),
+      mode: (() => {
+        const isDefault = $('#theme_mode_default').prop('checked')
+        const isCompact = $('#theme_mode_compact').prop('checked')
+
+        if (isDefault) {
+          return 'default'
+        }
+
+        if (isCompact) {
+          return 'compact'
+        }
+
+        return undefined
+      })(),
     },
     reply: {
       preload: (() => {
@@ -34,11 +67,11 @@ const saveOptions = async () => {
         const auto = $('#reply_preload_auto').prop('checked')
 
         if (off) {
-          return 'off' as const
+          return 'off'
         }
 
         if (auto) {
-          return 'auto' as const
+          return 'auto'
         }
 
         return undefined
@@ -70,21 +103,63 @@ const saveOptions = async () => {
   await setStorage(StorageKey.Options, currentOptions)
 }
 
-void (async function init() {
-  const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+function getThemeTypeFromClassList(classList: DOMTokenList) {
+  const themeType = Array.from(classList)
+    .find((it) => it.startsWith('v2p-theme-'))
+    ?.replace('v2p-theme-', '')
 
-  if (perfersDark.matches) {
-    $body.addClass('v2p-theme-dark')
-  }
+  return themeType
+}
 
-  perfersDark.addEventListener('change', ({ matches }) => {
-    if (matches) {
-      $body.addClass('v2p-theme-dark')
-    } else {
-      $body.removeClass('v2p-theme-dark')
+function setThemeOptions() {
+  $('.theme-option').each((_, ele) => {
+    const themeType = getThemeTypeFromClassList(ele.classList)
+
+    const $content = $($('#theme-option-content').clone().html())
+    const $typeName = $content.find('.theme-type-name')
+
+    if (themeType === 'light-default') {
+      $typeName.text('Light default')
+    } else if (themeType === 'dark-default') {
+      $typeName.text('Dark default')
+    } else if (themeType === 'dawn') {
+      $typeName.text('Rose Pine Dawn')
     }
-  })
 
+    $(ele).append($content)
+  })
+}
+
+function setTheme({ autoSwitch, themeType }: { autoSwitch?: boolean; themeType?: string }) {
+  if (autoSwitch) {
+    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+    if (perfersDark.matches) {
+      $body.addClass('v2p-theme-dark-default')
+    }
+
+    perfersDark.addEventListener('change', ({ matches }) => {
+      if (matches) {
+        $body.addClass('v2p-theme-dark-default')
+      } else {
+        $body.removeClass('v2p-theme-dark-default')
+      }
+    })
+  } else {
+    if (themeType) {
+      $body.get(0)?.classList.forEach((cls) => {
+        if (cls.startsWith('v2p-theme-')) {
+          $body.removeClass(cls)
+        }
+      })
+
+      $body.addClass(`v2p-theme-${themeType}`)
+    }
+  }
+}
+
+void (async function init() {
+  setThemeOptions()
   loadIcons()
 
   const storage = await getStorage()
@@ -93,9 +168,24 @@ void (async function init() {
   {
     const options = storage[StorageKey.Options]
 
+    setTheme({ autoSwitch: options.theme.autoSwitch, themeType: options.theme.type })
+
     $('#openInNewTab').prop('checked', options.openInNewTab)
     $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
-    $('#autoSwitch').prop('checked', options.theme.autoSwitch)
+
+    $('#theme_type_default').prop(
+      'checked',
+      !options.theme.type || options.theme.type === 'light-default'
+    )
+    $('#theme_type_dark').prop('checked', options.theme.type === 'dark-default')
+    $('#theme_type_dawn').prop('checked', options.theme.type === 'dawn')
+    $('#theme_autoSwitch').prop('checked', options.theme.autoSwitch)
+    $('#theme_mode_default').prop(
+      'checked',
+      !options.theme.mode || options.theme.mode === 'default'
+    )
+    $('#theme_mode_compact').prop('checked', options.theme.mode === 'compact')
+
     $('#autoFold').prop('checked', options.replyContent.autoFold)
     $('#hideReplyTime').prop('checked', options.replyContent.hideReplyTime)
     $('#hideRefName').prop('checked', options.replyContent.hideRefName)
@@ -357,4 +447,18 @@ void (async function init() {
       }
     })
   }
+
+  $('.theme-select .form-radio').on('click', (ev) => {
+    ev.stopImmediatePropagation()
+
+    const classList = $(ev.currentTarget).find('.theme-option').get(0)?.classList
+
+    if (classList) {
+      const themeType = getThemeTypeFromClassList(classList)
+
+      setTheme({
+        themeType,
+      })
+    }
+  })
 })()

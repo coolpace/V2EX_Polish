@@ -19,10 +19,10 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 28px;
-  color: var(--button-foreground-color);
+  color: var(--v2p-color-button-foreground);
   text-shadow: none;
   white-space: nowrap;
-  background: var(--button-background-color);
+  background: var(--v2p-color-button-background);
   border: none;
   border-radius: 6px;
   outline: none;
@@ -36,15 +36,15 @@
 
   &:is(:hover:enabled, :active:enabled) {
     font-weight: 500;
-    color: var(--button-foreground-hover-color);
+    color: var(--v2p-color-button-foreground-hover);
     text-shadow: none;
-    background: var(--button-hover-color);
+    background: var(--v2p-color-button-background-hover);
     border: none;
     box-shadow: var(--button-hover-shadow);
   }
 
   &:is(.hover_now, .disable_now) {
-    color: var(--button-foreground-color) !important;
+    color: var(--v2p-color-button-foreground) !important;
     text-shadow: none !important;
     background: var(--button-background-color) !important;
     border: none !important;
@@ -57,7 +57,7 @@
     pointer-events: none;
     cursor: default;
     font-weight: 500;
-    color: var(--button-foreground-color);
+    color: var(--v2p-color-button-foreground);
     text-shadow: none;
     opacity: 0.8;
     background: var(--button-background-color);

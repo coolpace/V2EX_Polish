@@ -4,14 +4,17 @@ body.v2p-theme-compact {
   --v2p-tp-item-x: 12px;
   --v2p-tp-item-y: 0px;
   --v2p-tp-tabs-pd: 6px;
-}
+  --v2p-tp-nested-pd: 10px;
 
-#Main {
-  .cell {
-    .item_title {
-      .topic-link {
-        font-size: 14px;
-        font-weight: 500;
+  visibility: visible;
+
+  #Main {
+    .cell {
+      .item_title {
+        .topic-link {
+          font-size: 14px;
+          font-weight: 500;
+        }
       }
     }
   }

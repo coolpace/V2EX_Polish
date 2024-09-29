@@ -18,57 +18,71 @@ if ($('#site-header').length > 0) {
   $body.addClass('v2p-mobile')
 }
 
+const toggleTheme = ({ $toggle, preferDark }: { $toggle: JQuery; preferDark: boolean }) => {
+  const shouldSync =
+    (preferDark && !$wrapper.hasClass('Night')) || (!preferDark && $wrapper.hasClass('Night'))
+
+  // 如果检测到本地设置与用户偏好设置不一致：
+  if (shouldSync) {
+    const href = $toggle.attr('href') // '/settings/night/toggle'
+
+    // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
+    if (typeof href === 'string') {
+      fetch(href)
+    }
+
+    // 同时修改切换按钮。
+    if (preferDark) {
+      $toggle.prop('title', '使用浅色主题')
+      $toggle.html('<i data-lucide="sun"></i>')
+    } else {
+      $toggle.prop('title', '使用深色主题')
+      $toggle.html('<i data-lucide="moon"></i>')
+    }
+    loadIcons()
+  }
+
+  if (preferDark) {
+    $body.addClass('v2p-theme-dark-default')
+    $wrapper.addClass('Night')
+  } else {
+    $body.removeClass('v2p-theme-dark-default')
+    $wrapper.removeClass('Night')
+  }
+}
+
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  if (options.theme.type === 'compact') {
+  if (options.theme.mode === 'compact') {
     $body.addClass('v2p-theme-compact')
   }
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
+  if (options.theme.type === 'dark-default') {
+    toggleTheme({ $toggle, preferDark: true })
+  } else {
+    toggleTheme({ $toggle, preferDark: false })
+  }
+
+  if (options.theme.type === 'dark-default') {
+    $body.addClass('v2p-theme-dark-default')
+  } else if (options.theme.type === 'dawn') {
+    $body.addClass('v2p-theme-dawn')
+  } else {
+    $body.addClass('v2p-theme-light-default')
+  }
+
   // 处理自动切换「明/暗」主题。
   if (options.theme.autoSwitch) {
     const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
-    const toggleTheme = (preferDark: boolean) => {
-      const shouldSync =
-        (preferDark && !$wrapper.hasClass('Night')) || (!preferDark && $wrapper.hasClass('Night'))
-
-      // 如果检测到本地设置与用户偏好设置不一致：
-      if (shouldSync) {
-        const href = $toggle.attr('href') // '/settings/night/toggle'
-
-        // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
-        if (typeof href === 'string') {
-          fetch(href)
-        }
-
-        // 同时修改切换按钮。
-        if (preferDark) {
-          $toggle.prop('title', '使用浅色主题')
-          $toggle.html('<i data-lucide="sun"></i>')
-        } else {
-          $toggle.prop('title', '使用深色主题')
-          $toggle.html('<i data-lucide="moon"></i>')
-        }
-        loadIcons()
-      }
-
-      if (preferDark) {
-        $body.addClass('v2p-theme-dark')
-        $wrapper.addClass('Night')
-      } else {
-        $body.removeClass('v2p-theme-dark')
-        $wrapper.removeClass('Night')
-      }
-    }
-
-    toggleTheme(perfersDark.matches)
+    toggleTheme({ $toggle, preferDark: perfersDark.matches })
 
     perfersDark.addEventListener('change', ({ matches }) => {
-      toggleTheme(matches)
+      toggleTheme({ $toggle, preferDark: matches })
     })
 
     $toggle.on('click', () => {
@@ -132,7 +146,7 @@ void (async () => {
   }
 
   // 增加 SOV2EX 作为搜索引擎选项。
-  // @deprecated: V2EX 原站已支持 SOV2EX，故不再需要此功能。
+  // MARK: @deprecated: V2EX 原站已支持 SOV2EX，故不再需要此功能。
   // {
   //   const $searchItem = $('<a class="search-item cell" target="_blank">')
 
