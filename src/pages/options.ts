@@ -147,6 +147,12 @@ function setTheme({ autoSwitch, themeType }: { autoSwitch?: boolean; themeType?:
     })
   } else {
     if (themeType) {
+      $body.get(0)?.classList.forEach((cls) => {
+        if (cls.startsWith('v2p-theme-')) {
+          $body.removeClass(cls)
+        }
+      })
+
       $body.addClass(`v2p-theme-${themeType}`)
     }
   }
@@ -443,13 +449,13 @@ void (async function init() {
   }
 
   $('.theme-select .form-radio').on('click', (ev) => {
-    const classList = $(ev.target).find('.theme-option').get(0)?.classList
+    ev.stopImmediatePropagation()
 
-    console.log(classList)
+    const classList = $(ev.currentTarget).find('.theme-option').get(0)?.classList
+
     if (classList) {
       const themeType = getThemeTypeFromClassList(classList)
 
-      console.log(themeType)
       setTheme({
         themeType,
       })

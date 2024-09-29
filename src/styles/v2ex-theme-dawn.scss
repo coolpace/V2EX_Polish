@@ -58,7 +58,7 @@ body.v2p-theme-dawn,
   --v2p-color-heart: #eb6f92;
   --v2p-color-heart-fill: rgb(235 111 146 / 50%);
   --v2p-color-mask: rgb(0 0 0 / 25%);
-  --v2p-color-divider: var(--v2p-color-main-200);
+  --v2p-color-divider: hsl(var(--v2p-color-muted) / 20%);
   --v2p-color-border: hsl(var(--v2p-color-muted) / 20%);
   --v2p-color-input-border: rgb(152 147 165 / 20%);
   --v2p-color-border-darker: #f2e9e1;

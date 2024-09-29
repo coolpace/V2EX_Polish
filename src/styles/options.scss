@@ -21,8 +21,8 @@ body {
   overflow-y: auto;
   width: 260px;
   height: 100%;
-  background-color: var(--v2p-color-main-50);
-  border-right: 1px solid var(--v2p-color-main-200);
+  background-color: var(--v2p-color-background);
+  border-right: 1px solid var(--v2p-color-divider);
 }
 
 .side-header {
@@ -66,7 +66,7 @@ body {
 }
 
 .menu-item.active {
-  background-color: var(--v2p-color-main-200);
+  background-color: var(--v2p-color-button-background-hover);
 }
 
 .content {
@@ -88,7 +88,7 @@ body {
 .backup-tip {
   margin-bottom: 20px;
   padding: 10px;
-  background-color: var(--v2p-color-main-100);
+  background-color: var(--v2p-color-button-background);
   border-radius: 5px;
 }
 
@@ -102,8 +102,8 @@ body {
   .form-radio {
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--v2p-color-main-200);
-    border-radius: 5px;
+    border: 1px solid var(--v2p-color-divider);
+    border-radius: 8px;
   }
 
   .combo {
@@ -271,7 +271,7 @@ body {
     }
 
     hr {
-      color: var(--v2p-color-main-200);
+      color: var(--v2p-color-divider);
     }
   }
 }
@@ -356,7 +356,7 @@ fieldset {
         visibility: hidden;
         background-color: var(--v2p-color-bg-content);
         border-radius: 5px;
-        box-shadow: 0 0 10px var(--v2p-color-main-200);
+        box-shadow: 0 0 10px var(--v2p-color-divider);
 
         .usage-popover-title {
           font-size: 13px;
