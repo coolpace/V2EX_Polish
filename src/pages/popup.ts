@@ -22,6 +22,7 @@ import {
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
+import { $body } from '../contents/globals'
 import { iconLoading } from '../icons'
 import {
   fetchHotTopics,
@@ -49,7 +50,6 @@ import {
 } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
-import { $body } from '../contents/globals'
 
 interface LastFetchUnreadMsgInfoInfo {
   time: number
@@ -72,9 +72,9 @@ function loadIcons() {
 
 function toggleTheme(mode?: 'dark' | 'light') {
   if (mode === 'dark') {
-    $body.addClass('v2p-theme-dark')
+    $body.addClass('v2p-theme-dark-default')
   } else {
-    $body.removeClass('v2p-theme-dark')
+    $body.removeClass('v2p-theme-dark-default')
   }
 }
 
@@ -180,7 +180,7 @@ function loadSettings() {
     })
 
     $('#theme-toggle').on('click', () => {
-      const shouldDark = !$body.hasClass('v2p-theme-dark')
+      const shouldDark = !$body.hasClass('v2p-theme-dark-default')
       const themeMode = shouldDark ? 'dark' : 'light'
       window.localStorage.setItem('v2p_popup_theme', themeMode)
       toggleTheme(themeMode)

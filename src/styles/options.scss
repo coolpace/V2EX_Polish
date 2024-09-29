@@ -7,7 +7,7 @@ body {
 body {
   font-size: 16px;
 
-  &.v2p-theme-dark {
+  &.v2p-theme-dark-default {
     color-scheme: dark;
   }
 }
@@ -95,22 +95,37 @@ body {
 .theme-select {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
   align-items: center;
   margin-bottom: 20px;
 
+  .form-radio {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--v2p-color-main-200);
+    border-radius: 5px;
+  }
+
+  .combo {
+    margin-left: 0;
+  }
+
   @at-root {
+    .theme-opt-input {
+      position: absolute;
+      bottom: 9px;
+      left: 10px;
+    }
+
     .theme-pv {
-      overflow: hidden;
       font-size: 13px;
-      border: 1px solid var(--v2p-color-main-200);
-      border-radius: 5px;
 
       .theme-pv-view {
         display: flex;
         flex-direction: column;
         aspect-ratio: 16 / 9;
         width: 260px;
+        min-height: 100px;
         background-color: var(--v2p-color-background);
 
         .tpv-header {
@@ -122,7 +137,7 @@ body {
           .tpv-header-item {
             width: 30px;
             height: 6px;
-            background-color: var(--v2p-color-bg-search);
+            background-color: var(--v2p-color-bg-avatar);
             border-radius: 999px;
           }
         }
@@ -184,6 +199,10 @@ body {
 
       .theme-pv-footer {
         padding: 5px 10px;
+
+        .theme-type-name {
+          padding-left: 20px;
+        }
       }
     }
   }

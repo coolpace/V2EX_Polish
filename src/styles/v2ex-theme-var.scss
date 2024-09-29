@@ -19,7 +19,7 @@
   --v2p-tp-tabs-pd: 10px;
   --v2p-tp-nested-pd: 15px;
 
-  body {
+  @mixin light-mode {
     // 基础色（参考自 TailwindCSS Slate）：
     --v2p-color-main-50: #f7f9fb;
     --v2p-color-main-100: #f1f5f9;
@@ -114,11 +114,20 @@
     --button-foreground-hover-color: var(--v2p-color-button-foreground-hover);
     --button-border-color: var(--v2p-color-main-300);
     --button-border-hover-color: var(--v2p-color-main-400);
+  }
 
+  body {
     font-family: system-ui, sans-serif;
     color: var(--v2p-color-foreground);
-    // visibility: hidden;
+    visibility: hidden;
     background-color: var(--v2p-color-background);
+
+    &.v2p-theme-light-default,
+    .v2p-theme-light-default {
+      @include light-mode;
+
+      visibility: visible;
+    }
 
     #Logo {
       background-image: url('https://www.v2ex.com/static/img/v2ex@2x.png');
@@ -132,5 +141,7 @@
     img::selection {
       background-color: var(--v2p-color-selection-background-img);
     }
+
+    @include light-mode;
   }
 }
