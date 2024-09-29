@@ -47,7 +47,10 @@
     --v2p-color-selection-foreground: var(--v2p-color-main-100);
     --v2p-color-selection-background: var(--v2p-color-main-700);
     --v2p-color-selection-background-img: var(--v2p-color-main-500);
+    --v2p-color-button-background: var(--v2p-color-main-100);
     --v2p-color-button-foreground: var(--v2p-color-main-500);
+    --v2p-color-button-background-hover: var(--v2p-color-main-200);
+    --v2p-color-button-foreground-hover: var(--v2p-color-main-600);
     --v2p-color-font-secondary: var(--v2p-color-main-500);
     --v2p-color-bg-content: #fff;
     --v2p-color-bg-footer: var(--v2p-color-bg-content);
@@ -87,11 +90,11 @@
     --box-background-hover-color: var(--v2p-color-main-200);
     --box-border-focus-color: var(--v2p-color-main-200);
     --box-border-radius: 10px;
-    --button-background-color: var(--v2p-color-main-100);
-    --button-background-hover-color: var(--v2p-color-main-200);
-    --button-hover-color: var(--button-background-hover-color);
+    --button-background-color: var(--v2p-color-button-background);
     --button-foreground-color: var(--v2p-color-button-foreground);
-    --button-foreground-hover-color: var(--v2p-color-main-600);
+    --button-hover-color: var(--v2p-color-button-background-hover);
+    --button-background-hover-color: var(--v2p-color-button-background-hover);
+    --button-foreground-hover-color: var(--v2p-color-button-foreground-hover);
     --button-border-color: var(--v2p-color-main-300);
     --button-border-hover-color: var(--v2p-color-main-400);
 
