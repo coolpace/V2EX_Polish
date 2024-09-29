@@ -18,13 +18,14 @@ if ($('#site-header').length > 0) {
   $body.addClass('v2p-mobile')
 }
 
+/** 切换主题。 */
 const toggleTheme = ({ $toggle, preferDark }: { $toggle: JQuery; preferDark: boolean }) => {
   const shouldSync =
     (preferDark && !$wrapper.hasClass('Night')) || (!preferDark && $wrapper.hasClass('Night'))
 
   // 如果检测到本地设置与用户偏好设置不一致：
   if (shouldSync) {
-    const href = $toggle.attr('href') // '/settings/night/toggle'
+    const href = $toggle.attr('href') // href='/settings/night/toggle'
 
     // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
     if (typeof href === 'string') {
@@ -56,7 +57,7 @@ void (async () => {
   const options = storage[StorageKey.Options]
 
   if (options.theme.mode === 'compact') {
-    $body.addClass('v2p-theme-compact')
+    $body.addClass('v2p-mode-compact')
   }
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')

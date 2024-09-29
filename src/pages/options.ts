@@ -147,6 +147,7 @@ function setTheme({ autoSwitch, themeType }: { autoSwitch?: boolean; themeType?:
     })
   } else {
     if (themeType) {
+      // 在切换主题时，先删除所有已有的主题类。
       $body.get(0)?.classList.forEach((cls) => {
         if (cls.startsWith('v2p-theme-')) {
           $body.removeClass(cls)
