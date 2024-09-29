@@ -42,17 +42,22 @@
     --v2p-color-orange-100: #ffedd5;
     --v2p-color-orange-400: #fb923c;
 
-    // 特别色：
+    // ====
     --v2p-color-background: #f2f3f5;
     --v2p-color-foreground: var(--v2p-color-main-800);
     --v2p-color-selection-foreground: var(--v2p-color-main-100);
     --v2p-color-selection-background: var(--v2p-color-main-700);
     --v2p-color-selection-background-img: var(--v2p-color-main-500);
+    --v2p-color-font-secondary: var(--v2p-color-main-500);
+
+    // ==== 按钮 ====
     --v2p-color-button-background: var(--v2p-color-main-100);
     --v2p-color-button-foreground: var(--v2p-color-main-500);
     --v2p-color-button-background-hover: var(--v2p-color-main-200);
     --v2p-color-button-foreground-hover: var(--v2p-color-main-600);
-    --v2p-color-font-secondary: var(--v2p-color-main-500);
+    // ---- 按钮 ----
+
+    // ==== 背景 ====
     --v2p-color-bg-content: #fff;
     --v2p-color-bg-footer: var(--v2p-color-bg-content);
     --v2p-color-bg-hover-btn: var(--v2p-color-main-200);
@@ -63,6 +68,12 @@
     --v2p-color-bg-widget: rgb(255 255 255 / 70%);
     --v2p-color-bg-reply: var(--v2p-color-main-100);
     --v2p-color-bg-tooltip: var(--v2p-color-bg-content);
+    --v2p-color-bg-tabs: var(--v2p-color-main-100);
+    --v2p-color-bg-tpr: var(--v2p-color-main-100);
+    --v2p-color-bg-avatar: var(--v2p-color-main-300);
+    // ---- 背景 ----
+
+    --v2p-color-tabs: var(--v2p-color-foreground);
     --v2p-color-heart: #ef4444;
     --v2p-color-heart-fill: #fee2e2;
     --v2p-color-mask: rgb(0 0 0 / 25%);
@@ -70,12 +81,17 @@
     --v2p-color-border: var(--v2p-color-main-200);
     --v2p-color-input-border: var(--v2p-color-main-300);
     --v2p-color-border-darker: var(--v2p-color-main-300);
+    --v2p-color-link-visited: var(--v2p-color-main-400);
+    --v2p-color-error: #ef4444;
+    --v2p-color-bg-error: #fee2e2;
+    --v2p-color-cell-num: var(--v2p-color-main-350);
+
+    // ==== 阴影 ====
     --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
     --v2p-widget-shadow: 0 9px 24px -3px rgb(0 0 0 / 6%), 0 4px 8px -1px rgb(0 0 0 /12%);
     --v2p-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
       0 9px 28px 8px rgb(0 0 0 / 5%);
-    --v2p-color-error: #ef4444;
-    --v2p-color-bg-error: #fee2e2;
+    // ---- 阴影 ----
 
     // V2EX 原有的 CSS 变量：
     --color-fade: var(--v2p-color-font-secondary);

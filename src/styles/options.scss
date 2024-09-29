@@ -94,9 +94,99 @@ body {
 
 .theme-select {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   margin-bottom: 20px;
+
+  @at-root {
+    .theme-pv {
+      overflow: hidden;
+      font-size: 13px;
+      border: 1px solid var(--v2p-color-main-200);
+      border-radius: 5px;
+
+      .theme-pv-view {
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: 16 / 9;
+        width: 260px;
+        background-color: var(--v2p-color-background);
+
+        .tpv-header {
+          display: flex;
+          gap: 10px;
+          padding: 8px 10px;
+          background-color: var(--v2p-color-bg-content);
+
+          .tpv-header-item {
+            width: 30px;
+            height: 6px;
+            background-color: var(--v2p-color-bg-search);
+            border-radius: 999px;
+          }
+        }
+
+        .tpv-main {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          padding: 10px;
+
+          .tpv-main-top {
+            padding-bottom: 10px;
+
+            .tpv-top-line {
+              width: 30%;
+              height: 8px;
+              background-color: var(--v2p-color-bg-avatar);
+              border-radius: 999px;
+            }
+          }
+
+          .tpv-main-content {
+            display: flex;
+            flex: 1;
+            gap: 10px;
+            height: 80%;
+
+            .tpv-main-left {
+              position: relative;
+              flex: 1;
+              background-color: var(--v2p-color-bg-content);
+              border-radius: 5px;
+
+              .tpv-main-line {
+                position: absolute;
+                top: 15px;
+                width: 100%;
+                padding: 5px;
+                background-color: var(--v2p-color-accent-50);
+
+                .tpv-main-line-inner {
+                  width: 25%;
+                  height: 8px;
+                  background-color: var(--v2p-color-accent-400);
+                  border-radius: 999px;
+                }
+              }
+            }
+
+            .tpv-main-right {
+              width: 25%;
+              height: 65%;
+              background-color: var(--v2p-color-bg-content);
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+
+      .theme-pv-footer {
+        padding: 5px 10px;
+      }
+    }
+  }
 }
 
 #options-form {

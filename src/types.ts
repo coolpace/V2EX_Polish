@@ -30,7 +30,7 @@ export interface Options {
   /** 颜色主题设置。 */
   theme: {
     /** 主题。 */
-    type?: 'default' | 'dawn'
+    type?: 'light-default' | 'dark-default' | 'dawn'
     /** 是否自动跟随系统切换主题。 */
     autoSwitch: boolean
     /** 主题间距模式。 */

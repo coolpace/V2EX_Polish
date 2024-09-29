@@ -274,7 +274,7 @@ body {
     padding: 5px 6px;
     font-size: 13px;
     color: var(--v2p-color-font-secondary);
-    background-color: var(--v2p-color-main-100);
+    background-color: var(--v2p-color-button-background);
     border-radius: 4px;
 
     &:hover {
@@ -391,6 +391,24 @@ body {
     #topic_content {
       @include share.input(120px);
     }
+
+    // 输入框。
+    .sl,
+    .ml {
+      border-color: var(--v2p-color-input-border);
+
+      &:focus {
+        border-color: var(--v2p-color-input-border);
+      }
+    }
+
+    // MARK: 记事本演示。
+    // 记事本页面链接：https://www.v2ex.com/notes
+    &[action^='/notes'] {
+      .cell {
+        background-color: transparent !important;
+      }
+    }
   }
 
   // MARK: 主题编辑内容的语法。
@@ -424,27 +442,6 @@ body {
   // 新消息提醒。
   .orange-dot {
     background: var(--v2p-color-orange-400);
-  }
-
-  // MARK: 记事本演示。
-  // 记事本页面链接：https://www.v2ex.com/notes
-  form[action^='/notes'] {
-    .cell {
-      background-color: transparent !important;
-    }
-  }
-
-  // MARK: 设置页表单。
-  // https://www.v2ex.com/settings
-  form[action^='/settings'] {
-    .sl,
-    .ml {
-      border-color: var(--v2p-color-input-border);
-
-      &:focus {
-        border-color: var(--v2p-color-input-border);
-      }
-    }
   }
 
   // 输入框：https://www.v2ex.com/notes ｜ https://www.v2ex.com/t
@@ -656,10 +653,10 @@ body {
     font-weight: 600;
     color: var(--v2p-color-foreground);
     text-shadow: none;
-    background: var(--v2p-color-main-100);
+    background: var(--v2p-color-button-background);
 
     &:hover {
-      background: var(--v2p-color-main-200);
+      background: var(--v2p-color-button-background-hover);
     }
   }
 
@@ -876,7 +873,7 @@ body {
       text-decoration: none;
 
       &:visited {
-        color: var(--v2p-color-main-400);
+        color: var(--v2p-color-link-visited);
       }
     }
 
@@ -915,8 +912,8 @@ body {
     .count_livid {
       @include count;
 
-      color: var(--v2p-color-main-500);
-      background-color: var(--v2p-color-main-200);
+      color: var(--v2p-color-button-foreground);
+      background-color: var(--v2p-color-button-background-hover);
     }
 
     .count_orange {
@@ -990,7 +987,7 @@ body {
             aspect-ratio: 1;
             width: 40px !important;
             height: 40px !important;
-            background-color: var(--v2p-color-main-300);
+            background-color: var(--v2p-color-bg-avatar);
             border-radius: 5px;
           }
         }
@@ -1084,7 +1081,7 @@ body {
       top: -4px;
       padding: 5px 10px;
       font-size: 12px;
-      color: var(--v2p-color-main-350);
+      color: var(--v2p-color-cell-num);
       background-color: transparent;
       border-radius: 5px;
     }
@@ -1120,8 +1117,12 @@ body {
 
   #SecondaryTabs {
     padding: 10px;
-    background-color: var(--v2p-color-main-100);
+    background-color: var(--v2p-color-bg-tabs);
     border-radius: 5px;
+
+    a {
+      color: var(--v2p-color-tabs);
+    }
   }
 
   .topic_content,
@@ -1277,4 +1278,9 @@ body {
       color: var(--v2p-color-main-500);
     }
   }
+}
+
+.wwads-cn {
+  border: none !important;
+  box-shadow: none !important;
 }
