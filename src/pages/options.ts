@@ -27,11 +27,16 @@ const saveOptions = async () => {
     },
     theme: {
       type: (() => {
-        const isDefault = $('#theme_type_default').prop('checked')
+        const isLightDefault = $('#theme_type_default').prop('checked')
+        const isDarkDefault = $('#theme_type_dark').prop('checked')
         const isDawn = $('#theme_type_dawn').prop('checked')
 
-        if (isDefault) {
-          return 'default'
+        if (isLightDefault) {
+          return 'light-default'
+        }
+
+        if (isDarkDefault) {
+          return 'dark-default'
         }
 
         if (isDawn) {
@@ -126,8 +131,9 @@ void (async function init() {
 
     $('#theme_type_default').prop(
       'checked',
-      !options.theme.type || options.theme.type === 'default'
+      !options.theme.type || options.theme.type === 'light-default'
     )
+    $('#theme_type_dark').prop('checked', options.theme.type === 'dark-default')
     $('#theme_type_dawn').prop('checked', options.theme.type === 'dawn')
     $('#theme_autoSwitch').prop('checked', options.theme.autoSwitch)
     $('#theme_mode_default').prop(

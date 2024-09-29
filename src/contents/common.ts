@@ -26,7 +26,10 @@ void (async () => {
     $body.addClass('v2p-theme-compact')
   }
 
-  if (options.theme.type === 'dawn') {
+  if (options.theme.type === 'dark-default') {
+    console.log(123)
+    $body.addClass('v2p-theme-dark')
+  } else if (options.theme.type === 'dawn') {
     $body.addClass('v2p-theme-dawn')
   } else {
     $body.addClass('v2p-theme-default')
@@ -138,7 +141,7 @@ void (async () => {
   }
 
   // 增加 SOV2EX 作为搜索引擎选项。
-  // @deprecated: V2EX 原站已支持 SOV2EX，故不再需要此功能。
+  // MARK: @deprecated: V2EX 原站已支持 SOV2EX，故不再需要此功能。
   // {
   //   const $searchItem = $('<a class="search-item cell" target="_blank">')
 
