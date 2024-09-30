@@ -19,6 +19,8 @@ export interface SettingsSyncInfo {
   lastCheckTime?: number
 }
 
+export type ThemeType = 'light-default' | 'dark-default' | 'dawn'
+
 export interface Options {
   /** 是否在新标签页打开主题。 */
   openInNewTab: boolean
@@ -30,7 +32,7 @@ export interface Options {
   /** 颜色主题设置。 */
   theme: {
     /** 主题。 */
-    type?: 'light-default' | 'dark-default' | 'dawn'
+    type?: ThemeType
     /** 是否自动跟随系统切换主题。 */
     autoSwitch: boolean
     /** 主题间距模式。 */
