@@ -147,14 +147,14 @@ body {
       z-index: var(--zidx-serach);
       top: 42px;
       font-size: 14px;
-      color: var(--v2p-color-main-600);
+      color: var(--v2p-color-font-secondary);
       background: var(--v2p-color-bg-widget);
       backdrop-filter: blur(16px);
       border: 1px solid var(--box-border-color);
       box-shadow: var(--v2p-widget-shadow);
 
       .fade {
-        color: var(--v2p-color-main-600);
+        color: var(--v2p-color-font-secondary);
       }
 
       .search-item {
@@ -842,7 +842,7 @@ body {
 
       &:hover:not(.v2p-hover-btn) {
         color: currentColor;
-        background: var(--v2p-color-main-100);
+        background: var(--v2p-color-bg-block);
       }
     }
   }
@@ -1046,7 +1046,7 @@ body {
 
         &:last-of-type {
           a.dark {
-            color: var(--v2p-color-main-600);
+            color: var(--v2p-color-font-secondary);
             text-decoration: none;
 
             &:hover {
@@ -1152,7 +1152,7 @@ body {
     background-color: transparent;
 
     &:not(.v2p-hover-btn):hover {
-      background-color: var(--v2p-color-main-100);
+      background-color: var(--v2p-color-bg-block);
     }
   }
 
@@ -1223,7 +1223,7 @@ body {
 
       .payload {
         color: var(--v2p-color-foreground);
-        background-color: var(--v2p-color-main-100);
+        background-color: var(--v2p-color-bg-block);
       }
 
       .topic-link:visited {
@@ -1259,7 +1259,7 @@ body {
     color: var(--v2p-color-main-500);
 
     &:hover {
-      color: var(--v2p-color-main-600);
+      color: var(--v2p-color-font-secondary);
     }
   }
 }

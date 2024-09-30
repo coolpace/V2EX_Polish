@@ -48,7 +48,7 @@
     --v2p-color-selection-foreground: var(--v2p-color-main-100);
     --v2p-color-selection-background: var(--v2p-color-main-700);
     --v2p-color-selection-background-img: var(--v2p-color-main-500);
-    --v2p-color-font-secondary: var(--v2p-color-main-500);
+    --v2p-color-font-secondary: var(--v2p-color-main-600);
 
     // ==== 按钮 ====
     --v2p-color-button-background: var(--v2p-color-main-100);
@@ -120,6 +120,8 @@
   }
 
   body {
+    @include light-mode;
+
     font-family: system-ui, sans-serif;
     color: var(--v2p-color-foreground);
     visibility: hidden;
@@ -144,7 +146,5 @@
     img::selection {
       background-color: var(--v2p-color-selection-background-img);
     }
-
-    @include light-mode;
   }
 }

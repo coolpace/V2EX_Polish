@@ -196,7 +196,7 @@ button {
 
         padding: 0;
         font-size: 13px;
-        color: var(--v2p-color-main-600);
+        color: var(--v2p-color-font-secondary);
       }
     }
 
@@ -349,7 +349,7 @@ button {
         outline: none;
 
         &::placeholder {
-          color: var(--v2p-color-main-600);
+          color: var(--v2p-color-font-secondary);
         }
 
         &.has-value {
@@ -390,7 +390,7 @@ button {
         min-width: 95px;
         font-size: inherit;
         font-weight: normal;
-        color: var(--v2p-color-main-600);
+        color: var(--v2p-color-font-secondary);
       }
 
       > input {
@@ -487,7 +487,7 @@ hr {
   @at-root {
     .details-content {
       padding: 8px 0 0;
-      color: var(--v2p-color-main-600);
+      color: var(--v2p-color-font-secondary);
     }
   }
 }
@@ -567,7 +567,7 @@ a {
   overflow: hidden;
   width: 320px;
   margin-top: 20px;
-  background-color: var(--v2p-color-main-100);
+  background-color: var(--v2p-color-bg-block);
   border-radius: 8px;
 }
 
@@ -597,7 +597,7 @@ a {
     width: 100%;
     height: 1em;
     margin: var(--gap) 0;
-    background-color: var(--v2p-color-main-100);
+    background-color: var(--v2p-color-bg-block);
     border-radius: 3px;
   }
 
@@ -609,7 +609,7 @@ a {
     margin: var(--gap) -5px;
     padding: 1px 5px;
     font-size: 12px;
-    background-color: var(--v2p-color-main-200);
+    background-color: var(--v2p-color-button-background-hover);
     border-radius: 4px;
 
     .fake-menu {
@@ -653,5 +653,5 @@ a {
 .empty-img-caption {
   margin-top: 5px;
   font-size: 12px;
-  color: var(--v2p-color-main-600);
+  color: var(--v2p-color-font-secondary);
 }
