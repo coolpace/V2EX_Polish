@@ -190,6 +190,10 @@ void (async function init() {
   {
     const $contentTags = $('[data-content-key="tags"]')
 
+    const renderEmptyTagsContent = () => {
+      $contentTags.append($('#tags-empty').html())
+    }
+
     const renderTagsContent = async () => {
       const storage = await getStorage(false)
       const tagData = storage[StorageKey.MemberTag]
@@ -361,9 +365,11 @@ void (async function init() {
           $contentTags.append($tagList)
 
           loadIcons()
+        } else {
+          renderEmptyTagsContent()
         }
       } else {
-        $contentTags.append($('#tags-empty').html())
+        renderEmptyTagsContent()
       }
     }
 

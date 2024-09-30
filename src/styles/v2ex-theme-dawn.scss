@@ -22,6 +22,9 @@ body.v2p-theme-dawn,
   --v2p-color-accent-400: hsl(var(--v2p-color-foam) / 50%);
   --v2p-color-accent-500: hsl(var(--v2p-color-foam) / 65%);
   --v2p-color-accent-600: hsl(var(--v2p-color-foam) / 80%);
+  --v2p-color-orange-50: hsl(var(--v2p-color-gold) / 10%);
+  --v2p-color-orange-100: hsl(var(--v2p-color-gold) / 20%);
+  --v2p-color-orange-400: hsl(var(--v2p-color-gold));
 
   // ====
   --v2p-color-background: hsl(var(--v2p-color-base));
@@ -52,6 +55,9 @@ body.v2p-theme-dawn,
   --v2p-color-bg-tabs: hsl(var(--v2p-color-pine) / 10%);
   --v2p-color-bg-tpr: hsl(var(--v2p-color-text) / 10%);
   --v2p-color-bg-avatar: hsl(var(--v2p-color-overlay));
+  --v2p-color-bg-block: hsl(var(--v2p-color-text) / 10%);
+  --v2p-color-bg-link: hsl(var(--v2p-color-text) / 10%);
+  --v2p-color-bg-link-hover: hsl(var(--v2p-color-text) / 15%);
   // ---- 背景 ----
 
   --v2p-color-tabs: hsl(var(--v2p-color-pine));
@@ -73,6 +79,14 @@ body.v2p-theme-dawn,
   --v2p-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
     0 9px 28px 8px rgb(0 0 0 / 5%);
   // ---- 阴影 ----
+
+  // V2EX 原有的 CSS 变量：
+  --link-color: var(--v2p-color-foreground);
+  --box-background-alt-color: var(--v2p-color-bg-block);
+  --box-background-hover-color: var(--v2p-color-bg-link-hover);
+  --button-hover-color: var(--v2p-color-button-background-hover);
+  --button-border-color: var(--v2p-color-border);
+  --button-border-hover-color: var(--v2p-color-border-darker);
 
   visibility: visible;
 
