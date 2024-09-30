@@ -2,7 +2,7 @@ import './polyfill'
 
 import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
-import type { MessageData } from '../types'
+import type { MessageData, Options, ThemeType } from '../types'
 import {
   deepMerge,
   getRunEnv,
@@ -12,14 +12,22 @@ import {
   setStorage,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
-import { loadIcons, postTask } from './helpers'
+import { loadIcons, postTask, setTheme } from './helpers'
 
 if ($('#site-header').length > 0) {
   $body.addClass('v2p-mobile')
 }
 
 /** 切换主题。 */
-const toggleTheme = ({ $toggle, preferDark }: { $toggle: JQuery; preferDark: boolean }) => {
+const toggleTheme = ({
+  $toggle,
+  preferDark,
+  themeType = 'light-default',
+}: {
+  $toggle: JQuery
+  preferDark: boolean
+  themeType?: ThemeType
+}) => {
   const shouldSync =
     (preferDark && !$wrapper.hasClass('Night')) || (!preferDark && $wrapper.hasClass('Night'))
 
@@ -40,14 +48,15 @@ const toggleTheme = ({ $toggle, preferDark }: { $toggle: JQuery; preferDark: boo
       $toggle.prop('title', '使用深色主题')
       $toggle.html('<i data-lucide="moon"></i>')
     }
+
     loadIcons()
   }
 
   if (preferDark) {
-    $body.addClass('v2p-theme-dark-default')
+    setTheme('dark-default')
     $wrapper.addClass('Night')
   } else {
-    $body.removeClass('v2p-theme-dark-default')
+    setTheme(themeType)
     $wrapper.removeClass('Night')
   }
 }
@@ -62,35 +71,28 @@ void (async () => {
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
-  if (options.theme.type === 'dark-default') {
-    toggleTheme({ $toggle, preferDark: true })
-  } else {
-    toggleTheme({ $toggle, preferDark: false })
-  }
-
-  if (options.theme.type === 'dark-default') {
-    $body.addClass('v2p-theme-dark-default')
-  } else if (options.theme.type === 'dawn') {
-    $body.addClass('v2p-theme-dawn')
-  } else {
-    $body.addClass('v2p-theme-light-default')
-  }
+  const themeType = options.theme.type
+  toggleTheme({ $toggle, preferDark: themeType === 'dark-default', themeType })
 
   // 处理自动切换「明/暗」主题。
   if (options.theme.autoSwitch) {
     const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
-    toggleTheme({ $toggle, preferDark: perfersDark.matches })
+    toggleTheme({ $toggle, preferDark: perfersDark.matches, themeType })
 
     perfersDark.addEventListener('change', ({ matches }) => {
-      toggleTheme({ $toggle, preferDark: matches })
-    })
-
-    $toggle.on('click', () => {
-      // 当用户主动设置颜色主题后，取消自动跟随系统。
-      void setStorage(StorageKey.Options, deepMerge(options, { theme: { autoSwitch: false } }))
+      toggleTheme({ $toggle, preferDark: matches, themeType })
     })
   }
+
+  $toggle.on('click', () => {
+    const newTheme: Partial<Options['theme']> = {
+      type: options.theme.type === 'dark-default' ? 'light-default' : 'dark-default',
+      autoSwitch: false, // 当用户主动设置颜色主题后，取消自动跟随系统。
+    }
+
+    void setStorage(StorageKey.Options, deepMerge(options, { theme: newTheme }))
+  })
 
   const syncInfo = storage[StorageKey.SyncInfo]
 
