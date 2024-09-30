@@ -370,7 +370,7 @@ export function getTagsText(tags: Tag[]): string {
   return tags.map((it) => it.name).join('，')
 }
 
-const setTheme = (type: string) => {
+export function setTheme(type: ThemeType) {
   // 在切换主题时，先删除所有已有的主题类。
   $body.get(0)?.classList.forEach((cls) => {
     if (cls.startsWith('v2p-theme-')) {
