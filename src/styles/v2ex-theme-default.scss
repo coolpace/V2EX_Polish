@@ -274,7 +274,7 @@ body {
     padding: 5px 6px;
     font-size: 13px;
     color: var(--v2p-color-font-secondary);
-    background-color: var(--v2p-color-button-background);
+    background-color: var(--v2p-color-bg-block);
     border-radius: 4px;
 
     &:hover {
@@ -323,7 +323,7 @@ body {
 
   .dock_area {
     margin: 12px 0;
-    background: var(--v2p-color-main-100);
+    background: var(--v2p-color-bg-block);
   }
 
   .member-activity-bar {
@@ -474,10 +474,10 @@ body {
       @include share.link;
 
       color: currentColor;
-      background-color: var(--v2p-color-main-100);
+      background-color: var(--v2p-color-bg-link);
 
       &:hover {
-        background-color: var(--v2p-color-main-200);
+        background-color: var(--v2p-color-bg-link-hover);
       }
 
       &:has(> .embedded_image) {
@@ -625,12 +625,12 @@ body {
 
   // 个人页的链接。
   .social_label:is(:link, :visited, :active) {
-    background-color: var(--v2p-color-main-100);
+    background-color: var(--v2p-color-button-background);
     border-radius: var(--box-border-radius);
     box-shadow: none;
 
     &:hover {
-      background-color: var(--v2p-color-main-200);
+      background-color: var(--v2p-color-button-background-hover);
     }
   }
 
@@ -676,8 +676,8 @@ body {
   }
 
   .onoffswitch label .frame::after {
-    color: var(--v2p-color-main-100);
-    background-color: var(--v2p-color-main-400);
+    color: var(--v2p-color-font-secondary);
+    background-color: var(--v2p-color-bg-search);
   }
 
   select {
@@ -692,7 +692,7 @@ body {
 .box {
   .tag {
     &::before {
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-font-secondary);
     }
 
     &:link,
@@ -742,7 +742,7 @@ body {
       }
 
       &:not(.v2p-hover-btn):hover {
-        background-color: var(--v2p-color-main-100);
+        background-color: var(--v2p-color-button-background-hover);
       }
     }
 
@@ -913,7 +913,7 @@ body {
       @include count;
 
       color: var(--v2p-color-button-foreground);
-      background-color: var(--v2p-color-button-background-hover);
+      background-color: var(--v2p-color-bg-block);
     }
 
     .count_orange {
@@ -1280,7 +1280,19 @@ body {
   }
 }
 
+// 广告：
 .wwads-cn {
   border: none !important;
   box-shadow: none !important;
+}
+
+// 广告：
+.box:has(a[href^='/advertise']) {
+  overflow: hidden;
+  border: none !important;
+  box-shadow: none !important;
+
+  .sidebar_compliance {
+    background-color: var(--v2p-color-bg-block);
+  }
 }

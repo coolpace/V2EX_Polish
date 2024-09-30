@@ -109,7 +109,6 @@ const $tabMsg = $('.tabs > li[data-target="tab-message"]')
 function loadSettings() {
   const storage = getStorageSync()
   const api = storage[StorageKey.API]
-  const options = storage[StorageKey.Options]
 
   const $patInput = $('#pat')
 

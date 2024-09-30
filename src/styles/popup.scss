@@ -82,12 +82,12 @@ button {
   padding: 5px 8px;
   color: var(--v2p-color-foreground);
   text-decoration: none;
-  background-color: var(--v2p-color-main-200);
+  background-color: var(--v2p-color-button-background);
   border-radius: 5px;
 
   &:hover {
     text-decoration: none;
-    background-color: var(--v2p-color-main-300);
+    background-color: var(--v2p-color-button-background-hover);
   }
 
   .action-icon {
@@ -104,10 +104,10 @@ button {
   width: 100%;
   padding: 4px 6px;
   font-size: 14px;
-  background-color: var(--v2p-color-main-100);
+  background-color: var(--v2p-color-bg-tabs);
   border-radius: 5px;
 
-  > li[data-target] {
+  li[data-target] {
     cursor: pointer;
     user-select: none;
     display: flex;
@@ -119,11 +119,11 @@ button {
     border-radius: 3px;
 
     &:hover {
-      background-color: var(--v2p-color-main-200);
+      background-color: var(--v2p-color-button-background-hover);
     }
 
     &.active {
-      color: var(--v2p-color-main-100);
+      color: var(--v2p-color-background);
       background-color: var(--v2p-color-foreground);
     }
   }
@@ -180,7 +180,7 @@ button {
       text-decoration: none;
 
       &:hover {
-        background-color: var(--v2p-color-main-100);
+        background-color: var(--v2p-color-bg-link);
       }
 
       .title {
@@ -332,8 +332,8 @@ button {
       gap: 0 10px;
       align-items: center;
       padding: 0 5px 0 0;
-      background-color: var(--v2p-color-main-100);
-      border: 1px solid var(--v2p-color-main-300);
+      background-color: var(--v2p-color-bg-block);
+      border: 1px solid var(--v2p-color-border);
       border-radius: 6px;
 
       &:has(.has-value) {
@@ -421,14 +421,14 @@ hr {
   margin-top: 10px;
   padding: 5px 8px;
   color: var(--v2p-color-foreground);
-  background-color: var(--v2p-color-main-100);
+  background-color: var(--v2p-color-bg-block);
   border-radius: 5px;
 
   @at-root {
     #clear-storage,
     #sync-settings {
       padding: 0 5px;
-      background-color: var(--v2p-color-main-200);
+      background-color: var(--v2p-color-button-background-hover);
       border-radius: 3px;
       transition:
         background-color 0.2s,
@@ -503,7 +503,7 @@ a {
 
     &:hover {
       text-decoration: underline;
-      background-color: var(--v2p-color-main-100);
+      background-color: var(--v2p-color-bg-link-hover);
     }
   }
 }

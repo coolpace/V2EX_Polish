@@ -88,7 +88,8 @@ body {
 .backup-tip {
   margin-bottom: 20px;
   padding: 10px;
-  background-color: var(--v2p-color-button-background);
+  font-size: 14px;
+  background-color: var(--v2p-color-bg-block);
   border-radius: 5px;
 }
 
@@ -393,7 +394,7 @@ fieldset {
         > img {
           width: 30px;
           height: 30px;
-          background-color: var(--v2p-color-main-100);
+          background-color: var(--v2p-color-bg-block);
           border-radius: 5px;
         }
       }
@@ -414,7 +415,7 @@ fieldset {
       align-items: center;
       justify-content: center;
       padding: 2px 6px;
-      background-color: var(--v2p-color-main-100);
+      background-color: var(--v2p-color-bg-block);
       border-radius: 4px;
 
       &.tag-item-tag-add {
@@ -476,7 +477,7 @@ fieldset {
     gap: 10px;
     justify-content: center;
     padding: 20px;
-    background-color: var(--v2p-color-main-100);
+    background-color: var(--v2p-color-bg-block);
     border-radius: 8px;
   }
 
