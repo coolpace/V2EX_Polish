@@ -30,10 +30,11 @@ import type {
   MessageData,
   ReadingItem,
   Tag,
+  ThemeType,
   V2EX_RequestErrorResponce,
 } from '../types'
 import { getRunEnv, getStorage, setStorage, sleep } from '../utils'
-import { replyTextArea } from './globals'
+import { $body, replyTextArea } from './globals'
 
 /**
  * 检查请求的错误是否由 V2EX 发出。
@@ -367,4 +368,47 @@ export function transformEmoji(textValue: string) {
  */
 export function getTagsText(tags: Tag[]): string {
   return tags.map((it) => it.name).join('，')
+}
+
+const setTheme = (type: string) => {
+  // 在切换主题时，先删除所有已有的主题类。
+  $body.get(0)?.classList.forEach((cls) => {
+    if (cls.startsWith('v2p-theme-')) {
+      $body.removeClass(cls)
+    }
+  })
+
+  $body.addClass(`v2p-theme-${type}`)
+}
+
+/**
+ * 设置主题。
+ */
+export function initTheme({
+  autoSwitch,
+  themeType = 'light-default',
+}: {
+  autoSwitch?: boolean
+  themeType?: ThemeType
+}) {
+  // 优先按照设置执行自动切换主题。
+  if (autoSwitch) {
+    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+    if (perfersDark.matches) {
+      setTheme('dark-default')
+    } else {
+      setTheme(themeType)
+    }
+
+    perfersDark.addEventListener('change', ({ matches }) => {
+      if (matches) {
+        setTheme('dark-default')
+      } else {
+        setTheme(themeType)
+      }
+    })
+  } else {
+    setTheme(themeType)
+  }
 }

@@ -22,7 +22,7 @@ import {
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
-import { $body } from '../contents/globals'
+import { initTheme } from '../contents/helpers'
 import { iconLoading } from '../icons'
 import {
   fetchHotTopics,
@@ -70,14 +70,6 @@ function loadIcons() {
   })
 }
 
-function toggleTheme(mode?: 'dark' | 'light') {
-  if (mode === 'dark') {
-    $body.addClass('v2p-theme-dark-default')
-  } else {
-    $body.removeClass('v2p-theme-dark-default')
-  }
-}
-
 const loading = `
 <div class="tab-loading">
   <span class="loading">
@@ -117,6 +109,7 @@ const $tabMsg = $('.tabs > li[data-target="tab-message"]')
 function loadSettings() {
   const storage = getStorageSync()
   const api = storage[StorageKey.API]
+  const options = storage[StorageKey.Options]
 
   const $patInput = $('#pat')
 
@@ -177,13 +170,6 @@ function loadSettings() {
   {
     $('#open-options').on('click', () => {
       chrome.runtime.openOptionsPage()
-    })
-
-    $('#theme-toggle').on('click', () => {
-      const shouldDark = !$body.hasClass('v2p-theme-dark-default')
-      const themeMode = shouldDark ? 'dark' : 'light'
-      window.localStorage.setItem('v2p_popup_theme', themeMode)
-      toggleTheme(themeMode)
     })
   }
 
@@ -596,7 +582,9 @@ function initTabs() {
 }
 
 window.addEventListener('load', () => {
-  void getStorage().then(() => {
+  void getStorage().then((storage) => {
+    const options = storage[StorageKey.Options]
+    initTheme({ autoSwitch: options.theme.autoSwitch, themeType: options.theme.type })
     initTabs()
   })
 
@@ -626,18 +614,6 @@ window.addEventListener('load', () => {
         $tabMsg.text(`消息(${info.count})`)
       }
     }
-  }
-
-  const themeMode = window.localStorage.getItem('v2p_popup_theme')
-
-  if (themeMode === 'dark' || themeMode === 'light') {
-    toggleTheme(themeMode)
-  } else {
-    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
-    perfersDark.addEventListener('change', ({ matches }) => {
-      toggleTheme(matches ? 'dark' : 'light')
-    })
-    toggleTheme(perfersDark.matches ? 'dark' : 'light')
   }
 
   loadIcons()

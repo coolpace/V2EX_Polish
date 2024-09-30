@@ -1,9 +1,8 @@
 import { CircleHelp, createIcons, Plus, Settings, Tags, X } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
-import { $body } from '../contents/globals'
-import { setMemberTags } from '../contents/helpers'
-import type { Options } from '../types'
+import { initTheme, setMemberTags } from '../contents/helpers'
+import type { Options, ThemeType } from '../types'
 import { getStorage, setStorage } from '../utils'
 
 function loadIcons() {
@@ -130,35 +129,6 @@ function setThemeOptions() {
   })
 }
 
-function setTheme({ autoSwitch, themeType }: { autoSwitch?: boolean; themeType?: string }) {
-  if (autoSwitch) {
-    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
-
-    if (perfersDark.matches) {
-      $body.addClass('v2p-theme-dark-default')
-    }
-
-    perfersDark.addEventListener('change', ({ matches }) => {
-      if (matches) {
-        $body.addClass('v2p-theme-dark-default')
-      } else {
-        $body.removeClass('v2p-theme-dark-default')
-      }
-    })
-  } else {
-    if (themeType) {
-      // 在切换主题时，先删除所有已有的主题类。
-      $body.get(0)?.classList.forEach((cls) => {
-        if (cls.startsWith('v2p-theme-')) {
-          $body.removeClass(cls)
-        }
-      })
-
-      $body.addClass(`v2p-theme-${themeType}`)
-    }
-  }
-}
-
 void (async function init() {
   setThemeOptions()
   loadIcons()
@@ -169,7 +139,7 @@ void (async function init() {
   {
     const options = storage[StorageKey.Options]
 
-    setTheme({ autoSwitch: options.theme.autoSwitch, themeType: options.theme.type })
+    initTheme({ autoSwitch: options.theme.autoSwitch, themeType: options.theme.type })
 
     $('#openInNewTab').prop('checked', options.openInNewTab)
     $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
@@ -457,8 +427,8 @@ void (async function init() {
     if (classList) {
       const themeType = getThemeTypeFromClassList(classList)
 
-      setTheme({
-        themeType,
+      initTheme({
+        themeType: themeType as ThemeType,
       })
     }
   })
