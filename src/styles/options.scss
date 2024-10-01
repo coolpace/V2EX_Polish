@@ -103,8 +103,12 @@ body {
   .form-radio {
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--v2p-color-divider);
+    border: 1px solid var(--v2p-color-border);
     border-radius: 8px;
+
+    &:hover {
+      border-color: var(--v2p-color-border-darker);
+    }
   }
 
   .combo {

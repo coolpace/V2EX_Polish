@@ -437,5 +437,7 @@ void (async function init() {
         themeType: themeType as ThemeType,
       })
     }
+
+    $('#theme_autoSwitch').prop('checked', false)
   })
 })()
