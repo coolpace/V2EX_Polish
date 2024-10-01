@@ -48,8 +48,6 @@ const toggleTheme = ({
       $toggle.prop('title', '使用深色主题')
       $toggle.html('<i data-lucide="moon"></i>')
     }
-
-    loadIcons()
   }
 
   if (prefersDark) {
@@ -59,6 +57,8 @@ const toggleTheme = ({
     setTheme(themeType)
     $wrapper.removeClass('Night')
   }
+
+  loadIcons()
 }
 
 void (async () => {
@@ -73,25 +73,24 @@ void (async () => {
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
-  const themeType = options.theme.type
+  const themeType = options.theme.type || 'light-default'
 
   // 处理自动切换「明/暗」主题。
   if (options.theme.autoSwitch) {
-    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
-
-    const themeTypeToToggle = themeType === 'dark-default' ? 'light-default' : 'dark-default'
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
+    const isPrefersDark = prefersDark.matches
 
     toggleTheme({
       $toggle,
-      prefersDark: perfersDark.matches,
-      themeType: themeTypeToToggle,
+      prefersDark: isPrefersDark,
+      themeType: isPrefersDark ? 'dark-default' : themeType,
     })
 
-    perfersDark.addEventListener('change', ({ matches }) => {
+    prefersDark.addEventListener('change', ({ matches }) => {
       toggleTheme({
         $toggle,
         prefersDark: matches,
-        themeType: themeTypeToToggle,
+        themeType: matches ? 'dark-default' : themeType,
       })
     })
   } else {
@@ -104,8 +103,10 @@ void (async () => {
   }
 
   $toggle.on('click', () => {
+    const wrapperDark = $wrapper.hasClass('Night')
+
     const newTheme: Partial<Options['theme']> = {
-      type: options.theme.type === 'dark-default' ? 'light-default' : 'dark-default',
+      type: wrapperDark ? 'light-default' : 'dark-default',
       autoSwitch: false, // 当用户主动设置颜色主题后，取消自动跟随系统。
     }
 

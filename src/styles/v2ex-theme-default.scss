@@ -90,7 +90,7 @@ body {
 
         .nav_item_current:hover {
           color: var(--box-foreground-color);
-          background-color: var(--box-background-color);
+          background-color: var(--v2p-color-bg-content);
         }
       }
 
@@ -392,16 +392,6 @@ body {
       @include share.input(120px);
     }
 
-    // 输入框。
-    .sl,
-    .ml {
-      border-color: var(--v2p-color-input-border);
-
-      &:focus {
-        border-color: var(--v2p-color-input-border);
-      }
-    }
-
     // MARK: 记事本演示。
     // 记事本页面链接：https://www.v2ex.com/notes
     &[action^='/notes'] {
@@ -684,6 +674,28 @@ body {
     @include share.select-box;
 
     padding: 4px 6px;
+  }
+
+  // MARK: 各种输入框。
+  .ml,
+  .mle,
+  .mll,
+  .sl,
+  .sll,
+  .sls {
+    color: var(--v2p-color-foreground);
+    background-color: var(--v2p-color-bg-content);
+    border-color: var(--v2p-color-input-border);
+
+    &:focus {
+      border-color: var(--v2p-color-input-border);
+    }
+  }
+
+  input,
+  select,
+  textarea {
+    color: var(--v2p-color-foreground);
   }
 }
 

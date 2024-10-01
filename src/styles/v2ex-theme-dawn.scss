@@ -70,7 +70,7 @@ body.v2p-theme-dawn,
   --v2p-color-divider: hsl(var(--v2p-color-muted) / 20%);
   --v2p-color-border: hsl(var(--v2p-color-muted) / 20%);
   --v2p-color-input-border: rgb(152 147 165 / 20%);
-  --v2p-color-border-darker: #f2e9e1;
+  --v2p-color-border-darker: hsl(var(--v2p-color-muted) / 40%);
   --v2p-color-link-visited: hsl(var(--v2p-color-subtle));
   --v2p-color-error: #eb6f92;
   --v2p-color-bg-error: #fee2e2;
