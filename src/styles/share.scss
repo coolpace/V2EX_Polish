@@ -135,7 +135,7 @@
 
   &::placeholder {
     font-size: 15px;
-    color: var(--v2p-color-main-500);
+    color: var(--v2p-color-font-tertiary);
   }
 
   &:is(:focus, :focus-within) {

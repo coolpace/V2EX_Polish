@@ -218,8 +218,8 @@ button {
 
     .topic-item-action-remove {
       padding: 1px 6px;
-      color: var(--v2p-color-main-800);
-      background-color: var(--v2p-color-main-300);
+      color: var(--v2p-color-foreground);
+      background-color: var(--v2p-color-bg-block-darker);
       border-radius: 2px;
       box-shadow: var(--v2p-box-shadow);
 
@@ -232,7 +232,7 @@ button {
 
   .notice-item {
     padding: 15px 12px;
-    border-bottom: 1px dashed var(--v2p-color-main-200);
+    border-bottom: 1px dashed var(--v2p-color-border);
 
     .notice {
       display: flex;
@@ -338,7 +338,7 @@ button {
 
       &:has(.has-value) {
         background-color: transparent;
-        border: 1px solid var(--v2p-color-main-500);
+        border: 1px solid var(--v2p-color-font-tertiary);
       }
 
       #pat {
@@ -369,8 +369,8 @@ button {
         height: 100%;
         padding: 5px 10px;
         font-size: 12px;
-        color: var(--v2p-color-main-100);
-        background-color: var(--v2p-color-main-800);
+        color: var(--v2p-color-background);
+        background-color: var(--v2p-color-foreground);
         border: none;
         border-radius: 5px;
       }
@@ -407,7 +407,7 @@ input {
 hr {
   margin: 15px 0;
   border: none;
-  border-top: 1px solid var(--v2p-color-main-300);
+  border-top: 1px solid var(--v2p-color-divider);
 }
 
 .message-actions {
@@ -522,7 +522,7 @@ a {
     align-items: center;
     justify-content: center;
     padding: 10px;
-    background-color: var(--v2p-color-main-200);
+    background-color: var(--v2p-color-bg-block);
   }
 
   .feature-check-in {
@@ -584,7 +584,7 @@ a {
   width: var(--width);
   padding: 0 10px;
   background-color: var(--v2p-color-bg-content);
-  border: 1px solid var(--v2p-color-main-300);
+  border: 1px solid var(--v2p-color-border-darker);
   border-radius: var(--round);
   box-shadow: var(--v2p-widget-shadow);
 
@@ -646,7 +646,7 @@ a {
 
   .item-divider {
     height: 1px;
-    background-color: var(--v2p-color-main-300);
+    background-color: var(--v2p-color-divider);
   }
 }
 

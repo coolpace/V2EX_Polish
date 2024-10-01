@@ -174,12 +174,14 @@ void (async () => {
   // }
 
   if (options.hideAccount) {
-    const link = $("link[rel~='icon']")
-    link.prop('href', 'https://v2p.app/favicon.svg')
+    const faviconLink = $("link[rel~='icon']")
+    faviconLink.prop('href', 'https://v2p.app/favicon.svg')
 
     $('#Logo').css('opacity', '0')
     $('#Top').find('a[href^="/member/"]').remove()
-    $infoCard.find('a[href^="/member/"]').css('opacity', '0')
+    $infoCard
+      .find('a[href^="/member/"], table:nth-of-type(1) td:nth-of-type(3) .fade')
+      .addClass('v2p-hide-account')
   }
 
   {
