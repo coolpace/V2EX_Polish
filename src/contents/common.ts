@@ -21,27 +21,27 @@ if ($('#site-header').length > 0) {
 /** 切换主题。 */
 const toggleTheme = ({
   $toggle,
-  preferDark,
+  prefersDark,
   themeType = 'light-default',
 }: {
   $toggle: JQuery
-  preferDark: boolean
+  prefersDark: boolean
   themeType?: ThemeType
 }) => {
-  const shouldSync =
-    (preferDark && !$wrapper.hasClass('Night')) || (!preferDark && $wrapper.hasClass('Night'))
+  const wrapperDark = $wrapper.hasClass('Night')
+  const shouldSync = (prefersDark && !wrapperDark) || (!prefersDark && wrapperDark)
 
   // 如果检测到本地设置与用户偏好设置不一致：
   if (shouldSync) {
-    const href = $toggle.attr('href') // href='/settings/night/toggle'
+    const toggleThemeUrl = $toggle.attr('href') // href='/settings/night/toggle'
 
     // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
-    if (typeof href === 'string') {
-      fetch(href)
+    if (typeof toggleThemeUrl === 'string') {
+      fetch(toggleThemeUrl)
     }
 
     // 同时修改切换按钮。
-    if (preferDark) {
+    if (prefersDark) {
       $toggle.prop('title', '使用浅色主题')
       $toggle.html('<i data-lucide="sun"></i>')
     } else {
@@ -52,7 +52,7 @@ const toggleTheme = ({
     loadIcons()
   }
 
-  if (preferDark) {
+  if (prefersDark) {
     setTheme('dark-default')
     $wrapper.addClass('Night')
   } else {
@@ -62,6 +62,8 @@ const toggleTheme = ({
 }
 
 void (async () => {
+  const runEnv = getRunEnv()
+
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
@@ -72,17 +74,33 @@ void (async () => {
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
   const themeType = options.theme.type
-  toggleTheme({ $toggle, preferDark: themeType === 'dark-default', themeType })
 
   // 处理自动切换「明/暗」主题。
   if (options.theme.autoSwitch) {
     const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
-    toggleTheme({ $toggle, preferDark: perfersDark.matches, themeType })
+    const themeTypeToToggle = themeType === 'dark-default' ? 'light-default' : 'dark-default'
+
+    toggleTheme({
+      $toggle,
+      prefersDark: perfersDark.matches,
+      themeType: themeTypeToToggle,
+    })
 
     perfersDark.addEventListener('change', ({ matches }) => {
-      toggleTheme({ $toggle, preferDark: matches, themeType })
+      toggleTheme({
+        $toggle,
+        prefersDark: matches,
+        themeType: themeTypeToToggle,
+      })
     })
+  } else {
+    /**
+     * 在浏览器扩展中，使用 themeType 判断是否为暗色主题。
+     * 而在 GreaseMonkey 中，使用 $wrapper.hasClass('Night') 判断是否为暗色主题。
+     */
+    const prefersDark = runEnv ? themeType === 'dark-default' : $wrapper.hasClass('Night')
+    toggleTheme({ $toggle, prefersDark, themeType })
   }
 
   $toggle.on('click', () => {
@@ -184,31 +202,27 @@ void (async () => {
       .addClass('v2p-hide-account')
   }
 
-  {
-    const runEnv = getRunEnv()
+  if (runEnv === 'chrome' || runEnv === 'web-ext') {
+    injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
 
-    if (runEnv === 'chrome' || runEnv === 'web-ext') {
-      injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
+    window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
+      if (ev.data.from === MessageFrom.Web) {
+        const payload = ev.data.payload
+        const task = payload?.task
 
-      window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
-        if (ev.data.from === MessageFrom.Web) {
-          const payload = ev.data.payload
-          const task = payload?.task
-
-          if (payload?.status === 'ready') {
-            postTask('if (typeof window.once === "string") { return window.once; }', (result) => {
-              if (typeof result === 'string') {
-                window.once = result
-              }
-            })
-          }
-
-          if (task) {
-            window.__V2P_Tasks?.get(task.id)?.(task.result)
-          }
+        if (payload?.status === 'ready') {
+          postTask('if (typeof window.once === "string") { return window.once; }', (result) => {
+            if (typeof result === 'string') {
+              window.once = result
+            }
+          })
         }
-      })
-    }
+
+        if (task) {
+          window.__V2P_Tasks?.get(task.id)?.(task.result)
+        }
+      }
+    })
   }
 
   // 添加页面底部相关信息。

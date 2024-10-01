@@ -397,6 +397,8 @@ export function initTheme({
 
     if (perfersDark.matches) {
       setTheme('dark-default')
+    } else if (themeType === 'dark-default') {
+      setTheme('light-default')
     } else {
       setTheme(themeType)
     }
@@ -404,6 +406,8 @@ export function initTheme({
     perfersDark.addEventListener('change', ({ matches }) => {
       if (matches) {
         setTheme('dark-default')
+      } else if (themeType === 'dark-default') {
+        setTheme('light-default')
       } else {
         setTheme(themeType)
       }
