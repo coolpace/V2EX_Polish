@@ -33,6 +33,8 @@ body.v2p-theme-dawn,
   --v2p-color-selection-background: hsl(var(--v2p-color-muted) / 20%);
   --v2p-color-selection-background-img: hsl(var(--v2p-color-muted) / 60%);
   --v2p-color-font-secondary: hsl(var(--v2p-color-subtle));
+  --v2p-color-font-tertiary: hsl(var(--v2p-color-subtle));
+  --v2p-color-font-quaternary: hsl(var(--v2p-color-subtle));
 
   // ==== 按钮 ====
   --v2p-color-button-background: hsl(var(--v2p-color-text) / 10%);
@@ -56,6 +58,7 @@ body.v2p-theme-dawn,
   --v2p-color-bg-tpr: hsl(var(--v2p-color-text) / 10%);
   --v2p-color-bg-avatar: hsl(var(--v2p-color-overlay));
   --v2p-color-bg-block: hsl(var(--v2p-color-text) / 10%);
+  --v2p-color-bg-block-darker: hsl(var(--v2p-color-text) / 25%);
   --v2p-color-bg-link: hsl(var(--v2p-color-text) / 10%);
   --v2p-color-bg-link-hover: hsl(var(--v2p-color-text) / 15%);
   // ---- 背景 ----

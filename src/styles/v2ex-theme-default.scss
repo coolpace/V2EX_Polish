@@ -96,7 +96,7 @@ body {
 
       #Rightcol {
         #page-outline-title {
-          background-color: var(--v2p-color-main-200);
+          background-color: var(--v2p-color-button-background-hover);
         }
 
         .page-outline-item:hover {
@@ -278,14 +278,14 @@ body {
     border-radius: 4px;
 
     &:hover {
-      color: var(--v2p-color-main-500);
-      background-color: var(--v2p-color-main-200);
+      color: var(--v2p-color-font-tertiary);
+      background-color: var(--v2p-color-button-background-hover);
     }
   }
 
   .outdated {
     font-size: 12px;
-    border-color: var(--v2p-color-main-200);
+    border-color: var(--v2p-color-border);
     border-bottom: none;
   }
 
@@ -327,7 +327,7 @@ body {
   }
 
   .member-activity-bar {
-    background-color: var(--v2p-color-main-200);
+    background-color: var(--v2p-color-divider);
 
     .member-activity-start {
       background-color: var(--v2p-color-accent-200);
@@ -436,7 +436,7 @@ body {
 
   // 提醒系统里的回复时间。
   .snow {
-    color: var(--v2p-color-main-400);
+    color: var(--v2p-color-font-quaternary);
   }
 
   // 新消息提醒。
@@ -510,11 +510,11 @@ body {
     .CodeMirror-gutters {
       padding-right: 5px;
       background-color: var(--v2p-color-bg-input);
-      border-right: 1px solid var(--v2p-color-main-300);
+      border-right: 1px solid var(--v2p-color-border-darker);
     }
 
     .CodeMirror-linenumber {
-      color: var(--v2p-color-main-400);
+      color: var(--v2p-color-font-quaternary);
     }
   }
 
@@ -553,11 +553,11 @@ body {
         .select2-search__field {
           padding: 6px 4px;
           background-color: transparent;
-          border: 1px solid var(--v2p-color-main-200);
+          border: 1px solid var(--v2p-color-border);
           border-radius: 4px;
 
           &:focus-visible {
-            border-color: var(--v2p-color-main-400);
+            border-color: var(--v2p-color-font-quaternary);
             outline: none;
           }
         }
@@ -618,7 +618,7 @@ body {
     blockquote {
       margin-inline: 0;
       padding: 0 1em;
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-font-tertiary);
       border-left: 3px solid var(--v2p-color-border);
     }
   }
@@ -848,8 +848,8 @@ body {
   }
 
   .vote:link {
-    color: var(--v2p-color-main-500);
-    border-color: var(--v2p-color-main-300);
+    color: var(--v2p-color-font-tertiary);
+    border-color: var(--v2p-color-border-darker);
     border-radius: 5px;
 
     &:hover {
@@ -905,7 +905,7 @@ body {
 
       a[href^='/member'] {
         font-weight: 500;
-        color: var(--v2p-color-main-500);
+        color: var(--v2p-color-font-tertiary);
       }
     }
 
@@ -968,7 +968,7 @@ body {
 
     .ago {
       font-size: 12px;
-      color: var(--v2p-color-main-400);
+      color: var(--v2p-color-font-quaternary);
       white-space: nowrap;
     }
 
@@ -1136,7 +1136,7 @@ body {
       position: relative;
       bottom: 1px;
       font-size: 13px;
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-font-tertiary);
       text-decoration: underline;
       text-underline-offset: 0.4ex;
     }
@@ -1158,8 +1158,8 @@ body {
 
   .tab_current {
     user-select: none;
-    color: var(--box-background-color);
-    background-color: var(--box-foreground-color);
+    color: var(--v2p-color-bg-content);
+    background-color: var(--v2p-color-foreground);
   }
 
   #reply-box {
@@ -1171,7 +1171,7 @@ body {
       padding: 0 22px;
       border: none;
       border-radius: var(--box-border-radius);
-      outline: 2px solid var(--v2p-color-main-200);
+      outline: 2px solid var(--v2p-color-border);
     }
 
     .flex-one-row:last-of-type {
@@ -1227,7 +1227,7 @@ body {
       }
 
       .topic-link:visited {
-        color: var(--v2p-color-main-400);
+        color: var(--v2p-color-font-quaternary);
       }
     }
   }
@@ -1242,7 +1242,7 @@ body {
       color: var(--v2p-color-foreground);
 
       &:hover {
-        border-color: var(--v2p-color-main-300);
+        border-color: var(--v2p-color-border-darker);
       }
     }
   }
@@ -1256,7 +1256,7 @@ body {
   }
 
   a.dark:is(:link, :active, :visited, :hover) {
-    color: var(--v2p-color-main-500);
+    color: var(--v2p-color-font-tertiary);
 
     &:hover {
       color: var(--v2p-color-font-secondary);
@@ -1275,7 +1275,7 @@ body {
     font-weight: 400;
 
     &:is(:link, :active, :visited, :hover) {
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-font-tertiary);
     }
   }
 }

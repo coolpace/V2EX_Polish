@@ -108,6 +108,10 @@ body {
       align-items: center;
       padding: 3px 0;
 
+      &:hover {
+        color: var(--v2p-color-button-foreground-hover);
+      }
+
       .v2p-tool-icon {
         width: 16px;
         height: 16px;
@@ -270,7 +274,7 @@ body {
 }
 
 #Main.v2p-topic-preview > .box {
-  border: 1px solid var(--v2p-color-main-200);
+  border: 1px solid var(--v2p-color-border);
 }
 
 a.v2p-topic-preview-title-link {
@@ -539,7 +543,7 @@ a.v2p-topic-preview-title-link {
       width: 16px;
       height: 16px;
       padding: 4px 0;
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-font-tertiary);
 
       &::after {
         @include share.tooltip;
@@ -825,7 +829,7 @@ a.v2p-topic-preview-title-link {
   margin: 0 -10px 15px;
   padding: 5px 10px;
   font-size: 13px;
-  color: var(--v2p-color-main-500);
+  color: var(--v2p-color-font-tertiary);
   background-color: var(--v2p-color-bg-block);
   border-radius: 5px;
 }
@@ -835,7 +839,7 @@ a.v2p-topic-preview-title-link {
   padding: 30px 0;
   font-size: 14px;
   line-height: 1.55;
-  color: var(--v2p-color-main-500);
+  color: var(--v2p-color-font-secondary);
   border-top: 1px solid var(--v2p-color-divider);
 
   @at-root {
@@ -859,7 +863,7 @@ a.v2p-topic-preview-title-link {
           height: 15px;
           margin-right: 5px;
           object-fit: cover;
-          background-color: var(--v2p-color-main-200);
+          background-color: var(--v2p-color-bg-avatar);
           border-radius: 2px;
         }
 
@@ -870,7 +874,7 @@ a.v2p-topic-preview-title-link {
         .v2p-topic-reply-tip {
           margin-top: 20px;
           font-size: 13px;
-          color: var(--v2p-color-main-400);
+          color: var(--v2p-color-font-quaternary);
           text-align: center;
         }
       }
@@ -885,7 +889,7 @@ a.v2p-topic-preview-title-link {
 
         &::placeholder {
           font-size: 14px;
-          color: var(--v2p-color-main-500);
+          color: var(--v2p-color-font-tertiary);
         }
 
         &:focus {
@@ -899,9 +903,9 @@ a.v2p-topic-preview-title-link {
       cursor: pointer;
       padding: 6px 10px;
       font-size: 12px;
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-font-tertiary);
       background-color: var(--v2p-color-bg-input);
-      border-top: 1px dashed var(--v2p-color-main-300);
+      border-top: 1px dashed var(--v2p-color-border-darker);
     }
 
     .v2p-reply-upload-bar-disabled {
@@ -919,7 +923,7 @@ a.v2p-topic-preview-title-link {
       justify-content: space-between;
       padding: 35px 10px 20px;
       font-size: 12px;
-      color: var(--v2p-color-main-500);
+      color: var(--v2p-color-font-tertiary);
       border-top: 1px solid var(--v2p-color-divider);
 
       a {
@@ -1001,7 +1005,7 @@ a.v2p-topic-preview-title-link {
 
     &.active {
       text-decoration: underline;
-      text-decoration-color: var(--v2p-color-main-500);
+      text-decoration-color: var(--v2p-color-font-tertiary);
       text-decoration-thickness: 2px;
       text-underline-offset: 4px;
     }
@@ -1067,7 +1071,7 @@ a:link.v2p-topic-preview-retry {
   width: 18px;
   height: 18px;
   padding: 4px 2px;
-  color: var(--v2p-color-main-500);
+  color: var(--v2p-color-font-tertiary);
 }
 
 .v2p-content-layout.v2p-content-layout {
@@ -1163,4 +1167,16 @@ a:link.v2p-topic-preview-retry {
 // MARK: 用户标签。
 .v2p-tag-block {
   margin-bottom: 10px;
+}
+
+// MARK: 隐藏用户信息。
+.v2p-hide-account {
+  @supports (filter: blur(6px)) {
+    opacity: 0.5;
+    filter: blur(6px);
+  }
+
+  @supports not (filter: blur(6px)) {
+    opacity: 0;
+  }
 }

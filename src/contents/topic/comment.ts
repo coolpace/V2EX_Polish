@@ -421,10 +421,10 @@ export async function handleComments() {
         $pageNormal.removeClass('page_current').addClass('page_normal')
       }
     }
+  }
 
-    if (options.replyContent.hideReplyTime) {
-      $('.cell .ago').addClass('v2p-auto-hide')
-    }
+  if (options.replyContent.hideReplyTime) {
+    $('.cell .ago').addClass('v2p-auto-hide')
   }
 
   const canHideRefName =
