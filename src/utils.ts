@@ -374,6 +374,8 @@ export async function setStorage<T extends StorageKey>(
             `${EXTENSION_NAME}: 无法设置 ${storageKey}， 单个 item 不能超出 8 KB，详情查看：https://developer.chrome.com/docs/extensions/reference/storage/#storage-areas`
           )
         }
+
+        console.error(err)
         throw new Error(`❌ 无法设置：${storageKey}`)
       }
       break
