@@ -83,14 +83,25 @@ body {
     }
 
     @at-root {
+      // 站点帮助页的侧边菜单栏：https://www.v2ex.com/help/currency。
       #Navcol {
         .nav_item:hover {
           background-color: var(--box-background-hover-color);
+
+          &:active {
+            box-shadow: none;
+          }
         }
 
-        .nav_item_current:hover {
-          color: var(--box-foreground-color);
-          background-color: var(--v2p-color-bg-content);
+        .nav_item_current {
+          &:hover {
+            color: var(--box-foreground-color);
+            background-color: var(--v2p-color-bg-content);
+          }
+
+          &:active {
+            box-shadow: none;
+          }
         }
       }
 
@@ -458,7 +469,8 @@ body {
       .reply_content,
       .v2p-topic-preview-content,
       .v2p-topic-preview-addons,
-      .v2p-reply-preview
+      .v2p-reply-preview,
+      .markdown_body
     ) {
     a[href^='http'] {
       @include share.link;
@@ -477,8 +489,7 @@ body {
 
     // MARK: 站内链接。
     a[href*='v2ex.com/t'],
-    a[href^='/t'],
-    a[href^='/go'] {
+    a[href^='/'] {
       @include share.link;
 
       color: var(--v2p-color-accent-500);
