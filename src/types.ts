@@ -21,6 +21,7 @@ export interface SettingsSyncInfo {
 
 export type ThemeType = 'light-default' | 'dark-default' | 'dawn'
 
+/** V2EX Polish 选项设置。 */
 export interface Options {
   /** 是否在新标签页打开主题。 */
   openInNewTab: boolean

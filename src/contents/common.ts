@@ -261,4 +261,33 @@ void (async () => {
 
     $('#Bottom .content').append($extraFooter)
   }
+
+  // 监听 Polish 主题设置的变化，实时切换主题。
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'sync') {
+      const options = changes[StorageKey.Options]
+
+      const { newValue, oldValue } = options
+
+      const newOptions = newValue as Options | undefined
+      const oldOptions = oldValue as Options | undefined
+
+      const newTheme = newOptions?.theme
+      const oldTheme = oldOptions?.theme
+
+      if (newTheme && oldTheme) {
+        if (oldTheme.type !== newTheme.type) {
+          toggleTheme({
+            $toggle,
+            prefersDark: newTheme.autoSwitch
+              ? window.matchMedia('(prefers-color-scheme: dark)').matches
+              : runEnv
+                ? themeType === 'dark-default'
+                : $wrapper.hasClass('Night'),
+            themeType: newTheme.type,
+          })
+        }
+      }
+    }
+  })
 })()
