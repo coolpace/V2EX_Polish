@@ -929,6 +929,7 @@ body {
       a[href^='/member'] {
         font-weight: 500;
         color: var(--v2p-color-font-tertiary);
+        background-color: transparent;
       }
     }
 
@@ -1162,6 +1163,7 @@ body {
       color: var(--v2p-color-font-tertiary);
       text-decoration: underline;
       text-underline-offset: 0.4ex;
+      background-color: transparent;
     }
   }
 
