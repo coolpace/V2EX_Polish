@@ -976,8 +976,13 @@ a.v2p-topic-preview-title-link {
       justify-content: flex-end;
       width: 240px;
 
-      > span {
+      .v2p-github-ref {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         width: 20px;
+        height: 20px;
+        padding: 2px 0;
       }
     }
   }

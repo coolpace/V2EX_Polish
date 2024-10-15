@@ -201,15 +201,14 @@ void (async () => {
       </div>
 
       <div class="v2p-footer-brand">
-        <span>
-          <a
-            href="https://github.com/coolpace/V2EX_Polish"
-            target="_blank"
-            title="GitHub 仓库"
-          >
-            ${iconGitHub}
-          </a>
-        </span>
+        <a
+          href="https://github.com/coolpace/V2EX_Polish"
+          target="_blank"
+          title="GitHub 仓库"
+          class="v2p-hover-btn v2p-github-ref"
+        >
+          ${iconGitHub}
+        </a>
       </div>
     </div>
     `)
