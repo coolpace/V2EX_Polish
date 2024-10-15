@@ -2,7 +2,7 @@ import './polyfill'
 
 import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
-import type { MessageData, Options, ThemeType } from '../types'
+import type { MessageData, Options } from '../types'
 import {
   deepMerge,
   getRunEnv,
@@ -12,57 +12,15 @@ import {
   setStorage,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
-import { loadIcons, postTask, setTheme } from './helpers'
+import { postTask, toggleTheme } from './helpers'
 
 if ($('#site-header').length > 0) {
   $body.addClass('v2p-mobile')
 }
 
-/** 切换主题。 */
-const toggleTheme = ({
-  $toggle,
-  prefersDark,
-  themeType = 'light-default',
-}: {
-  $toggle: JQuery
-  prefersDark: boolean
-  themeType?: ThemeType
-}) => {
-  const wrapperDark = $wrapper.hasClass('Night')
-  const shouldSync = (prefersDark && !wrapperDark) || (!prefersDark && wrapperDark)
-
-  // 如果检测到本地设置与用户偏好设置不一致：
-  if (shouldSync) {
-    const toggleThemeUrl = $toggle.attr('href') // href='/settings/night/toggle'
-
-    // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
-    if (typeof toggleThemeUrl === 'string') {
-      fetch(toggleThemeUrl)
-    }
-
-    // 同时修改切换按钮。
-    if (prefersDark) {
-      $toggle.prop('title', '使用浅色主题')
-      $toggle.html('<i data-lucide="sun"></i>')
-    } else {
-      $toggle.prop('title', '使用深色主题')
-      $toggle.html('<i data-lucide="moon"></i>')
-    }
-  }
-
-  if (prefersDark) {
-    setTheme('dark-default')
-    $wrapper.addClass('Night')
-  } else {
-    setTheme(themeType)
-    $wrapper.removeClass('Night')
-  }
-
-  loadIcons()
-}
-
 void (async () => {
   const runEnv = getRunEnv()
+  const isBrowserExtension = runEnv === 'chrome' || runEnv === 'web-ext'
 
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
@@ -77,16 +35,16 @@ void (async () => {
 
   // 处理自动切换「明/暗」主题。
   if (options.theme.autoSwitch) {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
-    const isPrefersDark = prefersDark.matches
+    const colorMedia = window.matchMedia('(prefers-color-scheme: dark)')
+    const prefersDark = colorMedia.matches
 
     toggleTheme({
       $toggle,
-      prefersDark: isPrefersDark,
-      themeType: isPrefersDark ? 'dark-default' : themeType,
+      prefersDark,
+      themeType: prefersDark ? 'dark-default' : themeType,
     })
 
-    prefersDark.addEventListener('change', ({ matches }) => {
+    colorMedia.addEventListener('change', ({ matches }) => {
       toggleTheme({
         $toggle,
         prefersDark: matches,
@@ -98,7 +56,10 @@ void (async () => {
      * 在浏览器扩展中，使用 themeType 判断是否为暗色主题。
      * 而在 GreaseMonkey 中，使用 $wrapper.hasClass('Night') 判断是否为暗色主题。
      */
-    const prefersDark = runEnv ? themeType === 'dark-default' : $wrapper.hasClass('Night')
+    const prefersDark = isBrowserExtension
+      ? themeType === 'dark-default'
+      : $wrapper.hasClass('Night')
+
     toggleTheme({ $toggle, prefersDark, themeType })
   }
 
@@ -263,8 +224,8 @@ void (async () => {
   }
 
   // 监听 Polish 主题设置的变化，实时切换主题。
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'sync') {
+  chrome.storage.onChanged.addListener((changes, storageType) => {
+    if (storageType === 'sync') {
       const options = changes[StorageKey.Options]
 
       const { newValue, oldValue } = options
@@ -281,8 +242,8 @@ void (async () => {
             $toggle,
             prefersDark: newTheme.autoSwitch
               ? window.matchMedia('(prefers-color-scheme: dark)').matches
-              : runEnv
-                ? themeType === 'dark-default'
+              : isBrowserExtension
+                ? newTheme.type === 'dark-default'
                 : $wrapper.hasClass('Night'),
             themeType: newTheme.type,
           })
