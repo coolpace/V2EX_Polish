@@ -34,7 +34,7 @@ import type {
   V2EX_RequestErrorResponce,
 } from '../types'
 import { getRunEnv, getStorage, setStorage, sleep } from '../utils'
-import { $body, replyTextArea } from './globals'
+import { $body, $wrapper, replyTextArea } from './globals'
 
 /**
  * 检查请求的错误是否由 V2EX 发出。
@@ -415,4 +415,54 @@ export function initTheme({
   } else {
     setTheme(themeType)
   }
+}
+
+interface ToggleThemeParams {
+  /** V2EX 原生页面中的主题切换按钮。 */
+  $toggle: JQuery
+  /** 用户是否要切换为暗色主题。 */
+  prefersDark: boolean
+  /** 自定义的主题类型。 */
+  themeType?: ThemeType
+}
+
+/**
+ * 处理主题类型变更后如何切换主题。
+ */
+export function toggleTheme({
+  $toggle,
+  prefersDark,
+  themeType = 'light-default',
+}: ToggleThemeParams) {
+  const isPageDark = $wrapper.hasClass('Night')
+  const shouldSync = prefersDark !== isPageDark
+
+  // 如果检测到本地设置与用户偏好设置不一致：
+  if (shouldSync) {
+    const toggleThemeUrl = $toggle.attr('href') // href='/settings/night/toggle'
+
+    // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
+    if (typeof toggleThemeUrl === 'string') {
+      fetch(toggleThemeUrl)
+    }
+
+    // 同时修改切换按钮。
+    if (prefersDark) {
+      $toggle.prop('title', '使用浅色主题')
+      $toggle.html('<i data-lucide="sun"></i>')
+    } else {
+      $toggle.prop('title', '使用深色主题')
+      $toggle.html('<i data-lucide="moon"></i>')
+    }
+  }
+
+  if (prefersDark) {
+    setTheme('dark-default')
+    $wrapper.addClass('Night')
+  } else {
+    setTheme(themeType)
+    $wrapper.removeClass('Night')
+  }
+
+  loadIcons()
 }
