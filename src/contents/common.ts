@@ -236,7 +236,7 @@ void (async () => {
       const oldTheme = oldOptions?.theme
 
       if (newTheme && oldTheme) {
-        if (oldTheme.type !== newTheme.type) {
+        if (newTheme.type !== oldTheme.type) {
           toggleTheme({
             $toggle,
             prefersDark: newTheme.autoSwitch
@@ -246,6 +246,14 @@ void (async () => {
                 : $wrapper.hasClass('Night'),
             themeType: newTheme.type,
           })
+        }
+
+        if (newTheme.mode !== oldTheme.mode) {
+          if (newTheme.mode === 'compact') {
+            $body.addClass('v2p-mode-compact')
+          } else {
+            $body.removeClass('v2p-mode-compact')
+          }
         }
       }
     }

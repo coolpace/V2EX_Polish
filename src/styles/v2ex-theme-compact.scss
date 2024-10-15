@@ -1,12 +1,20 @@
 body.v2p-mode-compact {
   --v2p-nav-height: 45px;
-  --v2p-layout-column-gap: 20px;
+  --v2p-layout-column-gap: 16px;
   --v2p-tp-item-x: 12px;
   --v2p-tp-item-y: 0px;
   --v2p-tp-tabs-pd: 6px;
   --v2p-tp-nested-pd: 10px;
 
   visibility: visible;
+
+  #Wrapper {
+    --component-margin: var(--v2p-layout-column-gap);
+
+    .sep20 {
+      height: var(--component-margin);
+    }
+  }
 
   #Main {
     .cell {
@@ -17,5 +25,29 @@ body.v2p-mode-compact {
         }
       }
     }
+
+    .topic_content {
+      font-size: 14.5px;
+    }
+
+    .reply_content {
+      font-size: 14px;
+    }
+
+    .topic_buttons {
+      padding: 4px 0;
+    }
+  }
+
+  #Rightbar {
+    .v2p-tool-box {
+      .v2p-tools {
+        gap: 5px 10px;
+      }
+    }
+  }
+
+  .v2p-topic-preview {
+    padding: 20px;
   }
 }
