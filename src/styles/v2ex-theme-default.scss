@@ -504,8 +504,11 @@ body {
 
   // MARK: 主题内容编辑器。
   .CodeMirror {
-    .CodeMirror-focused.cm-s-one-dark {
-      background-color: transparent;
+    color: currentColor;
+    background-color: var(--v2p-color-bg-input);
+
+    &.CodeMirror-focused {
+      background-color: var(--v2p-color-bg-content);
     }
 
     .CodeMirror-gutters {
@@ -516,6 +519,10 @@ body {
 
     .CodeMirror-linenumber {
       color: var(--v2p-color-font-quaternary);
+    }
+
+    .CodeMirror-cursors {
+      background-color: var(--v2p-color-foreground);
     }
   }
 
@@ -797,6 +804,7 @@ body {
       padding: 15px 5px;
     }
 
+    // 主题编辑器样式：
     &:has(form[action='/write']) {
       .cell {
         &:nth-child(1),
@@ -820,6 +828,10 @@ body {
               border-color: transparent;
             }
           }
+        }
+
+        &#preview {
+          padding: 2px 5px;
         }
       }
     }
