@@ -115,14 +115,20 @@ function setThemeOptions() {
     const themeType = getThemeTypeFromClassList(ele.classList)
 
     const $content = $($('#theme-option-content').clone().html())
+    const $preview = $content.find('.theme-pv-view')
     const $typeName = $content.find('.theme-type-name')
+    const $vipTip = $content.find('.vip-tip')
 
     if (themeType === 'light-default') {
+      $preview.addClass('v2p-theme-light-default')
       $typeName.text('Light default')
     } else if (themeType === 'dark-default') {
+      $preview.addClass('v2p-theme-dark-default')
       $typeName.text('Dark default')
     } else if (themeType === 'dawn') {
+      $preview.addClass('v2p-theme-dawn')
       $typeName.text('Rose Pine Dawn')
+      $vipTip.css('display', 'block')
     }
 
     $(ele).append($content)
