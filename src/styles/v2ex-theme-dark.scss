@@ -91,6 +91,18 @@
     @include dark-mode;
   }
 
+  &:has(#Wrapper.Night) {
+    color-scheme: dark;
+
+    #Top {
+      background-color: transparent;
+    }
+
+    #search-container::before {
+      background-image: url('/static/img/search_icon_light.png');
+    }
+  }
+
   @supports selector(:has(*)) {
     body:has(#Wrapper.Night) {
       @include dark-mode;

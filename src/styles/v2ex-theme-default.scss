@@ -3,18 +3,6 @@
 :root {
   color-scheme: light;
 
-  &:has(#Wrapper.Night) {
-    color-scheme: dark;
-
-    #Top {
-      background-color: transparent;
-    }
-
-    #search-container::before {
-      background-image: url('/static/img/search_icon_light.png');
-    }
-  }
-
   html,
   body {
     min-height: 100vh;

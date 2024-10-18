@@ -33,9 +33,20 @@ void (async () => {
 
   const themeType = options.theme.type || 'light-default'
 
+  const autoSwitchTheme = options.theme.autoSwitch
+
+  const colorMedia = window.matchMedia('(prefers-color-scheme: dark)')
+
+  const handleMediaEvent = ({ matches }: MediaQueryListEvent) => {
+    toggleTheme({
+      $toggle,
+      prefersDark: matches,
+      themeType: matches ? 'dark-default' : themeType,
+    })
+  }
+
   // 处理自动切换「明/暗」主题。
-  if (options.theme.autoSwitch) {
-    const colorMedia = window.matchMedia('(prefers-color-scheme: dark)')
+  if (autoSwitchTheme) {
     const prefersDark = colorMedia.matches
 
     toggleTheme({
@@ -44,17 +55,13 @@ void (async () => {
       themeType: prefersDark ? 'dark-default' : themeType,
     })
 
-    colorMedia.addEventListener('change', ({ matches }) => {
-      toggleTheme({
-        $toggle,
-        prefersDark: matches,
-        themeType: matches ? 'dark-default' : themeType,
-      })
-    })
+    colorMedia.addEventListener('change', handleMediaEvent)
   } else {
     /**
-     * 在浏览器扩展中，使用 themeType 判断是否为暗色主题。
-     * 而在 GreaseMonkey 中，使用 $wrapper.hasClass('Night') 判断是否为暗色主题。
+     * 如果没有开启自动切换主题，则根据当前主题类型判断是否为暗色主题。
+     *
+     * - 在浏览器扩展中，使用 `themeType` 判断是否为暗色主题。
+     * - 在油猴脚本中，使用 `$wrapper.hasClass('Night')` 判断是否为暗色主题。
      */
     const prefersDark = isBrowserExtension
       ? themeType === 'dark-default'
@@ -222,7 +229,7 @@ void (async () => {
     $('#Bottom .content').append($extraFooter)
   }
 
-  // 监听 Polish 主题设置的变化，实时切换主题。
+  // MARK: 监测 Polish 选项设置的变化。
   chrome.storage.onChanged.addListener((changes, storageType) => {
     if (storageType === 'sync') {
       const options = changes[StorageKey.Options]
@@ -235,6 +242,7 @@ void (async () => {
       const newTheme = newOptions?.theme
       const oldTheme = oldOptions?.theme
 
+      // 监听 Polish 主题设置的变化，实时切换主题。
       if (newTheme && oldTheme) {
         if (newTheme.type !== oldTheme.type) {
           toggleTheme({
@@ -254,6 +262,26 @@ void (async () => {
           } else {
             $body.removeClass('v2p-mode-compact')
           }
+        }
+
+        if (newTheme.autoSwitch !== oldTheme.autoSwitch) {
+          if (newTheme.autoSwitch) {
+            colorMedia.addEventListener('change', handleMediaEvent)
+          } else {
+            colorMedia.removeEventListener('change', handleMediaEvent)
+          }
+
+          const prefersDark = newTheme.autoSwitch
+            ? window.matchMedia('(prefers-color-scheme: dark)').matches
+            : isBrowserExtension
+              ? newTheme.type === 'dark-default'
+              : $wrapper.hasClass('Night')
+
+          toggleTheme({
+            $toggle,
+            prefersDark,
+            themeType: prefersDark ? 'dark-default' : themeType,
+          })
         }
       }
     }
