@@ -11,6 +11,7 @@ import { formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
 import { $body, $topicList } from '../globals'
 import { addToReadingList } from '../helpers'
+import { handleEmojiReplace } from '../topic/content'
 
 const invalidTemplate = (tip: string) => `
 <div class="v2p-no-pat">
@@ -293,6 +294,8 @@ export function handleTopicList() {
                   </div>
                 `)
               }
+
+              handleEmojiReplace($commentCells)
             }
 
             if (options.openInNewTab) {
@@ -301,7 +304,7 @@ export function handleTopicList() {
 
             modal.$content.empty().append($topicPreview)
 
-            // 默认情况下，div 不是可聚焦的元素，设置 tabindex 属性后，用户可以使用 focus() 聚焦到该元素。
+            // 默认情况下，div 不是可聚焦的元素，设置 tabindex 属性后，用户可以使用 `focus()` 聚焦到该元素。
             modal.$content.attr('tabindex', '0')
 
             modal.$content.trigger('focus')

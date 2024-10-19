@@ -320,14 +320,14 @@ export function handleTopicImg() {
 /**
  * 将低清表情图片转换成高清表情图片。
  */
-export function handleEmojiReplace() {
+export function handleEmojiReplace($cells: JQuery = $commentCells) {
   const srcMap = new Map<string, string>()
 
   Object.values(emojiLinks).forEach(({ ld, hd }) => {
     srcMap.set(ld, hd)
   })
 
-  const $embedImages = $commentCells.find(`.reply_content .embedded_image`)
+  const $embedImages = $cells.find(`.reply_content .embedded_image`)
 
   if ($embedImages.length > 0) {
     $embedImages.each((_, img) => {

@@ -52,10 +52,12 @@ function handleFilteredComments() {
     root: $main,
     onMount: ({ $title, $content }) => {
       const $template = $('<div class="v2p-modal-comments">')
+
       const $t1 = $template.clone().attr('data-tab-key', 'hot').addClass('v2p-tab-content-active')
       const $t2 = $template.clone().attr('data-tab-key', 'recent')
       const $t3 = $template.clone().attr('data-tab-key', 'op')
 
+      // MARK: 热门回复：
       {
         if (popularCount > 0) {
           popularCommentData.forEach(({ index, refMemberNames }) => {
@@ -103,6 +105,7 @@ function handleFilteredComments() {
         $content.append($t1)
       }
 
+      // MARK: 最近回复：
       {
         const len = commentDataList.length
         const displayNum =
@@ -168,6 +171,7 @@ function handleFilteredComments() {
         $content.append($t2)
       }
 
+      // MARK: 题主回复：
       {
         const opCommentData = commentDataList.filter(
           ({ memberName }) => memberName === topicOwnerName
@@ -220,12 +224,12 @@ function handleFilteredComments() {
       }
 
       const $tabs = $(`
-      <div class="v2p-modal-comment-tabs">
-        <div data-tab-key="hot" class="v2p-tab-active">热门回复</div>
-        <div data-tab-key="recent">最近回复</div>
-        <div data-tab-key="op">题主回复</div>
-      </div>
-    `)
+        <div class="v2p-modal-comment-tabs">
+          <div data-tab-key="hot" class="v2p-tab-active">热门回复</div>
+          <div data-tab-key="recent">最近回复</div>
+          <div data-tab-key="op">题主回复</div>
+        </div>
+      `)
       $title.append($tabs)
 
       $tabs.find('[data-tab-key]').on('click', (ev) => {
@@ -234,18 +238,21 @@ function handleFilteredComments() {
 
         if (typeof tabKey === 'string') {
           $target.addClass('v2p-tab-active').siblings().removeClass('v2p-tab-active')
+
           $(`.v2p-modal-comments[data-tab-key="${tabKey}"]`)
             .addClass('v2p-tab-content-active')
             .siblings()
             .removeClass('v2p-tab-content-active')
         }
       })
+
+      handleEmojiReplace($content.find('.cell[id^="r_"]'))
     },
     onOpen: ({ $content }) => {
-      $content.find('.cell[id^="r_"]').each((_, cellDom) => {
-        const storage = getStorageSync()
-        const options = storage[StorageKey.Options]
+      const storage = getStorageSync()
+      const options = storage[StorageKey.Options]
 
+      $content.find('.cell[id^="r_"]').each((_, cellDom) => {
         if (options.replyContent.autoFold) {
           processReplyContent($(cellDom))
         }
