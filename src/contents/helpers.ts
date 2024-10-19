@@ -6,6 +6,7 @@ import {
   createIcons,
   EyeOff,
   Heart,
+  House,
   MessageSquare,
   MessageSquarePlus,
   Moon,
@@ -341,6 +342,7 @@ export function loadIcons() {
         Twitter,
         ChevronDown,
         ArrowUpRightSquare,
+        House,
       },
     })
   }, 0)

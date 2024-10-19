@@ -165,7 +165,7 @@ void (async () => {
     const faviconLink = $("link[rel~='icon']")
     faviconLink.prop('href', 'https://v2p.app/favicon.svg')
 
-    $('#Logo').css('opacity', '0')
+    $('#Logo').append(`<i data-lucide="house"></i>`).addClass('v2p-logo')
     $('#Top').find('a[href^="/member/"]').remove()
     $infoCard
       .find('a[href^="/member/"], table:nth-of-type(1) td:nth-of-type(3) .fade')

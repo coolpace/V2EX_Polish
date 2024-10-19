@@ -13,6 +13,18 @@ body {
       padding: 0 15px;
     }
   }
+
+  a:has(#Logo.v2p-logo) {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  #Logo.v2p-logo {
+    width: unset;
+    height: 25px;
+    padding: 0 8px;
+    background: none;
+  }
 }
 
 .v2p-hover-btn {
