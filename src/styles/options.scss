@@ -132,6 +132,7 @@ body {
         width: 260px;
         min-height: 100px;
         background-color: var(--v2p-color-background);
+        border-bottom: 1px solid var(--v2p-color-border);
 
         .tpv-header {
           display: flex;

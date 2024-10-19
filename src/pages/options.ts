@@ -26,8 +26,8 @@ async function saveOptions() {
     },
     theme: {
       type: (() => {
-        const isLightDefault = $('#theme_type_default').prop('checked')
-        const isDarkDefault = $('#theme_type_dark').prop('checked')
+        const isLightDefault = $('#theme_type_light-default').prop('checked')
+        const isDarkDefault = $('#theme_type_dark-default').prop('checked')
         const isDawn = $('#theme_type_dawn').prop('checked')
 
         if (isLightDefault) {
@@ -102,36 +102,34 @@ async function saveOptions() {
   await setStorage(StorageKey.Options, currentOptions)
 }
 
-function getThemeTypeFromClassList(classList: DOMTokenList) {
-  const themeType = Array.from(classList)
-    .find((it) => it.startsWith('v2p-theme-'))
-    ?.replace('v2p-theme-', '')
-
-  return themeType
-}
-
 function setThemeOptions() {
-  $('.theme-option').each((_, ele) => {
-    const themeType = getThemeTypeFromClassList(ele.classList)
+  const themeTypes = [
+    { name: 'Light default', type: 'light-default' },
+    { name: 'Dark default', type: 'dark-default' },
+    { name: 'Rose Pine Dawn', type: 'dawn', vip: true },
+  ] satisfies { name: string; type: ThemeType; vip?: boolean }[]
 
-    const $content = $($('#theme-option-content').clone().html())
-    const $preview = $content.find('.theme-pv-view')
-    const $typeName = $content.find('.theme-type-name')
-    const $vipTip = $content.find('.vip-tip')
+  themeTypes.forEach((themeConfig) => {
+    const $themeOption = $($('#theme-option').clone().html())
 
-    if (themeType === 'light-default') {
-      $preview.addClass('v2p-theme-light-default')
-      $typeName.text('Light default')
-    } else if (themeType === 'dark-default') {
-      $preview.addClass('v2p-theme-dark-default')
-      $typeName.text('Dark default')
-    } else if (themeType === 'dawn') {
-      $preview.addClass('v2p-theme-dawn')
-      $typeName.text('Rose Pine Dawn')
+    const $input = $themeOption.find('.theme-opt-input')
+    const $label = $themeOption.find('.theme-option')
+    const $preview = $themeOption.find('.theme-pv-view')
+    const $typeName = $themeOption.find('.theme-type-name')
+    const $vipTip = $themeOption.find('.vip-tip')
+
+    $input.prop('value', themeConfig.type)
+    const id = `theme_type_${themeConfig.type}`
+    $input.prop('id', id)
+    $label.prop('for', id)
+    $preview.addClass(`v2p-theme-${themeConfig.type}`)
+    $typeName.text(themeConfig.name)
+
+    if (themeConfig.vip) {
       $vipTip.css('display', 'block')
     }
 
-    $(ele).append($content)
+    $('.theme-select').append($themeOption)
   })
 }
 
@@ -150,11 +148,11 @@ void (async function init() {
     $('#openInNewTab').prop('checked', options.openInNewTab)
     $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
 
-    $('#theme_type_default').prop(
+    $('#theme_type_light-default').prop(
       'checked',
       !options.theme.type || options.theme.type === 'light-default'
     )
-    $('#theme_type_dark').prop('checked', options.theme.type === 'dark-default')
+    $('#theme_type_dark-default').prop('checked', options.theme.type === 'dark-default')
     $('#theme_type_dawn').prop('checked', options.theme.type === 'dawn')
     $('#theme_autoSwitch').prop('checked', options.theme.autoSwitch)
     $('#theme_mode_default').prop(
@@ -432,13 +430,12 @@ void (async function init() {
   }
 
   $('.theme-select .form-radio').on('click', (ev) => {
-    ev.stopImmediatePropagation()
+    ev.stopPropagation()
 
-    const classList = $(ev.currentTarget).find('.theme-option').get(0)?.classList
+    const $themeOption = $(ev.currentTarget).find('.theme-opt-input')
+    const themeType = $themeOption.prop('value')
 
-    if (classList) {
-      const themeType = getThemeTypeFromClassList(classList)
-
+    if (themeType) {
       initTheme({
         themeType: themeType as ThemeType,
       })
