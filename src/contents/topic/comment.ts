@@ -20,9 +20,9 @@ import {
   topicOwnerName,
   updateCommentCells,
 } from '../globals'
-import { insertTextToReplyInput, loadIcons } from '../helpers'
+import { insertTextToReplyInput, loadIcons, replaceEmojiWithHD } from '../helpers'
 import { memberDataCache, processAvatar } from './avatar'
-import { handleEmojiReplace, handleTopicImg, processReplyContent, updateMemberTag } from './content'
+import { handleTopicImg, processReplyContent, updateMemberTag } from './content'
 
 /** 每一页的回复列表数据 */
 let commentDataList: readonly CommentData[] = []
@@ -246,7 +246,7 @@ function handleFilteredComments() {
         }
       })
 
-      handleEmojiReplace($content.find('.cell[id^="r_"]'))
+      replaceEmojiWithHD($content.find('.cell[id^="r_"]'))
     },
     onOpen: ({ $content }) => {
       const storage = getStorageSync()
@@ -607,6 +607,6 @@ export async function handleComments() {
   }
 
   window.requestIdleCallback(() => {
-    handleEmojiReplace()
+    replaceEmojiWithHD()
   })
 }

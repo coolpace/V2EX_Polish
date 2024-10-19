@@ -32,6 +32,7 @@ const generateManifest = (): Manifest => {
   const topicMatches = getMatches('t')
   const writeMatches = getMatches('write')
   const memberMatches = getMatches('member')
+  const notificationsMatches = getMatches('notifications')
 
   return {
     manifest_version: 3,
@@ -55,7 +56,7 @@ const generateManifest = (): Manifest => {
 
     content_scripts: [
       {
-        matches: matches,
+        matches,
         css: [
           'css/v2ex-theme-var.css',
           'css/v2ex-theme-default.css',
@@ -68,20 +69,20 @@ const generateManifest = (): Manifest => {
         all_frames: true,
       },
       {
-        matches: matches,
+        matches,
         js: ['scripts/polyfill.js'],
         run_at: 'document_end',
         all_frames: true,
       },
 
       {
-        matches: matches,
+        matches,
         css: ['css/v2ex-effect.css'],
         js: ['scripts/jquery.min.js', 'scripts/common.min.js'],
         all_frames: true,
       },
       {
-        matches: matches,
+        matches,
         exclude_matches: [
           '*://*/t/*',
           '*://*/notes/*',
@@ -100,16 +101,18 @@ const generateManifest = (): Manifest => {
       {
         matches: writeMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-write.min.js'],
-        all_frames: true,
       },
       {
         matches: memberMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-member.min.js'],
-        all_frames: true,
+      },
+      {
+        matches: notificationsMatches,
+        js: ['scripts/jquery.min.js', 'scripts/v2ex-notifications.min.js'],
       },
 
       {
-        matches: matches,
+        matches,
         js: ['scripts/toggle-icon.min.js'],
         all_frames: true,
       },
@@ -121,7 +124,7 @@ const generateManifest = (): Manifest => {
 
     web_accessible_resources: [
       {
-        matches: matches,
+        matches,
         resources: ['scripts/web_accessible_resources.min.js'],
       },
     ],

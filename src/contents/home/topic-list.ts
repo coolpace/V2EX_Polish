@@ -10,8 +10,7 @@ import type { Topic } from '../../types'
 import { formatTimestamp, getRunEnv, getStorageSync } from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
 import { $body, $topicList } from '../globals'
-import { addToReadingList } from '../helpers'
-import { handleEmojiReplace } from '../topic/content'
+import { addToReadingList, replaceEmojiWithHD } from '../helpers'
 
 const invalidTemplate = (tip: string) => `
 <div class="v2p-no-pat">
@@ -295,7 +294,7 @@ export function handleTopicList() {
                 `)
               }
 
-              handleEmojiReplace($commentCells)
+              replaceEmojiWithHD($commentCells)
             }
 
             if (options.openInNewTab) {

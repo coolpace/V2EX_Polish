@@ -35,7 +35,7 @@ import type {
   V2EX_RequestErrorResponce,
 } from '../types'
 import { getRunEnv, getStorage, isBrowserExtension, setStorage, sleep } from '../utils'
-import { $body, $wrapper, replyTextArea } from './globals'
+import { $body, $commentCells, $wrapper, replyTextArea } from './globals'
 
 /**
  * 检查请求的错误是否由 V2EX 发出。
@@ -466,4 +466,37 @@ export function toggleTheme({
   }
 
   loadIcons()
+}
+
+/**
+ * 将低清表情图片转换成高清表情图片。
+ */
+export function replaceEmojiWithHD($cells: JQuery = $commentCells) {
+  const srcMap = new Map<string, string>()
+
+  Object.values(emojiLinks).forEach(({ ld, hd }) => {
+    srcMap.set(ld, hd)
+  })
+
+  const $embedImages = $cells.find(`.reply_content .embedded_image, .payload .embedded_image`)
+
+  if ($embedImages.length > 0) {
+    $embedImages.each((_, img) => {
+      const $img = $(img)
+
+      const src = $img.attr('src')
+
+      if (typeof src === 'string') {
+        const hd = srcMap.get(src)
+
+        if (typeof hd === 'string') {
+          $img.attr('src', hd)
+          $img.css({
+            width: '20px',
+            height: '20px',
+          })
+        }
+      }
+    })
+  }
 }
