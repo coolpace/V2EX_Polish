@@ -33,7 +33,7 @@ import type {
   ThemeType,
   V2EX_RequestErrorResponce,
 } from '../types'
-import { getRunEnv, getStorage, setStorage, sleep } from '../utils'
+import { getRunEnv, getStorage, isBrowserExtension, setStorage, sleep } from '../utils'
 import { $body, $wrapper, replyTextArea } from './globals'
 
 /**
@@ -93,9 +93,7 @@ export async function setMemberTags(params: {
   const storage = await getStorage(false)
   const tagData = storage[StorageKey.MemberTag]
 
-  const runEnv = getRunEnv()
-
-  if (!(runEnv === 'chrome' || runEnv === 'web-ext')) {
+  if (!isBrowserExtension()) {
     // 非浏览器扩展不能设置用户标签。
     return
   }
@@ -382,7 +380,7 @@ export function setTheme(type: ThemeType) {
 }
 
 /**
- * 设置主题。
+ * 设置 options、popup 主题。
  */
 export function initTheme({
   autoSwitch,
@@ -393,9 +391,10 @@ export function initTheme({
 }) {
   // 优先按照设置执行自动切换主题。
   if (autoSwitch) {
-    const perfersDark = window.matchMedia('(prefers-color-scheme: dark)')
+    const colorMedia = window.matchMedia('(prefers-color-scheme: dark)')
+    const perfersDark = colorMedia.matches
 
-    if (perfersDark.matches) {
+    if (perfersDark) {
       setTheme('dark-default')
     } else if (themeType === 'dark-default') {
       setTheme('light-default')
@@ -403,7 +402,7 @@ export function initTheme({
       setTheme(themeType)
     }
 
-    perfersDark.addEventListener('change', ({ matches }) => {
+    colorMedia.addEventListener('change', ({ matches }) => {
       if (matches) {
         setTheme('dark-default')
       } else if (themeType === 'dark-default') {

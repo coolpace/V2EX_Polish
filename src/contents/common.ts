@@ -5,10 +5,10 @@ import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData, Options } from '../types'
 import {
   deepMerge,
-  getRunEnv,
   getStorage,
   getV2P_Settings,
   injectScript,
+  isBrowserExtension,
   setStorage,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
@@ -19,8 +19,7 @@ if ($('#site-header').length > 0) {
 }
 
 void (async () => {
-  const runEnv = getRunEnv()
-  const isBrowserExtension = runEnv === 'chrome' || runEnv === 'web-ext'
+  const isBrowserExt = isBrowserExtension()
 
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
@@ -31,22 +30,26 @@ void (async () => {
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
-  const themeType = options.theme.type || 'light-default'
-
-  const autoSwitchTheme = options.theme.autoSwitch
-
   const colorMedia = window.matchMedia('(prefers-color-scheme: dark)')
 
-  const handleMediaEvent = ({ matches }: MediaQueryListEvent) => {
-    toggleTheme({
-      $toggle,
-      prefersDark: matches,
-      themeType: matches ? 'dark-default' : themeType,
+  const handleColorSchemeChange = ({ matches }: MediaQueryListEvent) => {
+    // 每次系统主题变更时，都要获取最新的选项设置主题，这样才能设置正确的主题。
+    getStorage(false).then((storage) => {
+      const options = storage[StorageKey.Options]
+      const themeType = options.theme.type || 'light-default'
+
+      toggleTheme({
+        $toggle,
+        prefersDark: matches,
+        themeType: matches ? 'dark-default' : themeType,
+      })
     })
   }
 
+  const themeType = options.theme.type || 'light-default'
+
   // 处理自动切换「明/暗」主题。
-  if (autoSwitchTheme) {
+  if (options.theme.autoSwitch) {
     const prefersDark = colorMedia.matches
 
     toggleTheme({
@@ -55,7 +58,7 @@ void (async () => {
       themeType: prefersDark ? 'dark-default' : themeType,
     })
 
-    colorMedia.addEventListener('change', handleMediaEvent)
+    colorMedia.addEventListener('change', handleColorSchemeChange)
   } else {
     /**
      * 如果没有开启自动切换主题，则根据当前主题类型判断是否为暗色主题。
@@ -63,9 +66,7 @@ void (async () => {
      * - 在浏览器扩展中，使用 `themeType` 判断是否为暗色主题。
      * - 在油猴脚本中，使用 `$wrapper.hasClass('Night')` 判断是否为暗色主题。
      */
-    const prefersDark = isBrowserExtension
-      ? themeType === 'dark-default'
-      : $wrapper.hasClass('Night')
+    const prefersDark = isBrowserExt ? themeType === 'dark-default' : $wrapper.hasClass('Night')
 
     toggleTheme({ $toggle, prefersDark, themeType })
   }
@@ -171,7 +172,8 @@ void (async () => {
       .addClass('v2p-hide-account')
   }
 
-  if (runEnv === 'chrome' || runEnv === 'web-ext') {
+  if (isBrowserExt) {
+    // 注入浏览器扩展的资源文件，用于处理页面解析。
     injectScript(chrome.runtime.getURL('scripts/web_accessible_resources.min.js'))
 
     window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
@@ -244,44 +246,42 @@ void (async () => {
 
       // 监听 Polish 主题设置的变化，实时切换主题。
       if (newTheme && oldTheme) {
+        const prefersDark = newTheme.autoSwitch
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : isBrowserExt
+            ? newTheme.type === 'dark-default'
+            : $wrapper.hasClass('Night')
+
         if (newTheme.type !== oldTheme.type) {
           toggleTheme({
             $toggle,
-            prefersDark: newTheme.autoSwitch
-              ? window.matchMedia('(prefers-color-scheme: dark)').matches
-              : isBrowserExtension
-                ? newTheme.type === 'dark-default'
-                : $wrapper.hasClass('Night'),
+            prefersDark,
             themeType: newTheme.type,
           })
+        } else {
+          // 当主题类型未发生变化时，仅处理自动跟随系统主题的设置。
+          if (newTheme.autoSwitch !== oldTheme.autoSwitch) {
+            if (newTheme.autoSwitch) {
+              colorMedia.addEventListener('change', handleColorSchemeChange)
+            } else {
+              colorMedia.removeEventListener('change', handleColorSchemeChange)
+            }
+
+            toggleTheme({
+              $toggle,
+              prefersDark,
+              themeType: prefersDark ? 'dark-default' : newTheme.type,
+            })
+          }
         }
 
+        // 处理空间间距模式。
         if (newTheme.mode !== oldTheme.mode) {
           if (newTheme.mode === 'compact') {
             $body.addClass('v2p-mode-compact')
           } else {
             $body.removeClass('v2p-mode-compact')
           }
-        }
-
-        if (newTheme.autoSwitch !== oldTheme.autoSwitch) {
-          if (newTheme.autoSwitch) {
-            colorMedia.addEventListener('change', handleMediaEvent)
-          } else {
-            colorMedia.removeEventListener('change', handleMediaEvent)
-          }
-
-          const prefersDark = newTheme.autoSwitch
-            ? window.matchMedia('(prefers-color-scheme: dark)').matches
-            : isBrowserExtension
-              ? newTheme.type === 'dark-default'
-              : $wrapper.hasClass('Night')
-
-          toggleTheme({
-            $toggle,
-            prefersDark,
-            themeType: prefersDark ? 'dark-default' : themeType,
-          })
         }
       }
     }

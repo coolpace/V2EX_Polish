@@ -137,6 +137,15 @@ export function getRunEnv(): 'chrome' | 'web-ext' | null {
 }
 
 /**
+ * 判断当前运行环境是否为浏览器扩展。
+ */
+export function isBrowserExtension() {
+  const runEnv = getRunEnv()
+
+  return runEnv === 'chrome' || runEnv === 'web-ext'
+}
+
+/**
  * 转义 HTML 字符串中的特殊字符。
  */
 export function escapeHTML(htmlString: string): string {
@@ -290,13 +299,13 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
       }
     }
 
-    const runEnv = getRunEnv()
-
-    if (!(runEnv === 'chrome' || runEnv === 'web-ext')) {
+    if (!isBrowserExtension()) {
       const data: StorageSettings = { [StorageKey.Options]: defaultOptions }
+
       if (typeof window !== 'undefined') {
         window.__V2P_StorageCache = data
       }
+
       resolve(data)
     } else {
       chrome.storage.sync
