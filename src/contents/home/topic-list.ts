@@ -108,54 +108,54 @@ export function handleTopicList() {
             abortController = new AbortController()
 
             modal.$content.empty().append(`
-                <div class="v2p-tpr-loading">
-                  <div class="v2p-tpr-info">
-                    <div class="v2p-tpr v2p-tpr-info-avatar"></div>
-                    <div class="v2p-tpr v2p-tpr-info-text"></div>
-                  </div>
-  
-                  <div class="v2p-tpr-content">
-                    <div class="v2p-tpr v2p-tpr-content-p"></div>
-                    <div class="v2p-tpr v2p-tpr-content-p"></div>
-                    <div class="v2p-tpr v2p-tpr-content-p" style="width: 70%;"></div>
-                  </div>
-  
-                  <div class="v2p-tpr-cmt">
-                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
-                    <div class="v2p-tpr-cmt-right">
-                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
-                    </div>
-                  </div>
-  
-                  <div class="v2p-tpr-cmt" style="opacity: 0.8;">
-                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
-                    <div class="v2p-tpr-cmt-right">
-                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
-                    </div>
-                  </div>
-  
-                  <div class="v2p-tpr-cmt" style="opacity: 0.6;">
-                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
-                    <div class="v2p-tpr-cmt-right">
-                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
-                    </div>
-                  </div>
-                  <div class="v2p-tpr-cmt" style="opacity: 0.4;">
-                    <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
-                    <div class="v2p-tpr-cmt-right">
-                      <div class="v2p-tpr v2p-tpr-cmt-header"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p"></div>
-                      <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
-                    </div>
+              <div class="v2p-tpr-loading">
+                <div class="v2p-tpr-info">
+                  <div class="v2p-tpr v2p-tpr-info-avatar"></div>
+                  <div class="v2p-tpr v2p-tpr-info-text"></div>
+                </div>
+
+                <div class="v2p-tpr-content">
+                  <div class="v2p-tpr v2p-tpr-content-p"></div>
+                  <div class="v2p-tpr v2p-tpr-content-p"></div>
+                  <div class="v2p-tpr v2p-tpr-content-p" style="width: 70%;"></div>
+                </div>
+
+                <div class="v2p-tpr-cmt">
+                  <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                  <div class="v2p-tpr-cmt-right">
+                    <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
                   </div>
                 </div>
-              `)
+
+                <div class="v2p-tpr-cmt" style="opacity: 0.8;">
+                  <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                  <div class="v2p-tpr-cmt-right">
+                    <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
+                  </div>
+                </div>
+
+                <div class="v2p-tpr-cmt" style="opacity: 0.6;">
+                  <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                  <div class="v2p-tpr-cmt-right">
+                    <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
+                  </div>
+                </div>
+                <div class="v2p-tpr-cmt" style="opacity: 0.4;">
+                  <div class="v2p-tpr v2p-tpr-cmt-avatar"></div>
+                  <div class="v2p-tpr-cmt-right">
+                    <div class="v2p-tpr v2p-tpr-cmt-header"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p"></div>
+                    <div class="v2p-tpr v2p-tpr-cmt-p" style="width: 70%;"></div>
+                  </div>
+                </div>
+              </div>
+            `)
 
             const promises = [
               fetchTopic(topicId, { signal: abortController.signal }),
@@ -265,7 +265,7 @@ export function handleTopicList() {
             const $topicReplyBox = $topicMain.find('.box:has(.cell[id^="r_"])')
 
             if ($topicReplyBox.length > 0) {
-              $topicReplyBox.css('margin-top', '20px')
+              $topicReplyBox.css({ 'margin-top': '20px', padding: '0' })
               $topicReplyBox
                 .find(
                   '.cell:first-of-type, .cell.ps_container, .cell > table > tbody > tr > td:last-of-type > .fr'
