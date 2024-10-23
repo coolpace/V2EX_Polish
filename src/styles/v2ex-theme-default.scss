@@ -947,6 +947,7 @@ body {
     .count_livid {
       @include count;
 
+      margin-right: 0;
       color: var(--v2p-color-button-foreground);
       background-color: var(--v2p-color-bg-block);
     }
@@ -962,7 +963,7 @@ body {
     .item_title {
       .topic-link {
         font-size: 15px;
-        font-weight: 600;
+        font-weight: 500;
       }
     }
   }
