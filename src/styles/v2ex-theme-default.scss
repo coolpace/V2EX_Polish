@@ -593,8 +593,8 @@ body {
     border-bottom: none;
   }
 
-  // MARK: 正文内容的表格。
   .markdown_body {
+    // MARK: 正文内容的 MD 表格。
     table {
       border-top: 1px solid var(--v2p-color-border-darker);
       box-shadow: none;
@@ -616,6 +616,10 @@ body {
       padding: 0 1em;
       color: var(--v2p-color-font-tertiary);
       border-left: 3px solid var(--v2p-color-border);
+    }
+
+    pre {
+      line-height: 1.5;
     }
   }
 
@@ -1249,6 +1253,10 @@ body {
       .payload {
         color: var(--v2p-color-foreground);
         background-color: var(--v2p-color-bg-block);
+
+        &:has(.embedded_video_wrapper) {
+          min-width: 50%;
+        }
       }
 
       .topic-link:visited {
