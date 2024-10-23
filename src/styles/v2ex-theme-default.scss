@@ -707,6 +707,13 @@ body {
   textarea {
     color: var(--v2p-color-foreground);
   }
+
+  // 设置页的开关按钮。
+  .onoffswitch {
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
+  }
 }
 
 /* ====== 帖子标签 ====== */
