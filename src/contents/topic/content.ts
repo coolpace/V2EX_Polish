@@ -246,9 +246,9 @@ export function openTagsSetter(
       const tags =
         newTagsValue.trim().length > 0
           ? newTagsValue
-              .split(/,|，/g)
-              .filter((it) => it.trim().length > 0)
-              .map((it) => ({ name: it }))
+            .split(/,|，/g)
+            .filter((it) => it.trim().length > 0)
+            .map((it) => ({ name: it }))
           : undefined
 
       await setMemberTags({ memberName, memberAvatar: memberTagData?.avatar || memberAvatar, tags })
@@ -293,9 +293,9 @@ export function handleTopicImg() {
       const $img = $(img)
 
       if (img instanceof HTMLImageElement) {
-        if (img.clientWidth !== img.naturalWidth) {
-          $img.parent().removeAttr('href')
+        $img.parent().removeAttr('href')
 
+        if (img.clientWidth !== img.naturalWidth) {
           $img.css({ cursor: 'zoom-in' })
 
           $img.on('click', () => {
