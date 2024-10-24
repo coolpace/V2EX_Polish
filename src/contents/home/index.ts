@@ -2,7 +2,7 @@ import { StorageKey } from '../../constants'
 import { getStorage, isSameDay } from '../../utils'
 import { $infoCard } from '../globals'
 import { loadIcons } from '../helpers'
-import { handleHotTopics } from './hot-topics'
+// import { handleHotTopics } from './hot-topics'
 import { handleTopicList } from './topic-list'
 
 void (async () => {
@@ -38,7 +38,7 @@ void (async () => {
     }
   }
 
-  handleHotTopics()
+  // handleHotTopics()
 
   loadIcons()
 })()

@@ -4,6 +4,9 @@ import { getHotTopics } from '../../services'
 import type { HotTopic } from '../../types'
 import { $wrapper } from '../globals'
 
+/**
+ * 历史热议主题。
+ */
 export function handleHotTopics() {
   const $topicsHot = $('#TopicsHot')
   const $hotHeader = $topicsHot.find('> .cell:first-of-type').addClass('v2p-topics-hot-header')
