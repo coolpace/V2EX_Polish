@@ -127,14 +127,11 @@
 
     font-family: system-ui, sans-serif;
     color: var(--v2p-color-foreground);
-    visibility: hidden;
     background-color: var(--v2p-color-background);
 
     &.v2p-theme-light-default,
     .v2p-theme-light-default {
       @include light-mode;
-
-      visibility: visible;
     }
 
     #Logo {

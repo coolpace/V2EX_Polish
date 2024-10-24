@@ -12,6 +12,7 @@
 body {
   scrollbar-gutter: stable;
   overflow: overlay;
+  visibility: hidden;
 
   &.v2p-theme-light-default {
     visibility: visible;
