@@ -87,25 +87,28 @@
 
   body.v2p-theme-dark-default,
   .v2p-theme-dark-default,
-  &[data-darkreader-scheme='dark'] body {
-    @include dark-mode;
-  }
-
-  &:has(#Wrapper.Night) {
+  &[data-darkreader-scheme='dark'] body,
+  body:has(#Wrapper.Night) {
     color-scheme: dark;
+
+    @include dark-mode;
 
     #Top {
       background-color: transparent;
     }
 
+    #Main {
+      .cell {
+        .item_title {
+          .topic-link {
+            font-weight: normal; // 黑底白字下，500 的字体看起来会太粗。
+          }
+        }
+      }
+    }
+
     #search-container::before {
       background-image: url('/static/img/search_icon_light.png');
-    }
-  }
-
-  @supports selector(:has(*)) {
-    body:has(#Wrapper.Night) {
-      @include dark-mode;
     }
   }
 

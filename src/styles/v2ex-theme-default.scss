@@ -1292,8 +1292,23 @@ body {
 /* ================================================================ */
 
 #Rightbar {
-  .cell:has(.light-toggle) {
-    font-size: 13px;
+  .cell {
+    &:has(.light-toggle) {
+      font-size: 13px;
+    }
+  }
+
+  .box {
+    .item_node {
+      font-size: 12px;
+      color: var(--v2p-color-font-secondary);
+      border-color: var(--v2p-color-border);
+      border-radius: 5px;
+
+      &:hover {
+        box-shadow: var(--v2p-box-shadow);
+      }
+    }
   }
 
   a.dark:is(:link, :active, :visited, :hover) {
