@@ -364,7 +364,7 @@ export const defaultOptions: Options = {
     autoSwitch: false,
   },
   reply: {
-    preload: 'off',
+    preload: 'auto',
   },
   replyContent: {
     autoFold: true,

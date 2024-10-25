@@ -86,9 +86,7 @@ function handleFilteredComments() {
                             <span>${replyMember.memberName}</span>
                           </a>：
                         </div>
-                        <div class="v2p-topic-reply-content">${escapeHTML(
-                          replyMember.content
-                        )}</div>
+                        <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
                       </div>
                     </div>
                   `)
@@ -152,9 +150,7 @@ function handleFilteredComments() {
                             <span>${replyMember.memberName}</span>
                           </a>：
                         </div>
-                        <div class="v2p-topic-reply-content">${escapeHTML(
-                          replyMember.content
-                        )}</div>
+                        <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
                       </div>
                     </div>
                   `)
@@ -204,9 +200,7 @@ function handleFilteredComments() {
                             <span>${replyMember.memberName}</span>
                           </a>：
                         </div>
-                        <div class="v2p-topic-reply-content">${escapeHTML(
-                          replyMember.content
-                        )}</div>
+                        <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
                       </div>
                     </div>
                   `)
@@ -463,7 +457,7 @@ export async function handleComments() {
         openInNewTab: options.openInNewTab,
       })
 
-      if (memberName === loginName) {
+      if (memberName === loginName && !options.hideAccount) {
         $cellDom
           .find('.badges')
           .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
@@ -591,9 +585,7 @@ export async function handleComments() {
 
         if (diffInDays <= 30) {
           $opName.append(
-            `<span class="v2p-register-days v2p-register-days-15">${
-              diffInDays <= 15 ? '15' : '30'
-            } 天内注册</span>`
+            `<span class="v2p-register-days v2p-register-days-15">${diffInDays <= 15 ? '15' : '30'} 天内注册</span>`
           )
         }
       })
