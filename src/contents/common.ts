@@ -236,51 +236,54 @@ void (async () => {
     if (storageType === 'sync') {
       const options = changes[StorageKey.Options]
 
-      const { newValue, oldValue } = options
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (options) {
+        const { newValue, oldValue } = options
 
-      const newOptions = newValue as Options | undefined
-      const oldOptions = oldValue as Options | undefined
+        const newOptions = newValue as Options | undefined
+        const oldOptions = oldValue as Options | undefined
 
-      const newTheme = newOptions?.theme
-      const oldTheme = oldOptions?.theme
+        const newTheme = newOptions?.theme
+        const oldTheme = oldOptions?.theme
 
-      // 监听 Polish 主题设置的变化，实时切换主题。
-      if (newTheme && oldTheme) {
-        const prefersDark = newTheme.autoSwitch
-          ? window.matchMedia('(prefers-color-scheme: dark)').matches
-          : isBrowserExt
-            ? newTheme.type === 'dark-default'
-            : $wrapper.hasClass('Night')
+        // 监听 Polish 主题设置的变化，实时切换主题。
+        if (newTheme && oldTheme) {
+          const prefersDark = newTheme.autoSwitch
+            ? window.matchMedia('(prefers-color-scheme: dark)').matches
+            : isBrowserExt
+              ? newTheme.type === 'dark-default'
+              : $wrapper.hasClass('Night')
 
-        if (newTheme.type !== oldTheme.type) {
-          toggleTheme({
-            $toggle,
-            prefersDark,
-            themeType: newTheme.type,
-          })
-        } else {
-          // 当主题类型未发生变化时，仅处理自动跟随系统主题的设置。
-          if (newTheme.autoSwitch !== oldTheme.autoSwitch) {
-            if (newTheme.autoSwitch) {
-              colorMedia.addEventListener('change', handleColorSchemeChange)
-            } else {
-              colorMedia.removeEventListener('change', handleColorSchemeChange)
-            }
-
+          if (newTheme.type !== oldTheme.type) {
             toggleTheme({
               $toggle,
               prefersDark,
-              themeType: prefersDark ? 'dark-default' : newTheme.type,
+              themeType: newTheme.type,
             })
-          }
-        }
-
-        // 处理空间间距模式。
-        if (newTheme.mode !== oldTheme.mode) {
-          if (newTheme.mode === 'compact') {
-            $body.addClass('v2p-mode-compact')
           } else {
-            $body.removeClass('v2p-mode-compact')
+            // 当主题类型未发生变化时，仅处理自动跟随系统主题的设置。
+            if (newTheme.autoSwitch !== oldTheme.autoSwitch) {
+              if (newTheme.autoSwitch) {
+                colorMedia.addEventListener('change', handleColorSchemeChange)
+              } else {
+                colorMedia.removeEventListener('change', handleColorSchemeChange)
+              }
+
+              toggleTheme({
+                $toggle,
+                prefersDark,
+                themeType: prefersDark ? 'dark-default' : newTheme.type,
+              })
+            }
+          }
+
+          // 处理空间间距模式。
+          if (newTheme.mode !== oldTheme.mode) {
+            if (newTheme.mode === 'compact') {
+              $body.addClass('v2p-mode-compact')
+            } else {
+              $body.removeClass('v2p-mode-compact')
+            }
           }
         }
       }

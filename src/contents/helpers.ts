@@ -34,7 +34,7 @@ import type {
   ThemeType,
   V2EX_RequestErrorResponce,
 } from '../types'
-import { getRunEnv, getStorage, isBrowserExtension, setStorage, sleep } from '../utils'
+import { getStorage, isBrowserExtension, setStorage, sleep } from '../utils'
 import { $body, $commentCells, $wrapper, replyTextArea } from './globals'
 
 /**
@@ -291,9 +291,7 @@ export function decodeBase64TopicPage() {
  * 发送任务脚本到原 Web 页中执行，并返回执行结果。
  */
 export function postTask(expression: string, callback?: (result: unknown) => void) {
-  const runEnv = getRunEnv()
-
-  if (!runEnv) {
+  if (!isBrowserExtension()) {
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const result = Function(`"use strict"; ${expression}`)()
     callback?.(result)

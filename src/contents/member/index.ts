@@ -4,14 +4,16 @@ import { getStorage } from '../../utils'
 import { loginName } from '../globals'
 import { getTagsText } from '../helpers'
 import { type CallbackFunctions, openTagsSetter } from '../topic/content'
+import { handleTopicList } from './topic-list'
 
 void (async () => {
   const storage = await getStorage()
 
   const $memberName = $('h1')
   const memberName = $memberName.text()
+  const isOwner = memberName === loginName
 
-  if (memberName !== loginName) {
+  if (!isOwner) {
     const memberAvatar = $('.avatar').prop('src')
 
     const tagData = storage[StorageKey.MemberTag]
@@ -61,4 +63,6 @@ void (async () => {
 
     $tagBlock.insertAfter($memberName)
   }
+
+  handleTopicList({ isOwner })
 })()
