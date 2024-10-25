@@ -14,16 +14,18 @@ body {
     }
   }
 
-  a:has(#Logo.v2p-logo) {
-    display: inline-flex;
-    align-items: center;
+  #Top {
+    a:has(#Logo.v2p-logo) {
+      display: inline-flex;
+      align-items: center;
+    }
   }
 
   #Logo.v2p-logo {
     width: unset;
     height: 25px;
     padding: 0 8px;
-    background: none;
+    background-image: none !important;
   }
 }
 
