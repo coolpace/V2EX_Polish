@@ -259,11 +259,14 @@ export function useTopicPreview() {
 
             if ($topicReplyBox.length > 0) {
               $topicReplyBox.css({ 'margin-top': '20px', padding: '0' })
+
+              // 移除主题页中「回复」、「点赞」等操作。
               $topicReplyBox
                 .find(
                   '.cell:first-of-type, .cell.ps_container, .cell > table > tbody > tr > td:last-of-type > .fr'
                 )
                 .remove()
+
               const $commentCells = $topicReplyBox.find('.cell[id^="r_"]')
               const $commentTableRows = $commentCells.find('> table > tbody > tr')
               const commentDataList = getCommentDataList({
@@ -271,7 +274,9 @@ export function useTopicPreview() {
                 $commentTableRows,
                 $commentCells,
               })
+
               handleNestedComment({ options, $commentCells, commentDataList })
+
               $topicPreview.append($topicReplyBox)
 
               if (topic.replies > 100) {
