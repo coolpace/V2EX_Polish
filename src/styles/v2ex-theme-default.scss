@@ -1187,20 +1187,24 @@ body {
     font-size: 12px;
   }
 
+  // 「设置页」的选项标签样式：
   .tab {
     user-select: none;
     color: var(--v2p-color-foreground);
     background-color: transparent;
+    border-radius: 3px;
 
     &:not(.v2p-hover-btn):hover {
       background-color: var(--v2p-color-bg-block);
     }
   }
 
+  // 「设置页」的选项标签样式：
   .tab_current {
     user-select: none;
     color: var(--v2p-color-bg-content);
     background-color: var(--v2p-color-foreground);
+    border-radius: 3px;
   }
 
   #reply-box {
