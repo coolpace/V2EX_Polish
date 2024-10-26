@@ -5,6 +5,7 @@ body.v2p-mode-compact {
   --v2p-tp-item-y: 0px;
   --v2p-tp-tabs-pd: 6px;
   --v2p-tp-nested-pd: 10px;
+  --v2p-tp-preview-pd: 18px;
   --box-border-radius: 6px;
 
   visibility: visible;
@@ -46,9 +47,5 @@ body.v2p-mode-compact {
         gap: 5px 10px;
       }
     }
-  }
-
-  .v2p-topic-preview {
-    padding: 20px;
   }
 }

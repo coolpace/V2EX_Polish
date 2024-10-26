@@ -157,7 +157,7 @@ body {
 .v2p-topic-preview {
   @include share.text-content;
 
-  padding: 25px;
+  padding: var(--v2p-tp-preview-pd);
 
   @at-root {
     // MARK: 预览骨架屏。
