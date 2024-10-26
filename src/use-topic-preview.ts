@@ -4,8 +4,8 @@ import { createButton } from './components/button'
 import { createModal } from './components/modal'
 import { RequestMessage, StorageKey } from './constants'
 import { getCommentDataList, handleNestedComment } from './contents/dom'
-import { $body } from './contents/globals'
-import { addToReadingList, replaceEmojiWithHD } from './contents/helpers'
+import { $body, loginName } from './contents/globals'
+import { addToReadingList, loadIcons, replaceEmojiWithHD } from './contents/helpers'
 import { iconLogo } from './icons'
 import { crawlTopicPage, fetchTopic } from './services'
 import type { Topic } from './types'
@@ -260,13 +260,6 @@ export function useTopicPreview() {
             if ($topicReplyBox.length > 0) {
               $topicReplyBox.css({ 'margin-top': '20px', padding: '0' })
 
-              // 移除主题页中「回复」、「点赞」等操作。
-              $topicReplyBox
-                .find(
-                  '.cell:first-of-type, .cell.ps_container, .cell > table > tbody > tr > td:last-of-type > .fr'
-                )
-                .remove()
-
               const $commentCells = $topicReplyBox.find('.cell[id^="r_"]')
               const $commentTableRows = $commentCells.find('> table > tbody > tr')
               const commentDataList = getCommentDataList({
@@ -275,7 +268,45 @@ export function useTopicPreview() {
                 $commentCells,
               })
 
+              $commentCells.each((i, cellDom) => {
+                const currentComment = commentDataList.at(i)
+
+                if (currentComment?.id !== cellDom.id) {
+                  return
+                }
+
+                const $cellDom = $(cellDom)
+
+                const { memberName, thanked } = currentComment
+
+                if (memberName === loginName && !options.hideAccount) {
+                  $cellDom
+                    .find('.badges')
+                    .append(
+                      `<div class="badge ${memberName === topic.member.username ? 'mod' : 'you'}">YOU</div>`
+                    )
+                }
+
+                // 增加感谢爱心的样式。
+                const $likesBox = $cellDom.find('.small.fade').addClass('v2p-likes-box')
+
+                $likesBox
+                  .find('img[alt="❤️"]')
+                  .replaceWith('<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>')
+
+                if (thanked) {
+                  $likesBox.addClass('v2p-thanked')
+                }
+              })
+
               handleNestedComment({ options, $commentCells, commentDataList })
+
+              // 移除主题页中「回复」、「点赞」等操作。
+              $topicReplyBox
+                .find(
+                  '.cell:first-of-type, .cell.ps_container, .cell > table > tbody > tr > td:last-of-type > .fr'
+                )
+                .remove()
 
               $topicPreview.append($topicReplyBox)
 
@@ -305,6 +336,8 @@ export function useTopicPreview() {
             modal.$content.attr('tabindex', '0')
 
             modal.$content.trigger('focus')
+
+            loadIcons()
           }
         }
 
