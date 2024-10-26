@@ -32,6 +32,7 @@ const generateManifest = (): Manifest => {
   const topicMatches = getMatches('t')
   const writeMatches = getMatches('write')
   const memberMatches = getMatches('member')
+  const settingsMatches = getMatches('settings')
   const notificationsMatches = getMatches('notifications')
 
   return {
@@ -105,6 +106,10 @@ const generateManifest = (): Manifest => {
       {
         matches: memberMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-member.min.js'],
+      },
+      {
+        matches: settingsMatches,
+        js: ['scripts/jquery.min.js', 'scripts/v2ex-settings.min.js'],
       },
       {
         matches: notificationsMatches,

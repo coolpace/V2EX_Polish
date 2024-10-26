@@ -21,6 +21,7 @@ import { createToast } from '../components/toast'
 import {
   emojiLinks,
   MessageFrom,
+  MessageKey,
   type PopularEmoji,
   READING_CONTENT_LIMIT,
   StorageKey,
@@ -497,4 +498,11 @@ export function replaceEmojiWithHD($cells: JQuery = $commentCells) {
       }
     })
   }
+}
+
+/**
+ * 打开 V2EX Polish 的设置页面。
+ */
+export function openV2PSettings() {
+  chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
 }

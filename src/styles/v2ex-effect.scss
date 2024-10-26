@@ -1199,3 +1199,26 @@ a:link.v2p-topic-preview-retry {
     opacity: 0;
   }
 }
+
+// MARK: 设置页的样式。
+.v2p-settings-header.page-content-header {
+  gap: 10px;
+
+  .v2p-settings-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  .v2p-settings-title {
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  .v2p-settings-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}

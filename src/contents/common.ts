@@ -12,7 +12,7 @@ import {
   setStorage,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
-import { postTask, toggleTheme } from './helpers'
+import { openV2PSettings, postTask, toggleTheme } from './helpers'
 
 if ($('#site-header').length > 0) {
   $body.addClass('v2p-mobile')
@@ -223,7 +223,7 @@ void (async () => {
     `)
 
     $extraFooter.find('.v2p-optbtn').on('click', () => {
-      chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
+      openV2PSettings()
     })
 
     $(`<div class="v2p-footer-logo">${iconLogo}</div>`).prependTo($extraFooter)
