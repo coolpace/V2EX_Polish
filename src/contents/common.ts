@@ -1,6 +1,6 @@
 import './polyfill'
 
-import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
+import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import type { MessageData, Options } from '../types'
 import {
@@ -170,6 +170,7 @@ void (async () => {
     $infoCard
       .find('a[href^="/member/"], table:nth-of-type(1) td:nth-of-type(3) .fade')
       .addClass('v2p-hide-account')
+    $infoCard.find('.balance_area').addClass('v2p-hide-balance')
   }
 
   if (isBrowserExt) {

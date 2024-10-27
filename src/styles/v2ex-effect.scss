@@ -1209,6 +1209,26 @@ a:link.v2p-topic-preview-retry {
   }
 }
 
+.v2p-hide-balance {
+  @supports (filter: blur(6px)) {
+    opacity: 0.5;
+    filter: blur(6px);
+
+    &:hover {
+      opacity: 1;
+      filter: none;
+    }
+  }
+
+  @supports not (filter: blur(6px)) {
+    opacity: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
 // MARK: 设置页的样式。
 .v2p-member-name {
   display: flex;
