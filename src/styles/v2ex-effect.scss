@@ -1139,6 +1139,15 @@ a:link.v2p-topic-preview-retry {
   color: var(--v2p-color-orange-400);
   background-color: var(--v2p-color-orange-100);
   border-radius: 2px;
+
+  &.v2p-register-days-large {
+    display: inline-flex;
+    margin-left: 10px;
+    padding: 2px 5px;
+    font-size: 16px;
+    line-height: 1.4;
+    border-radius: 4px;
+  }
 }
 
 .v2p-topics-hot-loading {
@@ -1201,6 +1210,11 @@ a:link.v2p-topic-preview-retry {
 }
 
 // MARK: 设置页的样式。
+.v2p-member-name {
+  display: flex;
+  align-items: center;
+}
+
 .v2p-settings-header.page-content-header {
   gap: 10px;
 
@@ -1222,3 +1236,4 @@ a:link.v2p-topic-preview-retry {
     justify-content: flex-end;
   }
 }
+// ===========================

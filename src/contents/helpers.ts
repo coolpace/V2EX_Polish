@@ -506,3 +506,13 @@ export function replaceEmojiWithHD($cells: JQuery = $commentCells) {
 export function openV2PSettings() {
   chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
 }
+
+/**
+ * 计算用户注册时间。
+ *
+ * @param created - 用户注册时间, 单位为秒。
+ */
+export function getRegisterDays(created: number): number {
+  const diffInDays = (Date.now() / 1000 - created) / (60 * 60 * 24)
+  return diffInDays
+}

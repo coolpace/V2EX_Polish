@@ -1,15 +1,16 @@
 import { createButton } from '../../components/button'
 import { StorageKey } from '../../constants'
+import { fetchUserInfo } from '../../services'
 import { getStorage } from '../../utils'
 import { loginName } from '../globals'
-import { getTagsText } from '../helpers'
+import { getRegisterDays, getTagsText } from '../helpers'
 import { type CallbackFunctions, openTagsSetter } from '../topic/content'
 import { handleTopicList } from './topic-list'
 
 void (async () => {
   const storage = await getStorage()
 
-  const $memberName = $('h1')
+  const $memberName = $('#Main h1').addClass('v2p-member-name')
   const memberName = $memberName.text()
   const isOwner = memberName === loginName
 
@@ -65,4 +66,15 @@ void (async () => {
   }
 
   handleTopicList({ isOwner })
+
+  // MARK: 获取用户注册时间信息
+  fetchUserInfo(memberName).then((memberData) => {
+    const diffInDays = getRegisterDays(memberData.created)
+
+    if (diffInDays <= 30) {
+      $memberName.append(
+        `<span class="v2p-register-days v2p-register-days-large">${diffInDays <= 15 ? '15' : '30'} 天内注册</span>`
+      )
+    }
+  })
 })()

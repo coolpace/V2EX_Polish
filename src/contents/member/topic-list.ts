@@ -6,6 +6,7 @@ import { isBrowserExtension } from '../../utils'
 import { $topicList } from '../globals'
 
 interface HandleTopicListParams {
+  /** 是否为当前主题的创建人。 */
   isOwner?: boolean
 }
 

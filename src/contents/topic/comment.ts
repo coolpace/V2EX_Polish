@@ -20,7 +20,7 @@ import {
   topicOwnerName,
   updateCommentCells,
 } from '../globals'
-import { insertTextToReplyInput, loadIcons, replaceEmojiWithHD } from '../helpers'
+import { getRegisterDays, insertTextToReplyInput, loadIcons, replaceEmojiWithHD } from '../helpers'
 import { memberDataCache, processAvatar } from './avatar'
 import { handleTopicImg, processReplyContent, updateMemberTag } from './content'
 
@@ -581,11 +581,11 @@ export async function handleComments() {
       // MARK: 获取用户注册时间信息
       fetchUserInfo(memberName).then((memberData) => {
         memberDataCache.set(memberName, memberData)
-        const diffInDays = (Date.now() / 1000 - memberData.created) / (60 * 60 * 24)
+        const diffInDays = getRegisterDays(memberData.created)
 
         if (diffInDays <= 30) {
           $opName.append(
-            `<span class="v2p-register-days v2p-register-days-15">${diffInDays <= 15 ? '15' : '30'} 天内注册</span>`
+            `<span class="v2p-register-days">${diffInDays <= 15 ? '15' : '30'} 天内注册</span>`
           )
         }
       })
