@@ -116,8 +116,21 @@ export function deleteNotification(notification_id: string) {
   return request(`${V2EX_API}/notifications/${notification_id}`, { method: 'GET' })
 }
 
+/**
+ * Imgur 文件上传规则：
+ *
+ * - File size limits:
+ * 非动画图像（比如 JPG、PNG 等）的最大文件大小为 20MB。超过 5MB 的 PNG 文件将被转换为 JPEG。
+ * 动画图像（比如 GIF）和视频的最大文件大小为 200MB。视频上传不能超过 60 秒。超过 2MB 的 GIF 和视频文件将被转换为 GIFV。
+ * 对于非动画图片，匿名用户上传的文件超过 1MB，账号主上传的文件超过 5MB，将会进行有损压缩。
+ *
+ * - Upload limits:
+ * 每小时上传限额为 50 张图片，但账号没有总的上传限额。
+ *
+ * 使用详情参考 https://help.imgur.com/hc/en-us/articles/26511665959579-What-files-can-I-upload-Is-there-a-size-limit。
+ */
 export async function uploadImage(file: File): Promise<string> {
-  // Test:
+  // 如果要测试上传图片的交互效果，则取消以下注释。
   // return new Promise((resolve) => {
   //   setTimeout(() => {
   //     resolve(`https://xxx.com/${file.name}`)
@@ -131,7 +144,7 @@ export async function uploadImage(file: File): Promise<string> {
   const randomIndex = Math.floor(Math.random() * imgurClientIdPool.length)
   const clidenId = imgurClientIdPool[randomIndex]
 
-  // 使用详情参考 Imgur API 文档：https://apidocs.imgur.com/
+  // 使用详情参考 Imgur API 文档：https://apidocs.imgur.com/。
   const res = await fetch('https://api.imgur.com/3/upload', {
     method: 'POST',
     headers: { Authorization: `Client-ID ${clidenId}` },
