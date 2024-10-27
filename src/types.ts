@@ -44,7 +44,7 @@ export interface Options {
     /** 是否预加载回复内容。 */
     preload?: 'off' | 'auto'
     /** 是否使用水平布局。 */
-    layout?: 'auto' | 'horizontal'
+    layout?: 'auto' | 'horizontal' | 'vertical'
   }
   /** 回复内容设置。 */
   replyContent: {
@@ -276,21 +276,21 @@ type TaskId = string | number
 
 export type MessageData =
   | {
-      from: MessageFrom.Content
-      payload?: {
-        task?: {
-          id: TaskId
-          expression: string
-        }
+    from: MessageFrom.Content
+    payload?: {
+      task?: {
+        id: TaskId
+        expression: string
       }
     }
+  }
   | {
-      from: MessageFrom.Web
-      payload?: {
-        status?: 'ready'
-        task?: {
-          id: TaskId
-          result: unknown
-        }
+    from: MessageFrom.Web
+    payload?: {
+      status?: 'ready'
+      task?: {
+        id: TaskId
+        result: unknown
       }
     }
+  }

@@ -338,6 +338,7 @@ export const enum RequestMessage {
   TokenExpired = 'Token expired',
 }
 
+// 如何获取 Client ID：https://dubble.so/guides/how-to-get-imgur-client-id-purlxhv84a0m3mlsiak7
 // 注册应用获取 Client ID：https://api.imgur.com/oauth2/addclient
 // 查看已注册的应用：https://imgur.com/account/settings/apps
 export const imgurClientIdPool = [
@@ -365,6 +366,7 @@ export const defaultOptions: Options = {
   },
   reply: {
     preload: 'auto',
+    layout: 'auto',
   },
   replyContent: {
     autoFold: true,

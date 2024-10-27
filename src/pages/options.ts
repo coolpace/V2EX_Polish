@@ -79,7 +79,9 @@ async function saveOptions() {
         ? 'auto'
         : $('#replyLayoutHorizontal').prop('checked')
           ? 'horizontal'
-          : undefined,
+          : $('#replyLayoutVertical').prop('checked')
+            ? 'vertical'
+            : undefined,
     },
     replyContent: {
       autoFold: $('#autoFold').prop('checked'),
@@ -180,9 +182,12 @@ void (async function init() {
     $('#userTagDisplayInline').prop('checked', options.userTag.display === 'inline')
     $('#userTagDisplayBlock').prop('checked', options.userTag.display === 'block')
 
-    $('#replyLayoutDefault').prop('checked', !options.reply.layout)
     $('#replyLayoutAuto').prop('checked', options.reply.layout === 'auto')
     $('#replyLayoutHorizontal').prop('checked', options.reply.layout === 'horizontal')
+    $('#replyLayoutVertical').prop(
+      'checked',
+      options.reply.layout === 'vertical' || !options.reply.layout
+    )
     $('#hideAccount').prop('checked', options.hideAccount === true)
 
     $('input[type]').on('change', () => {
@@ -230,9 +235,9 @@ void (async function init() {
               <hr class="tags-divider" />
               <ul class="tags-list">
                 ${Object.entries(tagData)
-                  .map(([memberName, { tags, avatar }]) => {
-                    if (tags && tags.length > 0) {
-                      return `
+              .map(([memberName, { tags, avatar }]) => {
+                if (tags && tags.length > 0) {
+                  return `
                         <li class="tag-item">
                           <div class="tag-member-name">
                             <a href="${V2EX.Origin}/member/${memberName}" target="_blank">
@@ -242,10 +247,9 @@ void (async function init() {
                           </div>
 
                           <div class="tag-item-tags">
-                            ${
-                              tags
-                                .map((tag, idx) => {
-                                  return `
+                            ${tags
+                      .map((tag, idx) => {
+                        return `
                                     <span
                                       class="tag-item-tag"
                                       data-member-name="${memberName}"
@@ -259,9 +263,9 @@ void (async function init() {
                                       </span>
                                     </span>
                                   `
-                                })
-                                .join('') || ''
-                            }
+                      })
+                      .join('') || ''
+                    }
 
                             <span class="tag-item-tag tag-item-tag-add" data-member-name="${memberName}">
                               <span class="tag-add"><span data-lucide="plus"></span></span>
@@ -270,11 +274,11 @@ void (async function init() {
                           </div>
                         </li>
                       `
-                    }
+                }
 
-                    return ''
-                  })
-                  .join('')}
+                return ''
+              })
+              .join('')}
               </ul>
             </div>
           `)
