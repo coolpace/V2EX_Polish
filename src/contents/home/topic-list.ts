@@ -29,12 +29,9 @@ export function handleTopicList() {
     const match = linkHref?.match(/\/t\/(\d+)/)
     const topicId = match?.at(1)
 
-    $previewBtn
-      .clone()
-      .on('click', () => {
-        handlePreview({ topicId, topicTitle, linkHref })
-      })
-      .appendTo($itemTitle)
+    const $lastChild = $topicInfo.find('> span:first-of-type')
+    const $topicActions = $('<span class="v2p-topic-actions" />')
+    $topicActions.insertAfter($lastChild)
 
     $ignoreBtn
       .clone()
@@ -69,7 +66,14 @@ export function handleTopicList() {
           }
         }
       })
-      .insertAfter($topicInfo.find('> span:first-of-type'))
+      .appendTo($topicActions)
+
+    $previewBtn
+      .clone()
+      .on('click', () => {
+        handlePreview({ topicId, topicTitle, linkHref })
+      })
+      .appendTo($topicActions)
   })
 
   if (PAT) {

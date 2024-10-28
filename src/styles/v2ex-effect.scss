@@ -90,6 +90,7 @@ body {
 
   .v2p-topic-preview-btn {
     position: absolute;
+    top: 0;
     right: 0;
     bottom: 0;
     height: 20px;
@@ -134,12 +135,14 @@ body {
   }
 }
 
+.v2p-topic-actions {
+  display: inline-flex;
+  gap: 2px 10px;
+}
+
 .v2p-topic-preview-btn {
   cursor: pointer;
-  position: relative;
-  top: -1px;
-  margin-left: 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--v2p-color-button-foreground);
   visibility: hidden;
   background-color: var(--v2p-color-button-background-hover);
