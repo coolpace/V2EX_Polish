@@ -70,7 +70,16 @@ export function useTopicPreview() {
 
   const topicDataCache = new Map<string, TopicData>()
 
-  const handlePreview = (params: { topicId?: string; topicTitle?: string; linkHref?: string }) => {
+  interface HandlePreviewParams {
+    /** 主题 ID。不传则不会加载主题。 */
+    topicId?: string
+    /** 主题标题。不传则在加载时不显示标题。 */
+    topicTitle?: string
+    /** 主题链接。 */
+    linkHref?: string
+  }
+
+  const handlePreview = (params: HandlePreviewParams) => {
     const { topicId, topicTitle = '', linkHref } = params
 
     if (topicId) {
@@ -195,6 +204,12 @@ export function useTopicPreview() {
 
           if (cacheData) {
             const { topic, topicPageText } = cacheData
+
+            // 如果初始时传入的标题为空，则在加载完毕后使用获取到的标题。
+            if (!topicTitle) {
+              $titleLink.attr('title', topic.title)
+              $titleLink.text(topic.title)
+            }
 
             const $page = $(topicPageText)
 

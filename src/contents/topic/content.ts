@@ -2,6 +2,7 @@ import { createButton } from '../../components/button'
 import { createModal } from '../../components/modal'
 import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
+import { useTopicPreview } from '../../use-topic-preview'
 import { getStorage, getStorageSync } from '../../utils'
 import {
   $body,
@@ -309,4 +310,29 @@ export function handleTopicImg() {
       }
     })
   }
+}
+
+/**
+ * 处理主题内容中的主题链接，点击链接时会弹出预览。
+ */
+export function handleLinkPreview() {
+  const $topicLinks = $(
+    '.topic_content a[href*="v2ex.com/t/"], .reply_content a[href*="v2ex.com/t/"]'
+  )
+
+  const { handlePreview } = useTopicPreview()
+
+  const $previewBtn = $('<span class="v2p-link-preview-btn">预览</span>')
+
+  $previewBtn.on('click', (ev) => {
+    ev.preventDefault()
+
+    const linkHref = $topicLinks.attr('href')
+    const match = linkHref?.match(/\/t\/(\d+)/)
+    const topicId = match?.at(1)
+
+    handlePreview({ topicId, linkHref })
+  })
+
+  $topicLinks.append($previewBtn.clone(true))
 }

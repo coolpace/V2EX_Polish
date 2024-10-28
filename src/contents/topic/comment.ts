@@ -22,7 +22,7 @@ import {
 } from '../globals'
 import { getRegisterDays, insertTextToReplyInput, loadIcons, replaceEmojiWithHD } from '../helpers'
 import { memberDataCache, processAvatar } from './avatar'
-import { handleTopicImg, processReplyContent, updateMemberTag } from './content'
+import { handleLinkPreview, handleTopicImg, processReplyContent, updateMemberTag } from './content'
 
 /** 每一页的回复列表数据 */
 let commentDataList: readonly CommentData[] = []
@@ -600,5 +600,6 @@ export async function handleComments() {
 
   window.requestIdleCallback(() => {
     replaceEmojiWithHD()
+    handleLinkPreview()
   })
 }
