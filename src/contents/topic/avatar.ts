@@ -3,11 +3,16 @@ import { hoverDelay, type PopupControl } from '../../components/popup'
 import { fetchUserInfo } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { formatTimestamp } from '../../utils'
+import { getRegisterDays } from '../helpers'
 import { openTagsSetter } from './content'
 
 const banned = Symbol()
 
-export const memberDataCache = new Map<Member['username'], Member | typeof banned>()
+/** 缓存用户卡片的信息，减少重复的请求。 */
+export const memberDataCache = new Map<
+  Member['username'],
+  (Member & { registerDays: number }) | typeof banned
+>()
 
 interface ProcessAvatar {
   /** 触发弹出框的元素。 */
@@ -79,7 +84,7 @@ export function processAvatar(params: ProcessAvatar) {
       .appendTo($('.v2p-member-card-actions'))
 
     void (async () => {
-      // 缓存用户卡片的信息，只有在无缓存时才请求远程数据。
+      // 只有在无缓存时才请求远程数据。
       if (!memberDataCache.has(memberName)) {
         abortController = new AbortController()
 
@@ -92,7 +97,10 @@ export function processAvatar(params: ProcessAvatar) {
             signal: abortController.signal,
           })
 
-          memberDataCache.set(memberName, memberData)
+          memberDataCache.set(memberName, {
+            ...memberData,
+            registerDays: getRegisterDays(memberData.created),
+          })
         } catch (err) {
           if (err instanceof Error) {
             $content.html(`<span>${err.message}</span>`)
@@ -115,6 +123,14 @@ export function processAvatar(params: ProcessAvatar) {
           .find('.v2p-created-date')
           .removeClass('v2p-loading')
           .text(`加入于 ${formatTimestamp(data.created)}`)
+
+        if (data.registerDays <= 30) {
+          $content
+            .find('.v2p-info-right')
+            .append(
+              `<div class="v2p-register-days" style="margin: 5px 0;">${data.registerDays <= 15 ? '15' : '30'} 天内注册</div>`
+            )
+        }
 
         if (data.bio && data.bio.trim().length > 0) {
           $content.find('.v2p-bio').css('disply', 'block').text(data.bio)

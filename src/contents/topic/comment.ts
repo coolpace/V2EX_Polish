@@ -555,7 +555,7 @@ export async function handleComments() {
   handleNestedComment({ options, $commentCells, commentDataList })
 
   // MARK: 鼠标悬浮展示用户弹框
-  // 让主题内容区的头像在鼠标悬浮时也能展示用户信息弹框。
+  // 让主题内容区的 OP 头像在鼠标悬浮时也能展示用户信息弹框。
   {
     const $opAvatar = $topicHeader.find('.avatar')
     const $opName = $topicHeader.find('.gray a[href^="/member"]')
@@ -585,12 +585,13 @@ export async function handleComments() {
 
       // MARK: 获取用户注册时间信息
       fetchUserInfo(memberName).then((memberData) => {
-        memberDataCache.set(memberName, memberData)
-        const diffInDays = getRegisterDays(memberData.created)
+        const registerDays = getRegisterDays(memberData.created)
 
-        if (diffInDays <= 30) {
+        memberDataCache.set(memberName, { ...memberData, registerDays })
+
+        if (registerDays <= 30) {
           $opName.append(
-            `<span class="v2p-register-days">${diffInDays <= 15 ? '15' : '30'} 天内注册</span>`
+            `<span class="v2p-register-days">${registerDays <= 15 ? '15' : '30'} 天内注册</span>`
           )
         }
       })

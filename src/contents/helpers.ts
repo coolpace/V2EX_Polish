@@ -530,6 +530,13 @@ export function openV2PSettings() {
  * @param created - 用户注册时间, 单位为秒。
  */
 export function getRegisterDays(created: number): number {
-  const diffInDays = (Date.now() / 1000 - created) / (60 * 60 * 24)
-  return diffInDays
+  const registerDays = Math.ceil((Date.now() / 1000 - created) / (60 * 60 * 24))
+  return registerDays
+}
+
+/**
+ * 将 YYYY-MM-DD 格式的日期转换为时间戳, 单位为秒。
+ */
+export function getTimestampFromDateString(dateString: string): number {
+  return Math.floor(Date.parse(dateString) / 1000)
 }

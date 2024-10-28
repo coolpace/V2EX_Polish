@@ -69,11 +69,11 @@ void (async () => {
 
   // MARK: 获取用户注册时间信息
   fetchUserInfo(memberName).then((memberData) => {
-    const diffInDays = getRegisterDays(memberData.created)
+    const registerDays = getRegisterDays(memberData.created)
 
-    if (diffInDays <= 30) {
+    if (registerDays <= 30) {
       $memberName.append(
-        `<span class="v2p-register-days v2p-register-days-large">${diffInDays <= 15 ? '15' : '30'} 天内注册</span>`
+        `<span class="v2p-register-days v2p-register-days-large">${registerDays <= 15 ? '15' : '30'} 天内注册</span>`
       )
     }
   })
