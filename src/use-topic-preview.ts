@@ -5,7 +5,7 @@ import { createModal } from './components/modal'
 import { RequestMessage, StorageKey } from './constants'
 import { getCommentDataList, handleNestedComment } from './contents/dom'
 import { $body, loginName } from './contents/globals'
-import { addToReadingList, loadIcons, replaceEmojiWithHD } from './contents/helpers'
+import { addToReadingList, loadIcons, replaceCommentEmojiWithHD } from './contents/helpers'
 import { iconLogo } from './icons'
 import { crawlTopicPage, fetchTopic } from './services'
 import type { Topic } from './types'
@@ -338,7 +338,7 @@ export function useTopicPreview() {
                 `)
               }
 
-              replaceEmojiWithHD($commentCells)
+              replaceCommentEmojiWithHD($commentCells)
             }
 
             if (options.openInNewTab) {

@@ -1,3 +1,3 @@
-import { replaceEmojiWithHD } from '../helpers'
+import { replaceCommentEmojiWithHD } from '../helpers'
 
-replaceEmojiWithHD($('#notifications').find('.cell[id^="n_"]'))
+replaceCommentEmojiWithHD($('#notifications').find('.cell[id^="n_"]'))

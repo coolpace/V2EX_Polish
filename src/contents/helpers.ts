@@ -352,10 +352,12 @@ export function loadIcons() {
  */
 export function transformEmoji(textValue: string) {
   return textValue.replace(/\[[^\]]+\]/g, (x) => {
-    const emojiLink = emojiLinks[x as PopularEmoji].ld
+    if (Object.hasOwn(emojiLinks, x)) {
+      const emojiLink = emojiLinks[x as PopularEmoji].ld
 
-    if (typeof emojiLink === 'string') {
-      return `${emojiLink} `
+      if (typeof emojiLink === 'string') {
+        return `${emojiLink} `
+      }
     }
 
     return x
@@ -470,17 +472,15 @@ export function toggleTheme({
 /**
  * 将低清表情图片转换成高清表情图片。
  */
-export function replaceEmojiWithHD($cells: JQuery = $commentCells) {
-  const srcMap = new Map<string, string>()
+export function replaceEmojiWithHD($emojiImgs: JQuery) {
+  if ($emojiImgs.length > 0) {
+    const srcMap = new Map<string, string>()
 
-  Object.values(emojiLinks).forEach(({ ld, hd }) => {
-    srcMap.set(ld, hd)
-  })
+    Object.values(emojiLinks).forEach(({ ld, hd }) => {
+      srcMap.set(ld, hd)
+    })
 
-  const $embedImages = $cells.find(`.reply_content .embedded_image, .payload .embedded_image`)
-
-  if ($embedImages.length > 0) {
-    $embedImages.each((_, img) => {
+    $emojiImgs.each((_, img) => {
       const $img = $(img)
 
       const src = $img.attr('src')
@@ -491,12 +491,29 @@ export function replaceEmojiWithHD($cells: JQuery = $commentCells) {
         if (typeof hd === 'string') {
           $img.attr('src', hd)
           $img.css({
-            width: '20px',
-            height: '20px',
+            width: 'var(--v2p-emoji-size)',
+            height: 'var(--v2p-emoji-size)',
           })
         }
       }
     })
+  }
+}
+
+/**
+ * 处理评论中的表情图片，将其转换为高清表情图片。
+ */
+export function replaceCommentEmojiWithHD($cells: JQuery = $commentCells) {
+  const srcMap = new Map<string, string>()
+
+  Object.values(emojiLinks).forEach(({ ld, hd }) => {
+    srcMap.set(ld, hd)
+  })
+
+  const $embedImages = $cells.find(`.reply_content .embedded_image, .payload .embedded_image`)
+
+  if ($embedImages.length > 0) {
+    replaceEmojiWithHD($embedImages)
   }
 }
 

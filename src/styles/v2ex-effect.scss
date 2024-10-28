@@ -1260,6 +1260,7 @@ a:link.v2p-topic-preview-retry {
 
 .v2p-link-preview-btn {
   cursor: pointer;
+  user-select: none;
   display: inline-flex;
   height: 100%;
   margin-left: 5px;

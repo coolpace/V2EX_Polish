@@ -5,7 +5,12 @@ import { emojiLinks, emoticons, type PopularEmoji } from '../../constants'
 import { getCommentPreview } from '../../services'
 import { getOS } from '../../utils'
 import { $body, $replyBox, $replyForm, $replyTextArea } from '../globals'
-import { focusReplyInput, insertTextToReplyInput, transformEmoji } from '../helpers'
+import {
+  focusReplyInput,
+  insertTextToReplyInput,
+  replaceEmojiWithHD,
+  transformEmoji,
+} from '../helpers'
 
 function handleReplyActions() {
   const os = getOS()
@@ -188,6 +193,7 @@ export function handleReply() {
                     syntax: 'default',
                   })
                   $replyPreview.html(renderedContent)
+                  replaceEmojiWithHD($replyPreview.find('.embedded_image'))
                   lastPreviewText = textToPreview
                 } catch {
                   $replyPreview.html('预览失败，<a class="v2p-preview-retry">点击重试</a>。')

@@ -20,7 +20,12 @@ import {
   topicOwnerName,
   updateCommentCells,
 } from '../globals'
-import { getRegisterDays, insertTextToReplyInput, loadIcons, replaceEmojiWithHD } from '../helpers'
+import {
+  getRegisterDays,
+  insertTextToReplyInput,
+  loadIcons,
+  replaceCommentEmojiWithHD,
+} from '../helpers'
 import { memberDataCache, processAvatar } from './avatar'
 import { handleLinkPreview, handleTopicImg, processReplyContent, updateMemberTag } from './content'
 
@@ -240,7 +245,7 @@ function handleFilteredComments() {
         }
       })
 
-      replaceEmojiWithHD($content.find('.cell[id^="r_"]'))
+      replaceCommentEmojiWithHD($content.find('.cell[id^="r_"]'))
     },
     onOpen: ({ $content }) => {
       const storage = getStorageSync()
@@ -599,7 +604,7 @@ export async function handleComments() {
   }
 
   window.requestIdleCallback(() => {
-    replaceEmojiWithHD()
+    replaceCommentEmojiWithHD()
     handleLinkPreview()
   })
 }
