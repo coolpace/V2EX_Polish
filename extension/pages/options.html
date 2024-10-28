@@ -15,7 +15,7 @@
 
   <body>
     <div class="layout">
-      <div class="side collapsed">
+      <div class="side">
         <div class="side-header">
           <img src="../images/icon-32.png" />
           <span class="side-header-title">V2EX Polish</span>
@@ -35,302 +35,304 @@
         </div>
       </div>
 
-      <div class="content">
-        <div data-content-key="settings">
-          <div class="backup-tip">
-            「控制选项」和「用户标签」会自动通过远端进行备份和同步，无需担心重装插件会丢失数据。
+      <div class="content-wrapper">
+        <div class="content">
+          <div data-content-key="settings">
+            <div class="backup-tip">
+              「控制选项」和「用户标签」会自动通过远端进行备份和同步，无需担心重装插件会丢失数据。
+            </div>
+
+            <form id="options-form">
+              <div class="options-form-inner">
+                <div class="form-checkbox">
+                  <input type="checkbox" id="openInNewTab" checked="false" />
+                  <div class="combo">
+                    <label for="openInNewTab">新标签页打开主题</label>
+                    <p>启用后点击主题将在新的页签中打开</p>
+                  </div>
+                </div>
+
+                <hr />
+
+                <div class="form-checkbox">
+                  <input type="checkbox" id="autoCheckIn" checked="false" />
+                  <div class="combo">
+                    <label for="autoCheckIn">每日自动签到</label>
+                    <p>自动领取每日的登录奖励</p>
+                  </div>
+                </div>
+
+                <hr />
+
+                <!-- MARK: 颜色主题 -->
+                <fieldset>
+                  <legend>颜色主题</legend>
+
+                  <div class="theme-select"></div>
+
+                  <div class="form-checkbox">
+                    <input type="checkbox" id="theme_autoSwitch" checked="false" />
+                    <div class="combo">
+                      <label for="theme_autoSwitch">自动跟随系统切换浅色/深色模式</label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend>间距模式</legend>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="theme_mode_default"
+                      name="theme.mode"
+                      value="default"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="theme_mode_default">自然</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="theme_mode_compact"
+                      name="theme.mode"
+                      value="compact"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="theme_mode_compact">紧凑</label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <hr />
+
+                <!-- MARK: 预加载多页回复 -->
+                <fieldset>
+                  <legend>预加载多页回复</legend>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="reply_preload_off"
+                      name="reply.preload"
+                      value="off"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="reply_preload_off">关闭</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="reply_preload_auto"
+                      name="reply.preload"
+                      value="off"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="reply_preload_auto">自动预加载</label>
+                      <p>抓取多页（最多三页）回复后在同一页中展示</p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <hr />
+
+                <!-- MARK: 回复内容处理 -->
+                <fieldset>
+                  <legend>回复内容处理</legend>
+
+                  <div>
+                    <div class="form-checkbox">
+                      <input type="checkbox" id="autoFold" checked="false" />
+                      <div class="combo">
+                        <label for="autoFold">自动折叠长回复</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="form-checkbox">
+                      <input type="checkbox" id="hideReplyTime" checked="false" />
+                      <div class="combo">
+                        <label for="hideReplyTime">自动隐藏回复时间</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="form-checkbox">
+                      <input type="checkbox" id="nestedReply_multipleInsideOne" checked="false" />
+                      <div class="combo">
+                        <label for="nestedReply_multipleInsideOne"
+                          >一条回复中 @ 多个人时参与嵌套</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="form-checkbox">
+                      <input type="checkbox" id="hideRefName" checked="false" />
+                      <div class="combo">
+                        <label for="hideRefName">不显示 @ 提及用户名</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="form-checkbox">
+                      <input type="checkbox" id="showImgInPage" checked="false" />
+                      <div class="combo">
+                        <label for="showImgInPage">
+                          在主题中点击图片时，是否在页内预览图片大图。
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <hr />
+
+                <!-- MARK: 楼中楼回复的展现形式 -->
+                <fieldset>
+                  <legend>楼中楼回复的展现形式</legend>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="displayIndent"
+                      name="nestedReply.display"
+                      value="indent"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="displayIndent">逐层缩进（更直观）</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="displayAlign"
+                      name="nestedReply.display"
+                      value="align"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="displayAlign">靠左对齐（更美观）</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="displayOff"
+                      name="nestedReply.display"
+                      value="off"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="displayOff">关闭楼中楼</label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <hr />
+
+                <!-- MARK: 用户标签展现形式 -->
+                <fieldset>
+                  <legend>用户标签展现形式</legend>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="userTagDisplayInline"
+                      name="userTag.display"
+                      value="inline"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="userTagDisplayInline">行内显示（更省空间）</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="userTagDisplayBlock"
+                      name="userTag.display"
+                      value="block"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="userTagDisplayBlock">独行显示（更直观）</label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <hr />
+
+                <fieldset>
+                  <legend>
+                    主题内容布局
+                    <!-- <sup>新功能</sup> -->
+                  </legend>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="replyLayoutAuto"
+                      name="reply.layout"
+                      value="block"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="replyLayoutAuto">自动</label>
+                      <p>内容过高时自动切换为水平布局</p>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="replyLayoutVertical"
+                      name="reply.layout"
+                      value="vertical"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="replyLayoutVertical">垂直排列</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="replyLayoutHorizontal"
+                      name="reply.layout"
+                      value="horizontal"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="replyLayoutHorizontal">水平排列</label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <hr />
+
+                <fieldset>
+                  <legend>高级选项</legend>
+
+                  <div class="form-checkbox">
+                    <input type="checkbox" id="hideAccount" checked="false" />
+                    <div class="combo">
+                      <label for="hideAccount">防窥屏</label>
+                      <p>隐藏账号信息、替换网页 logo、替换标签 icon。</p>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </form>
           </div>
 
-          <form id="options-form">
-            <div class="options-form-inner">
-              <div class="form-checkbox">
-                <input type="checkbox" id="openInNewTab" checked="false" />
-                <div class="combo">
-                  <label for="openInNewTab">新标签页打开主题</label>
-                  <p>启用后点击主题将在新的页签中打开</p>
-                </div>
-              </div>
-
-              <hr />
-
-              <div class="form-checkbox">
-                <input type="checkbox" id="autoCheckIn" checked="false" />
-                <div class="combo">
-                  <label for="autoCheckIn">每日自动签到</label>
-                  <p>自动领取每日的登录奖励</p>
-                </div>
-              </div>
-
-              <hr />
-
-              <!-- MARK: 颜色主题 -->
-              <fieldset>
-                <legend>颜色主题</legend>
-
-                <div class="theme-select"></div>
-
-                <div class="form-checkbox">
-                  <input type="checkbox" id="theme_autoSwitch" checked="false" />
-                  <div class="combo">
-                    <label for="theme_autoSwitch">自动跟随系统切换浅色/深色模式</label>
-                  </div>
-                </div>
-              </fieldset>
-
-              <fieldset>
-                <legend>间距模式</legend>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="theme_mode_default"
-                    name="theme.mode"
-                    value="default"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="theme_mode_default">自然</label>
-                  </div>
-                </div>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="theme_mode_compact"
-                    name="theme.mode"
-                    value="compact"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="theme_mode_compact">紧凑</label>
-                  </div>
-                </div>
-              </fieldset>
-
-              <hr />
-
-              <!-- MARK: 预加载多页回复 -->
-              <fieldset>
-                <legend>预加载多页回复</legend>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="reply_preload_off"
-                    name="reply.preload"
-                    value="off"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="reply_preload_off">关闭</label>
-                  </div>
-                </div>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="reply_preload_auto"
-                    name="reply.preload"
-                    value="off"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="reply_preload_auto">自动预加载</label>
-                    <p>抓取多页（最多三页）回复后在同一页中展示</p>
-                  </div>
-                </div>
-              </fieldset>
-
-              <hr />
-
-              <!-- MARK: 回复内容处理 -->
-              <fieldset>
-                <legend>回复内容处理</legend>
-
-                <div>
-                  <div class="form-checkbox">
-                    <input type="checkbox" id="autoFold" checked="false" />
-                    <div class="combo">
-                      <label for="autoFold">自动折叠长回复</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="form-checkbox">
-                    <input type="checkbox" id="hideReplyTime" checked="false" />
-                    <div class="combo">
-                      <label for="hideReplyTime">自动隐藏回复时间</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="form-checkbox">
-                    <input type="checkbox" id="nestedReply_multipleInsideOne" checked="false" />
-                    <div class="combo">
-                      <label for="nestedReply_multipleInsideOne"
-                        >一条回复中 @ 多个人时参与嵌套</label
-                      >
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="form-checkbox">
-                    <input type="checkbox" id="hideRefName" checked="false" />
-                    <div class="combo">
-                      <label for="hideRefName">不显示 @ 提及用户名</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="form-checkbox">
-                    <input type="checkbox" id="showImgInPage" checked="false" />
-                    <div class="combo">
-                      <label for="showImgInPage">
-                        在主题中点击图片时，是否在页内预览图片大图。
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-
-              <hr />
-
-              <!-- MARK: 楼中楼回复的展现形式 -->
-              <fieldset>
-                <legend>楼中楼回复的展现形式</legend>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="displayIndent"
-                    name="nestedReply.display"
-                    value="indent"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="displayIndent">逐层缩进（更直观）</label>
-                  </div>
-                </div>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="displayAlign"
-                    name="nestedReply.display"
-                    value="align"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="displayAlign">靠左对齐（更美观）</label>
-                  </div>
-                </div>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="displayOff"
-                    name="nestedReply.display"
-                    value="off"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="displayOff">关闭楼中楼</label>
-                  </div>
-                </div>
-              </fieldset>
-
-              <hr />
-
-              <!-- MARK: 用户标签展现形式 -->
-              <fieldset>
-                <legend>用户标签展现形式</legend>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="userTagDisplayInline"
-                    name="userTag.display"
-                    value="inline"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="userTagDisplayInline">行内显示（更省空间）</label>
-                  </div>
-                </div>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="userTagDisplayBlock"
-                    name="userTag.display"
-                    value="block"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="userTagDisplayBlock">独行显示（更直观）</label>
-                  </div>
-                </div>
-              </fieldset>
-
-              <hr />
-
-              <fieldset>
-                <legend>
-                  主题内容布局
-                  <!-- <sup>新功能</sup> -->
-                </legend>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="replyLayoutAuto"
-                    name="reply.layout"
-                    value="block"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="replyLayoutAuto">自动</label>
-                    <p>内容过高时自动切换为水平布局</p>
-                  </div>
-                </div>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="replyLayoutVertical"
-                    name="reply.layout"
-                    value="vertical"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="replyLayoutVertical">垂直排列</label>
-                  </div>
-                </div>
-                <div class="form-radio">
-                  <input
-                    type="radio"
-                    id="replyLayoutHorizontal"
-                    name="reply.layout"
-                    value="horizontal"
-                    checked="false"
-                  />
-                  <div class="combo">
-                    <label for="replyLayoutHorizontal">水平排列</label>
-                  </div>
-                </div>
-              </fieldset>
-
-              <hr />
-
-              <fieldset>
-                <legend>高级选项</legend>
-
-                <div class="form-checkbox">
-                  <input type="checkbox" id="hideAccount" checked="false" />
-                  <div class="combo">
-                    <label for="hideAccount">防窥屏</label>
-                    <p>隐藏账号信息、替换网页 logo、替换标签 icon。</p>
-                  </div>
-                </div>
-              </fieldset>
-            </div>
-          </form>
+          <div data-content-key="tags"></div>
         </div>
-
-        <div data-content-key="tags"></div>
       </div>
     </div>
 
