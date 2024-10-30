@@ -98,6 +98,9 @@ async function saveOptions() {
     userTag: {
       display: $('input[name="userTag.display"]:checked').prop('value'),
     },
+    contextMenu: {
+      enabled: $('#contextMenuEnabled').prop('checked'),
+    },
     hideAccount: $('#hideAccount').prop('checked'),
   }
 
@@ -188,6 +191,7 @@ void (async function init() {
       'checked',
       options.reply.layout === 'vertical' || !options.reply.layout
     )
+    $('#contextMenuEnabled').prop('checked', !!options.contextMenu?.enabled)
     $('#hideAccount').prop('checked', options.hideAccount === true)
 
     $('input[type]').on('change', () => {

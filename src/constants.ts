@@ -381,6 +381,9 @@ export const defaultOptions: Options = {
   userTag: {
     display: 'inline',
   },
+  contextMenu: {
+    enabled: true,
+  },
 }
 
 export const enum MessageKey {

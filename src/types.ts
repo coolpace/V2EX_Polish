@@ -69,6 +69,11 @@ export interface Options {
     /** 用户标签展示形式。 */
     display: 'inline' | 'block'
   }
+  /** 上下文菜单设置。 */
+  contextMenu?: {
+    /** 是否启用上下文菜单。 */
+    enabled: boolean
+  }
   /** 隐藏账号信息。 */
   hideAccount?: boolean
 }
