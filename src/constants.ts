@@ -366,7 +366,7 @@ export const defaultOptions: Options = {
   },
   reply: {
     preload: 'auto',
-    layout: 'auto',
+    layout: 'vertical',
   },
   replyContent: {
     autoFold: true,
