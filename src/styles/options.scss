@@ -45,21 +45,38 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px 0;
-  padding: 20px;
+  padding: 20px var(--v2p-wrapper-pd);
   font-size: 14px;
   font-weight: bold;
 }
 
 .menu-item {
   cursor: pointer;
+  position: relative;
   display: flex;
   gap: 0 10px;
   align-items: center;
-  padding: 8px 12px;
+  padding: 8px 18px;
   border-radius: 5px;
 
   &:hover {
     background-color: var(--v2p-color-button-background-hover);
+  }
+
+  &.active {
+    background-color: var(--v2p-color-bg-content);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: calc(var(--v2p-wrapper-pd) / -3);
+      transform: translateY(-50%);
+      width: 3px;
+      height: 70%;
+      background-color: var(--v2p-color-accent-400);
+      border-radius: 999px;
+    }
   }
 }
 
@@ -68,16 +85,12 @@ body {
   height: 18px;
 }
 
-.menu-item.active {
-  background-color: var(--v2p-color-bg-content);
-}
-
 .content-wrapper {
   overflow: hidden;
   flex: 1;
   height: 100%;
   padding: var(--v2p-wrapper-pd);
-  padding-left: calc(var(--v2p-wrapper-pd) - 10px);
+  padding-left: calc(var(--v2p-wrapper-pd) / 2);
 
   .content {
     overflow: auto;
@@ -695,6 +708,12 @@ fieldset {
 
     .menu-item {
       justify-content: center;
+
+      &.active {
+        &::before {
+          display: none;
+        }
+      }
     }
 
     .menu-item-title {
