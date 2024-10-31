@@ -22,7 +22,7 @@ import {
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
-import { initTheme } from '../contents/helpers'
+import { initTheme, replaceEmojiWithHD } from '../contents/helpers'
 import { iconLoading } from '../icons'
 import {
   fetchHotTopics,
@@ -410,8 +410,7 @@ function initTabs() {
           $checkIn
             .find('.feature-content')
             .html(
-              `于 ${date} 自动签到${
-                dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
+              `于 ${date} 自动签到${dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
               }`
             )
         }
@@ -485,6 +484,8 @@ function initTabs() {
               </div>
              `)
               $tabHeader.find('.message-actions').append($checkMsgBtn)
+
+              replaceEmojiWithHD($noticeList.find('.notice-item .embedded_image'))
 
               $tabContent.empty().append($tabHeader).append($noticeList)
             } else {
