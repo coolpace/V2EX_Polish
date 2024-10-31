@@ -577,6 +577,7 @@ fieldset {
   }
 }
 
+// 用户标签的帮助信息。
 .help-info {
   display: inline-block;
   width: 1em;
@@ -588,10 +589,12 @@ fieldset {
   }
 }
 
+// ==============================
+// 菜单。
 .menu-wrapper {
   overflow: hidden;
   width: 320px;
-  margin-top: 20px;
+  margin-top: 10px;
   background-color: var(--v2p-color-bg-block);
   border-radius: 8px;
 }
@@ -674,7 +677,10 @@ fieldset {
     background-color: var(--v2p-color-divider);
   }
 }
+// ------------------------------
 
+// ==============================
+// 响应式。
 @media screen and (width<=768px) {
   .side {
     width: 80px;
@@ -747,3 +753,4 @@ fieldset {
     }
   }
 }
+// ------------------------------
