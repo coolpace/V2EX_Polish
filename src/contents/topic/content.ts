@@ -324,15 +324,27 @@ export function handleLinkPreview() {
 
   const $previewBtn = $('<span class="v2p-link-preview-btn">预览</span>')
 
-  $previewBtn.on('click', (ev) => {
-    ev.preventDefault()
+  $topicLinks.each((_, link) => {
+    const $link = $(link)
 
-    const linkHref = $topicLinks.attr('href')
-    const match = linkHref?.match(/\/t\/(\d+)/)
-    const topicId = match?.at(1)
+    const $cloned = $previewBtn.clone(true)
 
-    handlePreview({ topicId, linkHref })
+    $cloned.on('click', (ev) => {
+      ev.preventDefault()
+
+      const linkHref = $link.attr('href')
+      const match = linkHref?.match(/\/t\/(\d+)/)
+      const topicId = match?.at(1)
+
+      handlePreview({ topicId, linkHref })
+    })
+
+    const $previewBtnInLink = $link.find('.v2p-link-preview-btn')
+
+    if ($previewBtnInLink.length > 0) {
+      $previewBtnInLink.replaceWith($cloned)
+    } else {
+      $link.append($cloned)
+    }
   })
-
-  $topicLinks.append($previewBtn.clone(true))
 }

@@ -256,6 +256,8 @@ function handleFilteredComments() {
           processReplyContent($(cellDom))
         }
       })
+
+      handleLinkPreview()
     },
   })
 
