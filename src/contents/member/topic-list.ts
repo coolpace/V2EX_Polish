@@ -20,6 +20,8 @@ export function handleTopicList(params: HandleTopicListParams) {
   const { handlePreview } = useTopicPreview()
 
   const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
+  const $ignoreBtn = $('<span class="v2p-topic-ignore-btn">屏蔽</span>')
+  const $topicActions = $('<span class="v2p-topic-actions" />')
 
   $topicList.each((_, topicItem) => {
     const $topicItem = $(topicItem)
@@ -31,16 +33,11 @@ export function handleTopicList(params: HandleTopicListParams) {
     const match = linkHref?.match(/\/t\/(\d+)/)
     const topicId = match?.at(1)
 
-    $previewBtn
-      .clone()
-      .on('click', () => {
-        handlePreview({ topicId, topicTitle, linkHref })
-      })
-      .appendTo($itemTitle)
+    const $lastChild = $topicInfo.find('> span:first-of-type')
+    const $clonedTopicActions = $topicActions.clone()
+    $clonedTopicActions.insertAfter($lastChild)
 
     if (!isOwner) {
-      const $ignoreBtn = $('<span class="v2p-topic-ignore-btn">屏蔽</span>')
-
       $ignoreBtn
         .clone()
         .on('click', () => {
@@ -73,7 +70,14 @@ export function handleTopicList(params: HandleTopicListParams) {
             }
           }
         })
-        .insertAfter($topicInfo.find('> span:first-of-type'))
+        .appendTo($clonedTopicActions)
     }
+
+    $previewBtn
+      .clone()
+      .on('click', () => {
+        handlePreview({ topicId, topicTitle, linkHref })
+      })
+      .appendTo($clonedTopicActions)
   })
 }
