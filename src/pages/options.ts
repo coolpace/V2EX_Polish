@@ -1,10 +1,20 @@
-import { Check, CircleHelp, createIcons, Key, Plus, Settings, Tags, X } from 'lucide'
+import {
+  ArchiveRestore,
+  Check,
+  CircleHelp,
+  createIcons,
+  Key,
+  Plus,
+  Settings,
+  Tags,
+  X,
+} from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
 import { initTheme, setMemberTags } from '../contents/helpers'
 import type { Options, ThemeType } from '../types'
 import { getStorage, setStorage } from '../utils'
-import { handleTokenForm } from './options.helper'
+import { handleBackupForm, handleTokenForm } from './options.helper'
 
 function loadIcons() {
   createIcons({
@@ -13,6 +23,7 @@ function loadIcons() {
       Settings,
       Tags,
       Key,
+      ArchiveRestore,
       Plus,
       X,
       CircleHelp,
@@ -392,6 +403,7 @@ void (async function init() {
   }
 
   handleTokenForm()
+  handleBackupForm()
 
   // 控制切换显示菜单的内容。
   {
