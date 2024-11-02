@@ -6,6 +6,7 @@ import { RequestMessage, StorageKey } from './constants'
 import { getCommentDataList, handleNestedComment } from './contents/dom'
 import { $body, loginName } from './contents/globals'
 import { addToReadingList, loadIcons, replaceCommentEmojiWithHD } from './contents/helpers'
+import { handleLinkPreview } from './contents/topic/content'
 import { iconLogo } from './icons'
 import { crawlTopicPage, fetchTopic } from './services'
 import type { Topic } from './types'
@@ -346,6 +347,7 @@ export function useTopicPreview() {
             }
 
             modal.$content.empty().append($topicPreview)
+            handleLinkPreview()
 
             // 默认情况下，div 不是可聚焦的元素，设置 tabindex 属性后，用户可以使用 `focus()` 聚焦到该元素。
             modal.$content.attr('tabindex', '0')

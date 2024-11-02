@@ -107,6 +107,11 @@ body {
 
     &:has(#Singleton) {
       padding: 20px 0 0;
+
+      #Singleton {
+        overflow: hidden;
+        box-shadow: var(--v2p-box-shadow);
+      }
     }
   }
 
