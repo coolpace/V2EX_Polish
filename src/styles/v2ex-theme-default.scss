@@ -104,6 +104,10 @@ body {
         }
       }
     }
+
+    &:has(#Singleton) {
+      padding: 20px 0 0;
+    }
   }
 
   #Leftbar {

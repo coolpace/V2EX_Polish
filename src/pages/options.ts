@@ -1,9 +1,10 @@
-import { CircleHelp, createIcons, Plus, Settings, Tags, X } from 'lucide'
+import { Check, CircleHelp, createIcons, Key, Plus, Settings, Tags, X } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
 import { initTheme, setMemberTags } from '../contents/helpers'
 import type { Options, ThemeType } from '../types'
 import { getStorage, setStorage } from '../utils'
+import { handleTokenForm } from './options.helper'
 
 function loadIcons() {
   createIcons({
@@ -11,9 +12,11 @@ function loadIcons() {
     icons: {
       Settings,
       Tags,
+      Key,
       Plus,
       X,
       CircleHelp,
+      Check,
     },
   })
 }
@@ -388,6 +391,8 @@ void (async function init() {
     renderTagsContent()
   }
 
+  handleTokenForm()
+
   // 控制切换显示菜单的内容。
   {
     const url = new URL(window.location.href)
@@ -415,6 +420,7 @@ void (async function init() {
       $('[data-content-key]').hide()
       $(`[data-content-key="${activeKey}"]`).show()
 
+      // 通过 URL 参数控制直接访问侧边栏的菜单。
       if (activeKey === DEFAULT_ACTIVE_KEY) {
         url.searchParams.delete(MENU)
         history.replaceState(null, '', url.toString())

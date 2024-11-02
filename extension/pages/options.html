@@ -15,6 +15,7 @@
 
   <body>
     <div class="layout">
+      <!-- MARK: 侧边栏 -->
       <div class="side">
         <div class="side-header">
           <img src="../images/icon-32.png" />
@@ -27,9 +28,15 @@
               <i class="menu-item-icon" data-lucide="settings"></i>
               <span class="menu-item-title">控制选项</span>
             </li>
+
             <li data-menu-key="tags" class="menu-item">
               <i class="menu-item-icon" data-lucide="tags"></i>
               <span class="menu-item-title">用户标签</span>
+            </li>
+
+            <li data-menu-key="token" class="menu-item">
+              <i class="menu-item-icon" data-lucide="key"></i>
+              <span class="menu-item-title">API Token</span>
             </li>
           </ul>
         </div>
@@ -385,6 +392,103 @@
           </div>
 
           <div data-content-key="tags"></div>
+
+          <div data-content-key="token">
+            <form id="token-form">
+              <div class="token-form-inner">
+                <div>
+                  <h2 class="token-form-title">
+                    <label for="pat">设置个人访问令牌（PAT）</label>
+                  </h2>
+  
+                  <div class="pat-input">
+                    <input id="pat" type="text" autocomplete="off" placeholder="填写你的个人访问令牌 (PAT)" />
+                    <button class="submit-btn" type="submit">保存令牌</button>
+                  </div>
+  
+                  <div class="token-desc">
+                    <div class="token-desc-title">这将授权 V2EX Polish 使用令牌：</div>
+                    <ul class="token-usage-list">
+                      <li class="token-usage-item">
+                        <span class="token-desc-icon">
+                          <i data-lucide="check"></i>
+                        </span>
+                        <p>
+                          请求
+                          <a href="https://www.v2ex.com/help/api" target="_blank">
+                            V2EX 的开放 API
+                          </a>
+                          以获取所需数据。
+                        </p>
+                      </li>
+                      <li class="token-usage-item">
+                        <span class="token-desc-icon">
+                          <i data-lucide="check"></i>
+                        </span>
+                        <p>自动更新令牌（需手动开启）。</p>
+                      </li>
+                    </ul>
+  
+                    <div class="learn-more">
+                      <a
+                        class="link"
+                        href="https://www.v2ex.com/help/personal-access-token"
+                        target="_blank"
+                      >
+                        了解更多
+                      </a>
+                    </div>
+  
+                    <details class="token-details">
+                      <summary>
+                        <span class="summary-text">如何获取 PAT？哪些功能需要它？</span>
+                      </summary>
+                      <div class="details-content">
+                        <p>
+                          如果您还没有 PAT，请
+                          <a
+                            class="link"
+                            href="https://www.v2ex.com/settings/tokens"
+                            target="_blank"
+                          >
+                            前往创建
+                          </a>
+                          。
+                        </p>
+                        <p>
+                          主题内容预览、消息通知等功能都需要使用 PAT
+                          请求接口数据，然后作相应的展示。
+                        </p>
+                        <p>请放心，我们绝不会以任何方式滥用您的 PAT。</p>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+
+                <hr />
+
+                <div>
+                  <h2 class="token-form-title">API 使用情况</h2>
+                  <fieldset>
+                    <div class="form-item">
+                      <label>每小时限制请求</label>
+                      <input id="limit" readonly />
+                    </div>
+
+                    <div class="form-item">
+                      <label>剩余请求次数</label>
+                      <input id="remaining" readonly />
+                    </div>
+
+                    <div class="form-item">
+                      <label>下次重置时间</label>
+                      <input id="reset" readonly />
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+@use './share';
+
 html,
 body {
   height: 100%;
@@ -8,6 +10,7 @@ body {
   --v2p-wrapper-pd: 25px;
   --v2p-inner-round: 10px;
   --v2p-content-pd: 40px;
+  --v2p-section-gap: 20px;
 
   font-size: 16px;
 
@@ -257,7 +260,7 @@ body {
     .options-form-inner {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: var(--v2p-section-gap);
     }
 
     .form-item {
@@ -420,6 +423,7 @@ fieldset {
     }
 
     .tag-member-name {
+      display: inline-flex;
       min-width: 100px;
       margin: 0 0 8px;
       font-weight: bold;
@@ -428,11 +432,6 @@ fieldset {
         display: flex;
         gap: 6px;
         align-items: center;
-
-        &:hover {
-          text-decoration: underline 1.5px;
-          text-underline-offset: 0.46ex;
-        }
 
         > img {
           width: 30px;
@@ -690,10 +689,199 @@ fieldset {
     background-color: var(--v2p-color-divider);
   }
 }
+
+#token-form {
+  @at-root {
+    .token-form-inner {
+      container-type: inline-size;
+      display: flex;
+      flex-direction: column;
+      gap: var(--v2p-section-gap);
+
+      .form-item {
+        display: flex;
+        gap: 0 20px;
+        align-items: center;
+        font-size: 13px;
+
+        & ~ .form-item {
+          margin-top: 5px;
+        }
+
+        > label {
+          min-width: 95px;
+          font-size: inherit;
+          font-weight: normal;
+          color: var(--v2p-color-font-secondary);
+        }
+
+        > input {
+          background-color: transparent;
+        }
+      }
+    }
+
+    .token-form-title {
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .token-desc {
+      padding-top: 20px;
+      font-size: 13px;
+
+      .token-desc-title {
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .token-desc-icon {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin: 0 10px 0 3px;
+      }
+
+      .learn-more {
+        padding: 10px 0;
+        font-size: 14px;
+      }
+    }
+
+    .token-usage-list {
+      padding: 10px 0;
+
+      .token-usage-item {
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+
+        & ~ .token-usage-item {
+          margin-top: 6px;
+        }
+
+        > {
+          p {
+            flex: 1;
+          }
+        }
+      }
+    }
+
+    .pat-input {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      gap: 0 10px;
+      align-items: center;
+      width: 30%;
+      padding: 0 5px 0 0;
+      font-size: 13px;
+      background-color: var(--v2p-color-bg-block);
+      border: 1px solid var(--v2p-color-border);
+      border-radius: 6px;
+
+      &:has(.has-value) {
+        background-color: transparent;
+        border: 1px solid var(--v2p-color-font-tertiary);
+      }
+
+      #pat {
+        flex: 1;
+        padding: 9px 8px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+
+        &::placeholder {
+          color: var(--v2p-color-font-secondary);
+        }
+
+        &.has-value {
+          opacity: 0.6;
+          filter: blur(6px);
+
+          &:focus {
+            opacity: 1;
+            filter: none;
+          }
+        }
+      }
+
+      .submit-btn {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 5px 10px;
+        font-size: 12px;
+        color: var(--v2p-color-background);
+        white-space: nowrap;
+        background-color: var(--v2p-color-foreground);
+        border: none;
+        border-radius: 5px;
+      }
+    }
+
+    .token-details {
+      padding: 5px 0;
+
+      summary:hover {
+        .summary-text {
+          text-decoration: underline dashed;
+          text-underline-offset: var(--v2p-underline-offset);
+        }
+      }
+
+      @at-root {
+        .details-content {
+          padding: 8px 0 0;
+          color: var(--v2p-color-font-secondary);
+        }
+      }
+    }
+  }
+}
+
+a {
+  &:hover {
+    @include share.underline-text;
+  }
+
+  &.link {
+    text-decoration: underline dashed;
+    text-underline-offset: var(--v2p-underline-offset);
+
+    &:hover {
+      text-decoration: underline;
+      background-color: var(--v2p-color-bg-link-hover);
+    }
+  }
+}
+
+input {
+  outline: none;
+}
 // ------------------------------
 
 // ==============================
-// 响应式。
+// MARK: 响应式
+@container (width <= 1280px) {
+  #token-form {
+    .pat-input {
+      width: 50%;
+    }
+  }
+}
+
+@container (width <= 800px) {
+  #token-form {
+    .pat-input {
+      width: 80%;
+    }
+  }
+}
+
 @media screen and (width<=768px) {
   .side {
     width: 80px;
@@ -731,6 +919,12 @@ fieldset {
       --v2p-content-pd: 30px;
 
       box-shadow: none;
+    }
+  }
+
+  #token-form {
+    .pat-input {
+      width: 100%;
     }
   }
 }
