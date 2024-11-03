@@ -60,4 +60,12 @@ void (async () => {
   handleReply()
 
   loadIcons()
+
+  {
+    const isFlamewarNode = $topicHeader.find('a[href^="/go"]').attr('href')?.endsWith('/flamewar')
+
+    if (isFlamewarNode) {
+      $('#node_sidebar').addClass('v2p-node-sidebar-flamewar')
+    }
+  }
 })()

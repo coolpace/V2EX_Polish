@@ -1277,3 +1277,10 @@ a:link.v2p-topic-preview-retry {
     background-color: var(--v2p-color-accent-600);
   }
 }
+
+// 水深火热节点的侧栏公告栏样式。
+#node_sidebar.v2p-node-sidebar-flamewar {
+  background-color: var(--v2p-color-orange-50);
+  border: 1px solid var(--v2p-color-orange-400);
+  border-radius: var(--v2p-box-radius);
+}

@@ -9,6 +9,7 @@ export default defineConfig({
     'v2ex-member.min': 'src/contents/member/index.ts',
     'v2ex-settings.min': 'src/contents/settings/index.ts',
     'v2ex-notifications.min': 'src/contents/notifications/index.ts',
+    'v2ex-go.min': 'src/contents/go/index.ts',
     'decode-base64.min': 'src/contents/decode-base64.ts',
     'reading-list.min': 'src/contents/reading-list.ts',
 

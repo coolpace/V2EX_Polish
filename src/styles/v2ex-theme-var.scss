@@ -20,6 +20,7 @@
   --v2p-tp-nested-pd: 15px;
   --v2p-tp-preview-pd: 20px;
   --v2p-emoji-size: 20px;
+  --v2p-box-radius: 10px;
 
   @mixin light-mode {
     // 基础色（参考自 TailwindCSS Slate）：
@@ -114,7 +115,7 @@
     --box-background-alt-color: var(--v2p-color-main-100);
     --box-background-hover-color: var(--v2p-color-main-200);
     --box-border-focus-color: var(--v2p-color-main-200);
-    --box-border-radius: 10px;
+    --box-border-radius: var(--v2p-box-radius);
     --button-background-color: var(--v2p-color-button-background);
     --button-foreground-color: var(--v2p-color-button-foreground);
     --button-hover-color: var(--v2p-color-button-background-hover);

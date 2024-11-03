@@ -34,6 +34,7 @@ const generateManifest = (): Manifest => {
   const memberMatches = getMatches('member')
   const settingsMatches = getMatches('settings')
   const notificationsMatches = getMatches('notifications')
+  const nodeMatches = getMatches('go')
 
   return {
     manifest_version: 3,
@@ -114,6 +115,10 @@ const generateManifest = (): Manifest => {
       {
         matches: notificationsMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-notifications.min.js'],
+      },
+      {
+        matches: nodeMatches,
+        js: ['scripts/jquery.min.js', 'scripts/v2ex-go.min.js'],
       },
 
       {
