@@ -317,7 +317,7 @@ export function handleTopicImg() {
  */
 export function handleLinkPreview() {
   const $topicLinks = $(
-    '.topic_content a[href*="v2ex.com/t/"], .reply_content a[href*="v2ex.com/t/"]'
+    '.topic_content a[href*="v2ex.com/t/"], .reply_content a[href*="v2ex.com/t/"], .topic_content a[href^="/t/"], .reply_content a[href^="/t/"]'
   )
 
   const { handlePreview } = useTopicPreview()
