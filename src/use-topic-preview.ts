@@ -39,6 +39,8 @@ interface TopicData {
   cacheTime: number
 }
 
+const topicDataCache = new Map<string, TopicData>()
+
 export function useTopicPreview() {
   const storage = getStorageSync()
 
@@ -68,8 +70,6 @@ export function useTopicPreview() {
       abortController?.abort()
     },
   })
-
-  const topicDataCache = new Map<string, TopicData>()
 
   interface HandlePreviewParams {
     /** 主题 ID。不传则不会加载主题。 */
