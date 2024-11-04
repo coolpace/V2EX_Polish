@@ -45,4 +45,4 @@ export const loginName = $('#Top .tools > a[href^="/member"]').text()
 /** 题主的昵称。 */
 export const topicOwnerName = $topicHeader.find('> small > a[href^="/member"]').text()
 
-export const topicId = window.location.pathname.match(/\/t\/(\d+)/)?.at(1)
+export const pathTopicId = window.location.pathname.match(/\/t\/(\d+)/)?.at(1)

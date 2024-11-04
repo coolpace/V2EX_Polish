@@ -9,7 +9,7 @@ import {
   $commentCells,
   $topicContentBox,
   $topicHeader,
-  topicId,
+  pathTopicId,
   topicOwnerName,
 } from '../globals'
 import { getTagsText, loadIcons, setMemberTags } from '../helpers'
@@ -52,9 +52,9 @@ export function handleContent() {
     $topicBtn.eq(2).append('<span class="v2p-tb-icon"><i data-lucide="eye-off"></i></span>')
     $topicBtn.eq(3).append('<span class="v2p-tb-icon"><i data-lucide="heart"></i></span>')
 
-    if (topicId) {
+    if (pathTopicId) {
       $topicBtns.append(
-        ` &nbsp;<a href="${Links.Share}/${topicId}" target="_blank" class="tb v2p-tb v2p-hover-btn">分享<span class="v2p-tb-icon"><i data-lucide="arrow-up-right-square"></i></span></a>`
+        ` &nbsp;<a href="${Links.Share}/${pathTopicId}" target="_blank" class="tb v2p-tb v2p-hover-btn">分享<span class="v2p-tb-icon"><i data-lucide="arrow-up-right-square"></i></span></a>`
       )
     }
 
