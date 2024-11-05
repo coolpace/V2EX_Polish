@@ -486,7 +486,8 @@ body {
     }
 
     a[href^='http'],
-    a[href*='/email-protection'] {
+    a[href*='/email-protection'],
+    a[href^='/member/'] {
       @include share.link;
 
       color: currentColor;
