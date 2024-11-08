@@ -3,7 +3,7 @@ import { StorageKey } from '../../constants'
 import { fetchUserInfo } from '../../services'
 import { getStorage } from '../../utils'
 import { loginName } from '../globals'
-import { getRegisterDays, getTagsText } from '../helpers'
+import { getRegisterDays, getTagsText, replaceCommentEmojiWithHD } from '../helpers'
 import { type CallbackFunctions, openTagsSetter } from '../topic/content'
 import { handleTopicList } from './topic-list'
 
@@ -76,5 +76,9 @@ void (async () => {
         `<span class="v2p-register-days v2p-register-days-large">${registerDays <= 15 ? '15' : '30'} 天内注册</span>`
       )
     }
+  })
+
+  window.requestIdleCallback(() => {
+    replaceCommentEmojiWithHD($('#Main .box .inner'))
   })
 })()
