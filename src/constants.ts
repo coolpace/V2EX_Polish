@@ -58,6 +58,12 @@ export const enum PopularEmoji {
   害羞 = '[害羞R]',
   萌萌哒 = '[萌萌哒R]',
   偷笑 = '[偷笑R]',
+  买爆 = '[买爆R]',
+  色色 = '[色色R]',
+  抠鼻 = '[抠鼻R]',
+  黑薯问号 = '[黑薯问号R]',
+  扶墙 = '[扶墙R]',
+  鄙视 = '[鄙视R]',
 }
 
 export const emojiLinks = {
@@ -188,6 +194,30 @@ export const emojiLinks = {
     ld: 'https://i.imgur.com/aF7QiE5.png',
     hd: 'https://i.imgur.com/WneGpK9.png',
   },
+  [PopularEmoji.买爆]: {
+    ld: 'https://i.imgur.com/2JhZFtb.png',
+    hd: 'https://i.imgur.com/za9t585.png',
+  },
+  [PopularEmoji.色色]: {
+    ld: 'https://i.imgur.com/ZA1jRv1.png',
+    hd: 'https://i.imgur.com/mEGRKJy.png',
+  },
+  [PopularEmoji.抠鼻]: {
+    ld: 'https://i.imgur.com/pYtTFnj.png',
+    hd: 'https://i.imgur.com/ErnQrMJ.png',
+  },
+  [PopularEmoji.黑薯问号]: {
+    ld: 'https://i.imgur.com/aCjmFLD.png',
+    hd: 'https://i.imgur.com/i4Wgtyv.png',
+  },
+  [PopularEmoji.扶墙]: {
+    ld: 'https://i.imgur.com/RV7y6tR.png',
+    hd: 'https://i.imgur.com/PjhjZsJ.png',
+  },
+  [PopularEmoji.鄙视]: {
+    ld: 'https://i.imgur.com/LaO5dh3.png',
+    hd: 'https://i.imgur.com/StrGaFx.png',
+  },
 } as const satisfies Record<
   PopularEmoji,
   {
@@ -235,6 +265,12 @@ export const emoticons = [
       PopularEmoji.偷笑,
       PopularEmoji.哭惹,
       PopularEmoji.汗颜,
+      PopularEmoji.色色,
+      PopularEmoji.抠鼻,
+      PopularEmoji.鄙视,
+      PopularEmoji.买爆,
+      PopularEmoji.黑薯问号,
+      PopularEmoji.扶墙,
     ],
   },
   {
