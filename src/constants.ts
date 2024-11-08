@@ -64,6 +64,11 @@ export const enum PopularEmoji {
   黑薯问号 = '[黑薯问号R]',
   扶墙 = '[扶墙R]',
   鄙视 = '[鄙视R]',
+  蹲 = '[蹲R]',
+  庆祝 = '[庆祝R]',
+  六 = '[六R]',
+  可 = '[可R]',
+  加一 = '[加一R]',
 }
 
 export const emojiLinks = {
@@ -218,6 +223,26 @@ export const emojiLinks = {
     ld: 'https://i.imgur.com/LaO5dh3.png',
     hd: 'https://i.imgur.com/StrGaFx.png',
   },
+  [PopularEmoji.蹲]: {
+    ld: 'https://i.imgur.com/t876WSv.png',
+    hd: 'https://i.imgur.com/jdTq0YI.png',
+  },
+  [PopularEmoji.庆祝]: {
+    ld: 'https://i.imgur.com/wQw2kD0.png',
+    hd: 'https://i.imgur.com/lx6jrkm.png',
+  },
+  [PopularEmoji.六]: {
+    ld: 'https://i.imgur.com/JqoC4L5.png',
+    hd: 'https://i.imgur.com/cUVWKc2.png',
+  },
+  [PopularEmoji.可]: {
+    ld: 'https://i.imgur.com/I70yy88.png',
+    hd: 'https://i.imgur.com/nRgXwUT.png',
+  },
+  [PopularEmoji.加一]: {
+    ld: 'https://i.imgur.com/hpVvbVh.png',
+    hd: 'https://i.imgur.com/abBCCK9.png',
+  },
 } as const satisfies Record<
   PopularEmoji,
   {
@@ -271,6 +296,11 @@ export const emoticons = [
       PopularEmoji.买爆,
       PopularEmoji.黑薯问号,
       PopularEmoji.扶墙,
+      PopularEmoji.蹲,
+      PopularEmoji.可,
+      PopularEmoji.六,
+      PopularEmoji.加一,
+      PopularEmoji.庆祝,
     ],
   },
   {
