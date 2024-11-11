@@ -318,11 +318,10 @@ export function useTopicPreview() {
               handleNestedComment({ options, $commentCells, commentDataList })
 
               // 移除主题页中「回复」、「点赞」等操作。
-              $topicReplyBox
-                .find(
-                  '.cell:first-of-type, .cell.ps_container, .cell > table > tbody > tr > td:last-of-type > .fr'
-                )
-                .remove()
+              const $rightArea = $topicReplyBox
+                .find('.cell[id^="r_"] > table > tbody > tr > td:last-of-type > .fr')
+                .children(':not(.no)')
+              $rightArea.remove()
 
               $topicPreview.append($topicReplyBox)
 
