@@ -34,16 +34,16 @@ export function getCommentDataList({
       const refMemberNames =
         memberNameMatches.length > 0
           ? memberNameMatches.map(([, name]) => {
-              return name
-            })
+            return name
+          })
           : undefined
 
       const floorNumberMatches = Array.from(content.matchAll(/#(\d+)/g))
       const refFloors =
         floorNumberMatches.length > 0
           ? floorNumberMatches.map(([, floor]) => {
-              return floor
-            })
+            return floor
+          })
           : undefined
 
       let contentHtml: CommentData['contentHtml'] = undefined
@@ -59,7 +59,10 @@ export function getCommentDataList({
             const pattern = /(@<a href="\/member\/\w+">[\w\s]+<\/a>)\s+/g
             const replacement = '<span class="v2p-member-ref">$1</span> '
 
+            // 将提及的用户使用 v2p-member-ref 包裹。
             contentHtml = contentHtml.replace(pattern, replacement)
+
+            $content.html(contentHtml)
           }
         }
       }
