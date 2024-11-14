@@ -41,7 +41,7 @@ const generateManifest = (): Manifest => {
 
     name: 'V2EX Polish',
 
-    version: '2.0.4', // <- 在发布前，需要手动修改版本。
+    version: '2.0.5', // <- 在发布前，需要手动修改版本。
 
     description: '专为 V2EX 用户设计，提供了丰富的扩展功能。',
 
