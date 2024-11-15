@@ -326,6 +326,8 @@ export function useTopicPreview() {
               $topicPreview.append($topicReplyBox)
 
               if (topic.replies > 100) {
+                $topicReplyBox.find('.cell.ps_container').remove() // 移除评论分页。
+
                 $topicPreview.append(`
                   <div class="v2p-topic-reply-tip">
                     <a
