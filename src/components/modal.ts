@@ -107,8 +107,6 @@ export function createModal(props: CreateModalProps): ModalControl {
       root.append($container)
 
       $closeBtn.on('click', handleModalClose)
-
-      onMount?.(modalElements)
     }
 
     // Hack: 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
@@ -126,6 +124,8 @@ export function createModal(props: CreateModalProps): ModalControl {
 
     onOpen?.(modalElements)
   }
+
+  onMount?.(modalElements)
 
   return { ...modalElements, open: handleModalOpen, close: handleModalClose }
 }

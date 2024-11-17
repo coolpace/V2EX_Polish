@@ -85,6 +85,9 @@ export function getCommentDataList({
     .get()
 }
 
+/**
+ * 处理嵌套回复。
+ */
 export function handleNestedComment({
   options,
   $commentCells,

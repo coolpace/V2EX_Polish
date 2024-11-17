@@ -315,7 +315,10 @@ export function useTopicPreview() {
                 }
               })
 
-              handleNestedComment({ options, $commentCells, commentDataList })
+              // 延迟执行，以确保 DOM 元素已经插入到页面中，这样在 `processReplyContent` 中才能拿到正确的 reply content height。
+              setTimeout(() => {
+                handleNestedComment({ options, $commentCells, commentDataList })
+              }, 0)
 
               // 移除主题页中「回复」、「点赞」等操作。
               const $rightArea = $topicReplyBox
@@ -348,6 +351,7 @@ export function useTopicPreview() {
             }
 
             modal.$content.empty().append($topicPreview)
+
             handleLinkPreview()
 
             // 默认情况下，div 不是可聚焦的元素，设置 tabindex 属性后，用户可以使用 `focus()` 聚焦到该元素。
