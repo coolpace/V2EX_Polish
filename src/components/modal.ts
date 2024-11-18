@@ -102,13 +102,6 @@ export function createModal(props: CreateModalProps): ModalControl {
   }
 
   const handleModalOpen = () => {
-    // 只有当第一次打开时才执行一些初始化操作，从而实现懒加载的效果。
-    if (root && !$container.parent().length) {
-      root.append($container)
-
-      $closeBtn.on('click', handleModalClose)
-    }
-
     // Hack: 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
     setTimeout(() => {
       if (!boundEvent) {
@@ -125,7 +118,13 @@ export function createModal(props: CreateModalProps): ModalControl {
     onOpen?.(modalElements)
   }
 
+  $closeBtn.on('click', handleModalClose)
+
   onMount?.(modalElements)
+
+  if (root) {
+    root.append($container)
+  }
 
   return { ...modalElements, open: handleModalOpen, close: handleModalClose }
 }
