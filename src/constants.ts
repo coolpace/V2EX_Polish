@@ -258,8 +258,8 @@ export const emoticons = [
   {
     title: '流行',
     list: [
-      PopularEmoji.脱单doge,
       PopularEmoji.doge,
+      PopularEmoji.脱单doge,
       PopularEmoji.打call,
       PopularEmoji.星星眼,
       PopularEmoji.吃瓜,
