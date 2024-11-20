@@ -56,6 +56,12 @@ body {
       display: inline-flex;
       width: 0;
     }
+
+    &:has(.v2p-topic-reply-ref) {
+      .v2p-member-ref {
+        display: none; // 在「筛选回复中」隐藏 @ 用户。
+      }
+    }
   }
 
   #reply-box .v2p-reply-preview {
@@ -1084,7 +1090,7 @@ a:link.v2p-topic-preview-retry {
   }
 
   &.v2p-member-ref-show {
-    display: inline;
+    display: inline !important;
   }
 }
 
