@@ -21,6 +21,7 @@
   --v2p-tp-preview-pd: 20px;
   --v2p-emoji-size: 21px;
   --v2p-box-radius: 10px;
+  --v2p-input-radius: 6px;
 
   @mixin light-mode {
     // 基础色（参考自 TailwindCSS Slate）：
@@ -89,6 +90,7 @@
     --v2p-color-divider: var(--v2p-color-main-200);
     --v2p-color-border: var(--v2p-color-main-200);
     --v2p-color-input-border: var(--v2p-color-main-300);
+    --v2p-color-input-border-focus: var(--v2p-color-main-400);
     --v2p-color-border-darker: var(--v2p-color-main-300);
     --v2p-color-link-visited: var(--v2p-color-main-400);
     --v2p-color-error: #ef4444;

@@ -566,7 +566,7 @@ fieldset {
     text-shadow: none;
     white-space: nowrap;
     background: var(--button-background-color);
-    border-radius: 6px;
+    border-radius: var(--v2p-input-radius);
     box-shadow:
       0 1.8px 0 var(--box-background-hover-color),
       0 1.8px 0 var(--button-background-color);
@@ -782,7 +782,7 @@ fieldset {
       font-size: 13px;
       background-color: var(--v2p-color-bg-block);
       border: 1px solid var(--v2p-color-border);
-      border-radius: 6px;
+      border-radius: var(--v2p-input-radius);
 
       &:has(.has-value) {
         background-color: transparent;

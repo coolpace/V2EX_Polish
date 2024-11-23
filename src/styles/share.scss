@@ -24,7 +24,7 @@
   white-space: nowrap;
   background: var(--v2p-color-button-background);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--v2p-input-radius);
   outline: none;
   box-shadow:
     0 1.8px 0 var(--box-background-hover-color),

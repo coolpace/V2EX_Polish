@@ -138,7 +138,7 @@ body {
     margin: 0 30px;
     background-color: var(--v2p-color-bg-search);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--v2p-input-radius);
 
     &::before {
       top: 0;
@@ -543,11 +543,16 @@ body {
     width: 200px !important;
 
     .select2-selection {
-      background-color: var(--v2p-color-background);
+      height: 33px !important;
+      background-color: var(--v2p-color-bg-content);
       border: 1px solid var(--v2p-color-border);
+      border-radius: var(--v2p-input-radius);
 
       .select2-selection__rendered,
       .select2-selection__placeholder {
+        display: inline-flex;
+        align-items: center;
+        height: 100%;
         color: var(--v2p-color-foreground);
       }
     }
@@ -697,7 +702,15 @@ body {
   select {
     @include share.select-box;
 
-    padding: 4px 6px;
+    cursor: pointer;
+    padding: 7px 10.5px;
+    background-color: var(--v2p-color-bg-content);
+    border-radius: var(--v2p-input-radius);
+
+    &:hover,
+    &:focus {
+      border-color: var(--v2p-color-input-border-focus);
+    }
   }
 
   // MARK: 各种输入框。
@@ -707,12 +720,14 @@ body {
   .sl,
   .sll,
   .sls {
+    padding: 7px 10.5px;
     color: var(--v2p-color-foreground);
     background-color: var(--v2p-color-bg-content);
     border-color: var(--v2p-color-input-border);
+    border-radius: var(--v2p-input-radius);
 
     &:focus {
-      border-color: var(--v2p-color-input-border);
+      border-color: var(--v2p-color-input-border-focus);
     }
   }
 
