@@ -70,8 +70,6 @@
     --button-border-color: var(--v2p-color-border);
     --button-border-hover-color: #768390;
 
-    visibility: visible;
-
     #Logo {
       background-image: url('https://www.v2ex.com/static/img/v2ex-alt@2x.png');
     }
@@ -111,6 +109,10 @@
     #search-container::before {
       background-image: url('/static/img/search_icon_light.png');
     }
+  }
+
+  body.v2p-theme-dark-default {
+    visibility: visible;
   }
 
   @supports not selector(:has(*)) {
