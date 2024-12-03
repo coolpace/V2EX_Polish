@@ -14,6 +14,7 @@ import {
 import { $body, $infoCard, $wrapper } from './globals'
 import { openV2PSettings, postTask, toggleTheme } from './helpers'
 
+// 通过判断 `#site-header` 元素是否存在，来判断当前是否为移动端。
 if ($('#site-header').length > 0) {
   $body.addClass('v2p-mobile')
 }
