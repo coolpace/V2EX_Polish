@@ -378,7 +378,7 @@ export const emoticons = [
   },
 ] as const satisfies readonly { title: string; list: readonly string[] }[]
 
-/** 关于扩展的超链接。 */
+/** 关于扩展的超链接 */
 export const enum Links {
   /** 官网主页 */
   Home = 'https://v2p.app',
@@ -390,10 +390,23 @@ export const enum Links {
   Support = 'https://v2p.app/support',
 }
 
+/** 当内容被折叠时，用户可阅读内容的最大高度。 */
 export const READABLE_CONTENT_HEIGHT = 250
+
+/** 最大可显示内容高度，超过此高度内容会被折叠。 */
 export const MAX_CONTENT_HEIGHT = 550
 
+/** 稍后阅读列表中，存储的主题内容的最大文本长度。 */
 export const READING_CONTENT_LIMIT = 150
+
+/** 最大主题内容的适宜阅读高度。 */
+export const MAX_TOPIC_CONTENT_HEIGHT = 600
+
+/** 最小主题页面的适宜阅读宽度。 */
+export const MIN_TOPIC_PAGE_WIDTH = 1200
+
+/** 当窗口宽度小于此值时，右侧栏会隐藏。 */
+export const MIN_RIGHTBAR_HIDE_WIDTH = 900
 
 /** Popup 中缓存的主题列表数据的过期时间。 */
 export const dataExpiryTime = 60 * 60 * 1000

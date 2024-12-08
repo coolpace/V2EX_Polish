@@ -1,6 +1,11 @@
-import { createElement, PanelRight, PanelTop } from 'lucide'
+import { ChevronLeft, ChevronRight, createElement, PanelRight, PanelTop } from 'lucide'
 
-import { StorageKey } from '../../constants'
+import {
+  MAX_TOPIC_CONTENT_HEIGHT,
+  MIN_RIGHTBAR_HIDE_WIDTH,
+  MIN_TOPIC_PAGE_WIDTH,
+  StorageKey,
+} from '../../constants'
 import { getStorageSync } from '../../utils'
 import { $main, $topicContentBox, $wrapperContent } from '../globals'
 
@@ -13,6 +18,20 @@ iconLayoutV.setAttribute('height', '100%')
 const iconLayoutH = createElement(PanelRight)
 iconLayoutH.setAttribute('width', '100%')
 iconLayoutH.setAttribute('height', '100%')
+
+const $toggleRightbarBtn = $(`
+  <div class="v2p-toggle-rightbar-btn">
+    <span class="v2p-toggle-rightbar-icon"></span>
+  </div>
+`)
+
+const iconChevronLeft = createElement(ChevronLeft)
+iconChevronLeft.setAttribute('width', '100%')
+iconChevronLeft.setAttribute('height', '100%')
+
+const iconChevronRight = createElement(ChevronRight)
+iconChevronRight.setAttribute('width', '100%')
+iconChevronRight.setAttribute('height', '100%')
 
 /** 将主题页切换为水平布局。 */
 const switchToHorizontalLayout = () => {
@@ -66,24 +85,59 @@ export function toggleTopicLayout() {
  * 控制主题布局水平分屏显示。
  */
 export function handleLayout() {
-  const storage = getStorageSync()
-  const options = storage[StorageKey.Options]
+  const $rightbar = $('#Rightbar')
+  $rightbar.addClass('v2p-layout-rightbar')
 
-  if (options.reply.layout === 'auto') {
-    const contentHeight = $topicContentBox.height()
+  $toggleRightbarBtn.insertAfter($rightbar).hide()
+  $('.v2p-toggle-rightbar-icon').html(iconChevronLeft)
 
-    if (typeof contentHeight === 'number' && contentHeight >= 600) {
-      switchToHorizontalLayout()
+  $toggleRightbarBtn.on('click', () => {
+    const isVisible = $rightbar.hasClass('v2p-layout-rightbar-visible')
+    if (isVisible) {
+      $('#Rightbar').removeClass('v2p-layout-rightbar-visible')
+      $('.v2p-toggle-rightbar-icon').html(iconChevronLeft)
     } else {
-      switchToVerticalLayout()
+      $('#Rightbar').addClass('v2p-layout-rightbar-visible')
+      $('.v2p-toggle-rightbar-icon').html(iconChevronRight)
     }
-  } else {
-    if (options.reply.layout === 'horizontal') {
-      switchToHorizontalLayout()
-    } else {
+  })
+
+  // 添加窗口大小变化的监听
+  const handleResize = () => {
+    if (window.innerWidth < MIN_TOPIC_PAGE_WIDTH) {
       switchToVerticalLayout()
+    } else {
+      // 重新应用当前布局设置
+      const storage = getStorageSync()
+      const options = storage[StorageKey.Options]
+
+      if (options.reply.layout === 'auto') {
+        const contentHeight = $topicContentBox.height() || 0
+
+        if (contentHeight >= MAX_TOPIC_CONTENT_HEIGHT) {
+          switchToHorizontalLayout()
+        } else {
+          switchToVerticalLayout()
+        }
+      } else if (options.reply.layout === 'horizontal') {
+        switchToHorizontalLayout()
+      }
+    }
+
+    if (window.innerWidth < MIN_RIGHTBAR_HIDE_WIDTH) {
+      $toggleRightbarBtn.show()
+      $('.v2p-layout-rightbar').addClass('v2p-layout-rightbar-float')
+    } else {
+      $toggleRightbarBtn.hide()
+      $('.v2p-layout-rightbar').removeClass('v2p-layout-rightbar-float')
     }
   }
+
+  // 初始化时执行一次
+  handleResize()
+
+  // 监听窗口大小变化
+  window.addEventListener('resize', handleResize)
 
   $layoutToggle.on('click', () => {
     toggleTopicLayout()

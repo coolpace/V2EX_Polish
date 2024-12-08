@@ -69,6 +69,11 @@ body {
     .content {
       display: flex;
       gap: var(--v2p-layout-column-gap);
+
+      // 当右侧栏浮动时，取消设置间距。
+      &:has(.v2p-layout-rightbar-float) {
+        gap: 0;
+      }
     }
 
     @at-root {
@@ -111,6 +116,13 @@ body {
       #Singleton {
         overflow: hidden;
         box-shadow: var(--v2p-box-shadow);
+      }
+    }
+
+    // 当右侧栏浮动时，主内容区域居中。
+    &:has(.v2p-layout-rightbar-float) {
+      #Main {
+        margin: auto;
       }
     }
   }
