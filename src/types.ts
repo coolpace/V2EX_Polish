@@ -23,58 +23,66 @@ export type ThemeType = 'light-default' | 'dark-default' | 'dawn'
 
 /** V2EX Polish 选项设置。 */
 export interface Options {
-  /** 是否在新标签页打开主题。 */
+  /** 链接打开方式：是否在新标签页中打开主题链接 */
   openInNewTab: boolean
-  /** 自动签到设置。 */
+
+  /** 自动签到功能配置 */
   autoCheckIn: {
-    /** 是否启用自动签到。 */
+    /** 是否开启自动签到功能 */
     enabled: boolean
   }
-  /** 颜色主题设置。 */
+
+  /** 界面主题相关配置 */
   theme: {
-    /** 主题。 */
+    /** 主题类型：可选择明亮、暗黑或黎明主题 */
     type?: ThemeType
-    /** 是否自动跟随系统切换主题。 */
+    /** 是否启用自动跟随系统主题切换 */
     autoSwitch: boolean
-    /** 主题间距模式。 */
+    /** 界面布局紧凑度：默认或紧凑模式 */
     mode?: 'default' | 'compact'
   }
-  /** 主题回复设置。 */
+
+  /** 回复功能配置 */
   reply: {
-    /** 是否预加载回复内容。 */
+    /** 回复内容预加载策略：关闭或自动加载 */
     preload?: 'off' | 'auto'
-    /** 是否使用水平布局。 */
+    /** 回复布局方式：自动、水平或垂直布局 */
     layout?: 'auto' | 'horizontal' | 'vertical'
   }
-  /** 回复内容设置。 */
+
+  /** 回复内容显示配置 */
   replyContent: {
-    /** 是否自动折叠回复内容。 */
+    /** 是否自动折叠过长回复 */
     autoFold?: boolean
-    /** 是否隐藏回复时间。 */
+    /** 是否隐藏回复时间戳 */
     hideReplyTime?: boolean
-    /** 是否隐藏 @ 提及用户名。 */
+    /** 是否隐藏回复中的 @ 用户名 */
     hideRefName?: boolean
-    /** 在主题中点击图片时，是否在页内预览图片大图。 */
+    /** 是否启用图片页内预览功能 */
     showImgInPage?: boolean
   }
-  /** 嵌套回复设置。 */
+
+  /** 嵌套回复显示配置 */
   nestedReply: {
-    /** 嵌套回复展示形式。 */
+    /** 嵌套回复的显示方式：对齐、缩进或关闭 */
     display: 'align' | 'indent' | 'off'
-    /** 当一条回复中指定了多个用户时，是否参与嵌套。 */
+    /** 多重 @ 用户时的嵌套处理：保持嵌套或关闭 */
     multipleInsideOne?: 'nested' | 'off'
   }
-  /** 用户标签设置。 */
+
+  /** 用户标签配置 */
   userTag: {
-    /** 用户标签展示形式。 */
+    /** 用户标签的显示方式：行内或块级显示 */
     display: 'inline' | 'block'
   }
-  /** 上下文菜单设置。 */
+
+  /** 上下文菜单配置 */
   contextMenu?: {
-    /** 是否启用上下文菜单。 */
+    /** 是否启用右键上下文菜单 */
     enabled: boolean
   }
-  /** 隐藏账号信息。 */
+
+  /** 是否隐藏用户账号信息 */
   hideAccount?: boolean
 }
 
