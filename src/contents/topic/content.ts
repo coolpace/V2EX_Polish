@@ -297,9 +297,9 @@ export function openTagsSetter(
       const tags =
         newTagsValue.trim().length > 0
           ? newTagsValue
-            .split(/,|，/g)
-            .filter((it) => it.trim().length > 0)
-            .map((it) => ({ name: it }))
+              .split(/,|，/g)
+              .filter((it) => it.trim().length > 0)
+              .map((it) => ({ name: it }))
           : undefined
 
       await setMemberTags({ memberName, memberAvatar: memberTagData?.avatar || memberAvatar, tags })

@@ -281,21 +281,21 @@ type TaskId = string | number
 
 export type MessageData =
   | {
-    from: MessageFrom.Content
-    payload?: {
-      task?: {
-        id: TaskId
-        expression: string
+      from: MessageFrom.Content
+      payload?: {
+        task?: {
+          id: TaskId
+          expression: string
+        }
       }
     }
-  }
   | {
-    from: MessageFrom.Web
-    payload?: {
-      status?: 'ready'
-      task?: {
-        id: TaskId
-        result: unknown
+      from: MessageFrom.Web
+      payload?: {
+        status?: 'ready'
+        task?: {
+          id: TaskId
+          result: unknown
+        }
       }
     }
-  }

@@ -410,7 +410,8 @@ function initTabs() {
           $checkIn
             .find('.feature-content')
             .html(
-              `于 ${date} 自动签到${dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
+              `于 ${date} 自动签到${
+                dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
               }`
             )
         }

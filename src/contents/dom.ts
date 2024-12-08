@@ -34,16 +34,16 @@ export function getCommentDataList({
       const refMemberNames =
         memberNameMatches.length > 0
           ? memberNameMatches.map(([, name]) => {
-            return name
-          })
+              return name
+            })
           : undefined
 
       const floorNumberMatches = Array.from(content.matchAll(/#(\d+)/g))
       const refFloors =
         floorNumberMatches.length > 0
           ? floorNumberMatches.map(([, floor]) => {
-            return floor
-          })
+              return floor
+            })
           : undefined
 
       let contentHtml: CommentData['contentHtml'] = undefined
