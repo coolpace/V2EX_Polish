@@ -25,6 +25,7 @@ export const HOSTS = [
 type Manifest = chrome.runtime.ManifestV3
 
 const generateManifest = (): Manifest => {
+  // 生成匹配规则，如果不指定后缀，则匹配所有域名。
   const getMatches = (surrfix?: string) =>
     HOSTS.map((host) => `https://${host}${surrfix ? `/${surrfix}` : ''}/*`)
 
@@ -41,7 +42,7 @@ const generateManifest = (): Manifest => {
 
     name: 'V2EX Polish',
 
-    version: '2.1.0', // <- 在发布前，需要手动修改版本。
+    version: '2.1.1', // <- 在发布前，需要手动修改版本。
 
     description: '专为 V2EX 用户设计，提供了丰富的扩展功能。',
 
@@ -68,6 +69,7 @@ const generateManifest = (): Manifest => {
           'css/v2ex-theme-mobile.css',
         ],
         run_at: 'document_start',
+        // 内容脚本会注入到页面的主框架和所有子框架（iframes）中，这意味着扩展的功能可以在页面的所有框架中运行。
         all_frames: true,
       },
       {
@@ -103,22 +105,27 @@ const generateManifest = (): Manifest => {
       {
         matches: writeMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-write.min.js'],
+        all_frames: true,
       },
       {
         matches: memberMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-member.min.js'],
+        all_frames: true,
       },
       {
         matches: settingsMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-settings.min.js'],
+        all_frames: true,
       },
       {
         matches: notificationsMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-notifications.min.js'],
+        all_frames: true,
       },
       {
         matches: nodeMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-go.min.js'],
+        all_frames: true,
       },
 
       {
