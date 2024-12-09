@@ -22,6 +22,7 @@ body {
   }
 
   #Logo.v2p-logo {
+    flex-shrink: 0;
     width: unset;
     height: 25px;
     padding: 0 8px;

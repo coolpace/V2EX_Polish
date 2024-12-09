@@ -135,7 +135,7 @@ body {
   #Main {
     flex: 1;
     order: 2;
-    max-width: 85vw;
+    max-width: clamp(400px, 92vw, 1200px);
     margin: 0;
   }
 

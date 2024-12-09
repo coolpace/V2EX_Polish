@@ -1,6 +1,6 @@
 import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
-import { $commentTableRows, $replyBox, $topicHeader } from '../globals'
+import { $body, $commentTableRows, $replyBox, $topicHeader } from '../globals'
 import { loadIcons } from '../helpers'
 import { handleComments } from './comment'
 import { handleContent } from './content'
@@ -12,6 +12,12 @@ import { handleTools } from './tool'
 void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
+
+  // 减少内容区的最小宽度，适配小屏预览的情况。
+  {
+    $body.css('min-width', '450px')
+    $('.content').css('min-width', '450px')
+  }
 
   handleLayout()
 
