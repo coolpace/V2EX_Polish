@@ -13,6 +13,15 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
+  const searchParams = new URLSearchParams(window.location.search)
+
+  const isPreview = searchParams.get('v2p-preview') === '1'
+
+  if (isPreview) {
+    $('#Top').hide()
+    $('#Bottom').hide()
+  }
+
   // 减少内容区的最小宽度，适配小屏预览的情况。
   {
     $body.css('min-width', '450px')
