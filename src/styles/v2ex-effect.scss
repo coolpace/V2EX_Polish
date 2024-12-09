@@ -117,6 +117,7 @@ body {
       background-color: var(--v2p-color-bg-content);
       border: 1px solid var(--v2p-color-border);
       border-radius: 10px;
+      box-shadow: var(--v2p-widget-shadow);
 
       &.v2p-layout-rightbar-visible {
         display: block;
