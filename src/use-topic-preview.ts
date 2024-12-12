@@ -72,7 +72,7 @@ export function useTopicPreview() {
   })
 
   interface HandlePreviewParams {
-    /** ���题 ID。不传则不会加载主题。 */
+    /** 主题 ID。不传则不会加载主题。 */
     topicId?: string
     /** 主题标题。不传则在加载时不显示标题。 */
     topicTitle?: string
