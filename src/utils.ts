@@ -1,7 +1,7 @@
 import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
 import type { SettingsSyncInfo, StorageItems, StorageSettings } from './types'
 
-// 动态获取 V2EX 的域名，防止跨域。
+/** 动态获取 V2EX 的域名，防止跨域。 */
 export const V2EX_ORIGIN =
   typeof window !== 'undefined' && window.location.origin.includes('v2ex.com')
     ? window.location.origin
@@ -191,7 +191,9 @@ export function sleep(ms: number) {
 const mark = `${EXTENSION_NAME}_settings`
 
 /**
- * 获取存储的个人配置备份。
+ * 获取持久化存储的个人配置备份。
+ *
+ * 目前是存储在 V2EX 的记事本中。
  */
 export async function getV2P_Settings(): Promise<
   { noteId: string; config: StorageSettings } | undefined
@@ -290,6 +292,14 @@ export async function setV2P_Settings(
 
 /**
  * 获取用户存储的应用数据。
+ *
+ * @description
+ * 该方法会按以下顺序获取数据：
+ * 1. 如果启用缓存且存在缓存数据，直接返回缓存
+ * 2. 如果不在浏览器扩展环境中，返回默认配置
+ * 3. 如果在浏览器扩展环境中，从 chrome.storage.sync 获取数据
+ *
+ * @param useCache - 是否使用缓存数据，默认为 true
  */
 export function getStorage(useCache = true): Promise<StorageSettings> {
   return new Promise((resolve, reject) => {

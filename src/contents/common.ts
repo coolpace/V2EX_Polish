@@ -83,6 +83,7 @@ void (async () => {
     void setStorage(StorageKey.Options, deepMerge(options, { theme: newTheme }))
   })
 
+  /** 用户从浏览器扩展中同步的配置信息（不是远程备份）。 */
   const syncInfo = storage[StorageKey.SyncInfo]
 
   // 当发现远程的配置有更新时，自动同步到本地。
@@ -97,21 +98,23 @@ void (async () => {
       // Warning: 不能在登录页请求 getV2P_Settings 接口，否则会导致无法成功跳转页面。
       if (!isSignInPage) {
         void getV2P_Settings().then(async (res) => {
+          /** 远程备份的配置信息。 */
           const settings = res?.config
           const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
 
           if (settings && remoteSyncInfo) {
-            if (syncInfo.version < remoteSyncInfo.version || neverChecked) {
-              await chrome.storage.sync.set(
-                deepMerge(storage, {
-                  ...settings,
-                  [StorageKey.SyncInfo]: {
-                    ...settings[StorageKey.SyncInfo],
-                    lastCheckTime: Date.now(),
-                  },
-                })
-              )
-            }
+            // HACK: 因为无法读取正确的 `syncInfo`，导致无法正确同步配置，所以暂时关闭此功能。
+            // if (syncInfo.version < remoteSyncInfo.version || neverChecked) {
+            //   await chrome.storage.sync.set(
+            //     deepMerge(storage, {
+            //       ...settings,
+            //       [StorageKey.SyncInfo]: {
+            //         ...remoteSyncInfo,
+            //         lastCheckTime: Date.now(),
+            //       },
+            //     })
+            //   )
+            // }
           }
         })
       }
