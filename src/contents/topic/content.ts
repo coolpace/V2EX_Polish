@@ -17,47 +17,49 @@ import { getTagsText, loadIcons, setMemberTags } from '../helpers'
 /**
  * 对主题内容中过高的图片进行折叠处理。
  */
-function handleTopicImgHeight() {
-  const $topicContentImgs = $topicContentBox.find('.topic_content .embedded_image')
+function handleTopicImgHeight(autoFold?: boolean) {
+  if (autoFold) {
+    const $topicContentImgs = $topicContentBox.find('.topic_content .embedded_image')
 
-  $topicContentImgs.each((_, img) => {
-    const $img = $(img)
+    $topicContentImgs.each((_, img) => {
+      const $img = $(img)
 
-    const height = $img.height() ?? 0
-    const shouldWrap = height > 600
+      const height = $img.height() ?? 0
+      const shouldWrap = height > 600
 
-    if (shouldWrap) {
-      const collapsedCSS = {
-        maxHeight: `${READABLE_CONTENT_HEIGHT}px`,
-        overflow: 'hidden',
-        paddingBottom: '0',
-        '--bg-reply': 'var(--v2p-color-bg-content)',
+      if (shouldWrap) {
+        const collapsedCSS = {
+          maxHeight: `${READABLE_CONTENT_HEIGHT}px`,
+          overflow: 'hidden',
+          paddingBottom: '0',
+          '--bg-reply': 'var(--v2p-color-bg-content)',
+        }
+
+        const $contentBox = $('<div class="v2p-reply-content v2p-collapsed">').css(collapsedCSS)
+
+        const $expandBtn = createButton({ children: '展开图片', className: 'v2p-expand-btn' })
+
+        const toggleContent = () => {
+          const collapsed = $contentBox.hasClass('v2p-collapsed')
+
+          $contentBox
+            .toggleClass('v2p-collapsed')
+            .css(
+              collapsed
+                ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' }
+                : collapsedCSS
+            )
+          $expandBtn.html(collapsed ? '收起图片' : '展开图片')
+        }
+
+        $expandBtn.on('click', () => {
+          toggleContent()
+        })
+
+        $contentBox.append($img.clone()).replaceAll($img).append($expandBtn)
       }
-
-      const $contentBox = $('<div class="v2p-reply-content v2p-collapsed">').css(collapsedCSS)
-
-      const $expandBtn = createButton({ children: '展开图片', className: 'v2p-expand-btn' })
-
-      const toggleContent = () => {
-        const collapsed = $contentBox.hasClass('v2p-collapsed')
-
-        $contentBox
-          .toggleClass('v2p-collapsed')
-          .css(
-            collapsed
-              ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' }
-              : collapsedCSS
-          )
-        $expandBtn.html(collapsed ? '收起图片' : '展开图片')
-      }
-
-      $expandBtn.on('click', () => {
-        toggleContent()
-      })
-
-      $contentBox.append($img.clone()).replaceAll($img).append($expandBtn)
-    }
-  })
+    })
+  }
 }
 
 /**
@@ -145,7 +147,7 @@ export function handleContent() {
   }
 
   window.requestIdleCallback(() => {
-    handleTopicImgHeight()
+    handleTopicImgHeight(options.replyContent.autoFold)
   })
 }
 
