@@ -112,7 +112,10 @@ export function useTopicPreview() {
           previewFrame.prop('src', 'about:blank')
         }
 
-        modal.$content.append(previewFrame)
+        const $wrapper = $('<div class="v2p-topic-preview-wrapper">')
+        $wrapper.append(previewFrame)
+
+        modal.$content.append($wrapper)
       } else {
         if (PAT) {
           const load = async () => {
