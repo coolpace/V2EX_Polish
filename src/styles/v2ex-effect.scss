@@ -121,6 +121,11 @@ body {
 
       &.v2p-layout-rightbar-visible {
         display: block;
+
+        .box {
+          background-color: var(--v2p-color-background);
+          box-shadow: none;
+        }
       }
     }
   }
