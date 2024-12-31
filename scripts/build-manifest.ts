@@ -26,8 +26,14 @@ type Manifest = chrome.runtime.ManifestV3
 
 const generateManifest = (): Manifest => {
   // 生成匹配规则，如果不指定后缀，则匹配所有域名。
-  const getMatches = (surrfix?: string) =>
-    HOSTS.map((host) => `https://${host}${surrfix ? `/${surrfix}` : ''}/*`)
+  const getMatches = (suffix?: string) => {
+    return HOSTS.map((host) => {
+      const base = `https://${host}`
+      const path = suffix ? `/${suffix}` : ''
+
+      return `${base}${path}/*`
+    })
+  }
 
   const matches = getMatches()
   const topicMatches = getMatches('t')
