@@ -26,6 +26,7 @@ function handleTopicImgHeight(autoFold?: boolean) {
 
       const height = $img.height() ?? 0
       const shouldWrap = height > 600
+      console.log(height)
 
       if (shouldWrap) {
         const collapsedCSS = {
@@ -52,11 +53,15 @@ function handleTopicImgHeight(autoFold?: boolean) {
           $expandBtn.html(collapsed ? '收起图片' : '展开图片')
         }
 
-        $expandBtn.on('click', () => {
+        $expandBtn.on('click', (ev) => {
+          ev.preventDefault()
           toggleContent()
         })
 
-        $contentBox.append($img.clone()).replaceAll($img).append($expandBtn)
+        const $imgWrapper = $img.parent()
+        const $clonedWrapper = $imgWrapper.clone()
+
+        $contentBox.append($clonedWrapper).replaceAll($imgWrapper).append($expandBtn)
       }
     })
   }
@@ -189,7 +194,8 @@ export function processReplyContent($cellDom: JQuery) {
       $expandBtn.html(collapsed ? '收起回复' : '展开回复')
     }
 
-    $expandBtn.on('click', () => {
+    $expandBtn.on('click', (ev) => {
+      ev.preventDefault()
       toggleContent()
     })
 
