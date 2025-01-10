@@ -394,7 +394,7 @@ export function handleLinkPreview() {
       const match = linkHref?.match(/\/t\/(\d+)/)
       const topicId = match?.at(1)
 
-      handlePreview({ topicId, linkHref })
+      handlePreview({ topicId, topicTitle: $link.text(), linkHref })
     })
 
     const $previewBtnInLink = $link.find('.v2p-link-preview-btn')
