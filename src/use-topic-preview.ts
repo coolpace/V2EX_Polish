@@ -104,7 +104,9 @@ export function useTopicPreview() {
         const previewFrame = $('<iframe class="v2p-topic-preview-frame">')
 
         try {
-          const urlPath = new URL(linkHref).pathname + new URL(linkHref).search
+          const urlPath = linkHref.startsWith('http')
+            ? new URL(linkHref).pathname + new URL(linkHref).search
+            : linkHref
           const url = new URL(urlPath, window.location.origin)
           url.searchParams.append('v2p-preview', '1')
           previewFrame.prop('src', url.toString())
