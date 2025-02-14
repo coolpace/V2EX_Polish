@@ -21,7 +21,7 @@ const invalidTemplate = (tip: string) => `
 
   <div class="v2p-no-pat-steps">
     <div class="v2p-no-pat-step">
-      <div style="font-weight:bold;margin-bottom:10px;font-size:15px;">1. ���扩展程序列表中找到并点击「V2EX Polish」。</div>
+      <div style="font-weight:bold;margin-bottom:10px;font-size:15px;">1. 在扩展程序列表中找到并点击「V2EX Polish」。</div>
       <img class="v2p-no-pat-img" src="https://i.imgur.com/UfNkuTF.png">
     </div>
     <div class="v2p-no-pat-step">
@@ -104,7 +104,8 @@ export function useTopicPreview() {
         const previewFrame = $('<iframe class="v2p-topic-preview-frame">')
 
         try {
-          const url = new URL(linkHref, window.location.origin)
+          const urlPath = new URL(linkHref).pathname + new URL(linkHref).search
+          const url = new URL(urlPath, window.location.origin)
           url.searchParams.append('v2p-preview', '1')
           previewFrame.prop('src', url.toString())
         } catch (error) {
