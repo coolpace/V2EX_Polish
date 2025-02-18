@@ -82,6 +82,7 @@
     --v2p-color-bg-block-darker: var(--v2p-color-main-300);
     --v2p-color-bg-link: var(--v2p-color-main-100);
     --v2p-color-bg-link-hover: var(--v2p-color-main-200);
+    --v2p-color-bg-error: #fee2e2;
     // ---- 背景 ----
 
     --v2p-color-tabs: var(--v2p-color-foreground);
@@ -95,8 +96,8 @@
     --v2p-color-border-darker: var(--v2p-color-main-300);
     --v2p-color-link-visited: var(--v2p-color-main-400);
     --v2p-color-error: #ef4444;
-    --v2p-color-bg-error: #fee2e2;
     --v2p-color-cell-num: var(--v2p-color-main-350);
+    --v2p-color-badge: var(--v2p-color-bg-content);
 
     // ==== 阴影 ====
     --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);

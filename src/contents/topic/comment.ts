@@ -29,6 +29,25 @@ import {
 import { memberDataCache, processAvatar } from './avatar'
 import { handleLinkPreview, handleTopicImg, processReplyContent, updateMemberTag } from './content'
 
+/**
+ * 生成回复引用的 HTML 模板
+ */
+function generateReplyRefHTML(replyMember: CommentData) {
+  return `
+    <div class="v2p-topic-reply-ref">
+      <div class="v2p-topic-reply">
+        <div class="v2p-topic-reply-member">
+          <a href="${replyMember.memberLink}" target="_blank">
+            <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
+            <span>${replyMember.memberName}</span>
+          </a>：
+        </div>
+        <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
+      </div>
+    </div>
+  `
+}
+
 /** 每一页的回复列表数据 */
 let commentDataList: readonly CommentData[] = []
 
@@ -81,21 +100,7 @@ function handleFilteredComments() {
               )
 
               if (replyMember) {
-                $clonedCell.prepend(
-                  $(`
-                    <div class="v2p-topic-reply-ref">
-                      <div class="v2p-topic-reply">
-                        <div class="v2p-topic-reply-member">
-                          <a href="${replyMember.memberLink}" target="_blank">
-                            <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
-                            <span>${replyMember.memberName}</span>
-                          </a>：
-                        </div>
-                        <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
-                      </div>
-                    </div>
-                  `)
-                )
+                $clonedCell.prepend(generateReplyRefHTML(replyMember))
               }
             }
 
@@ -108,7 +113,7 @@ function handleFilteredComments() {
         $content.append($t1)
       }
 
-      // MARK: 最近回复：
+      // MARK: 最新回复：
       {
         const len = commentDataList.length
         const displayNum =
@@ -145,21 +150,7 @@ function handleFilteredComments() {
               )
 
               if (replyMember) {
-                $clonedCell.prepend(
-                  $(`
-                    <div class="v2p-topic-reply-ref">
-                      <div class="v2p-topic-reply">
-                        <div class="v2p-topic-reply-member">
-                          <a href="${replyMember.memberLink}" target="_blank">
-                            <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
-                            <span>${replyMember.memberName}</span>
-                          </a>：
-                        </div>
-                        <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
-                      </div>
-                    </div>
-                  `)
-                )
+                $clonedCell.prepend(generateReplyRefHTML(replyMember))
               }
             }
 
@@ -195,21 +186,7 @@ function handleFilteredComments() {
               )
 
               if (replyMember) {
-                $clonedCell.prepend(
-                  $(`
-                    <div class="v2p-topic-reply-ref">
-                      <div class="v2p-topic-reply">
-                        <div class="v2p-topic-reply-member">
-                          <a href="${replyMember.memberLink}" target="_blank">
-                            <img class="v2p-topic-reply-avatar" src="${replyMember.memberAvatar}">
-                            <span>${replyMember.memberName}</span>
-                          </a>：
-                        </div>
-                        <div class="v2p-topic-reply-content">${escapeHTML(replyMember.content)}</div>
-                      </div>
-                    </div>
-                  `)
-                )
+                $clonedCell.prepend(generateReplyRefHTML(replyMember))
               }
             }
 
@@ -225,7 +202,7 @@ function handleFilteredComments() {
       const $tabs = $(`
         <div class="v2p-modal-comment-tabs">
           <div data-tab-key="hot" class="v2p-tab-active">热门回复</div>
-          <div data-tab-key="recent">最近回复</div>
+          <div data-tab-key="recent">最新回复</div>
           <div data-tab-key="op">题主回复</div>
         </div>
       `)
