@@ -593,6 +593,8 @@ a.v2p-topic-preview-title-link {
 }
 
 .v2p-controls {
+  position: relative;
+  z-index: var(--zidx-tip);
   display: inline-flex;
   column-gap: 15px;
   align-items: center;
