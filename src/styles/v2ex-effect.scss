@@ -593,8 +593,6 @@ a.v2p-topic-preview-title-link {
 }
 
 .v2p-controls {
-  position: relative;
-  z-index: var(--zidx-tip);
   display: inline-flex;
   column-gap: 15px;
   align-items: center;
@@ -609,6 +607,7 @@ a.v2p-topic-preview-title-link {
   @at-root {
     .v2p-control {
       position: relative;
+      z-index: var(--zidx-popup);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -621,6 +620,7 @@ a.v2p-topic-preview-title-link {
         @include share.tooltip;
 
         position: absolute;
+        z-index: var(--zidx-tip);
         top: -8px;
         transform: translateY(-100%);
         opacity: 0;

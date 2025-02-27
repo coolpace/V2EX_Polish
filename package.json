@@ -49,5 +49,6 @@
     "tsup": "^8.3.0",
     "typescript": "^5.5.4",
     "web-ext": "^8.3.0"
-  }
+  },
+  "packageManager": "pnpm@9.15.3"
 }
