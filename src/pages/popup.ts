@@ -30,7 +30,7 @@ import {
   fetchNotifications,
   getUnreadMessagesCount,
 } from '../services'
-import type { Topic } from '../types'
+import type { Notification, Topic } from '../types'
 import {
   deepMerge,
   formatTimestamp,
@@ -434,68 +434,78 @@ function initTabs() {
 
         $tabContent.html(loading)
 
-        fetchNotifications()
-          .then(({ result: notifications }) => {
-            if (notifications.length > 0) {
-              const $noticeList = $('<ul class="list">').append(
-                notifications
-                  .map((notice) => {
-                    return `
-                    <li class="notice-item">
-                      <div class="notice">
-                        ${notice.text}
-                      </div>
-                      ${notice.payload ? `<div class="payload">${notice.payload}</div>` : ''}
-                    </li>
-                    `
-                  })
-                  .join('')
-              )
+        let notifications: Notification[] = []
 
-              $noticeList.find('.notice-item .notice > a').each((_, a) => {
-                const link = $(a)
-                link
-                  .prop('target', '_blank')
-                  .prop('href', `${V2EX.Origin}${link.attr('href') ?? ''}`)
-              })
+        try {
+          const { result } = await fetchNotifications()
+          notifications = result
+        } catch {
+          $tabContent.html(errorDisplay)
+        }
 
-              const iconAtSign = createElement(AtSign)
-              iconAtSign.setAttribute('width', '100%')
-              iconAtSign.setAttribute('height', '100%')
+        if (notifications.length > 0) {
+          try {
+            const $noticeList = $('<ul class="list">').append(
+              notifications
+                .map((notice) => {
+                  return `
+                  <li class="notice-item">
+                    <div class="notice">
+                      ${notice.text}
+                    </div>
+                    ${notice.payload ? `<div class="payload">${notice.payload}</div>` : ''}
+                  </li>
+                  `
+                })
+                .join('')
+            )
 
-              const $checkMsgBtn = $(`
+            // 为每个通知添加点击事件，点击后打开对应的主题链接。
+            $noticeList.find('.notice-item .notice > a').each((_, a) => {
+              const link = $(a)
+              link.prop('target', '_blank').prop('href', `${V2EX.Origin}${link.attr('href') ?? ''}`)
+            })
+
+            const iconAtSign = createElement(AtSign)
+            iconAtSign.setAttribute('width', '100%')
+            iconAtSign.setAttribute('height', '100%')
+
+            const $checkMsgBtn = $(`
               <a class="action-btn" href="${V2EX.Origin}/notifications" target="_blank">
                 <span class="action-icon"></span>
                 查看所有消息
               </a>
-              `)
-              $checkMsgBtn.find('.action-icon').append(iconAtSign)
+            `)
+            $checkMsgBtn.find('.action-icon').append(iconAtSign)
 
-              $checkMsgBtn.on('click', () => {
-                // 当在 Popup 中主动点击查看消息时，应该重置未读数量。
-                const storeInfo: LastFetchUnreadMsgInfoInfo = { time: Date.now(), count: 0 }
-                window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
-                $tabMsg.text('消息')
-              })
+            $checkMsgBtn.on('click', () => {
+              // 当在 Popup 中主动点击查看消息时，应该重置未读数量。
+              const storeInfo: LastFetchUnreadMsgInfoInfo = { time: Date.now(), count: 0 }
+              window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
+              $tabMsg.text('消息')
+            })
 
-              const $tabHeader = $(`
+            const $tabHeader = $(`
               <div class="tab-header">
                 <div class="message-actions"></div>
                 <hr />
               </div>
-             `)
-              $tabHeader.find('.message-actions').append($checkMsgBtn)
+           `)
+            $tabHeader.find('.message-actions').append($checkMsgBtn)
 
-              replaceEmojiWithHD($noticeList.find('.notice-item .embedded_image'))
+            replaceEmojiWithHD($noticeList.find('.notice-item .embedded_image'))
 
-              $tabContent.empty().append($tabHeader).append($noticeList)
-            } else {
-              $tabContent.empty().append('<div class="tip">无任何消息</div>')
-            }
-          })
-          .catch(() => {
-            $tabContent.html(errorDisplay)
-          })
+            $tabContent.empty().append($tabHeader).append($noticeList)
+          } catch {
+            $tabContent.html(`
+              <div class="fetch-error">
+                消息列表渲染出错。
+              </div>
+            `)
+          }
+        } else {
+          $tabContent.empty().append('<div class="tip">无任何消息</div>')
+        }
       } else {
         const $tipBtn = createButton({ children: '去设置' }).on('click', () => {
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
