@@ -99,6 +99,9 @@
       0 9px 28px 8px rgb(0 0 0 / 5%);
     // ---- 阴影 ----
 
+    // 滚动条
+    --v2p-scrollbar-background-color: #fcfcfc;
+
     // V2EX 原有的 CSS 变量：
     --color-fade: var(--v2p-color-font-secondary);
     --color-gray: var(--v2p-color-font-secondary);
