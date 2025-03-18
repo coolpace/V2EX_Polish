@@ -388,6 +388,8 @@ export const enum Links {
   Share = 'https://v2p.leoku.dev/share',
   /** 赞赏支持页 */
   Support = 'https://v2p.leoku.dev/support',
+  /** 个人主页 */
+  Portfolio = 'https://leoku.dev',
 }
 
 /** 当内容被折叠时，用户可阅读内容的最大高度。 */

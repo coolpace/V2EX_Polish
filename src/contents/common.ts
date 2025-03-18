@@ -208,7 +208,7 @@ void (async () => {
       <div class="v2p-footer-text">扩展自 V2EX Polish </div>
 
       <div class="v2p-footer-links">
-        <a class="v2p-footer-link v2p-hover-btn" href="${Links.Home}" target="_blank">插件官网</a>
+        <a class="v2p-footer-link v2p-hover-btn" href="${Links.Portfolio}#contact" target="_blank">商务联系</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Feedback}" target="_blank">问题反馈</a>
         <a class="v2p-footer-link v2p-hover-btn" href="${Links.Support}" target="_blank">赞赏支持</a>
         <a class="v2p-footer-link v2p-hover-btn v2p-optbtn" href="javascript:void(0);">选项设置</a>
