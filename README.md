@@ -189,4 +189,4 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 [Link CWS]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm
 [Link CWS Search V2EX]: https://chromewebstore.google.com/search/V2EX?hl=zh-CN
 [Link CWS Rating]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews?hl=zh-CN
-[Link Donation]: https://www.v2p.app/support
+[Link Donation]: https://v2p.leoku.dev/support

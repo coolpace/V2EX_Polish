@@ -381,13 +381,13 @@ export const emoticons = [
 /** 关于扩展的超链接 */
 export const enum Links {
   /** 官网主页 */
-  Home = 'https://v2p.app',
+  Home = 'https://v2p.leoku.dev',
   /** 问题反馈页 */
   Feedback = 'https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new',
   /** 主题图片分享页 */
-  Share = 'https://v2p.app/share',
+  Share = 'https://v2p.leoku.dev/share',
   /** 赞赏支持页 */
-  Support = 'https://v2p.app/support',
+  Support = 'https://v2p.leoku.dev/support',
 }
 
 /** 当内容被折叠时，用户可阅读内容的最大高度。 */

@@ -167,7 +167,7 @@ void (async () => {
 
   if (options.hideAccount) {
     const faviconLink = $("link[rel~='icon']")
-    faviconLink.prop('href', 'https://v2p.app/favicon.svg')
+    faviconLink.prop('href', `${Links.Home}/favicon.svg`)
 
     $('#Logo').append(`<i data-lucide="house"></i>`).addClass('v2p-logo')
     $('#Top').find('a[href^="/member/"]').remove()
