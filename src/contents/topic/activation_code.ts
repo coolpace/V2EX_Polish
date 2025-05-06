@@ -1,7 +1,7 @@
 import { StorageKey } from '../../constants'
 import { getStorageSync } from '../../utils'
 import { getCommentDataList } from '../dom'
-import { $commentCells, $commentTableRows, $topicContentBox } from '../globals'
+import { $commentCells, $commentTableRows, $topicContentBox, $topicHeader } from '../globals'
 
 /**
  * 激活码的正则表达式模式
@@ -12,6 +12,8 @@ const ACTIVATION_CODE_PATTERNS = [
   // 由字母、数字和连字符组成的字符串，长度至少为8
   /[A-Za-z0-9-]{8,}/g,
 ]
+
+const ACTIVATION_CODES_KEY = 'v2p_used_activation_codes'
 
 /**
  * 判断字符串是否可能是激活码
@@ -87,7 +89,7 @@ function extractActivationCodes(text: string): string[] {
     }
   })
 
-  return [...new Set(codes), '24080365-0002-6385-74c5-220e996125ee', '24090060-0644-c71e-f9f8-2c76104bf620'] // 去重
+  return [...new Set(codes)] // 去重
 }
 
 /**
@@ -189,20 +191,74 @@ function processElementWithCodes($element: JQuery, usedCodes: string[]): void {
 }
 
 /**
+ * 检查帖子标题是否包含激活码相关关键字
+ */
+function isTitleContainsActivationCodeKeywords(): boolean {
+  const title = $topicHeader.find('h1').text().toLowerCase()
+  const keywords = ['送码', '激活码', '注册码', 'key', 'code', '兑换码', '序列号']
+  return keywords.some((keyword) => title.includes(keyword))
+}
+
+/**
+ * 从sessionStorage获取已保存的激活码
+ */
+function getSavedActivationCodes(): string[] {
+  try {
+    const savedCodes = sessionStorage.getItem(ACTIVATION_CODES_KEY)
+    if (!savedCodes) {
+      return []
+    }
+
+    const parsedCodes = JSON.parse(savedCodes) as unknown
+    // 验证解析出的数据是否为字符串数组
+    if (Array.isArray(parsedCodes) && parsedCodes.every((code) => typeof code === 'string')) {
+      return parsedCodes
+    }
+    return []
+  } catch (error) {
+    console.error('获取保存的激活码失败:', error)
+    return []
+  }
+}
+
+/**
+ * 保存激活码到sessionStorage
+ */
+function saveActivationCodes(codes: string[]): void {
+  try {
+    // 去重后保存
+    const uniqueCodes = [...new Set(codes)]
+    sessionStorage.setItem(ACTIVATION_CODES_KEY, JSON.stringify(uniqueCodes))
+  } catch (error) {
+    console.error('保存激活码失败:', error)
+  }
+}
+
+/**
  * 处理帖子内容中的激活码
  */
 export function handleActivationCodes(): void {
+  // 检查帖子标题是否包含激活码相关关键字
+  if (!isTitleContainsActivationCodeKeywords()) {
+    return // 不包含激活码相关关键字，不需要处理
+  }
 
   // 从评论中提取已使用的激活码
-  const usedCodes = extractCodesFromComments()
+  const currentPageCodes = extractCodesFromComments()
+  // 合并当前页面提取的激活码和之前保存的激活码
+  const savedCodes = getSavedActivationCodes()
+  const allUsedCodes = [...savedCodes, ...currentPageCodes]
 
-  if (usedCodes.length === 0) {
+  if (allUsedCodes.length === 0) {
     return // 没有找到已使用的激活码，不需要处理
   }
+
+  // 保存合并后的激活码，供翻页后使用
+  saveActivationCodes(allUsedCodes)
 
   // 处理主题内容中的激活码
   const $topicContents = $topicContentBox.find('.topic_content')
   $topicContents.each((_, content) => {
-    processElementWithCodes($(content), usedCodes)
+    processElementWithCodes($(content), allUsedCodes)
   })
 }
