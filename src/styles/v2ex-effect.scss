@@ -836,25 +836,24 @@ a.v2p-topic-preview-title-link {
 
 // 激活码样式
 .v2p-used-code {
-  text-decoration: line-through;
-  color: #999;
-  background-color: rgba(255, 0, 0, 0.05);
-  padding: 0 2px;
-  border-radius: 2px;
   position: relative;
+  padding: 0 2px;
+  text-decoration: line-through;
+  background-color: var(--v2p-color-heart-fill);
+  border-radius: 2px;
 
   &:hover::after {
-    content: "已使用";
+    content: '已使用';
     position: absolute;
+    z-index: 100;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
     padding: 2px 6px;
-    border-radius: 3px;
     font-size: 12px;
+    color: var(--v2p-color-main-50);
     white-space: nowrap;
-    z-index: 100;
+    background-color: var(--v2p-color-mask);
+    border-radius: 3px;
   }
 }
 
