@@ -238,6 +238,15 @@ function saveActivationCodes(codes: string[]): void {
  * 处理帖子内容中的激活码
  */
 export function handleActivationCodes(): void {
+  // 获取当前页面的选项
+  const storage = getStorageSync()
+  const options = storage[StorageKey.Options]
+
+  // 检查是否启用了激活码划线功能
+  if (!options.activationCode.enabled) {
+    return // 未启用，不执行后续逻辑
+  }
+
   // 检查帖子标题是否包含激活码相关关键字
   if (!isTitleContainsActivationCodeKeywords()) {
     return // 不包含激活码相关关键字，不需要处理

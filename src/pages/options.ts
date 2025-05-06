@@ -97,6 +97,9 @@ async function saveOptions() {
       display: $('input[name="userTag.display"]:checked').prop('value'),
     },
     hideAccount: $('#hideAccount').prop('checked'),
+    activationCode: {
+      enabled: $('#activationCodeEnabled').prop('checked'),
+    },
   }
 
   await setStorage(StorageKey.Options, currentOptions)
@@ -180,6 +183,7 @@ void (async function init() {
     $('#replyLayoutAuto').prop('checked', options.reply.layout === 'auto')
     $('#replyLayoutHorizontal').prop('checked', options.reply.layout === 'horizontal')
     $('#hideAccount').prop('checked', options.hideAccount === true)
+    $('#activationCodeEnabled').prop('checked', options.activationCode.enabled)
 
     $('input[type]').on('change', () => {
       void saveOptions()

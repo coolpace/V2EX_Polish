@@ -71,6 +71,11 @@ export interface Options {
   }
   /** 隐藏账号信息。 */
   hideAccount?: boolean
+  /** 激活码处理设置。 */
+  activationCode: {
+    /** 是否启用激活码划线功能。 */
+    enabled: boolean
+  }
 }
 
 export interface API_Info {
