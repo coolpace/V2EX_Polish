@@ -834,6 +834,30 @@ a.v2p-topic-preview-title-link {
   border-radius: 5px;
 }
 
+// 激活码样式
+.v2p-used-code {
+  text-decoration: line-through;
+  color: #999;
+  background-color: rgba(255, 0, 0, 0.05);
+  padding: 0 2px;
+  border-radius: 2px;
+  position: relative;
+
+  &:hover::after {
+    content: "已使用";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 100;
+  }
+}
+
 .v2p-topic-reply-box {
   margin-top: 50px;
   padding: 30px 0;
