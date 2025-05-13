@@ -195,7 +195,7 @@ function processElementWithCodes($element: JQuery, usedCodes: string[]): void {
  */
 function isTitleContainsActivationCodeKeywords(): boolean {
   const title = $topicHeader.find('h1').text().toLowerCase()
-  const keywords = ['送码', '激活码', '注册码', 'key', 'code', '兑换码', '序列号']
+  const keywords = ['送码', '激活码', '注册码', 'key', 'code', '兑换码', '序列号', '促销码']
   return keywords.some((keyword) => title.includes(keyword))
 }
 
