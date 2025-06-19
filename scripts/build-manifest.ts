@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * V2EX Polish 扩展 Manifest 构建脚本
  *
@@ -5,15 +6,27 @@
  * 1. 自动生成适用于 Chrome 和 Firefox 的 manifest.json 文件
  * 2. 统一管理扩展的配置信息，避免手动维护多个配置文件
  * 3. 根据不同浏览器的特性自动调整配置项
+ * 4. 支持选择主要目标浏览器
+ *
+ * 使用方法：
+ * - 默认（Chrome 为主）：bun scripts/build-manifest.ts
+ * - Chrome 为主：bun scripts/build-manifest.ts --target chrome
+ * - Firefox 为主：bun scripts/build-manifest.ts --target firefox
+ * - 显示帮助：bun scripts/build-manifest.ts --help
+ *
+ * 生成的文件（Chrome 为主）：
+ * - extension/manifest.json (Chrome 版本)
+ * - extension/manifest-firefox.json (Firefox 版本)
+ *
+ * 生成的文件（Firefox 为主）：
+ * - extension/manifest.json (Firefox 版本)
+ * - extension/manifest-chrome.json (Chrome 版本)
  *
  * 解决的问题：
  * - Chrome 和 Firefox 对 Manifest V3 的支持存在差异
  * - 手动维护多个 manifest 文件容易出错且效率低下
  * - 需要为多个 V2EX 域名生成匹配规则
- *
- * 生成的文件：
- * - extension/manifest.json (Chrome 版本)
- * - extension/manifest-firefox.json (Firefox 版本)
+ * - 支持灵活选择主要目标浏览器
  *
  * 主要差异处理：
  * - Firefox 不支持 sidePanel 权限，会自动过滤
@@ -49,6 +62,90 @@ export const HOSTS = [
 ]
 
 type Manifest = chrome.runtime.ManifestV3
+
+/**
+ * 支持的目标浏览器类型
+ */
+type TargetBrowser = 'chrome' | 'firefox'
+
+/**
+ * 命令行参数配置接口
+ */
+interface BuildOptions {
+  target: TargetBrowser // 主要目标浏览器
+  help?: boolean // 显示帮助信息
+}
+
+/**
+ * 解析命令行参数
+ *
+ * 支持的参数格式：
+ * - --target chrome
+ * - --target firefox
+ * - --help
+ */
+const parseArgs = (): BuildOptions => {
+  const args = process.argv.slice(2)
+  const options: BuildOptions = {
+    target: 'chrome', // 默认以 Chrome 为主
+  }
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i]
+
+    switch (arg) {
+      case '--target':
+      case '-t': {
+        const target = args[++i]
+        if (target === 'chrome' || target === 'firefox') {
+          options.target = target
+        } else {
+          console.error(`❌ 无效的目标浏览器: ${target}，支持的值: chrome, firefox`)
+          process.exit(1)
+        }
+        break
+      }
+      case '--help':
+      case '-h':
+        options.help = true
+        break
+      default:
+        if (arg.startsWith('--')) {
+          console.warn(`⚠️  未知参数: ${arg}`)
+        }
+        break
+    }
+  }
+
+  return options
+}
+
+/**
+ * 显示帮助信息
+ */
+const showHelp = () => {
+  console.log(`
+V2EX Polish Manifest 构建工具
+
+用法：
+  bun scripts/build-manifest.ts [选项]
+
+选项：
+  --target, -t <浏览器>    设置主要目标浏览器 (chrome | firefox)
+  --help, -h               显示此帮助信息
+
+目标浏览器：
+  chrome                   以 Chrome 为主要目标 (默认)
+                          生成: manifest.json (Chrome) + manifest-firefox.json
+  firefox                  以 Firefox 为主要目标
+                          生成: manifest.json (Firefox) + manifest-chrome.json
+
+示例：
+  bun scripts/build-manifest.ts                    # 默认，Chrome 为主
+  bun scripts/build-manifest.ts --target chrome    # Chrome 为主
+  bun scripts/build-manifest.ts --target firefox   # Firefox 为主
+`)
+}
 
 /**
  * 生成 Chrome 扩展的 Manifest V3 配置
@@ -227,68 +324,182 @@ const generateManifest = (): Manifest => {
   }
 }
 
-// 生成基础 manifest 配置
-const manifest = generateManifest()
-
-// 写入 Chrome 版本的 manifest.json
-fs.writeFile(path.join('extension', 'manifest.json'), JSON.stringify(manifest), 'utf8', (err) => {
-  if (err) {
-    console.error('生成 Chrome manifest.json 失败:', err)
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('✅ Chrome manifest.json 生成成功')
-  }
-})
-
-// 为 Firefox 创建特殊版本的 manifest
-const manifestFirefox: Manifest = JSON.parse(JSON.stringify(manifest))
-
 /**
- * Firefox 特殊配置处理
+ * 将 Chrome manifest 转换为 Firefox 兼容版本
  *
- * Firefox 对 Manifest V3 的支持与 Chrome 存在差异，需要特殊处理：
- * 1. 添加 browser_specific_settings.gecko.id（Firefox 扩展 ID）
- * 2. 移除不支持的 sidePanel 权限
- * 3. 将 background.service_worker 改为 background.scripts
+ * @param chromeManifest - Chrome 版本的 manifest
+ * @returns Firefox 兼容的 manifest
  */
-Object.assign(manifestFirefox, {
-  browser_specific_settings: {
-    gecko: {
-      id: 'leokudev@gmail.com', // Firefox 扩展唯一标识符
+const convertToFirefoxManifest = (chromeManifest: Manifest): Manifest => {
+  const firefoxManifest: Manifest = JSON.parse(JSON.stringify(chromeManifest))
+
+  // 添加 Firefox 特有配置
+  Object.assign(firefoxManifest, {
+    browser_specific_settings: {
+      gecko: {
+        id: 'leokudev@gmail.com', // Firefox 扩展唯一标识符
+      },
     },
-  },
-})
+  })
 
-// 移除 Firefox 不支持的 sidePanel 权限
-manifestFirefox.permissions = manifestFirefox.permissions?.filter(
-  (permission) => permission !== 'sidePanel'
-)
+  // 移除 Firefox 不支持的 sidePanel 权限
+  firefoxManifest.permissions = firefoxManifest.permissions?.filter(
+    (permission) => permission !== 'sidePanel'
+  )
 
-// 处理后台脚本配置差异
-if (manifestFirefox.background) {
-  const serviceWorker = manifestFirefox.background.service_worker
+  // 处理后台脚本配置差异
+  if (firefoxManifest.background) {
+    const serviceWorker = firefoxManifest.background.service_worker
 
-  // Firefox 使用 scripts 数组而非 service_worker
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  /** @ts-expect-error */
-  delete manifestFirefox.background.service_worker
+    // Firefox 使用 scripts 数组而非 service_worker
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    /** @ts-expect-error */
+    delete firefoxManifest.background.service_worker
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  /** @ts-expect-error */
-  manifestFirefox.background['scripts'] = [serviceWorker]
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    /** @ts-expect-error */
+    firefoxManifest.background['scripts'] = [serviceWorker]
+  }
+
+  return firefoxManifest
 }
 
-// 写入 Firefox 版本的 manifest.json
-fs.writeFile(
-  path.join('extension', 'manifest-firefox.json'),
-  JSON.stringify(manifestFirefox),
-  'utf8',
-  (err) => {
-    if (err) {
-      console.error('生成 Firefox manifest-firefox.json 失败:', err)
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('✅ Firefox manifest-firefox.json 生成成功')
-    }
+/**
+ * 写入文件的 Promise 版本
+ */
+const writeFileAsync = (filePath: string, content: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filePath, content, 'utf8', (err) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
+      }
+    })
+  })
+}
+
+/**
+ * 安全删除文件的 Promise 版本
+ *
+ * 先检查文件是否存在，存在则删除，不存在则直接返回
+ * 返回值表示是否真正删除了文件
+ */
+const deleteFileAsync = (filePath: string): Promise<boolean> => {
+  return new Promise((resolve) => {
+    // 先检查文件是否存在
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        // 文件不存在，返回 false
+        resolve(false)
+        return
+      }
+
+      // 文件存在，执行删除操作
+      fs.unlink(filePath, () => {
+        // 删除完成，返回 true
+        resolve(true)
+      })
+    })
+  })
+}
+
+/**
+ * 清理所有现有的 manifest 文件
+ *
+ * 删除 extension 目录下所有以 manifest 开头的 JSON 文件，
+ * 确保生成新文件前没有旧文件残留
+ * 只有文件真正存在并被删除时才会打印删除信息
+ */
+const cleanupManifestFiles = async (): Promise<void> => {
+  const extensionDir = path.join('extension')
+  const manifestFiles = ['manifest.json', 'manifest-chrome.json', 'manifest-firefox.json']
+
+  console.log('🧹 清理现有的 manifest 文件...')
+
+  const deleteResults = await Promise.all(
+    manifestFiles.map(async (filename) => {
+      const filePath = path.join(extensionDir, filename)
+      const wasDeleted = await deleteFileAsync(filePath)
+      return { filename, wasDeleted }
+    })
+  )
+
+  // 只打印真正被删除的文件
+  const deletedFiles = deleteResults.filter((result) => result.wasDeleted)
+  if (deletedFiles.length > 0) {
+    deletedFiles.forEach(({ filename }) => {
+      console.log(`   删除: ${filename}`)
+    })
+  } else {
+    console.log('   没有找到需要清理的文件')
   }
-)
+
+  console.log('✅ manifest 文件清理完成')
+}
+
+// 主程序执行
+const main = async () => {
+  const options = parseArgs()
+
+  // 显示帮助信息
+  if (options.help) {
+    showHelp()
+    return
+  }
+
+  // 输出构建信息
+  console.log('🚀 开始构建 V2EX Polish Manifest 文件...')
+  console.log(`🎯 主要目标浏览器: ${options.target}`)
+
+  try {
+    // 首先清理所有现有的 manifest 文件
+    await cleanupManifestFiles()
+
+    // 生成基础 Chrome manifest 配置
+    const chromeManifest = generateManifest()
+
+    // 生成 Firefox manifest 配置
+    const firefoxManifest = convertToFirefoxManifest(chromeManifest)
+
+    if (options.target === 'chrome') {
+      // Chrome 为主：manifest.json (Chrome) + manifest-firefox.json (Firefox)
+      await Promise.all([
+        writeFileAsync(
+          path.join('extension', 'manifest.json'),
+          JSON.stringify(chromeManifest, null, 2)
+        ),
+        writeFileAsync(
+          path.join('extension', 'manifest-firefox.json'),
+          JSON.stringify(firefoxManifest, null, 2)
+        ),
+      ])
+
+      console.log('✅ manifest.json (Chrome) 生成成功')
+      console.log('✅ manifest-firefox.json (Firefox) 生成成功')
+    } else {
+      // Firefox 为主：manifest.json (Firefox) + manifest-chrome.json (Chrome)
+      await Promise.all([
+        writeFileAsync(
+          path.join('extension', 'manifest.json'),
+          JSON.stringify(firefoxManifest, null, 2)
+        ),
+        writeFileAsync(
+          path.join('extension', 'manifest-chrome.json'),
+          JSON.stringify(chromeManifest, null, 2)
+        ),
+      ])
+
+      console.log('✅ manifest.json (Firefox) 生成成功')
+      console.log('✅ manifest-chrome.json (Chrome) 生成成功')
+    }
+
+    console.log('🎉 Manifest 文件构建完成！')
+  } catch (error) {
+    console.error('❌ 构建失败:', error)
+    process.exit(1)
+  }
+}
+
+// 执行主程序
+main()

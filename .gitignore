@@ -11,8 +11,7 @@ node_modules
 /build*
 /extension/css/*
 /extension/scripts/*
-/extension/manifest.json
-/extension/manifest-firefox.json
+/extension/manifest*.json
 !/extension/scripts/jquery.min.js
 !/extension/scripts/polyfill.js
 
