@@ -16,23 +16,14 @@ import path from 'node:path'
  */
 
 /**
- * 递归删除指定文件夹及其所有子内容。
- * 注意：为确保构建可重复执行，构建前会清理目标目录。
+ * 删除目录（若存在）。
  * @param folderPath 绝对或相对目录路径
  */
-function deleteFolderRecursive(folderPath: string) {
-  if (fs.existsSync(folderPath)) {
-    fs.readdirSync(folderPath).forEach((file) => {
-      const curPath = path.join(folderPath, file)
+function removeDirectory(folderPath: string) {
+  const exists = fs.existsSync(folderPath)
 
-      if (fs.lstatSync(curPath).isDirectory()) {
-        deleteFolderRecursive(curPath)
-      } else {
-        fs.unlinkSync(curPath)
-      }
-    })
-
-    fs.rmdirSync(folderPath)
+  if (exists) {
+    fs.rmSync(folderPath, { recursive: true, force: true })
   }
 }
 
@@ -57,45 +48,34 @@ interface BuildParams {
  */
 function build({ source, target, excludeFile: exclude }: BuildParams) {
   // 校验源目录存在性。
-  if (!fs.existsSync(source)) {
+  const sourceExists = fs.existsSync(source)
+
+  if (!sourceExists) {
     throw new Error('源文件夹不存在。')
   }
 
-  // 确保输出为干净目录：若存在则先删除，再重新创建。
-  if (fs.existsSync(target)) {
-    deleteFolderRecursive(target)
-  }
+  // 确保输出为干净目录：若存在则先删除。
+  removeDirectory(target)
 
-  // 创建目标目录。
-  fs.mkdirSync(target)
+  // 使用 fs.cpSync 执行递归复制，并保留排除语义。
+  // 说明：当 excludeFile 指定时，忽略所有 basename 等于该值的文件。
+  const filter = (src: string) => {
+    let allowed = true
 
-  // 列出当前源目录中的所有条目（文件/文件夹）。
-  const files = fs.readdirSync(source)
-
-  files.forEach((file) => {
-    // 计算源与目标的完整路径，保持目录结构一致。
-    const sourcePath = path.join(source, file)
-    const targetPath = path.join(target, file)
-
-    if (file !== exclude) {
-      if (fs.statSync(sourcePath).isDirectory()) {
-        // 子目录：递归构建。
-        build({ source: sourcePath, target: targetPath })
-      } else {
-        // 普通文件：直接复制到目标目录。
-        fs.copyFileSync(sourcePath, targetPath)
+    if (exclude) {
+      const basename = path.basename(src)
+      if (basename === exclude) {
+        allowed = false
       }
     }
-  })
 
-  // 删除空的文件夹。
-  // 目的：避免递归过程中产生无内容的空目录残留。
-  if (fs.readdirSync(target).length === 0) {
-    fs.rmdirSync(target)
+    return allowed
   }
 
+  fs.cpSync(source, target, { recursive: true, filter })
+
+  // Firefox 构建：将浏览器专属清单重命名为标准文件名，便于后续打包与加载。
   if (target === 'build-firefox') {
-    // Firefox 构建：将浏览器专属清单重命名为标准文件名，便于后续打包与加载。
     const oldFileName = path.join(target, 'manifest-firefox.json')
     const newFileName = path.join(target, 'manifest.json')
 

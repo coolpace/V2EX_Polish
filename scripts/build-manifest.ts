@@ -39,6 +39,43 @@ import path from 'node:path'
 import { consola } from 'consola'
 
 /**
+ * 从 package.json 读取版本号，统一版本来源。
+ *
+ * 失败时抛出错误，由上层捕获并终止构建，以避免产生不一致的 Manifest。
+ */
+function getPackageVersion(): string {
+  const packageJsonPath = path.join(process.cwd(), 'package.json')
+  let fileContent = ''
+  let version = ''
+
+  try {
+    fileContent = fs.readFileSync(packageJsonPath, 'utf8')
+  } catch (err) {
+    throw new Error(`无法读取 package.json：${String(err)}`)
+  }
+
+  try {
+    const pkg = JSON.parse(fileContent) as { version?: unknown }
+
+    if (typeof pkg.version === 'string' && pkg.version.trim().length > 0) {
+      version = pkg.version
+    } else {
+      throw new Error('package.json 未包含有效的 version 字段')
+    }
+  } catch (err) {
+    if (version) {
+      // 已经获取到版本则不进入此分支，这里仅为类型收窄的兜底逻辑。
+    } else {
+      throw new Error(`解析 package.json 失败：${String(err)}`)
+    }
+  }
+
+  return version
+}
+
+// 将版本读取操作放在生成时机，便于被主流程的 try/catch 捕获并输出一致化日志。
+
+/**
  * 可注入与授权的 V2EX 主机名白名单。
  *
  * 用途：
@@ -112,7 +149,7 @@ const parseArgs = (): BuildOptions => {
         if (target === 'chrome' || target === 'firefox') {
           options.target = target
         } else {
-          console.error(`❌ 无效的目标浏览器: ${target}，支持的值: chrome, firefox`)
+          consola.error(`❌ 无效的目标浏览器: ${target}，支持的值: chrome, firefox`)
           process.exit(1)
         }
         break
@@ -123,7 +160,7 @@ const parseArgs = (): BuildOptions => {
         break
       default:
         if (arg.startsWith('--')) {
-          console.warn(`⚠️  未知参数: ${arg}`)
+          consola.warn(`⚠️  未知参数: ${arg}`)
         }
         break
     }
@@ -205,7 +242,7 @@ const generateManifest = (): Manifest => {
 
     name: 'V2EX Polish',
 
-    version: '2.2.14', // <- 在发布前，需要手动修改版本。
+    version: getPackageVersion(),
 
     description: '专为 V2EX 用户设计，提供了丰富的扩展功能。',
 
