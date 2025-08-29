@@ -6,6 +6,22 @@
 
 V2EX Polish 是一个为 V2EX 用户设计的浏览器扩展，提供了丰富的功能增强。项目同时支持 Chrome、Firefox 等浏览器扩展和油猴脚本，并配有基于 Next.js 的官方网站。
 
+## 快速开始
+
+```bash
+# 1. 安装依赖（建议使用 pnpm 9）
+pnpm install
+
+# 2. 启动开发（默认以 Chrome 为主）
+pnpm dev
+
+# 3. 或启动 Firefox 开发
+pnpm dev:firefox
+```
+
+- 开发输出目录：`extension/`（运行时代码）。请在 `src/` 中修改源码，构建后文件会输出到 `extension/`。
+- 首选包管理器：仓库已声明 `packageManager: pnpm@9`，建议安装 pnpm 9 以避免兼容问题。
+
 ## 技术栈
 
 ### 核心技术
@@ -99,12 +115,18 @@ V2EX Polish 是一个为 V2EX 用户设计的浏览器扩展，提供了丰富�
 └── tsup.config.ts         # tsup 配置文件
 ```
 
+### 重要约定
+
+- 不要直接修改 `extension/` 目录下的文件（构建产物会被覆盖）。
+- 源代码改动集中在 `src/`；样式在 `src/styles/`；构建逻辑在 `scripts/`。
+- Manifest 文件由 `scripts/build-manifest.ts` 自动生成，可按需切换主要目标浏览器。
+
 ## 开发环境设置
 
 ### 前置要求
 
-- **Node.js** >= 18
-- **pnpm** >= 8（推荐使用 pnpm 作为包管理器）
+- **Node.js** >= 20
+- **pnpm** >= 9（推荐使用 pnpm 作为包管理器）
 - **Bun** >= 1.1（用于构建脚本）
 
 ### 安装依赖
@@ -133,6 +155,26 @@ pnpm dev:firefox
 2. 编译源代码并监听文件变化
 3. 启动浏览器并加载扩展
 4. 自动打开 V2EX 网站
+
+#### 切换 Manifest 主要目标浏览器
+
+- 默认以 Chrome 为主：
+
+  ```bash
+  pnpm build:manifest
+  ```
+
+- 以 Chrome 为主（生成 `manifest.json` 与 `manifest-firefox.json`）：
+
+  ```bash
+  pnpm build:manifest:chrome
+  ```
+
+- 以 Firefox 为主（生成 `manifest.json` 与 `manifest-chrome.json`）：
+
+  ```bash
+  pnpm build:manifest:firefox
+  ```
 
 ### 方式二：手动加载扩展
 
@@ -182,25 +224,32 @@ pnpm dev:firefox
 
 ## 开发脚本说明
 
-| 脚本命令                | 功能描述                     |
-| ----------------------- | ---------------------------- |
-| `pnpm dev`              | 启动 Chrome 开发环境（推荐） |
-| `pnpm dev:firefox`      | 启动 Firefox 开发环境        |
-| `pnpm build`            | 完整生产构建                 |
-| `pnpm build:all`        | 构建所有组件                 |
-| `pnpm build:ext`        | 构建扩展 JavaScript          |
-| `pnpm build:style`      | 构建样式文件                 |
-| `pnpm build:manifest`   | 生成 manifest.json           |
-| `pnpm build:userscript` | 构建油猴脚本                 |
-| `pnpm watch`            | 监听文件变化并自动构建       |
-| `pnpm watch:ext`        | 监听扩展文件变化             |
-| `pnpm watch:style`      | 监听样式文件变化             |
-| `pnpm lint`             | 运行所有代码检查             |
-| `pnpm lint:ts`          | TypeScript 类型检查          |
-| `pnpm lint:es`          | ESLint 代码检查              |
-| `pnpm lint:style`       | Stylelint 样式检查           |
-| `pnpm lint:prettier`    | Prettier 格式化检查          |
-| `pnpm deps`             | 交互式更新依赖               |
+| 脚本命令                      | 功能描述                             |
+| ----------------------------- | ------------------------------------ |
+| `pnpm dev`                    | 启动 Chrome 开发环境（推荐）         |
+| `pnpm dev:firefox`            | 启动 Firefox 开发环境                |
+| `pnpm run:chrome`             | 启动带本地 Profile 的 Chromium       |
+| `pnpm run:firefox`            | 启动带本地 Profile 的 Firefox        |
+| `pnpm build`                  | 完整生产构建（含打包 zip）           |
+| `pnpm build:all`              | Manifest、样式、扩展、油猴全量构建   |
+| `pnpm build:ext`              | 构建扩展 JavaScript                  |
+| `pnpm build:style`            | 构建样式文件                         |
+| `pnpm build:manifest`         | 生成 manifest.json                   |
+| `pnpm build:manifest:chrome`  | 以 Chrome 为主生成 Manifest          |
+| `pnpm build:manifest:firefox` | 以 Firefox 为主生成 Manifest         |
+| `pnpm build:userscript`       | 构建油猴脚本                         |
+| `pnpm watch`                  | 监听文件变化并自动构建               |
+| `pnpm watch:ext`              | 监听扩展文件变化                     |
+| `pnpm watch:style`            | 监听样式文件变化                     |
+| `pnpm pack:chrome`            | 生成 Chrome 扩展 zip                 |
+| `pnpm pack:firefox`           | 生成 Firefox 扩展 zip                |
+| `pnpm clean`                  | 清理构建产物与本地浏览器 Profile     |
+| `pnpm lint`                   | 运行所有代码检查                     |
+| `pnpm lint:ts`                | TypeScript 类型检查                  |
+| `pnpm lint:es`                | ESLint 代码检查                      |
+| `pnpm lint:style`             | Stylelint 样式检查                   |
+| `pnpm lint:prettier`          | Prettier 格式化检查（Markdown/JSON） |
+| `pnpm deps`                   | 交互式更新依赖                       |
 
 ## 官网开发
 
@@ -271,6 +320,18 @@ pnpm dev
 4. **构建成功**：确保 `pnpm build` 能够成功执行
 5. **文档更新**：如有必要，更新相关文档
 
+### 提交规范（推荐）
+
+- 推荐采用 Conventional Commits（如：`feat: xxx`、`fix: xxx`、`chore: xxx`）。
+- 一个 commit 只做一件事；信息清晰，能表达改动意图与影响范围。
+
+### Pull Request 检查清单
+
+- [ ] 已在 Chrome 与 Firefox 上本地验证主要功能
+- [ ] `pnpm build`、`pnpm lint` 全部通过
+- [ ] 未改动 `extension/` 目录的构建产物
+- [ ] 必要时更新了文档（如 README、CONTRIBUTING）
+
 ### 开发建议
 
 1. **功能开发**：优先在 `src/contents/` 目录下开发页面特定功能
@@ -287,6 +348,11 @@ pnpm dev
 - 在 `chrome://extensions/` 中查看扩展详情和错误日志
 - 使用 `console.log` 进行调试输出
 
+常见本地环境问题：
+
+- 如果启动浏览器失败，请检查本机浏览器是否可用，以及本仓库中的本地 Profile 目录是否存在：`chrome-profile/`、`firefox-dev-profile/`。
+- 若 `web-ext` 无法找到浏览器，可尝试升级本机浏览器或在命令中显式指定路径（参考 `web-ext` 文档）。
+
 ### 样式调试
 
 - 使用浏览器开发者工具检查样式
@@ -300,12 +366,16 @@ pnpm dev
 - 确保 Node.js 版本 >= 18
 - 使用 pnpm 而不是 npm 或 yarn
 - 清理 node_modules 重新安装依赖
+  ```bash
+  rimraf node_modules && pnpm install
+  ```
 
 ### 开发问题
 
 - 确保扩展在浏览器中正确加载
 - 检查控制台错误信息
 - 验证 manifest.json 配置
+  - 如切换主要目标浏览器，请运行对应的 Manifest 生成命令（见上文）。
 
 ## 社区支持
 

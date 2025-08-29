@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * V2EX Polish 扩展 Manifest 构建脚本
  *
@@ -33,9 +32,10 @@
  * - Firefox 使用 background.scripts 而非 background.service_worker
  * - Firefox 需要添加 browser_specific_settings.gecko.id
  */
-
 import fs from 'node:fs'
 import path from 'node:path'
+
+import { consola } from 'consola'
 
 /**
  * 扩展能够识别的 V2EX 域名列表
@@ -124,7 +124,7 @@ const parseArgs = (): BuildOptions => {
  * 显示帮助信息
  */
 const showHelp = () => {
-  console.log(`
+  consola.log(`
 V2EX Polish Manifest 构建工具
 
 用法：
@@ -415,27 +415,13 @@ const cleanupManifestFiles = async (): Promise<void> => {
   const extensionDir = path.join('extension')
   const manifestFiles = ['manifest.json', 'manifest-chrome.json', 'manifest-firefox.json']
 
-  console.log('🧹 清理现有的 manifest 文件...')
-
-  const deleteResults = await Promise.all(
+  await Promise.all(
     manifestFiles.map(async (filename) => {
       const filePath = path.join(extensionDir, filename)
       const wasDeleted = await deleteFileAsync(filePath)
       return { filename, wasDeleted }
     })
   )
-
-  // 只打印真正被删除的文件
-  const deletedFiles = deleteResults.filter((result) => result.wasDeleted)
-  if (deletedFiles.length > 0) {
-    deletedFiles.forEach(({ filename }) => {
-      console.log(`   删除: ${filename}`)
-    })
-  } else {
-    console.log('   没有找到需要清理的文件')
-  }
-
-  console.log('✅ manifest 文件清理完成')
 }
 
 // 主程序执行
@@ -449,8 +435,8 @@ const main = async () => {
   }
 
   // 输出构建信息
-  console.log('🚀 开始构建 V2EX Polish Manifest 文件...')
-  console.log(`🎯 主要目标浏览器: ${options.target}`)
+  consola.start('🚀 开始构建 V2EX Polish Manifest 文件...')
+  consola.info(`🎯 主要目标浏览器：${options.target}`)
 
   try {
     // 首先清理所有现有的 manifest 文件
@@ -475,8 +461,8 @@ const main = async () => {
         ),
       ])
 
-      console.log('✅ manifest.json (Chrome) 生成成功')
-      console.log('✅ manifest-firefox.json (Firefox) 生成成功')
+      consola.success('✅ manifest.json (Chrome) 生成成功')
+      consola.success('✅ manifest-firefox.json (Firefox) 生成成功')
     } else {
       // Firefox 为主：manifest.json (Firefox) + manifest-chrome.json (Chrome)
       await Promise.all([
@@ -490,13 +476,13 @@ const main = async () => {
         ),
       ])
 
-      console.log('✅ manifest.json (Firefox) 生成成功')
-      console.log('✅ manifest-chrome.json (Chrome) 生成成功')
+      consola.success('✅ manifest.json (Firefox) 生成成功')
+      consola.success('✅ manifest-chrome.json (Chrome) 生成成功')
     }
 
-    console.log('🎉 Manifest 文件构建完成！')
+    consola.success('🎉 Manifest 文件构建完成！')
   } catch (error) {
-    console.error('❌ 构建失败:', error)
+    consola.error('❌ 构建失败:', error)
     process.exit(1)
   }
 }
