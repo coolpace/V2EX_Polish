@@ -32,19 +32,31 @@
  * - Firefox 使用 background.scripts 而非 background.service_worker
  * - Firefox 需要添加 browser_specific_settings.gecko.id
  */
+
 import fs from 'node:fs'
 import path from 'node:path'
 
 import { consola } from 'consola'
 
 /**
- * 扩展能够识别的 V2EX 域名列表
+ * 可注入与授权的 V2EX 主机名白名单。
  *
- * 包含了 V2EX 的所有官方域名和镜像站点：
+ * 用途：
+ * - 生成 host_permissions（权限声明）
+ * - 生成 content_scripts[].matches / exclude_matches（内容脚本注入范围）
+ * - 生成 web_accessible_resources[].matches（可访问资源范围）
+ * Chrome 与 Firefox 构建共用此列表。
+ *
+ * 覆盖范围：
  * - 主域名：v2ex.com, www.v2ex.com
  * - 地区镜像：cn, jp, de, us, hk, global
- * - 特殊用途：fast (CDN加速), s (短链接), origin (原始服务器)
- * - 开发环境：staging (测试环境)
+ * - 特殊用途：fast（CDN 加速）、s（短链接）、origin（源站）
+ * - 开发/测试：staging（测试环境，发布前如无必要可移除）
+ *
+ * 维护说明：
+ * - 仅填写主机名，不包含协议与路径，例如 "v2ex.com"
+ * - 变更此列表会同时影响权限与脚本注入域，请审慎评估
+ * - 不要添加通配符或端口；路径后缀在下游规则中统一追加
  */
 export const HOSTS = [
   'v2ex.com',
