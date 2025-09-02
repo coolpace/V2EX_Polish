@@ -60,7 +60,7 @@ body {
 
     &:has(.v2p-topic-reply-ref) {
       .v2p-member-ref {
-        display: none; // 在「筛选回复中」隐藏 @ 用户。
+        display: none; /* 在「筛选回复中」隐藏 @ 用户。 */
       }
     }
   }
@@ -114,9 +114,9 @@ body {
       display: none;
       margin: 0;
       padding: 10px;
-      background-color: var(--v2p-color-bg-content);
       border: 1px solid var(--v2p-color-border);
       border-radius: 10px;
+      background-color: var(--v2p-color-bg-content);
       box-shadow: var(--v2p-widget-shadow);
 
       &.v2p-layout-rightbar-visible {
@@ -178,8 +178,8 @@ body {
   justify-content: center;
   width: 24px;
   height: 40px;
-  background: var(--v2p-color-bg-content);
   border-radius: 4px 0 0 4px;
+  background: var(--v2p-color-bg-content);
   box-shadow: var(--v2p-widget-shadow);
 }
 
@@ -195,12 +195,12 @@ body {
 
 .v2p-topic-preview-btn {
   cursor: pointer;
+  border: none;
+  border-radius: 3px;
   font-size: 13px;
   color: var(--v2p-color-button-foreground);
   visibility: hidden;
   background-color: var(--v2p-color-button-background-hover);
-  border: none;
-  border-radius: 3px;
   outline: none;
 }
 
@@ -216,7 +216,7 @@ body {
   padding: var(--v2p-tp-preview-pd);
 
   @at-root {
-    // MARK: 预览骨架屏。
+    /* MARK: 预览骨架屏。 */
     .v2p-tpr-loading {
       --tpr-h: 30px;
       --tpr-h-p: 22px;
@@ -227,8 +227,8 @@ body {
       padding: 25px;
 
       .v2p-tpr {
-        background-color: var(--v2p-color-bg-tpr);
         border-radius: 5px;
+        background-color: var(--v2p-color-bg-tpr);
       }
 
       .v2p-tpr-info {
@@ -303,9 +303,9 @@ body {
       gap: 20px;
       align-items: center;
       padding: 5px 10px;
+      border-radius: 5px;
       font-size: 13px;
       background-color: var(--v2p-color-button-background);
-      border-radius: 5px;
     }
 
     .v2p-tp-read {
@@ -333,8 +333,8 @@ body {
     .v2p-tp-avatar {
       width: 20px;
       height: 20px;
-      background-color: var(--v2p-color-bg-avatar);
       border-radius: 3px;
+      background-color: var(--v2p-color-bg-avatar);
     }
 
     .v2p-topic-preview-addons {
@@ -398,10 +398,10 @@ a.v2p-topic-preview-title-link {
   left: 50%;
   transform: translateX(-50%);
   padding: 10px 15px;
+  border-radius: 8px;
   font-size: 14px;
   color: var(--v2p-color-background);
   background: var(--v2p-color-foreground);
-  border-radius: 8px;
   box-shadow: var(--v2p-toast-shadow);
 }
 
@@ -414,8 +414,8 @@ a.v2p-topic-preview-title-link {
   width: clamp(450px, 100%, 800px);
   height: 100%;
   margin: 0 auto;
-  background-color: var(--v2p-color-bg-content);
   border-radius: var(--box-border-radius);
+  background-color: var(--v2p-color-bg-content);
 
   @at-root {
     .v2p-modal-header {
@@ -423,8 +423,8 @@ a.v2p-topic-preview-title-link {
       gap: 0 20px;
       align-items: center;
       padding: 15px 20px 20px;
-      background-color: var(--v2p-color-bg-content);
       border-bottom: 1px solid var(--box-border-color);
+      background-color: var(--v2p-color-bg-content);
     }
 
     .v2p-modal-title {
@@ -446,11 +446,11 @@ a.v2p-topic-preview-title-link {
     .v2p-modal-content {
       position: relative;
       overflow-y: auto;
-      overscroll-behavior-y: contain; // 防止滚动穿透。
+      overscroll-behavior-y: contain; /* 防止滚动穿透。 */
       flex: 1;
       outline: none;
 
-      // 调整预览下的评论样式。
+      /* 调整预览下的评论样式。 */
       #Main.v2p-topic-preview > .box {
         border: none;
         box-shadow: none;
@@ -475,10 +475,10 @@ a.v2p-topic-preview-title-link {
       gap: 4px;
       align-items: center;
       padding: 4px 5px;
+      border-radius: 4px;
       font-size: 14px;
       font-weight: normal;
       background-color: var(--button-background-color);
-      border-radius: 4px;
 
       > [data-tab-key] {
         cursor: pointer;
@@ -520,8 +520,8 @@ a.v2p-topic-preview-title-link {
     align-items: center;
     margin: 0 5px;
     padding: 2px 10px;
-    background-color: var(--v2p-color-bg-block);
     border-radius: 2px;
+    background-color: var(--v2p-color-bg-block);
   }
 
   .v2p-no-pat-steps {
@@ -531,8 +531,8 @@ a.v2p-topic-preview-title-link {
     max-width: 800px;
     margin-top: 20px;
     padding: 20px;
-    background-color: var(--v2p-color-bg-block);
     border-radius: 10px;
+    background-color: var(--v2p-color-bg-block);
   }
 
   .v2p-no-pat-step {
@@ -707,8 +707,8 @@ a.v2p-topic-preview-title-link {
     display: inline-block;
     width: 73px;
     height: 73px;
-    background-color: var(--button-background-hover-color);
     border-radius: 5px;
+    background-color: var(--button-background-hover-color);
   }
 
   .v2p-avatar {
@@ -732,8 +732,8 @@ a.v2p-topic-preview-title-link {
   }
 
   .v2p-loading {
-    background-color: var(--button-background-hover-color);
     border-radius: 4px;
+    background-color: var(--button-background-hover-color);
   }
 
   .v2p-bio {
@@ -752,9 +752,9 @@ a.v2p-topic-preview-title-link {
   display: inline-flex;
   margin: 0 0 2px;
   padding: 0 3px;
+  border-radius: 3px;
   font-size: 12px;
   background-color: var(--button-background-hover-color);
-  border-radius: 3px;
 }
 
 .v2p-reply-tags-inline {
@@ -792,8 +792,8 @@ a.v2p-topic-preview-title-link {
   cursor: pointer;
   height: 20px;
   padding: 3px;
-  line-height: 20px;
   border-radius: 4px;
+  line-height: 20px;
 
   &:hover {
     background-color: var(--box-background-hover-color);
@@ -874,7 +874,7 @@ a.v2p-topic-preview-title-link {
 }
 
 .cell[id^='r'] .cell[id^='r'] {
-  // 加深嵌套回复中「展开按钮」的背景色。
+  /* 加深嵌套回复中「展开按钮」的背景色。 */
   .v2p-reply-content {
     .v2p-expand-btn.normal.button {
       color: var(--v2p-color-button-foreground);
@@ -900,19 +900,19 @@ a.v2p-topic-preview-title-link {
 .v2p-topic-reply-ref {
   margin: 0 -10px 15px;
   padding: 5px 10px;
+  border-radius: 5px;
   font-size: 13px;
   color: var(--v2p-color-font-tertiary);
   background-color: var(--v2p-color-bg-block);
-  border-radius: 5px;
 }
 
 .v2p-topic-reply-box {
   margin-top: 50px;
   padding: 30px 0;
+  border-top: 1px solid var(--v2p-color-divider);
   font-size: 14px;
   line-height: 1.55;
   color: var(--v2p-color-font-secondary);
-  border-top: 1px solid var(--v2p-color-divider);
 
   @at-root {
     .v2p-topic-reply {
@@ -934,9 +934,9 @@ a.v2p-topic-preview-title-link {
           width: 15px;
           height: 15px;
           margin-right: 5px;
+          border-radius: 2px;
           object-fit: cover;
           background-color: var(--v2p-color-bg-avatar);
-          border-radius: 2px;
         }
 
         .v2p-topic-reply-content {
@@ -956,8 +956,8 @@ a.v2p-topic-preview-title-link {
       @include share.input(140px);
 
       #reply_content {
-        background-color: transparent;
         border: none;
+        background-color: transparent;
 
         &::placeholder {
           font-size: 14px;
@@ -974,10 +974,10 @@ a.v2p-topic-preview-title-link {
     .v2p-reply-upload-bar {
       cursor: pointer;
       padding: 6px 10px;
+      border-top: 1px dashed var(--v2p-color-border-darker);
       font-size: 12px;
       color: var(--v2p-color-font-tertiary);
       background-color: var(--v2p-color-bg-input);
-      border-top: 1px dashed var(--v2p-color-border-darker);
     }
 
     .v2p-reply-upload-bar-disabled {
@@ -994,9 +994,9 @@ a.v2p-topic-preview-title-link {
       align-items: center;
       justify-content: space-between;
       padding: 35px 10px 20px;
+      border-top: 1px solid var(--v2p-color-divider);
       font-size: 12px;
       color: var(--v2p-color-font-tertiary);
-      border-top: 1px solid var(--v2p-color-divider);
 
       a {
         &:hover {
@@ -1091,15 +1091,15 @@ a.v2p-topic-preview-title-link {
 
 .v2p-select-dropdown {
   padding: 5px;
-  font-size: 12px;
   border-radius: 5px;
+  font-size: 12px;
 
   @at-root {
     .v2p-select-item {
       cursor: pointer;
       padding: 5px 10px;
-      white-space: nowrap;
       border-radius: 4px;
+      white-space: nowrap;
 
       &:hover {
         background-color: var(--v2p-color-button-background-hover);
@@ -1125,7 +1125,7 @@ a:link.v2p-topic-preview-retry {
 
 .v2p-indent {
   .v2p-member-ref {
-    display: none; // 只有在嵌套回复中才能隐藏 @ 用户。
+    display: none; /* 只有在嵌套回复中才能隐藏 @ 用户。 */
   }
 }
 
@@ -1195,17 +1195,17 @@ a:link.v2p-topic-preview-retry {
   align-items: center;
   margin-left: 2px;
   padding: 0 2px;
+  border-radius: 2px;
   color: var(--v2p-color-orange-400);
   background-color: var(--v2p-color-orange-100);
-  border-radius: 2px;
 
   &.v2p-register-days-large {
     display: inline-flex;
     margin-left: 10px;
     padding: 2px 5px;
+    border-radius: 4px;
     font-size: 16px;
     line-height: 1.4;
-    border-radius: 4px;
   }
 }
 
@@ -1233,9 +1233,9 @@ a:link.v2p-topic-preview-retry {
   align-items: center;
   margin-left: auto;
   padding: 1px 6px;
+  border-radius: 4px;
   font-size: 13px;
   background-color: var(--v2p-color-button-background);
-  border-radius: 4px;
 
   &:hover {
     background-color: var(--v2p-color-button-background-hover);
@@ -1251,12 +1251,12 @@ a:link.v2p-topic-preview-retry {
   }
 }
 
-// MARK: 用户标签。
+/* MARK: 用户标签。 */
 .v2p-tag-block {
   margin-bottom: 10px;
 }
 
-// MARK: 隐藏用户信息。
+/* MARK: 隐藏用户信息。 */
 .v2p-hide-account {
   @supports (filter: blur(6px)) {
     opacity: 0.5;
@@ -1288,7 +1288,7 @@ a:link.v2p-topic-preview-retry {
   }
 }
 
-// MARK: 设置页的样式。
+/* MARK: 设置页的样式。 */
 .v2p-member-name {
   display: flex;
   align-items: center;
@@ -1315,7 +1315,8 @@ a:link.v2p-topic-preview-retry {
     justify-content: flex-end;
   }
 }
-// ===========================
+
+/* =========================== */
 
 .v2p-link-preview-btn {
   cursor: pointer;
@@ -1324,21 +1325,21 @@ a:link.v2p-topic-preview-retry {
   height: 100%;
   margin-left: 5px;
   padding: 0 5px;
+  border-radius: 3px;
   font-size: 12px;
   color: var(--v2p-color-bg-content);
   background-color: var(--v2p-color-accent-500);
-  border-radius: 3px;
 
   &:hover {
     background-color: var(--v2p-color-accent-600);
   }
 }
 
-// 水深火热节点的侧栏公告栏样式。
+/* 水深火热节点的侧栏公告栏样式。 */
 #node_sidebar.v2p-node-sidebar-flamewar {
-  background-color: var(--v2p-color-orange-50);
   border: 1px solid var(--v2p-color-orange-400);
   border-radius: var(--v2p-box-radius);
+  background-color: var(--v2p-color-orange-50);
 }
 
 .v2p-topic-preview-frame {

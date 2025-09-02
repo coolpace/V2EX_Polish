@@ -79,8 +79,8 @@ body {
       transform: translateY(-50%);
       width: 3px;
       height: 70%;
-      background-color: var(--v2p-color-accent-400);
       border-radius: 999px;
+      background-color: var(--v2p-color-accent-400);
     }
   }
 }
@@ -101,8 +101,8 @@ body {
     overflow: auto;
     height: 100%;
     padding: var(--v2p-content-pd);
-    background-color: var(--v2p-color-bg-content);
     border-radius: var(--v2p-inner-round);
+    background-color: var(--v2p-color-bg-content);
     box-shadow: var(--v2p-box-shadow);
 
     div[data-content-key] {
@@ -119,9 +119,9 @@ body {
 .backup-tip {
   margin-bottom: 20px;
   padding: 10px;
+  border-radius: 5px;
   font-size: 14px;
   background-color: var(--v2p-color-bg-block);
-  border-radius: 5px;
 }
 
 .theme-select {
@@ -162,8 +162,8 @@ body {
         aspect-ratio: 16 / 9;
         width: 260px;
         min-height: 100px;
-        background-color: var(--v2p-color-background);
         border-bottom: 1px solid var(--v2p-color-border);
+        background-color: var(--v2p-color-background);
 
         .tpv-header {
           display: flex;
@@ -174,8 +174,8 @@ body {
           .tpv-header-item {
             width: 30px;
             height: 6px;
-            background-color: var(--v2p-color-bg-avatar);
             border-radius: 999px;
+            background-color: var(--v2p-color-bg-avatar);
           }
         }
 
@@ -191,8 +191,8 @@ body {
             .tpv-top-line {
               width: 30%;
               height: 8px;
-              background-color: var(--v2p-color-bg-avatar);
               border-radius: 999px;
+              background-color: var(--v2p-color-bg-avatar);
             }
           }
 
@@ -205,8 +205,8 @@ body {
             .tpv-main-left {
               position: relative;
               flex: 1;
-              background-color: var(--v2p-color-bg-content);
               border-radius: 5px;
+              background-color: var(--v2p-color-bg-content);
 
               .tpv-main-line {
                 position: absolute;
@@ -218,8 +218,8 @@ body {
                 .tpv-main-line-inner {
                   width: 25%;
                   height: 8px;
-                  background-color: var(--v2p-color-accent-400);
                   border-radius: 999px;
+                  background-color: var(--v2p-color-accent-400);
                 }
               }
             }
@@ -227,8 +227,8 @@ body {
             .tpv-main-right {
               width: 25%;
               height: 65%;
-              background-color: var(--v2p-color-bg-content);
               border-radius: 5px;
+              background-color: var(--v2p-color-bg-content);
             }
           }
         }
@@ -247,10 +247,10 @@ body {
           display: none;
           margin-left: auto;
           padding: 2px 6px;
+          border-radius: 4px;
           font-size: 12px;
           color: var(--v2p-color-orange-400);
           background-color: var(--v2p-color-orange-100);
-          border-radius: 4px;
         }
       }
     }
@@ -336,12 +336,12 @@ fieldset {
     cursor: help;
     margin-left: 5px;
     padding: 3px 4px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
     font-weight: normal;
     line-height: 1;
     color: var(--v2p-color-orange-400);
     background-color: var(--v2p-color-orange-100);
-    border: 1px solid currentColor;
-    border-radius: 4px;
   }
 }
 
@@ -382,10 +382,10 @@ fieldset {
         right: -5px;
         min-width: 180px;
         padding: 10px;
+        border-radius: 5px;
         font-size: 12px;
         visibility: hidden;
         background-color: var(--v2p-color-bg-content);
-        border-radius: 5px;
         box-shadow: 0 0 10px var(--v2p-color-divider);
 
         .usage-popover-title {
@@ -438,8 +438,8 @@ fieldset {
         > img {
           width: 30px;
           height: 30px;
-          background-color: var(--v2p-color-bg-block);
           border-radius: 5px;
+          background-color: var(--v2p-color-bg-block);
         }
       }
     }
@@ -459,8 +459,8 @@ fieldset {
       align-items: center;
       justify-content: center;
       padding: 2px 6px;
-      background-color: var(--v2p-color-bg-block);
       border-radius: 4px;
+      background-color: var(--v2p-color-bg-block);
 
       &.tag-item-tag-add {
         cursor: pointer;
@@ -479,10 +479,10 @@ fieldset {
         width: 14px;
         height: 14px;
         padding: 1px;
+        border-radius: 9999px;
         color: var(--v2p-color-error);
         opacity: 0.7;
         background-color: var(--v2p-color-bg-error);
-        border-radius: 9999px;
 
         &:hover {
           opacity: 1;
@@ -521,16 +521,16 @@ fieldset {
     gap: 10px;
     justify-content: center;
     padding: 20px;
-    background-color: var(--v2p-color-bg-block);
     border-radius: 8px;
+    background-color: var(--v2p-color-bg-block);
   }
 
   .avatar {
     position: relative;
     width: 48px;
     height: 48px;
-    background-color: var(--v2p-color-main-300);
     border-radius: 5px;
+    background-color: var(--v2p-color-main-300);
   }
 
   .userinfo {
@@ -538,10 +538,10 @@ fieldset {
     top: -5px;
     width: max-content;
     padding: 12px;
-    background: var(--v2p-color-bg-widget);
-    backdrop-filter: blur(16px);
     border: 1px solid var(--box-border-color);
     border-radius: 8px;
+    background: var(--v2p-color-bg-widget);
+    backdrop-filter: blur(16px);
     box-shadow: var(--v2p-widget-shadow);
   }
 
@@ -560,13 +560,13 @@ fieldset {
     align-items: center;
     height: 28px;
     padding: 0 12px;
+    border-radius: var(--v2p-input-radius);
     font-family: inherit;
     font-weight: 500;
     color: var(--v2p-color-button-foreground);
     text-shadow: none;
     white-space: nowrap;
     background: var(--button-background-color);
-    border-radius: var(--v2p-input-radius);
     box-shadow:
       0 1.8px 0 var(--box-background-hover-color),
       0 1.8px 0 var(--button-background-color);
@@ -575,8 +575,8 @@ fieldset {
   .userinfo-avatar {
     width: 73px;
     height: 73px;
-    background-color: var(--v2p-color-main-300);
-    border-radius: 5px;
+    border-radius: 6px;
+    background-color: var(--v2p-color-main-200);
   }
 
   .userinfo-lines {
@@ -586,12 +586,13 @@ fieldset {
 
     div {
       height: 15px;
-      background-color: var(--v2p-color-main-300);
+      border-radius: 4px;
+      background-color: var(--v2p-color-main-200);
     }
   }
 }
 
-// 用户标签的帮助信息。
+/** 用户标签的帮助信息。 */
 .help-info {
   display: inline-block;
   width: 1em;
@@ -603,14 +604,15 @@ fieldset {
   }
 }
 
-// ==============================
-// 菜单。
+/** ============================== */
+
+/** 菜单。 */
 .menu-wrapper {
   overflow: hidden;
   width: 320px;
   margin-top: 10px;
-  background-color: var(--v2p-color-bg-block);
   border-radius: 8px;
+  background-color: var(--v2p-color-bg-block);
 }
 
 .fake-menu {
@@ -625,9 +627,9 @@ fieldset {
   left: 28px;
   width: var(--width);
   padding: 0 10px;
-  background-color: var(--v2p-color-bg-content);
   border: 1px solid var(--v2p-color-border-darker);
   border-radius: var(--round);
+  background-color: var(--v2p-color-bg-content);
   box-shadow: var(--v2p-widget-shadow);
 
   &.menu-root {
@@ -639,8 +641,8 @@ fieldset {
     width: 100%;
     min-height: 1em;
     margin: var(--gap) 0;
-    background-color: var(--v2p-color-bg-block);
     border-radius: 3px;
+    background-color: var(--v2p-color-bg-block);
   }
 
   .active-item {
@@ -650,9 +652,9 @@ fieldset {
     justify-content: space-between;
     margin: var(--gap) -5px;
     padding: 1px 5px;
+    border-radius: 4px;
     font-size: 12px;
     background-color: var(--v2p-color-button-background-hover);
-    border-radius: 4px;
 
     .fake-menu {
       position: absolute;
@@ -671,9 +673,9 @@ fieldset {
       height: 16px;
       margin: 0 5px 0 3px;
       padding: 3px;
+      border-radius: 2px;
       color: white;
       background-color: var(--v2p-color-foreground);
-      border-radius: 2px;
     }
   }
 
@@ -779,21 +781,21 @@ fieldset {
       align-items: center;
       width: 30%;
       padding: 0 5px 0 0;
-      font-size: 13px;
-      background-color: var(--v2p-color-bg-block);
       border: 1px solid var(--v2p-color-border);
       border-radius: var(--v2p-input-radius);
+      font-size: 13px;
+      background-color: var(--v2p-color-bg-block);
 
       &:has(.has-value) {
-        background-color: transparent;
         border: 1px solid var(--v2p-color-font-tertiary);
+        background-color: transparent;
       }
 
       #pat {
         flex: 1;
         padding: 9px 8px;
-        background-color: transparent;
         border: none;
+        background-color: transparent;
         outline: none;
 
         &::placeholder {
@@ -816,12 +818,12 @@ fieldset {
         align-items: center;
         height: 100%;
         padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
         font-size: 12px;
         color: var(--v2p-color-background);
         white-space: nowrap;
         background-color: var(--v2p-color-foreground);
-        border: none;
-        border-radius: 5px;
       }
     }
 
@@ -879,12 +881,12 @@ input {
       sup {
         margin-left: 5px;
         padding: 2px 4px;
+        border: 1px solid currentColor;
+        border-radius: 4px;
         font-weight: normal;
         line-height: 1;
         color: var(--v2p-color-orange-400);
         background-color: var(--v2p-color-orange-100);
-        border: 1px solid currentColor;
-        border-radius: 4px;
       }
     }
 
@@ -894,16 +896,16 @@ input {
       align-items: center;
       margin-top: 10px;
       padding: 5px 8px;
+      border-radius: 5px;
       color: var(--v2p-color-foreground);
       background-color: var(--v2p-color-bg-block);
-      border-radius: 5px;
 
       @at-root {
         #clear-storage,
         #sync-settings {
           padding: 0 5px;
-          background-color: var(--v2p-color-button-background-hover);
           border-radius: 3px;
+          background-color: var(--v2p-color-button-background-hover);
           transition:
             background-color 0.2s,
             color 0.2s;
@@ -948,10 +950,10 @@ input {
     }
   }
 }
-// ------------------------------
 
-// ==============================
-// MARK: 响应式
+/** ============================== */
+
+/** MARK: 响应式 */
 @container (width <= 1280px) {
   #token-form {
     .pat-input {
@@ -1052,4 +1054,5 @@ input {
     }
   }
 }
-// ------------------------------
+
+/** ============================== */

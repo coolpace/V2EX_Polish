@@ -10,6 +10,7 @@
 }
 
 body {
+  /** Firefox */
   scrollbar-color: var(--v2p-color-foreground) var(--v2p-scrollbar-background-color);
   scrollbar-gutter: stable;
   overflow: auto;
@@ -46,9 +47,11 @@ body {
   }
 
   pre {
-    // 防止代码块不换行导致 Main 容器突破宽度。
-    // .content: 1100px |;Main.content #RightBar: 270px;
-    max-width: calc(1100px - 270px - 2 * var(--v2p-layout-column-gap) - 2 * 12px);
+    /** 防止代码块不换行导致 Main 容器突破宽度。 */
+    max-width: calc(
+      var(--v2p-content-width) - var(--v2p-rightbar-width) - 2 * var(--v2p-layout-column-gap) - 2 *
+        12px
+    );
   }
 
   #Top {
@@ -63,7 +66,7 @@ body {
     background-color: var(--v2p-color-bg-footer);
 
     .content {
-      flex-direction: column; // 修复 v2ex.com/settings/invite 页脚布局错乱的问题。
+      flex-direction: column; /** 修复 v2ex.com/settings/invite 页脚布局错乱的问题。 */
     }
   }
 
@@ -79,15 +82,16 @@ body {
     .content {
       display: flex;
       gap: var(--v2p-layout-column-gap);
+      max-width: var(--v2p-content-width);
 
-      // 当右侧栏浮动时，取消设置间距。
+      /** 当右侧栏浮动时，取消设置间距。 */
       &:has(.v2p-layout-rightbar-float) {
         gap: 0;
       }
     }
 
     @at-root {
-      // 站点帮助页的侧边菜单栏：https://www.v2ex.com/help/currency。
+      /** 站点帮助页的侧边菜单栏：https://www.v2ex.com/help/currency。 */
       #Navcol {
         .nav_item:hover {
           background-color: var(--box-background-hover-color);
@@ -129,7 +133,7 @@ body {
       }
     }
 
-    // 当右侧栏浮动时，主内容区域居中。
+    /** 当右侧栏浮动时，主内容区域居中。 */
     &:has(.v2p-layout-rightbar-float) {
       #Main {
         margin: auto;
@@ -152,6 +156,7 @@ body {
   #Rightbar {
     float: none;
     order: 3;
+    width: var(--v2p-rightbar-width);
     margin-right: var(--v2p-layout-column-gap);
   }
 
@@ -423,8 +428,9 @@ body {
       @include share.input(120px);
     }
 
-    // MARK: 记事本演示。
-    // 记事本页面链接：https://www.v2ex.com/notes
+    /** MARK: 记事本演示。 */
+
+    /** 记事本页面链接：https://www.v2ex.com/notes */
     &[action^='/notes'] {
       .cell {
         background-color: transparent !important;
@@ -432,7 +438,7 @@ body {
     }
   }
 
-  // MARK: 主题编辑内容的语法。
+  /** MARK: 主题编辑内容的语法。 */
   #syntax-selector {
     .radio-group {
       padding: 3px;
@@ -455,23 +461,23 @@ body {
     }
   }
 
-  // 提醒系统里的回复时间。
+  /** 提醒系统里的回复时间。 */
   .snow {
     color: var(--v2p-color-font-quaternary);
   }
 
-  // 新消息提醒。
+  /** 新消息提醒。 */
   .orange-dot {
     background: var(--v2p-color-orange-400);
   }
 
-  // 输入框：https://www.v2ex.com/notes ｜ https://www.v2ex.com/t
+  /** 输入框：https://www.v2ex.com/notes ｜ https://www.v2ex.com/t */
   .alt {
     border: 1px solid var(--button-border-color);
     background-color: var(--v2p-color-bg-input);
   }
 
-  // https://www.v2ex.com/i/about
+  /** https://www.v2ex.com/i/about */
   a.btn_hero {
     border-color: var(--v2p-color-foreground);
 
@@ -492,7 +498,7 @@ body {
       .v2p-reply-preview,
       .markdown_body
     ) {
-    // MARK: 站内链接。
+    /** MARK: 站内链接。 */
     a[href*='v2ex.com/t'],
     a[href*='v2ex.com/t'][href^='http'],
     a[href^='/'] {
@@ -526,7 +532,7 @@ body {
     }
   }
 
-  // MARK: 主题内容编辑器。
+  /** MARK: 主题内容编辑器。 */
   .CodeMirror {
     color: currentColor;
     background-color: var(--v2p-color-bg-input);
@@ -560,7 +566,7 @@ body {
     border-radius: 8px;
   }
 
-  // 选择主题节点的下拉选择框。
+  /** 选择主题节点的下拉选择框。 */
   .select2-container {
     width: 200px !important;
 
@@ -625,7 +631,7 @@ body {
     }
   }
 
-  // 提示回复没有内容。
+  /** 提示回复没有内容。 */
   .problem {
     border-color: var(--v2p-color-orange-400);
     border-bottom: none;
@@ -635,7 +641,7 @@ body {
   }
 
   .markdown_body {
-    // MARK: 正文内容的 MD 表格。
+    /** MARK: 正文内容的 MD 表格。 */
     table {
       border-top: 1px solid var(--v2p-color-border-darker);
       box-shadow: none;
@@ -664,7 +670,7 @@ body {
     }
   }
 
-  // 个人页的链接。
+  /** 个人页的链接。 */
   .social_label:is(:link, :visited, :active) {
     border-radius: var(--box-border-radius);
     background-color: var(--v2p-color-button-background);
@@ -685,7 +691,7 @@ body {
     background-color: var(--v2p-color-orange-50);
   }
 
-  // 账户余额。
+  /** 账户余额。 */
   .balance_area,
   a.balance_area:is(:link, :visited) {
     display: inline-flex;
@@ -710,7 +716,7 @@ body {
     }
   }
 
-  // 设置页的开关。
+  /** 设置页的开关。 */
   .onoffswitch label .frame::before {
     color: #fff;
     background-color: var(--v2p-color-accent-400);
@@ -735,7 +741,7 @@ body {
     }
   }
 
-  // MARK: 各种输入框。
+  /** MARK: 各种输入框。 */
   .ml,
   .mle,
   .mll,
@@ -759,7 +765,7 @@ body {
     color: var(--v2p-color-foreground);
   }
 
-  // 设置页的开关按钮。
+  /** 设置页的开关按钮。 */
   .onoffswitch {
     width: 90px;
     min-width: 90px;
@@ -767,7 +773,7 @@ body {
   }
 }
 
-/* ====== 帖子标签 ====== */
+/** ====== 帖子标签 ====== */
 
 .box {
   .tag {
@@ -789,7 +795,7 @@ body {
   }
 }
 
-/* ------ 帖子标签 ------ */
+/** ------ 帖子标签 ------ */
 
 #Top {
   .content {
@@ -832,7 +838,7 @@ body {
   }
 }
 
-/* ================================================================ */
+/** ================================================================ */
 
 #Main {
   .box {
@@ -854,7 +860,7 @@ body {
       padding: 15px 5px;
     }
 
-    // 主题编辑器样式：
+    /** 主题编辑器样式： */
     &:has(form[action='/write']) {
       .cell {
         &:nth-child(1),
@@ -887,7 +893,7 @@ body {
     }
   }
 
-  /* ====== 帖子操作按钮 ====== */
+  /** ====== 帖子操作按钮 ====== */
   .topic_buttons {
     display: flex;
     flex-wrap: wrap;
@@ -1039,7 +1045,7 @@ body {
     background-color: var(--bg-reply);
 
     &:not(:has(+ .cell[id^='r'])) {
-      border-bottom: none; // 去除最后一条回复的底边框。
+      border-bottom: none; /** 去除最后一条回复的底边框。 */
     }
 
     &:hover {
@@ -1062,7 +1068,7 @@ body {
 
     .reply_content {
       padding-bottom: 10px;
-      line-height: 1.5; // 回复内容行距可以紧凑一点。
+      line-height: 1.5; /** 回复内容行距可以紧凑一点。 */
     }
 
     > table {
@@ -1081,7 +1087,7 @@ body {
         }
       }
 
-      /* 嵌套的回复 */
+      /** 嵌套的回复 */
       ~ .cell[id^='r'] {
         --bg-reply: var(--v2p-color-bg-reply);
 
@@ -1092,13 +1098,13 @@ body {
         border-radius: 0;
         box-shadow: -2.4px 0 var(--v2p-color-border-darker);
 
-        /* 多层嵌套 */
+        /** 多层嵌套 */
         .cell[id^='r'] {
           padding: 0;
           box-shadow: none;
 
           &.v2p-indent {
-            padding-left: var(--v2p-tp-nested-pd); /* 取消靠左对齐，逐层缩进 */
+            padding-left: var(--v2p-tp-nested-pd); /** 取消靠左对齐，逐层缩进 */
             border-left: 1px solid var(--v2p-color-border-darker);
           }
         }
@@ -1182,7 +1188,7 @@ body {
     top: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 5px 3px;
+    gap: 4px 3px;
     align-items: center;
     padding: var(--v2p-tp-tabs-pd);
     border-bottom: 1px solid var(--box-border-color);
@@ -1219,7 +1225,7 @@ body {
 
     color: currentColor;
 
-    // 被 @ 的用户
+    /** 被 @ 的用户 */
     a[href^='/member'] {
       position: relative;
       bottom: 1px;
@@ -1235,7 +1241,7 @@ body {
     font-size: 12px;
   }
 
-  // 「设置页」的选项标签样式：
+  /** 「设置页」的选项标签样式： */
   .tab {
     user-select: none;
     border-radius: 3px;
@@ -1247,7 +1253,7 @@ body {
     }
   }
 
-  // 「设置页」的选项标签样式：
+  /** 「设置页」的选项标签样式： */
   .tab_current {
     user-select: none;
     border-radius: 3px;
@@ -1392,13 +1398,13 @@ body {
   }
 }
 
-// 广告：
+/** 广告： */
 .wwads-cn {
   border: none !important;
   box-shadow: none !important;
 }
 
-// 广告：
+/** 广告： */
 .box:has(a[href^='/advertise']) {
   overflow: hidden;
   border: none !important;
