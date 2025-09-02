@@ -50,7 +50,7 @@
 }
 
 :where(button, [type='button'], [type='reset'], [type='submit']) {
-  appearance: button;
+  appearance: auto;
   background-color: transparent;
   background-image: none;
 }
@@ -109,9 +109,9 @@
   overflow: visible;
   height: 0;
   block-size: 0;
-  color: inherit;
   border: none;
   border-block-start: 1px solid;
+  color: inherit;
 }
 
 :where(:focus-visible) {

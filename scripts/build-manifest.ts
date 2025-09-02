@@ -149,6 +149,7 @@ const parseArgs = (): BuildOptions => {
 
     switch (arg) {
       case '--target':
+        // fall through
 
       case '-t': {
         const target = args[++i]
@@ -165,6 +166,7 @@ const parseArgs = (): BuildOptions => {
       }
 
       case '--help':
+        // fall through
 
       case '-h':
         options.help = true
@@ -393,7 +395,7 @@ const generateManifest = (): Manifest => {
  * @returns Firefox 兼容的 manifest
  */
 const convertToFirefoxManifest = (chromeManifest: Manifest): Manifest => {
-  const firefoxManifest: Manifest = JSON.parse(JSON.stringify(chromeManifest))
+  const firefoxManifest = JSON.parse(JSON.stringify(chromeManifest)) as Manifest
 
   // 添加 Firefox 特有配置
   Object.assign(firefoxManifest, {
@@ -556,4 +558,4 @@ const main = async () => {
 }
 
 // 执行主程序
-main()
+void main()

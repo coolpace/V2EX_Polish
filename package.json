@@ -21,7 +21,7 @@
     "pack:firefox": "web-ext build -s build-firefox -a build-firefox -o",
     "output:userscript": "tsup src/user-scripts/index.ts --no-minify --outDir dist",
     "output:css": "bun src/user-scripts/write-style.mjs",
-    "clean": "rimraf extension/css extension/manifest*.json build-chrome build-firefox dist && find extension/scripts -name '*.min.js' ! -name 'jquery.min.js' -delete",
+    "clean": "rimraf extension/css extension/manifest*.json build-chrome build-firefox dist && find extension/scripts -name '*.js' ! -name 'jquery.min.js' ! -name 'polyfill.js' -delete",
     "watch": "run-p watch:style watch:ext",
     "watch:ext": "bun build:ext --watch",
     "watch:style": "bun build:style --watch",

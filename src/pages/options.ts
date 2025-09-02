@@ -225,7 +225,9 @@ void (async function init() {
     const renderTagsContent = async () => {
       const storage = await getStorage(false)
       const tagData = storage[StorageKey.MemberTag]
-      const bytesUsed = await chrome.storage.sync.getBytesInUse([StorageKey.MemberTag])
+      const bytesUsed = await chrome.storage.sync.getBytesInUse(
+        [StorageKey.MemberTag as string],
+      )
 
       $contentTags.empty()
 

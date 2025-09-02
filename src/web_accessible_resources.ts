@@ -13,7 +13,7 @@ window.addEventListener('message', (ev: MessageEvent<MessageData>) => {
 
     if (task) {
       // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      const result = Function(`"use strict"; ${task.expression}`)()
+      const result = (Function(`"use strict"; ${task.expression}`) as () => unknown)()
       const messageData: MessageData = {
         from: MessageFrom.Web,
         payload: { task: { id: task.id, result } },

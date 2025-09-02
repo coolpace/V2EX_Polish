@@ -56,11 +56,13 @@ export function handleTopicList(params: HandleTopicListParams) {
 
                   if (match) {
                     const result = match[0].slice(1, -1)
+
                     if (result.startsWith('/ignore/topic')) {
                       try {
                         await fetch(`${V2EX.Origin}${result}`)
-                        createToast({ message: `✅ 已屏蔽` })
-                      } finally {
+                        createToast({ message: '✅ 已屏蔽' })
+                      }
+                      finally {
                         toast.clear()
                       }
                     }

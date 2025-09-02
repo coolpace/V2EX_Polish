@@ -86,7 +86,7 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
     void setStorage(StorageKey.API, api)
   }
 
-  const resultData: DataWrapper<Data> = await res.json()
+  const resultData = await res.json() as DataWrapper<Data>
 
   if (typeof resultData.success === 'boolean' && !resultData.success) {
     throw new Error(resultData.message, { cause: resultData })
@@ -154,7 +154,7 @@ export async function uploadImage(file: File): Promise<string> {
   })
 
   if (res.ok) {
-    const resData: ImgurResponse = await res.json()
+    const resData = await res.json() as ImgurResponse
 
     if (resData.success) {
       return resData.data.link
@@ -184,7 +184,7 @@ export async function thankReply(params: {
     const res = await fetch(`/thank/reply/${params.replyId}?once=${window.once}`, {
       method: 'POST',
     })
-    const data: V2EX_Response & { once: Once } = await res.json()
+    const data = await res.json() as V2EX_Response & { once: Once }
 
     // 从接口获取到最新的 once 后需要更新回 Web 页。
     postTask(`window.once = ${data.once}`)
@@ -321,7 +321,7 @@ export async function getHotTopics(params: {
     signal,
   })
 
-  const data: DataWrapper<HotTopic[]> = await res.json()
+  const data = await res.json() as DataWrapper<HotTopic[]>
 
   return data
 }

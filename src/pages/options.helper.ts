@@ -20,7 +20,8 @@ async function loadSettings() {
 
     if (value) {
       $patInput.addClass('has-value')
-    } else {
+    }
+    else {
       $patInput.removeClass('has-value')
     }
   })
@@ -28,9 +29,11 @@ async function loadSettings() {
   if (api) {
     if (api.pat) {
       $patInput.val(api.pat).addClass('has-value')
-    } else {
+    }
+    else {
       $('.details').prop('open', true)
     }
+
     $('#limit').val(api.limit ?? defaultValue)
     $('#reset').val(api.reset ? formatTimestamp(api.reset, { format: 'YMDHMS' }) : defaultValue)
     $('#remaining').val(api.remaining ?? defaultValue)
@@ -104,6 +107,7 @@ export async function handleBackupForm() {
         .on('click', () => {
           void (async () => {
             const txt = $syncBtn.text()
+
             try {
               $syncBtn.text('备份中...').css('pointer-events', 'none')
               const storage = await getStorage(false)
@@ -111,12 +115,14 @@ export async function handleBackupForm() {
               $localVersion.val(newSyncInfo.version)
               $remoteVersion.val(newSyncInfo.version)
               $syncTime.val(formatTimestamp(newSyncInfo.lastSyncTime, { format: 'YMDHMS' }))
-            } finally {
+            }
+            finally {
               $syncBtn.text(txt).css('pointer-events', 'auto')
             }
           })()
         })
-    } else {
+    }
+    else {
       if (!syncInfo || syncInfo.version < remoteSyncInfo.version) {
         $('.storage-tip').text('远程备份的版本较新')
         $syncBtn
@@ -125,18 +131,20 @@ export async function handleBackupForm() {
           .on('click', () => {
             void (async () => {
               const txt = $syncBtn.text()
+
               try {
                 $syncBtn.text('同步中...').css('pointer-events', 'none')
                 await new Promise((resolve) =>
                   setTimeout(() => {
                     resolve(undefined)
-                  }, 1000)
+                  }, 1000),
                 )
                 const storage = await getStorage(false)
                 await chrome.storage.sync.set(deepMerge(storage, settings))
                 await getStorage(false)
                 loadSettings() // 同步配置后重新加载以应用最新配置。
-              } finally {
+              }
+              finally {
                 $syncBtn.text(txt).css('pointer-events', 'auto')
               }
             })()

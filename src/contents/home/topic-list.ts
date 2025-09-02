@@ -1,18 +1,14 @@
 import { createToast } from '../../components/toast'
-import { StorageKey, V2EX } from '../../constants'
+import { V2EX } from '../../constants'
 import { crawlTopicPage } from '../../services'
 import { useTopicPreview } from '../../use-topic-preview'
-import { getStorageSync, isBrowserExtension } from '../../utils'
+import { isBrowserExtension } from '../../utils'
 import { $topicList } from '../globals'
 
 export function handleTopicList() {
   if (!isBrowserExtension()) {
     return
   }
-
-  const storage = getStorageSync()
-
-  const PAT = storage[StorageKey.API]?.pat
 
   const { handlePreview } = useTopicPreview()
 
@@ -52,12 +48,14 @@ export function handleTopicList() {
 
                 if (match) {
                   const result = match[0].slice(1, -1)
+
                   if (result.startsWith('/ignore/topic')) {
                     try {
                       await fetch(`${V2EX.Origin}${result}`)
-                      createToast({ message: `✅ 已屏蔽` })
+                      createToast({ message: '✅ 已屏蔽' })
                       $topicItem.remove() // 屏蔽成功后，在列表中移除该主题。
-                    } finally {
+                    }
+                    finally {
                       toast.clear()
                     }
                   }
@@ -77,23 +75,23 @@ export function handleTopicList() {
       .appendTo($clonedTopicActions)
   })
 
-  if (PAT) {
-    $('#TopicsHot,#my-recent-topics')
-      .find('.cell .item_hot_topic_title')
-      .each((_, topicTitle) => {
-        const $topicItem = $(topicTitle)
-        $previewBtn
-          .clone()
-          .on('click', () => {
-            const $link = $topicItem.find('> a')
-            const linkHref = $link.attr('href')
-            const match = linkHref?.match(/\/t\/(\d+)/)
-            const topicId = match?.at(1)
-            const topicTitle = $link.text()
+  // 为「最近查看过的主题」和「今日热议主题」添加预览按钮
+  $('#TopicsHot,#my-recent-topics')
+    .find('.cell .item_hot_topic_title')
+    .each((_, topicTitle) => {
+      const $topicItem = $(topicTitle)
 
-            handlePreview({ topicId, topicTitle, linkHref })
-          })
-          .appendTo($topicItem)
-      })
-  }
+      $previewBtn
+        .clone()
+        .on('click', () => {
+          const $link = $topicItem.find('> a')
+          const linkHref = $link.attr('href')
+          const match = linkHref?.match(/\/t\/(\d+)/)
+          const topicId = match?.at(1)
+          const topicTitle = $link.text()
+
+          handlePreview({ topicId, topicTitle, linkHref })
+        })
+        .appendTo($topicItem)
+    })
 }

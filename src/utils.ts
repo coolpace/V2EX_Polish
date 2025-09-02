@@ -86,7 +86,7 @@ export function isSameDay(timestamp1: number, timestamp2: number): boolean {
 /**
  * 判断是否为简单 JS 对象（不包括 Array）。
  */
-function isObject(value: any): value is Record<string, any> {
+function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
@@ -94,9 +94,12 @@ function isObject(value: any): value is Record<string, any> {
  * 深度合并两个对象。
  */
 export function deepMerge<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends Record<string, any> = Record<string, any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   U extends Record<string, any> = Record<string, any>,
 >(target: T, source: U): T & U {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = {} as Record<string, any>
 
   for (const key in target) {
@@ -191,7 +194,7 @@ export function injectScript(scriptSrc: string) {
 /**
  * 简单地校验数据类型，更好的做法是使用 zod、yup 等库，但在此插件没必要。
  */
-export function isValidSettings(settings: any): settings is StorageSettings {
+export function isValidSettings(settings: unknown): settings is StorageSettings {
   return !!settings && typeof settings === 'object' && StorageKey.Options in settings
 }
 
@@ -202,9 +205,17 @@ export function sleep(ms: number) {
 const mark = `${EXTENSION_NAME}_settings`
 
 /**
- * 获取持久化存储的个人配置备份。
+ * 从 V2EX 记事本中获取插件配置的云端备份数据。
  *
- * 目前是存储在 V2EX 的记事本中。
+ * @description
+ * 该函数通过解析 V2EX 记事本页面，查找并读取插件配置的云端备份，
+ * 实现插件配置在不同设备间的同步功能。
+ *
+ * @returns
+ * - 成功时返回包含记事本 ID 和配置数据的对象
+ * - 未找到有效配置或解析失败时返回 undefined
+ *
+ * @throws 网络请求失败或 HTML 解析异常时可能抛出错误
  */
 export async function getV2P_Settings(): Promise<
   { noteId: string, config: StorageSettings } | undefined
@@ -241,7 +252,7 @@ export async function getV2P_Settings(): Promise<
     const value = $editor.val()
 
     if (typeof value === 'string') {
-      const syncSettings = JSON.parse(value.replace(mark, ''))
+      const syncSettings = JSON.parse(value.replace(mark, '')) as unknown
 
       if (isValidSettings(syncSettings)) {
         return { noteId, config: syncSettings }

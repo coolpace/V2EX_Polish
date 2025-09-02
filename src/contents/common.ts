@@ -35,7 +35,7 @@ void (async () => {
 
   const handleColorSchemeChange = ({ matches }: MediaQueryListEvent) => {
     // 每次系统主题变更时，都要获取最新的选项设置主题，这样才能设置正确的主题。
-    getStorage(false).then((storage) => {
+    void getStorage(false).then((storage) => {
       const options = storage[StorageKey.Options]
       const themeType = options.theme.type || 'light-default'
 
@@ -60,7 +60,8 @@ void (async () => {
     })
 
     colorMedia.addEventListener('change', handleColorSchemeChange)
-  } else {
+  }
+  else {
     /**
      * 如果没有开启自动切换主题，则根据当前主题类型判断是否为暗色主题。
      *
@@ -89,10 +90,13 @@ void (async () => {
   // 当发现远程的配置有更新时，自动同步到本地。
   if (syncInfo) {
     const lastCheckTime = syncInfo.lastCheckTime
-    const twoHours = 2 * 60 * 1000 * 60
+    const tenMinutes = 10 * 60 * 1000
     const neverChecked = !lastCheckTime
 
-    if ((lastCheckTime && Date.now() - lastCheckTime >= twoHours) || neverChecked) {
+    // eslint-disable-next-line @stylistic/no-mixed-operators
+    const shouldCheck = lastCheckTime && Date.now() - lastCheckTime >= tenMinutes || neverChecked
+
+    if (shouldCheck) {
       const isSignInPage = window.location.href.includes('/signin')
 
       // Warning: 不能在登录页请求 getV2P_Settings 接口，否则会导致无法成功跳转页面。
@@ -102,19 +106,23 @@ void (async () => {
           const settings = res?.config
           const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
 
-          if (settings && remoteSyncInfo) {
-            // HACK: 因为无法读取正确的 `syncInfo`，导致无法正确同步配置，所以暂时关闭此功能。
-            // if (syncInfo.version < remoteSyncInfo.version || neverChecked) {
-            //   await chrome.storage.sync.set(
-            //     deepMerge(storage, {
-            //       ...settings,
-            //       [StorageKey.SyncInfo]: {
-            //         ...remoteSyncInfo,
-            //         lastCheckTime: Date.now(),
-            //       },
-            //     })
-            //   )
-            // }
+          // 远程备份的配置信息存在时，才进行同步。
+          if (remoteSyncInfo) {
+            // 远程备份的版本更新时，才进行同步。
+            if (syncInfo.version < remoteSyncInfo.version || neverChecked) {
+              await chrome.storage.sync.set(
+                deepMerge(storage, {
+                  ...settings,
+                  [StorageKey.SyncInfo]: {
+                    ...remoteSyncInfo,
+                    lastCheckTime: Date.now(),
+                  },
+                }),
+              )
+
+              // 同步完成后，刷新页面以应用最新配置。
+              window.location.reload()
+            }
           }
         })
       }
@@ -124,12 +132,14 @@ void (async () => {
   // 更换主题颜色切换的按钮。
   {
     const $toggleImg = $toggle.find('> img')
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const alt = $toggleImg.prop('alt')
 
     if (alt === 'Light') {
       $toggle.prop('title', '使用深色主题')
       $toggleImg.replaceWith('<i data-lucide="moon"></i>')
-    } else if (alt === 'Dark') {
+    }
+    else if (alt === 'Dark') {
       $toggle.prop('title', '使用浅色主题')
       $toggleImg.replaceWith('<i data-lucide="sun"></i>')
     }
@@ -166,10 +176,10 @@ void (async () => {
   // }
 
   if (options.hideAccount) {
-    const faviconLink = $("link[rel~='icon']")
+    const faviconLink = $('link[rel~=\'icon\']')
     faviconLink.prop('href', `${Links.Home}/favicon.svg`)
 
-    $('#Logo').append(`<i data-lucide="house"></i>`).addClass('v2p-logo')
+    $('#Logo').append('<i data-lucide="house"></i>').addClass('v2p-logo')
     $('#Top').find('a[href^="/member/"]').remove()
     $infoCard
       .find('a[href^="/member/"], table:nth-of-type(1) td:nth-of-type(3) .fade')
@@ -241,12 +251,14 @@ void (async () => {
     if (storageType === 'sync') {
       const options = changes[StorageKey.Options]
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (options) {
-        const { newValue, oldValue } = options
+        const { newValue, oldValue } = options as {
+          newValue: Options | undefined
+          oldValue: Options | undefined
+        }
 
-        const newOptions = newValue as Options | undefined
-        const oldOptions = oldValue as Options | undefined
+        const newOptions = newValue
+        const oldOptions = oldValue
 
         const newTheme = newOptions?.theme
         const oldTheme = oldOptions?.theme
@@ -265,12 +277,14 @@ void (async () => {
               prefersDark,
               themeType: newTheme.type,
             })
-          } else {
+          }
+          else {
             // 当主题类型未发生变化时，仅处理自动跟随系统主题的设置。
             if (newTheme.autoSwitch !== oldTheme.autoSwitch) {
               if (newTheme.autoSwitch) {
                 colorMedia.addEventListener('change', handleColorSchemeChange)
-              } else {
+              }
+              else {
                 colorMedia.removeEventListener('change', handleColorSchemeChange)
               }
 
@@ -286,7 +300,8 @@ void (async () => {
           if (newTheme.mode !== oldTheme.mode) {
             if (newTheme.mode === 'compact') {
               $body.addClass('v2p-mode-compact')
-            } else {
+            }
+            else {
               $body.removeClass('v2p-mode-compact')
             }
           }

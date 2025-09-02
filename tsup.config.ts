@@ -5,27 +5,32 @@ export default defineConfig({
   entry: {
     // === 内容脚本 (Content Scripts) ===
     // 注入到 V2EX 页面中的脚本，用于增强页面功能
-    'common.min': 'src/contents/common.ts', // 通用功能模块
-    'v2ex-home.min': 'src/contents/home/index.ts', // 首页增强功能
-    'v2ex-topic.min': 'src/contents/topic/index.ts', // 话题页面增强
-    'v2ex-write.min': 'src/contents/write/index.ts', // 写作页面增强
-    'v2ex-member.min': 'src/contents/member/index.ts', // 用户页面增强
-    'v2ex-settings.min': 'src/contents/settings/index.ts', // 设置页面增强
-    'v2ex-notifications.min': 'src/contents/notifications/index.ts', // 通知页面增强
-    'v2ex-go.min': 'src/contents/go/index.ts', // Go 节点页面增强
-    'decode-base64.min': 'src/contents/decode-base64.ts', // Base64 解码工具
-    'reading-list.min': 'src/contents/reading-list.ts', // 阅读列表功能
+    common: 'src/contents/common.ts', // 通用功能模块
+    'v2ex-home': 'src/contents/home/index.ts', // 首页增强功能
+    'v2ex-topic': 'src/contents/topic/index.ts', // 话题页面增强
+    'v2ex-write': 'src/contents/write/index.ts', // 写作页面增强
+    'v2ex-member': 'src/contents/member/index.ts', // 用户页面增强
+    'v2ex-settings': 'src/contents/settings/index.ts', // 设置页面增强
+    'v2ex-notifications': 'src/contents/notifications/index.ts', // 通知页面增强
+    'v2ex-go': 'src/contents/go/index.ts', // Go 节点页面增强
+    'decode-base64': 'src/contents/decode-base64.ts', // Base64 解码工具
+    'reading-list': 'src/contents/reading-list.ts', // 阅读列表功能
 
     // === 扩展页面 (Extension Pages) ===
     // 扩展程序自身的 UI 页面
-    'popup.min': 'src/pages/popup.ts', // 弹出窗口页面
-    'options.min': 'src/pages/options.ts', // 选项设置页面
+    popup: 'src/pages/popup.ts', // 弹出窗口页面
+    options: 'src/pages/options.ts', // 选项设置页面
 
     // === 后台脚本 (Background Scripts) ===
     // 在扩展后台运行的脚本
-    'toggle-icon.min': 'src/background/toggle-icon.ts', // 图标状态切换
-    'background.min': 'src/background/main.ts', // 主后台脚本
-    'web_accessible_resources.min': 'src/web_accessible_resources.ts', // 网页可访问资源
+    'toggle-icon': 'src/background/toggle-icon.ts', // 图标状态切换
+    background: 'src/background/main.ts', // 主后台脚本
+    web_accessible_resources: 'src/web_accessible_resources.ts', // 网页可访问资源
+  },
+
+  // 自动为所有输出文件添加 .min 后缀
+  outExtension() {
+    return { js: '.min.js' }
   },
 
   // 构建输出目录 - 编译后的文件将输出到扩展的 scripts 目录
