@@ -6,6 +6,7 @@
  * 2. 统一管理扩展的配置信息，避免手动维护多个配置文件
  * 3. 根据不同浏览器的特性自动调整配置项
  * 4. 支持选择主要目标浏览器
+ * 5. 版本号统一从 package.json 读取（见 getPackageVersion），无需在脚本或 manifest 中重复维护
  *
  * 使用方法：
  * - 默认（Chrome 为主）：bun scripts/build-manifest.ts
