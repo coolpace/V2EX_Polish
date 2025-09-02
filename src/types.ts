@@ -102,7 +102,7 @@ export interface Tag {
   name: string
 }
 
-export type MemberTag = Record<Member['username'], { tags?: Tag[]; avatar?: Member['avatar'] }>
+export type MemberTag = Record<Member['username'], { tags?: Tag[], avatar?: Member['avatar'] }>
 
 export interface ReadingItem extends Pick<Topic, 'url' | 'title' | 'content'> {
   addedTime: number
@@ -287,23 +287,23 @@ export type Once = string
 
 type TaskId = string | number
 
-export type MessageData =
-  | {
-      from: MessageFrom.Content
-      payload?: {
-        task?: {
-          id: TaskId
-          expression: string
-        }
+export type MessageData
+  = | {
+    from: MessageFrom.Content
+    payload?: {
+      task?: {
+        id: TaskId
+        expression: string
       }
     }
+  }
   | {
-      from: MessageFrom.Web
-      payload?: {
-        status?: 'ready'
-        task?: {
-          id: TaskId
-          result: unknown
-        }
+    from: MessageFrom.Web
+    payload?: {
+      status?: 'ready'
+      task?: {
+        id: TaskId
+        result: unknown
       }
     }
+  }

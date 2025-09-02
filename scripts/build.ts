@@ -64,6 +64,7 @@ function build({ source, target, excludeFile: exclude }: BuildParams) {
 
     if (exclude) {
       const basename = path.basename(src)
+
       if (basename === exclude) {
         allowed = false
       }

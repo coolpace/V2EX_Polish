@@ -2,8 +2,8 @@ import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
 import type { SettingsSyncInfo, StorageItems, StorageSettings } from './types'
 
 /** 动态获取 V2EX 的域名，防止跨域。 */
-export const V2EX_ORIGIN =
-  typeof window !== 'undefined' && window.location.origin.includes('v2ex.com')
+export const V2EX_ORIGIN
+  = typeof window !== 'undefined' && window.location.origin.includes('v2ex.com')
     ? window.location.origin
     : V2EX.Origin
 
@@ -20,13 +20,17 @@ export function getOS() {
 
   if (macosPlatforms.test(userAgent)) {
     os = 'macos'
-  } else if (iosPlatforms.test(userAgent)) {
+  }
+  else if (iosPlatforms.test(userAgent)) {
     os = 'ios'
-  } else if (windowsPlatforms.test(userAgent)) {
+  }
+  else if (windowsPlatforms.test(userAgent)) {
     os = 'windows'
-  } else if (userAgent.includes('android')) {
+  }
+  else if (userAgent.includes('android')) {
     os = 'android'
-  } else if (userAgent.includes('linux')) {
+  }
+  else if (userAgent.includes('linux')) {
     os = 'linux'
   }
 
@@ -38,7 +42,7 @@ export function getOS() {
  */
 export function formatTimestamp(
   timestamp: number,
-  { format = 'YMD' }: { format?: 'YMD' | 'YMDHM' | 'YMDHMS' } = {}
+  { format = 'YMD' }: { format?: 'YMD' | 'YMDHM' | 'YMDHMS' } = {},
 ): string {
   const date = new Date(timestamp.toString().length === 10 ? timestamp * 1000 : timestamp)
   const year = date.getFullYear().toString()
@@ -73,9 +77,9 @@ export function isSameDay(timestamp1: number, timestamp2: number): boolean {
   const date2 = new Date(timestamp2)
 
   return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
+    date1.getFullYear() === date2.getFullYear()
+    && date1.getMonth() === date2.getMonth()
+    && date1.getDate() === date2.getDate()
   )
 }
 
@@ -102,10 +106,12 @@ export function deepMerge<
     if (isObject(targetProp) && isObject(sourceProp)) {
       // 如果是对象，递归调用函数进行合并
       result[key] = deepMerge(targetProp, sourceProp)
-    } else if (Reflect.has(source, key)) {
+    }
+    else if (Reflect.has(source, key)) {
       // 如果 obj2 中也有这个属性，则进行覆盖
       result[key] = sourceProp
-    } else {
+    }
+    else {
       // 否则直接拷贝 obj1 中的属性
       result[key] = targetProp
     }
@@ -153,14 +159,19 @@ export function escapeHTML(htmlString: string): string {
     switch (match) {
       case '<':
         return '&lt;'
+
       case '>':
         return '&gt;'
+
       case '&':
         return '&amp;'
+
       case '"':
         return '&quot;'
-      case "'":
+
+      case '\'':
         return '&#39;'
+
       default:
         return match
     }
@@ -196,7 +207,7 @@ const mark = `${EXTENSION_NAME}_settings`
  * 目前是存储在 V2EX 的记事本中。
  */
 export async function getV2P_Settings(): Promise<
-  { noteId: string; config: StorageSettings } | undefined
+  { noteId: string, config: StorageSettings } | undefined
 > {
   let noteId: string | undefined
 
@@ -244,7 +255,7 @@ export async function getV2P_Settings(): Promise<
  */
 export async function setV2P_Settings(
   storageSettings: StorageSettings,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<SettingsSyncInfo> {
   const data = await getV2P_Settings()
 
@@ -261,7 +272,7 @@ export async function setV2P_Settings(
 
   formData.append(
     'content',
-    mark + JSON.stringify({ ...storageSettings, [StorageKey.SyncInfo]: syncInfo })
+    mark + JSON.stringify({ ...storageSettings, [StorageKey.SyncInfo]: syncInfo }),
   )
   formData.append('syntax', '0')
 
@@ -273,7 +284,8 @@ export async function setV2P_Settings(
       body: formData,
       signal,
     })
-  } else {
+  }
+  else {
     // 如果是第一次备份，则新建一个 V2EX 记事本来存储。
     formData.append('parent_id', '0')
 
@@ -284,7 +296,6 @@ export async function setV2P_Settings(
     })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   await setStorage(StorageKey.SyncInfo, syncInfo)
 
   return syncInfo
@@ -317,7 +328,8 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
       }
 
       resolve(data)
-    } else {
+    }
+    else {
       chrome.storage.sync
         .get()
         .then((items: StorageItems) => {
@@ -327,13 +339,15 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
 
           if (options) {
             data = { ...items, [StorageKey.Options]: deepMerge(defaultOptions, options) }
-          } else {
+          }
+          else {
             data = { ...items, [StorageKey.Options]: defaultOptions }
           }
 
           if (typeof window !== 'undefined') {
             window.__V2P_StorageCache = data
           }
+
           resolve(data)
         })
         .catch(() => {
@@ -360,43 +374,56 @@ let controller: AbortController | null = null
 
 export async function setStorage<T extends StorageKey>(
   storageKey: T,
-  storageItem: StorageItems[T]
+  storageItem: StorageItems[T],
 ) {
   switch (storageKey) {
     case StorageKey.Options:
+      // fall through
+
     case StorageKey.API:
+      // fall through
+
     case StorageKey.Daily:
+
+      // fall through
     case StorageKey.MemberTag:
+
+      // fall through
     case StorageKey.SyncInfo:
+
+      // fall through
     case StorageKey.ReadingList:
       try {
         await chrome.storage.sync.set({ [storageKey]: storageItem })
 
         // 当检测到配置更新时，自动备份到远程。
         if (
-          storageKey !== StorageKey.API &&
-          storageKey !== StorageKey.SyncInfo &&
-          typeof $ !== 'undefined'
+          storageKey !== StorageKey.API
+          && storageKey !== StorageKey.SyncInfo
+          && typeof $ !== 'undefined'
         ) {
           const settings = await getStorage(false)
 
           if (controller) {
             controller.abort()
           }
+
           controller = new AbortController()
 
-          setV2P_Settings(settings, controller.signal)
+          await setV2P_Settings(settings, controller.signal)
         }
-      } catch (err) {
+      }
+      catch (err) {
         if (String(err).includes('QUOTA_BYTES_PER_ITEM quota exceeded')) {
           console.error(
-            `${EXTENSION_NAME}: 无法设置 ${storageKey}， 单个 item 不能超出 8 KB，详情查看：https://developer.chrome.com/docs/extensions/reference/storage/#storage-areas`
+            `${EXTENSION_NAME}: 无法设置 ${storageKey}， 单个 item 不能超出 8 KB，详情查看：https://developer.chrome.com/docs/extensions/reference/storage/#storage-areas`,
           )
         }
 
         console.error(err)
         throw new Error(`❌ 无法设置：${storageKey}`)
       }
+
       break
 
     default:

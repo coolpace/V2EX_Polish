@@ -1,7 +1,7 @@
-module.exports = {
-  customSyntax: 'postcss-scss',
+import stylelintPreset from 'prefer-code-style/stylelint'
 
-  extends: [require.resolve('prefer-code-style/stylelint')],
+export default {
+  extends: [stylelintPreset],
 
   rules: {
     'selector-id-pattern': null,

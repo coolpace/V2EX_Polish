@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   ArchiveRestore,
   Check,
@@ -126,7 +127,7 @@ function setThemeOptions() {
     { name: 'Light default', type: 'light-default' },
     { name: 'Dark default', type: 'dark-default' },
     { name: 'Rose Pine Dawn', type: 'dawn', vip: true },
-  ] satisfies { name: string; type: ThemeType; vip?: boolean }[]
+  ] satisfies { name: string, type: ThemeType, vip?: boolean }[]
 
   themeTypes.forEach((themeConfig) => {
     const $themeOption = $($('#theme-option').clone().html())
@@ -169,14 +170,14 @@ void (async function init() {
 
     $('#theme_type_light-default').prop(
       'checked',
-      !options.theme.type || options.theme.type === 'light-default'
+      !options.theme.type || options.theme.type === 'light-default',
     )
     $('#theme_type_dark-default').prop('checked', options.theme.type === 'dark-default')
     $('#theme_type_dawn').prop('checked', options.theme.type === 'dawn')
     $('#theme_autoSwitch').prop('checked', options.theme.autoSwitch)
     $('#theme_mode_default').prop(
       'checked',
-      !options.theme.mode || options.theme.mode === 'default'
+      !options.theme.mode || options.theme.mode === 'default',
     )
     $('#theme_mode_compact').prop('checked', options.theme.mode === 'compact')
 
@@ -190,7 +191,7 @@ void (async function init() {
     $('#displayOff').prop('checked', options.nestedReply.display === 'off')
     $('#nestedReply_multipleInsideOne').prop(
       'checked',
-      options.nestedReply.multipleInsideOne === 'nested'
+      options.nestedReply.multipleInsideOne === 'nested',
     )
 
     $('#reply_preload_off').prop('checked', options.reply.preload === 'off')
@@ -203,7 +204,7 @@ void (async function init() {
     $('#replyLayoutHorizontal').prop('checked', options.reply.layout === 'horizontal')
     $('#replyLayoutVertical').prop(
       'checked',
-      options.reply.layout === 'vertical' || !options.reply.layout
+      options.reply.layout === 'vertical' || !options.reply.layout,
     )
     $('#contextMenuEnabled').prop('checked', !!options.contextMenu?.enabled)
     $('#hideAccount').prop('checked', options.hideAccount === true)
@@ -253,9 +254,9 @@ void (async function init() {
               <hr class="tags-divider" />
               <ul class="tags-list">
                 ${Object.entries(tagData)
-                  .map(([memberName, { tags, avatar }]) => {
-                    if (tags && tags.length > 0) {
-                      return `
+    .map(([memberName, { tags, avatar }]) => {
+      if (tags && tags.length > 0) {
+        return `
                         <li class="tag-item">
                           <div class="tag-member-name">
                             <a href="${V2EX.Origin}/member/${memberName}" target="_blank">
@@ -266,9 +267,9 @@ void (async function init() {
 
                           <div class="tag-item-tags">
                             ${
-                              tags
-                                .map((tag, idx) => {
-                                  return `
+  tags
+    .map((tag, idx) => {
+      return `
                                     <span
                                       class="tag-item-tag"
                                       data-member-name="${memberName}"
@@ -282,9 +283,9 @@ void (async function init() {
                                       </span>
                                     </span>
                                   `
-                                })
-                                .join('') || ''
-                            }
+    })
+    .join('') || ''
+  }
 
                             <span class="tag-item-tag tag-item-tag-add" data-member-name="${memberName}">
                               <span class="tag-add"><span data-lucide="plus"></span></span>
@@ -293,11 +294,11 @@ void (async function init() {
                           </div>
                         </li>
                       `
-                    }
+      }
 
-                    return ''
-                  })
-                  .join('')}
+      return ''
+    })
+    .join('')}
               </ul>
             </div>
           `)
@@ -320,7 +321,7 @@ void (async function init() {
                         tags: [...currentMemberTags, { name: newTagValue }],
                       })
 
-                      renderTagsContent()
+                      void renderTagsContent()
                     }
                   }
                 }
@@ -348,11 +349,11 @@ void (async function init() {
                       await setMemberTags({
                         memberName,
                         tags: currentMemberTags.map((it, idx) =>
-                          idx === tagIdx ? { name: changedTagValue } : it
+                          idx === tagIdx ? { name: changedTagValue } : it,
                         ),
                       })
 
-                      renderTagsContent()
+                      void renderTagsContent()
                     }
                   }
                 }
@@ -372,18 +373,18 @@ void (async function init() {
 
                 if (currentMemberTags) {
                   if (currentMemberTags.length <= 1) {
-                    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                     delete tagData[memberName]
 
                     await setStorage(StorageKey.MemberTag, tagData)
-                  } else {
+                  }
+                  else {
                     await setMemberTags({
                       memberName,
                       tags: currentMemberTags.filter((_, idx) => idx !== tagIdx),
                     })
                   }
 
-                  renderTagsContent()
+                  void renderTagsContent()
                 }
               }
             })()
@@ -392,19 +393,21 @@ void (async function init() {
           $contentTags.append($tagList)
 
           loadIcons()
-        } else {
+        }
+        else {
           renderEmptyTagsContent()
         }
-      } else {
+      }
+      else {
         renderEmptyTagsContent()
       }
     }
 
-    renderTagsContent()
+    void renderTagsContent()
   }
 
-  handleTokenForm()
-  handleBackupForm()
+  void handleTokenForm()
+  void handleBackupForm()
 
   // 控制切换显示菜单的内容。
   {
@@ -437,7 +440,8 @@ void (async function init() {
       if (activeKey === DEFAULT_ACTIVE_KEY) {
         url.searchParams.delete(MENU)
         history.replaceState(null, '', url.toString())
-      } else {
+      }
+      else {
         url.searchParams.set(MENU, activeKey)
         history.replaceState(null, '', url.toString())
       }

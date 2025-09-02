@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /**
  * Popup 功能描述：
  * 1. 切换到某个 tab 时，如果该 tab 的内容没有加载过，则加载内容。
@@ -114,9 +115,11 @@ function loadSettings() {
 
   $patInput.on('change', (ev) => {
     const value = (ev.target as HTMLInputElement).value
+
     if (value) {
       $patInput.addClass('has-value')
-    } else {
+    }
+    else {
       $patInput.removeClass('has-value')
     }
   })
@@ -124,9 +127,11 @@ function loadSettings() {
   if (api) {
     if (api.pat) {
       $patInput.val(api.pat).addClass('has-value')
-    } else {
+    }
+    else {
       $('.details').prop('open', true)
     }
+
     $('#limit').val(api.limit ?? defaultValue)
     $('#reset').val(api.reset ? formatTimestamp(api.reset, { format: 'YMDHMS' }) : defaultValue)
     $('#remaining').val(api.remaining ?? defaultValue)
@@ -168,7 +173,7 @@ function loadSettings() {
 
   {
     $('#open-options').on('click', () => {
-      chrome.runtime.openOptionsPage()
+      void chrome.runtime.openOptionsPage()
     })
   }
 
@@ -194,13 +199,13 @@ function loadSettings() {
 
       $remoteVersion.val(version ?? defaultValue)
       $syncTime.val(
-        lastSyncTime ? formatTimestamp(lastSyncTime, { format: 'YMDHMS' }) : defaultValue
+        lastSyncTime ? formatTimestamp(lastSyncTime, { format: 'YMDHMS' }) : defaultValue,
       )
 
       const $syncBtn = $('#sync-settings')
 
-      const backupAvailable =
-        syncInfo && remoteSyncInfo && syncInfo.version >= remoteSyncInfo.version
+      const backupAvailable
+        = syncInfo && remoteSyncInfo && syncInfo.version >= remoteSyncInfo.version
 
       if (!remoteSyncInfo || backupAvailable) {
         if (!remoteSyncInfo) {
@@ -217,6 +222,7 @@ function loadSettings() {
           .on('click', () => {
             void (async () => {
               const txt = $syncBtn.text()
+
               try {
                 $syncBtn.text('备份中...').css('pointer-events', 'none')
                 const storage = await getStorage(false)
@@ -224,12 +230,14 @@ function loadSettings() {
                 $localVersion.val(newSyncInfo.version)
                 $remoteVersion.val(newSyncInfo.version)
                 $syncTime.val(formatTimestamp(newSyncInfo.lastSyncTime, { format: 'YMDHMS' }))
-              } finally {
+              }
+              finally {
                 $syncBtn.text(txt).css('pointer-events', 'auto')
               }
             })()
           })
-      } else {
+      }
+      else {
         if (!syncInfo || syncInfo.version < remoteSyncInfo.version) {
           $('.storage-tip').text('远程备份的版本较新')
           $syncBtn
@@ -238,18 +246,20 @@ function loadSettings() {
             .on('click', () => {
               void (async () => {
                 const txt = $syncBtn.text()
+
                 try {
                   $syncBtn.text('同步中...').css('pointer-events', 'none')
                   await new Promise((resolve) =>
                     setTimeout(() => {
                       resolve(undefined)
-                    }, 1000)
+                    }, 1000),
                   )
                   const storage = await getStorage(false)
                   await chrome.storage.sync.set(deepMerge(storage, settings))
                   await getStorage(false)
                   loadSettings() // 同步配置后重新加载以应用最新配置。
-                } finally {
+                }
+                finally {
                   $syncBtn.text(txt).css('pointer-events', 'auto')
                 }
               })()
@@ -308,10 +318,16 @@ function initTabs() {
           .on('click', () => {
             void (async () => {
               const tabs = await Promise.all(
-                currentReadingData.map((it) => chrome.tabs.create({ url: it.url, active: false }))
+                currentReadingData.map((it) => chrome.tabs.create({ url: it.url, active: false })),
               )
-              const groupId = await chrome.tabs.group({ tabIds: tabs.map((it) => it.id!) })
-              await chrome.tabGroups.update(groupId, { title: 'V2EX', color: 'grey' })
+              const tabIds = tabs.map((it) => it.id).filter((id): id is number => id !== undefined)
+
+              if (tabIds.length > 0) {
+                const groupId = await chrome.tabs.group({
+                  tabIds: tabIds as [number, ...number[]],
+                })
+                await chrome.tabGroups.update(groupId, { title: 'V2EX', color: 'grey' })
+              }
             })()
           })
           .prependTo($readingList)
@@ -333,12 +349,14 @@ function initTabs() {
               $tabContent
                 .find(`.topic-item:has(.topic-item-action-remove[data-url="${url}"])`)
                 .remove()
-            } else {
+            }
+            else {
               displayEmpty()
             }
           }
         })
-      } else {
+      }
+      else {
         displayEmpty()
       }
     }
@@ -348,7 +366,8 @@ function initTabs() {
 
       if (loaded) {
         tabContentScrollTop = topicContentData[tabId].lastScrollTop ?? 0
-      } else {
+      }
+      else {
         const getData = async () => {
           $tabContent.html(loading)
 
@@ -357,14 +376,18 @@ function initTabs() {
               const topics = await fetchHotTopics()
               topicContentData[tabId].data = topics
               topicContentData[tabId].lastFetchTime = Date.now()
+
               return topics
-            } else {
+            }
+            else {
               const topics = await fetchLatestTopics()
               topicContentData[tabId].data = topics
               topicContentData[tabId].lastFetchTime = Date.now()
+
               return topics
             }
-          } catch (err) {
+          }
+          catch (err) {
             if (err instanceof Error) {
               console.error(`获取列表数据出错：${err.message}`)
             }
@@ -382,10 +405,12 @@ function initTabs() {
 
           if (!data || !lastFetchTime || Date.now() - lastFetchTime > dataExpiryTime) {
             topicList = await getData()
-          } else {
+          }
+          else {
             topicList = data
           }
-        } else {
+        }
+        else {
           topicList = await getData()
         }
 
@@ -412,10 +437,11 @@ function initTabs() {
             .html(
               `于 ${date} 自动签到${
                 dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
-              }`
+              }`,
             )
         }
-      } else {
+      }
+      else {
         $checkIn.on('click', () => {
           void checkIn()
         })
@@ -439,7 +465,8 @@ function initTabs() {
         try {
           const { result } = await fetchNotifications()
           notifications = result
-        } catch {
+        }
+        catch {
           $tabContent.html(errorDisplay)
         }
 
@@ -457,7 +484,7 @@ function initTabs() {
                   </li>
                   `
                 })
-                .join('')
+                .join(''),
             )
 
             // 为每个通知添加点击事件，点击后打开对应的主题链接。
@@ -496,23 +523,25 @@ function initTabs() {
             replaceEmojiWithHD($noticeList.find('.notice-item .embedded_image'))
 
             $tabContent.empty().append($tabHeader).append($noticeList)
-          } catch {
+          }
+          catch {
             $tabContent.html(`
               <div class="fetch-error">
                 消息列表渲染出错。
               </div>
             `)
           }
-        } else {
+        }
+        else {
           $tabContent.empty().append('<div class="tip">无任何消息</div>')
         }
-      } else {
+      }
+      else {
         const $tipBtn = createButton({ children: '去设置' }).on('click', () => {
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
           activeTab({ tabId: TabId.Setting })
         })
         const $tip = $(
-          '<div class="tip"><p>需要设置您的个人访问令牌才能获取消息通知</p></div>'
+          '<div class="tip"><p>需要设置您的个人访问令牌才能获取消息通知</p></div>',
         ).append($tipBtn)
         $tabContent.empty().append($tip)
       }
@@ -546,12 +575,14 @@ function initTabs() {
     }
   }
 
-  const activeTab = ({ tabId, tabEle }: { tabId?: string; tabEle?: JQuery } = {}) => {
+  const activeTab = ({ tabId, tabEle }: { tabId?: string, tabEle?: JQuery } = {}) => {
     if (tabId) {
       toggleActiveTab($(`.tabs > li[data-target="${tabId}"]`))
-    } else if (tabEle) {
+    }
+    else if (tabEle) {
       toggleActiveTab(tabEle)
-    } else {
+    }
+    else {
       toggleActiveTab($('nav > .tabs > li:first-child'))
     }
   }
@@ -610,17 +641,19 @@ window.addEventListener('load', () => {
 
     // 每 5 分钟获取一次未读消息数量。
     if (now - info.time >= fiveMinutes) {
-      getUnreadMessagesCount().then((count) => {
+      void getUnreadMessagesCount().then((count) => {
         const storeInfo: LastFetchUnreadMsgInfoInfo = { time: now, count }
         window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
 
         if (count > 0) {
           $tabMsg.text(`消息(${count})`)
-        } else {
+        }
+        else {
           $tabMsg.text('消息')
         }
       })
-    } else {
+    }
+    else {
       if (info.count > 0) {
         $tabMsg.text(`消息(${info.count})`)
       }

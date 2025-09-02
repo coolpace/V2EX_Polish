@@ -36,15 +36,17 @@ export async function fetchUserInfo(memberName: Member['username'], options?: Re
   try {
     const member = await legacyRequest<Member>(
       `${V2EX_LEGACY_API}/members/show.json?username=${memberName}`,
-      options
+      options,
     )
 
     return member
-  } catch (err) {
+  }
+  catch (err) {
     if (err instanceof Error) {
       if (err.name === 'AbortError') {
         throw new Error('请求被取消')
-      } else if (err.cause === 404) {
+      }
+      else if (err.cause === 404) {
         throw new Error('查无此用户，疑似已被封禁', { cause: err.cause })
       }
     }
@@ -196,10 +198,12 @@ export async function thankReply(params: {
       params.onSuccess?.()
 
       await refreshMoney()
-    } else {
+    }
+    else {
       alert(data.message)
     }
-  } catch {
+  }
+  catch {
     params.onFail?.()
   }
 }
@@ -210,6 +214,7 @@ export async function thankReply(params: {
 export async function crawlTopicPage(path: string, page = '1'): Promise<string> {
   const res = await fetch(`${V2EX_ORIGIN}${path}?p=${page}`)
   const htmlText = await res.text()
+
   return htmlText
 }
 
@@ -258,8 +263,10 @@ export async function getCommentPreview(params: {
 
   if (res.ok) {
     const renderedContent = await res.text()
+
     return renderedContent
-  } else {
+  }
+  else {
     throw new Error('预览失败')
   }
 }
@@ -275,9 +282,11 @@ export async function getUnreadMessagesCount(): Promise<number> {
 
     if (countStr) {
       const count = Number(text.match(/\d+/)?.at(0))
+
       return count
     }
-  } else {
+  }
+  else {
     return 0
   }
 

@@ -376,7 +376,7 @@ export const emoticons = [
     title: '其他',
     list: ['👻', '🤡', '🐔', '👀', '💩', '🐴', '🦄', '🐧', '🐶', '🐒', '🙈', '🙉', '🙊', '🐵'],
   },
-] as const satisfies readonly { title: string; list: readonly string[] }[]
+] as const satisfies readonly { title: string, list: readonly string[] }[]
 
 /** 关于扩展的超链接 */
 export const enum Links {

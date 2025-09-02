@@ -110,7 +110,8 @@ export function useTopicPreview() {
           const url = new URL(urlPath, window.location.origin)
           url.searchParams.append('v2p-preview', '1')
           previewFrame.prop('src', url.toString())
-        } catch (error) {
+        }
+        catch (error) {
           console.error('Invalid URL:', error)
           previewFrame.prop('src', 'about:blank')
         }
@@ -119,14 +120,15 @@ export function useTopicPreview() {
         $wrapper.append(previewFrame)
 
         modal.$content.append($wrapper)
-      } else {
+      }
+      else {
         if (PAT) {
           const load = async () => {
             let cacheData = topicDataCache.get(topicId)
 
             if (
-              !cacheData ||
-              Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 在同一个页面中且不刷新的情况下，缓存超时时间为十分钟。
+              !cacheData
+              || Date.now() - cacheData.cacheTime > 1000 * 60 * 10 // 在同一个页面中且不刷新的情况下，缓存超时时间为十分钟。
             ) {
               abortController = new AbortController()
 
@@ -196,26 +198,28 @@ export function useTopicPreview() {
 
                 topicDataCache.set(topicId, data)
                 cacheData = data
-              } catch (err) {
+              }
+              catch (err) {
                 const $errorTip = $('<div style="padding: 20px; text-align: center;">')
 
                 if (err instanceof Error) {
                   if (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-                    err.message === RequestMessage.InvalidToken ||
+                    err.message === RequestMessage.InvalidToken
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-                    err.message === RequestMessage.TokenExpired
+                    || err.message === RequestMessage.TokenExpired
                   ) {
                     $errorTip.html(
                       invalidTemplate(
-                        '您的 Token 已失效，请<a class="v2p-topic-preview-retry" href="https://www.v2ex.com/settings/tokens" target="_blank">重新设置</a>。'
-                      )
+                        '您的 Token 已失效，请<a class="v2p-topic-preview-retry" href="https://www.v2ex.com/settings/tokens" target="_blank">重新设置</a>。',
+                      ),
                     )
                   }
-                } else {
+                }
+                else {
                   $errorTip.html('加载主题失败，<a class="v2p-topic-preview-retry">点击重试</a>。')
                   $errorTip.find('.v2p-topic-preview-retry').on('click', () => {
-                    load()
+                    void load()
                   })
                 }
 
@@ -258,7 +262,7 @@ export function useTopicPreview() {
               iconBook.setAttribute('height', '100%')
 
               const $readingBtn = $(
-                '<div class="v2p-tp-read"><span class="v2p-tp-read-icon"></span>稍后阅读</div>'
+                '<div class="v2p-tp-read"><span class="v2p-tp-read-icon"></span>稍后阅读</div>',
               )
               $readingBtn.find('.v2p-tp-read-icon').append(iconBook)
               $readingBtn
@@ -284,7 +288,8 @@ export function useTopicPreview() {
                     <p>该主题没有正文内容</p>
                   </div>
                 `)
-              } else {
+              }
+              else {
                 $topicPreview.append($topicContent)
                 $topicContent.wrap('<div class="cell">')
               }
@@ -319,7 +324,7 @@ export function useTopicPreview() {
                     $cellDom
                       .find('.badges')
                       .append(
-                        `<div class="badge ${memberName === topic.member.username ? 'mod' : 'you'}">YOU</div>`
+                        `<div class="badge ${memberName === topic.member.username ? 'mod' : 'you'}">YOU</div>`,
                       )
                   }
 
@@ -383,8 +388,9 @@ export function useTopicPreview() {
             }
           }
 
-          load()
-        } else {
+          void load()
+        }
+        else {
           modal.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
         }
       }

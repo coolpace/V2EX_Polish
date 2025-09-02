@@ -51,7 +51,8 @@ function getPackageVersion(): string {
 
   try {
     fileContent = fs.readFileSync(packageJsonPath, 'utf8')
-  } catch (err) {
+  }
+  catch (err) {
     throw new Error(`无法读取 package.json：${String(err)}`)
   }
 
@@ -60,13 +61,16 @@ function getPackageVersion(): string {
 
     if (typeof pkg.version === 'string' && pkg.version.trim().length > 0) {
       version = pkg.version
-    } else {
+    }
+    else {
       throw new Error('package.json 未包含有效的 version 字段')
     }
-  } catch (err) {
+  }
+  catch (err) {
     if (version) {
       // 已经获取到版本则不进入此分支，这里仅为类型收窄的兜底逻辑。
-    } else {
+    }
+    else {
       throw new Error(`解析 package.json 失败：${String(err)}`)
     }
   }
@@ -145,24 +149,32 @@ const parseArgs = (): BuildOptions => {
 
     switch (arg) {
       case '--target':
+
       case '-t': {
         const target = args[++i]
+
         if (target === 'chrome' || target === 'firefox') {
           options.target = target
-        } else {
+        }
+        else {
           consola.error(`❌ 无效的目标浏览器: ${target}，支持的值: chrome, firefox`)
           process.exit(1)
         }
+
         break
       }
+
       case '--help':
+
       case '-h':
         options.help = true
         break
+
       default:
         if (arg.startsWith('--')) {
           consola.warn(`⚠️  未知参数: ${arg}`)
         }
+
         break
     }
   }
@@ -255,10 +267,10 @@ const generateManifest = (): Manifest => {
 
     // 扩展图标配置（多尺寸适配）
     icons: {
-      '16': 'images/icon-16.png',
-      '32': 'images/icon-32.png',
-      '48': 'images/icon-48.png',
-      '128': 'images/icon-128.png',
+      16: 'images/icon-16.png',
+      32: 'images/icon-32.png',
+      48: 'images/icon-48.png',
+      128: 'images/icon-128.png',
     },
 
     content_scripts: [
@@ -394,7 +406,7 @@ const convertToFirefoxManifest = (chromeManifest: Manifest): Manifest => {
 
   // 移除 Firefox 不支持的 sidePanel 权限
   firefoxManifest.permissions = firefoxManifest.permissions?.filter(
-    (permission) => permission !== 'sidePanel'
+    (permission) => permission !== 'sidePanel',
   )
 
   // 处理后台脚本配置差异
@@ -422,7 +434,8 @@ const writeFileAsync = (filePath: string, content: string): Promise<void> => {
     fs.writeFile(filePath, content, 'utf8', (err) => {
       if (err) {
         reject(err)
-      } else {
+      }
+      else {
         resolve()
       }
     })
@@ -442,6 +455,7 @@ const deleteFileAsync = (filePath: string): Promise<boolean> => {
       if (err) {
         // 文件不存在，返回 false
         resolve(false)
+
         return
       }
 
@@ -469,8 +483,9 @@ const cleanupManifestFiles = async (): Promise<void> => {
     manifestFiles.map(async (filename) => {
       const filePath = path.join(extensionDir, filename)
       const wasDeleted = await deleteFileAsync(filePath)
+
       return { filename, wasDeleted }
-    })
+    }),
   )
 }
 
@@ -481,6 +496,7 @@ const main = async () => {
   // 显示帮助信息
   if (options.help) {
     showHelp()
+
     return
   }
 
@@ -503,26 +519,27 @@ const main = async () => {
       await Promise.all([
         writeFileAsync(
           path.join('extension', 'manifest.json'),
-          JSON.stringify(chromeManifest, null, 2)
+          JSON.stringify(chromeManifest, null, 2),
         ),
         writeFileAsync(
           path.join('extension', 'manifest-firefox.json'),
-          JSON.stringify(firefoxManifest, null, 2)
+          JSON.stringify(firefoxManifest, null, 2),
         ),
       ])
 
       consola.success('✅ manifest.json (Chrome) 生成成功')
       consola.success('✅ manifest-firefox.json (Firefox) 生成成功')
-    } else {
+    }
+    else {
       // Firefox 为主：manifest.json (Firefox) + manifest-chrome.json (Chrome)
       await Promise.all([
         writeFileAsync(
           path.join('extension', 'manifest.json'),
-          JSON.stringify(firefoxManifest, null, 2)
+          JSON.stringify(firefoxManifest, null, 2),
         ),
         writeFileAsync(
           path.join('extension', 'manifest-chrome.json'),
-          JSON.stringify(chromeManifest, null, 2)
+          JSON.stringify(chromeManifest, null, 2),
         ),
       ])
 
@@ -531,7 +548,8 @@ const main = async () => {
     }
 
     consola.success('🎉 Manifest 文件构建完成！')
-  } catch (error) {
+  }
+  catch (error) {
     consola.error('❌ 构建失败:', error)
     process.exit(1)
   }

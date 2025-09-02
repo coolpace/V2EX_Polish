@@ -10,10 +10,9 @@
 }
 
 body {
-  // Firefox
   scrollbar-color: var(--v2p-color-foreground) var(--v2p-scrollbar-background-color);
   scrollbar-gutter: stable;
-  overflow: overlay;
+  overflow: auto;
   visibility: hidden;
 
   /* ------ 浏览器窗口滚动条 ------ */
@@ -48,20 +47,20 @@ body {
 
   pre {
     // 防止代码块不换行导致 Main 容器突破宽度。
-    // .content: 1100px | #RightBar: 270px
+    // .content: 1100px |;Main.content #RightBar: 270px;
     max-width: calc(1100px - 270px - 2 * var(--v2p-layout-column-gap) - 2 * 12px);
   }
 
   #Top {
     height: var(--v2p-nav-height);
-    background-color: var(--v2p-color-bg-content);
     border: none;
+    background-color: var(--v2p-color-bg-content);
   }
 
   #Bottom {
+    border: none;
     color: var(--v2p-color-font-secondary);
     background-color: var(--v2p-color-bg-footer);
-    border: none;
 
     .content {
       flex-direction: column; // 修复 v2ex.com/settings/invite 页脚布局错乱的问题。
@@ -159,9 +158,9 @@ body {
   #search-container {
     height: 30px;
     margin: 0 30px;
-    background-color: var(--v2p-color-bg-search);
     border: none;
     border-radius: var(--v2p-input-radius);
+    background-color: var(--v2p-color-bg-search);
 
     &::before {
       top: 0;
@@ -178,11 +177,11 @@ body {
     #search-result {
       z-index: var(--zidx-serach);
       top: 42px;
+      border: 1px solid var(--box-border-color);
       font-size: 14px;
       color: var(--v2p-color-font-secondary);
       background: var(--v2p-color-bg-widget);
       backdrop-filter: blur(16px);
-      border: 1px solid var(--box-border-color);
       box-shadow: var(--v2p-widget-shadow);
 
       .fade {
@@ -190,9 +189,9 @@ body {
       }
 
       .search-item {
+        border-radius: 5px;
         font-weight: bold;
         color: var(--v2p-color-foreground);
-        border-radius: 5px;
 
         &.active {
           color: var(--v2p-color-foreground);
@@ -206,10 +205,10 @@ body {
   }
 
   .box {
-    color: var(--box-foreground-color);
-    background-color: var(--v2p-color-bg-content);
     border: none;
     border-radius: var(--box-border-radius);
+    color: var(--box-foreground-color);
+    background-color: var(--v2p-color-bg-content);
     box-shadow: var(--v2p-box-shadow);
 
     .header {
@@ -244,9 +243,9 @@ body {
       &:hover {
         &,
         &:enabled {
+          border: none;
           color: var(--v2p-color-accent-600);
           background: var(--v2p-color-accent-100);
-          border: none;
           box-shadow: var(--button-hover-shadow);
         }
       }
@@ -262,8 +261,8 @@ body {
   .badge {
     user-select: none;
     padding: 2px 5px;
-    font-weight: bold;
     border: 1px solid var(--v2p-color-accent-400);
+    font-weight: bold;
 
     &:first-child {
       border: 1px solid var(--v2p-color-accent-400);
@@ -288,9 +287,9 @@ body {
     }
 
     &.you {
+      border: 1px solid var(--v2p-color-orange-400);
       color: var(--v2p-color-orange-400);
       background-color: var(--v2p-color-orange-50);
-      border: 1px solid var(--v2p-color-orange-400);
     }
 
     &.mini {
@@ -304,10 +303,10 @@ body {
 
   a.node:is(:active, :link, :visited) {
     padding: 5px 6px;
+    border-radius: 4px;
     font-size: 13px;
     color: var(--v2p-color-font-secondary);
     background-color: var(--v2p-color-bg-block);
-    border-radius: 4px;
 
     &:hover {
       color: var(--v2p-color-font-tertiary);
@@ -316,18 +315,18 @@ body {
   }
 
   .outdated {
-    font-size: 12px;
     border-color: var(--v2p-color-border);
     border-bottom: none;
+    font-size: 12px;
   }
 
   :is(.page_normal, .page_current) {
     &:is(:link, :visited) {
       user-select: none;
       padding: 6px 9px;
-      font-size: 14px;
       border: none;
       border-radius: 4px;
+      font-size: 14px;
     }
   }
 
@@ -385,10 +384,10 @@ body {
   .online {
     user-select: none;
     padding: 6px 8px;
+    border-radius: 5px;
     font-size: 13px;
     color: var(--v2p-color-bg-content);
     background: var(--v2p-color-accent-400);
-    border-radius: 5px;
   }
 
   #topic_supplement {
@@ -468,8 +467,8 @@ body {
 
   // 输入框：https://www.v2ex.com/notes ｜ https://www.v2ex.com/t
   .alt {
-    background-color: var(--v2p-color-bg-input);
     border: 1px solid var(--button-border-color);
+    background-color: var(--v2p-color-bg-input);
   }
 
   // https://www.v2ex.com/i/about
@@ -538,8 +537,8 @@ body {
 
     .CodeMirror-gutters {
       padding-right: 5px;
-      background-color: var(--v2p-color-bg-input);
       border-right: 1px solid var(--v2p-color-border-darker);
+      background-color: var(--v2p-color-bg-input);
     }
 
     .CodeMirror-linenumber {
@@ -567,9 +566,9 @@ body {
 
     .select2-selection {
       height: 33px !important;
-      background-color: var(--v2p-color-bg-content);
       border: 1px solid var(--v2p-color-border);
       border-radius: var(--v2p-input-radius);
+      background-color: var(--v2p-color-bg-content);
 
       .select2-selection__rendered,
       .select2-selection__placeholder {
@@ -590,9 +589,9 @@ body {
 
         .select2-search__field {
           padding: 6px 4px;
-          background-color: transparent;
           border: 1px solid var(--v2p-color-border);
           border-radius: 4px;
+          background-color: transparent;
 
           &:focus-visible {
             border-color: var(--v2p-color-font-quaternary);
@@ -628,11 +627,11 @@ body {
 
   // 提示回复没有内容。
   .problem {
+    border-color: var(--v2p-color-orange-400);
+    border-bottom: none;
     color: currentColor;
     color: var(--v2p-color-orange-400);
     background-color: var(--v2p-color-orange-50);
-    border-color: var(--v2p-color-orange-400);
-    border-bottom: none;
   }
 
   .markdown_body {
@@ -656,8 +655,8 @@ body {
     blockquote {
       margin-inline: 0;
       padding: 0 1em;
-      color: var(--v2p-color-font-tertiary);
       border-left: 3px solid var(--v2p-color-border);
+      color: var(--v2p-color-font-tertiary);
     }
 
     pre {
@@ -667,8 +666,8 @@ body {
 
   // 个人页的链接。
   .social_label:is(:link, :visited, :active) {
-    background-color: var(--v2p-color-button-background);
     border-radius: var(--box-border-radius);
+    background-color: var(--v2p-color-button-background);
     box-shadow: none;
 
     &:hover {
@@ -681,9 +680,9 @@ body {
   }
 
   .message {
+    border: none;
     color: var(--v2p-color-orange-400);
     background-color: var(--v2p-color-orange-50);
-    border: none;
   }
 
   // 账户余额。
@@ -703,8 +702,8 @@ body {
   }
 
   :is(.subtle) {
-    background-color: var(--v2p-color-bg-subtle);
     border-left: 3px solid var(--v2p-color-accent-200);
+    background-color: var(--v2p-color-bg-subtle);
 
     .topic_content {
       font-size: 15px;
@@ -727,8 +726,8 @@ body {
 
     cursor: pointer;
     padding: 7px 10.5px;
-    background-color: var(--v2p-color-bg-content);
     border-radius: var(--v2p-input-radius);
+    background-color: var(--v2p-color-bg-content);
 
     &:hover,
     &:focus {
@@ -744,10 +743,10 @@ body {
   .sll,
   .sls {
     padding: 7px 10.5px;
-    color: var(--v2p-color-foreground);
-    background-color: var(--v2p-color-bg-content);
     border-color: var(--v2p-color-input-border);
     border-radius: var(--v2p-input-radius);
+    color: var(--v2p-color-foreground);
+    background-color: var(--v2p-color-bg-content);
 
     &:focus {
       border-color: var(--v2p-color-input-border-focus);
@@ -778,10 +777,10 @@ body {
 
     &:link,
     &:visited {
+      border-radius: 5px;
       font-size: 12px;
       color: var(--v2p-color-font-secondary);
       background-color: var(--v2p-color-main-100);
-      border-radius: 5px;
     }
 
     > li {
@@ -813,10 +812,10 @@ body {
     .top {
       height: 26px;
       padding: 0 6px;
+      border-radius: 4px;
       line-height: 26px;
       color: var(--v2p-color-button-foreground);
       white-space: nowrap;
-      border-radius: 4px;
 
       &:hover {
         color: var(--v2p-color-foreground);
@@ -918,10 +917,10 @@ body {
       column-gap: 5px;
       align-items: center;
       padding: 5px;
+      border-radius: 4px;
       text-shadow: none;
       white-space: nowrap;
       background: none;
-      border-radius: 4px;
 
       &:not(.v2p-hover-btn) {
         color: var(--v2p-color-font-secondary);
@@ -935,9 +934,9 @@ body {
   }
 
   .vote:link {
-    color: var(--v2p-color-font-tertiary);
     border-color: var(--v2p-color-border-darker);
     border-radius: 5px;
+    color: var(--v2p-color-font-tertiary);
 
     &:hover {
       box-shadow: 0 2px 2px var(--v2p-color-main-200);
@@ -949,10 +948,10 @@ body {
       user-select: none;
       display: inline-block;
       padding: 5px 10px;
+      border-radius: 5px;
       font-size: 12px;
       font-weight: 400;
       white-space: nowrap;
-      border-radius: 5px;
     }
 
     .topic-link {
@@ -1076,8 +1075,8 @@ body {
             aspect-ratio: 1;
             width: 40px !important;
             height: 40px !important;
-            background-color: var(--v2p-color-bg-avatar);
             border-radius: 5px;
+            background-color: var(--v2p-color-bg-avatar);
           }
         }
       }
@@ -1169,10 +1168,10 @@ body {
       position: relative;
       top: -4px;
       padding: 5px 10px;
+      border-radius: 5px;
       font-size: 12px;
       color: var(--v2p-color-cell-num);
       background-color: transparent;
-      border-radius: 5px;
     }
   }
 
@@ -1186,8 +1185,8 @@ body {
     gap: 5px 3px;
     align-items: center;
     padding: var(--v2p-tp-tabs-pd);
-    background-color: var(--v2p-color-bg-content);
     border-bottom: 1px solid var(--box-border-color);
+    background-color: var(--v2p-color-bg-content);
 
     .tab_current {
       margin-right: 0;
@@ -1206,8 +1205,8 @@ body {
 
   #SecondaryTabs {
     padding: 10px;
-    background-color: var(--v2p-color-bg-tabs);
     border-radius: 5px;
+    background-color: var(--v2p-color-bg-tabs);
 
     a {
       color: var(--v2p-color-tabs);
@@ -1239,9 +1238,9 @@ body {
   // 「设置页」的选项标签样式：
   .tab {
     user-select: none;
+    border-radius: 3px;
     color: var(--v2p-color-foreground);
     background-color: transparent;
-    border-radius: 3px;
 
     &:not(.v2p-hover-btn):hover {
       background-color: var(--v2p-color-bg-block);
@@ -1251,9 +1250,9 @@ body {
   // 「设置页」的选项标签样式：
   .tab_current {
     user-select: none;
+    border-radius: 3px;
     color: var(--v2p-color-bg-content);
     background-color: var(--v2p-color-foreground);
-    border-radius: 3px;
   }
 
   #reply-box {
@@ -1299,8 +1298,8 @@ body {
   }
 
   #no-comments-yet {
-    color: var(--color-gray);
     border-color: var(--color-gray);
+    color: var(--color-gray);
   }
 
   #notifications {
@@ -1332,8 +1331,8 @@ body {
 
   .cell_tabs {
     .cell_tab_current {
-      font-weight: bold;
       border-color: var(--v2p-color-foreground);
+      font-weight: bold;
     }
 
     .cell_tab {
@@ -1357,10 +1356,10 @@ body {
 
   .box {
     .item_node {
-      font-size: 12px;
-      color: var(--v2p-color-font-secondary);
       border-color: var(--v2p-color-border);
       border-radius: 5px;
+      font-size: 12px;
+      color: var(--v2p-color-font-secondary);
 
       &:hover {
         box-shadow: var(--v2p-box-shadow);
