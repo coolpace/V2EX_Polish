@@ -31,16 +31,16 @@ export function getCommentDataList({
       const floor = $td.find('span.no').text()
 
       const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9]+)/g))
-      const refMemberNames =
-        memberNameMatches.length > 0
+      const refMemberNames
+        = memberNameMatches.length > 0
           ? memberNameMatches.map(([, name]) => {
               return name
             })
           : undefined
 
       const floorNumberMatches = Array.from(content.matchAll(/#(\d+)/g))
-      const refFloors =
-        floorNumberMatches.length > 0
+      const refFloors
+        = floorNumberMatches.length > 0
           ? floorNumberMatches.map(([, floor]) => {
               return floor
             })
@@ -49,8 +49,8 @@ export function getCommentDataList({
       let contentHtml: CommentData['contentHtml'] = undefined
 
       if (refMemberNames) {
-        const canHideRefName =
-          options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
+        const canHideRefName
+          = options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
 
         // 如果设置了「隐藏 @ 用户名 」，则把 @ 用户名 提取出来，并使用 span 包裹。
         if (canHideRefName) {
@@ -110,8 +110,8 @@ export function handleNestedComment({
       }
 
       // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
-      const currentComment =
-        dataFromIndex?.id === cellDom.id
+      const currentComment
+        = dataFromIndex?.id === cellDom.id
           ? dataFromIndex
           : commentDataList.find((data) => data.id === cellDom.id)
 
@@ -157,6 +157,7 @@ export function handleNestedComment({
               }
 
               $commentCells.eq(refCommentIdx).append(cellDom)
+
               return
             }
           }

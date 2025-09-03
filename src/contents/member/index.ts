@@ -25,7 +25,6 @@ void (async () => {
 
     const callbacks: CallbackFunctions = {
       onRemoveExistingTagBlock: () => {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         insertAddBtn()
       },
 
@@ -49,16 +48,18 @@ void (async () => {
 
       if (tagsText) {
         const $tags = $(
-          `<div class="v2p-reply-tags v2p-tags-${memberName}" style="margin-right: 5px;" title="${tagsText}"><b>#</b>&nbsp;${tagsText}</div>`
+          `<div class="v2p-reply-tags v2p-tags-${memberName}" style="margin-right: 5px;" title="${tagsText}"><b>#</b>&nbsp;${tagsText}</div>`,
         )
         $tags.on('click', () => {
           openTagsSetter({ memberName, memberAvatar, ...callbacks })
         })
         $tagBlock.append($tags)
-      } else {
+      }
+      else {
         insertAddBtn()
       }
-    } else {
+    }
+    else {
       insertAddBtn()
     }
 
@@ -68,12 +69,12 @@ void (async () => {
   handleTopicList({ isOwner })
 
   // MARK: 获取用户注册时间信息
-  fetchUserInfo(memberName).then((memberData) => {
+  void fetchUserInfo(memberName).then((memberData) => {
     const registerDays = getRegisterDays(memberData.created)
 
     if (registerDays <= 30) {
       $memberName.append(
-        `<span class="v2p-register-days v2p-register-days-large">${registerDays <= 15 ? '15' : '30'} 天内注册</span>`
+        `<span class="v2p-register-days v2p-register-days-large">${registerDays <= 15 ? '15' : '30'} 天内注册</span>`,
       )
     }
   })

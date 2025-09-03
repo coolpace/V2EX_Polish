@@ -58,9 +58,10 @@ export function handleTools() {
 
     const $toolContent = $(`
       <div class="v2p-select-dropdown">
+        <div class="v2p-select-item v2p-reply-tool-share">生成分享图片</div>
+        <div class="v2p-select-divider"></div>
         <div class="v2p-select-item v2p-reply-tool-decode">解析本页 Base64</div>
         <div class="v2p-select-item v2p-reply-tool-encode">文本转 Base64</div>
-        <div class="v2p-select-item v2p-reply-tool-share">生成分享图片</div>
       </div>
     `)
 
@@ -87,7 +88,8 @@ export function handleTools() {
 
           try {
             encodedText = window.btoa(encodeURIComponent(inputText))
-          } catch (err) {
+          }
+          catch (err) {
             const errorTip = '该文本无法编码为 Base64'
             console.error(err, `${errorTip}，可能的错误原因：文本包含中文。`)
             createToast({ message: errorTip })
@@ -106,8 +108,8 @@ export function handleTools() {
       }
     })
 
-    const canHideRefName =
-      options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
+    const canHideRefName
+      = options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
 
     if (canHideRefName) {
       let isHidden = options.replyContent.hideRefName
@@ -119,7 +121,8 @@ export function handleTools() {
           isHidden = false
           $toolToggleDisplay.text('隐藏 @ 用户名')
           $('.v2p-member-ref').addClass('v2p-member-ref-show')
-        } else {
+        }
+        else {
           isHidden = true
           $toolToggleDisplay.text('显示 @ 用户名')
           $('.v2p-member-ref').removeClass('v2p-member-ref-show')
@@ -134,7 +137,7 @@ export function handleTools() {
       <div class="v2p-select-item v2p-reply-tool-layout">
         ${options.reply.layout === 'horizontal' ? '切换为垂直布局' : '切换为水平布局'}
       </div>
-      `
+      `,
     )
 
     $toolToggleLayout.on('click', () => {

@@ -73,18 +73,16 @@ export function createModal(props: CreateModalProps): ModalControl {
 
   const mouseUpHandler = (ev: JQuery.MouseUpEvent) => {
     if (
-      mouseDownTarget === $mask.get(0) &&
-      ev.target === $mask.get(0) &&
-      ev.currentTarget === ev.target
+      mouseDownTarget === $mask.get(0)
+      && ev.target === $mask.get(0)
+      && ev.currentTarget === ev.target
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleModalClose()
     }
   }
 
   const keyupHandler = (ev: JQuery.KeyDownEvent) => {
     if (ev.key === 'Escape') {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handleModalClose()
     }
   }

@@ -49,11 +49,11 @@ export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorRespo
     if ('success' in cause && 'message' in cause) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        typeof cause['success'] === 'boolean' &&
+        typeof cause['success'] === 'boolean'
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        !cause['success'] &&
+        && !cause['success']
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        typeof cause['message'] === 'string'
+        && typeof cause['message'] === 'string'
       )
     }
   }
@@ -106,9 +106,9 @@ export async function setMemberTags(params: {
       [memberName]: { tags, avatar: memberAvatar || tagData?.[memberName]?.avatar },
     }
     await setStorage(StorageKey.MemberTag, newTagData)
-  } else {
+  }
+  else {
     if (tagData && Reflect.has(tagData, memberName)) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete tagData[memberName]
       await setStorage(StorageKey.MemberTag, tagData)
     }
@@ -134,7 +134,8 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
 
   if (exist) {
     createToast({ message: '该主题已存在于稍后阅读' })
-  } else {
+  }
+  else {
     if (window.__V2P_AddingReading !== true) {
       window.__V2P_AddingReading = true
 
@@ -158,7 +159,8 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
 
         // 加入延时等待，防止连续触发添加操作。
         await sleep(500)
-      } finally {
+      }
+      finally {
         window.__V2P_AddingReading = false
       }
     }
@@ -174,7 +176,7 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
 function customEscape(str: string) {
   return str.replace(
     /[^a-zA-Z0-9_.!~*'()-]/g,
-    (c) => `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`
+    (c) => `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`,
   )
 }
 
@@ -195,7 +197,8 @@ export function decodeBase64TopicPage() {
 
   if (window.__V2P_DecodeStatus === 'decodeed') {
     createToast({ message: '已解析完本页所有的 Base64 字符串' })
-  } else {
+  }
+  else {
     // 不能从 global.ts 中引入，否则会出现脚本执行错误，此错误发生原因未知。
     const $topicContentBox = $('#Main .box:has(.topic_content)')
     const $commentBox = $('#Main .box:has(.cell[id^="r_"])')
@@ -229,6 +232,7 @@ export function decodeBase64TopicPage() {
       // 检查填充字符 "=" 的位置是否正确。
       if (text.includes('=')) {
         const paddingIndex = text.indexOf('=')
+
         if (paddingIndex !== text.length - 1 && paddingIndex !== text.length - 2) {
           return text
         }
@@ -242,8 +246,10 @@ export function decodeBase64TopicPage() {
       try {
         const decodedStr = decodeURIComponent(customEscape(window.atob(text)))
         count += 1
+
         return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
-      } catch (err) {
+      }
+      catch (err) {
         if (err instanceof Error) {
           console.error(`解析 Base64 出错：${err.message}`)
         }
@@ -261,7 +267,7 @@ export function decodeBase64TopicPage() {
       ].map((ele) => ele.outerHTML)
 
       content.innerHTML = content.innerHTML.replace(base64regex, (htmlText) =>
-        convertHTMLText(htmlText, excludeTextList)
+        convertHTMLText(htmlText, excludeTextList),
       )
     }
 
@@ -271,7 +277,8 @@ export function decodeBase64TopicPage() {
 
     if (count === 0) {
       createToast({ message: '本页未发现 Base64 字符串' })
-    } else {
+    }
+    else {
       window.__V2P_DecodeStatus = 'decodeed'
       createToast({ message: `✅ 已解析本页所有的 Base64 字符串，共 ${count} 条` })
     }
@@ -296,11 +303,13 @@ export function postTask(expression: string, callback?: (result: unknown) => voi
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const result = Function(`"use strict"; ${expression}`)()
     callback?.(result)
-  } else {
+  }
+  else {
     if (callback) {
       if (window.__V2P_Tasks) {
         window.__V2P_Tasks.set(Date.now(), callback)
-      } else {
+      }
+      else {
         window.__V2P_Tasks = new Map([[Date.now(), callback]])
       }
     }
@@ -399,22 +408,27 @@ export function initTheme({
 
     if (perfersDark) {
       setTheme('dark-default')
-    } else if (themeType === 'dark-default') {
+    }
+    else if (themeType === 'dark-default') {
       setTheme('light-default')
-    } else {
+    }
+    else {
       setTheme(themeType)
     }
 
     colorMedia.addEventListener('change', ({ matches }) => {
       if (matches) {
         setTheme('dark-default')
-      } else if (themeType === 'dark-default') {
+      }
+      else if (themeType === 'dark-default') {
         setTheme('light-default')
-      } else {
+      }
+      else {
         setTheme(themeType)
       }
     })
-  } else {
+  }
+  else {
     setTheme(themeType)
   }
 }
@@ -445,14 +459,15 @@ export function toggleTheme({
 
     // 调用远程接口修改 cookie，以便下次刷新页面时保持配置一致。
     if (typeof toggleThemeUrl === 'string') {
-      fetch(toggleThemeUrl)
+      void fetch(toggleThemeUrl)
     }
 
     // 同时修改切换按钮。
     if (prefersDark) {
       $toggle.prop('title', '使用浅色主题')
       $toggle.html('<i data-lucide="sun"></i>')
-    } else {
+    }
+    else {
       $toggle.prop('title', '使用深色主题')
       $toggle.html('<i data-lucide="moon"></i>')
     }
@@ -461,7 +476,8 @@ export function toggleTheme({
   if (prefersDark) {
     setTheme('dark-default')
     $wrapper.addClass('Night')
-  } else {
+  }
+  else {
     setTheme(themeType)
     $wrapper.removeClass('Night')
   }
@@ -510,7 +526,7 @@ export function replaceCommentEmojiWithHD($cells: JQuery = $commentCells) {
     srcMap.set(ld, hd)
   })
 
-  const $embedImages = $cells.find(`.reply_content .embedded_image, .payload .embedded_image`)
+  const $embedImages = $cells.find('.reply_content .embedded_image, .payload .embedded_image')
 
   if ($embedImages.length > 0) {
     replaceEmojiWithHD($embedImages)
@@ -531,6 +547,7 @@ export function openV2PSettings() {
  */
 export function getRegisterDays(created: number): number {
   const registerDays = Math.ceil((Date.now() / 1000 - created) / (60 * 60 * 24))
+
   return registerDays
 }
 

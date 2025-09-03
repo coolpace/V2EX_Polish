@@ -64,6 +64,7 @@ void (async () => {
     if (document.referrer.includes(document.location.pathname)) {
       const url = new URL(document.location.href)
       const page = url.searchParams.get('p')
+
       if (page && page !== '1') {
         document.querySelector('.topic_buttons')?.scrollIntoView({ behavior: 'smooth' })
       }

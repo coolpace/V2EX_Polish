@@ -76,7 +76,8 @@ const switchToVerticalLayout = () => {
 export function toggleTopicLayout() {
   if ($wrapperContent.hasClass('v2p-content-layout')) {
     switchToVerticalLayout()
-  } else {
+  }
+  else {
     switchToHorizontalLayout()
   }
 }
@@ -93,10 +94,12 @@ export function handleLayout() {
 
   $toggleRightbarBtn.on('click', () => {
     const isVisible = $rightbar.hasClass('v2p-layout-rightbar-visible')
+
     if (isVisible) {
       $('#Rightbar').removeClass('v2p-layout-rightbar-visible')
       $('.v2p-toggle-rightbar-icon').html(iconChevronLeft)
-    } else {
+    }
+    else {
       $('#Rightbar').addClass('v2p-layout-rightbar-visible')
       $('.v2p-toggle-rightbar-icon').html(iconChevronRight)
     }
@@ -106,7 +109,8 @@ export function handleLayout() {
   const handleResize = () => {
     if (window.innerWidth < MIN_TOPIC_PAGE_WIDTH) {
       switchToVerticalLayout()
-    } else {
+    }
+    else {
       // 重新应用当前布局设置
       const storage = getStorageSync()
       const options = storage[StorageKey.Options]
@@ -116,10 +120,12 @@ export function handleLayout() {
 
         if (contentHeight >= MAX_TOPIC_CONTENT_HEIGHT) {
           switchToHorizontalLayout()
-        } else {
+        }
+        else {
           switchToVerticalLayout()
         }
-      } else if (options.reply.layout === 'horizontal') {
+      }
+      else if (options.reply.layout === 'horizontal') {
         switchToHorizontalLayout()
       }
     }
@@ -127,7 +133,8 @@ export function handleLayout() {
     if (window.innerWidth < MIN_RIGHTBAR_HIDE_WIDTH) {
       $toggleRightbarBtn.show()
       $('.v2p-layout-rightbar').addClass('v2p-layout-rightbar-float')
-    } else {
+    }
+    else {
       $toggleRightbarBtn.hide()
       $('.v2p-layout-rightbar').removeClass('v2p-layout-rightbar-float')
     }

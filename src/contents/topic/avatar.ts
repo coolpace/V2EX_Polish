@@ -11,7 +11,7 @@ const banned = Symbol()
 /** 缓存用户卡片的信息，减少重复的请求。 */
 export const memberDataCache = new Map<
   Member['username'],
-  (Member & { registerDays: number }) | typeof banned
+  Member & { registerDays: number } | typeof banned
 >()
 
 interface ProcessAvatar {
@@ -101,7 +101,8 @@ export function processAvatar(params: ProcessAvatar) {
             ...memberData,
             registerDays: getRegisterDays(memberData.created),
           })
-        } catch (err) {
+        }
+        catch (err) {
           if (err instanceof Error) {
             $content.html(`<span>${err.message}</span>`)
 
@@ -128,14 +129,15 @@ export function processAvatar(params: ProcessAvatar) {
           $content
             .find('.v2p-info-right')
             .append(
-              `<div class="v2p-register-days" style="margin: 5px 0;">${data.registerDays <= 15 ? '15' : '30'} 天内注册</div>`
+              `<div class="v2p-register-days" style="margin: 5px 0;">${data.registerDays <= 15 ? '15' : '30'} 天内注册</div>`,
             )
         }
 
         if (data.bio && data.bio.trim().length > 0) {
           $content.find('.v2p-bio').css('disply', 'block').text(data.bio)
         }
-      } else if (typeof data === 'symbol' && data === banned) {
+      }
+      else if (typeof data === 'symbol' && data === banned) {
         $content.html('<span>查无此用户，疑似已被封禁</span>')
       }
     })()
@@ -164,7 +166,7 @@ export function processAvatar(params: ProcessAvatar) {
   if (shouldWrap) {
     // 点击头像跳转到该用户的主页。
     $trigger.wrap(
-      `<a href="/member/${commentData.memberName}" target="_blank" style="cursor: pointer;">`
+      `<a href="/member/${commentData.memberName}" target="_blank" style="cursor: pointer;">`,
     )
   }
 }

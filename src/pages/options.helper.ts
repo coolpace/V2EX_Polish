@@ -142,7 +142,8 @@ export async function handleBackupForm() {
                 const storage = await getStorage(false)
                 await chrome.storage.sync.set(deepMerge(storage, settings))
                 await getStorage(false)
-                loadSettings() // 同步配置后重新加载以应用最新配置。
+
+                void loadSettings() // 同步配置后重新加载以应用最新配置。
               }
               finally {
                 $syncBtn.text(txt).css('pointer-events', 'auto')

@@ -21,7 +21,7 @@ export function handleHotTopics() {
 
   const $text = $('<span class="v2p-topics-hot-picker-text">今日</span>')
   const $trigger = $(
-    '<div class="v2p-topics-hot-picker"><span class="v2p-topics-hot-icon"><i data-lucide="chevron-down"></i></span></div>'
+    '<div class="v2p-topics-hot-picker"><span class="v2p-topics-hot-icon"><i data-lucide="chevron-down"></i></span></div>',
   )
     .prepend($text)
     .appendTo($hotHeader)
@@ -89,21 +89,27 @@ export function handleHotTopics() {
       switch (alias) {
         case '今日':
           $listWrapper.empty().append($todayCells)
+
           return
 
         case '近三日':
+          // fall through
+
         case '近七日':
+          // fall through
+
         case '近一月': {
           const cacheResult = cache.get(alias)
 
           if (cacheResult) {
             renderNewTopicList(cacheResult)
-          } else {
+          }
+          else {
             const days = alias === '近三日' ? 3 : alias === '近七日' ? 7 : 30
 
             abortController = new AbortController()
 
-            getHotTopics({
+            void getHotTopics({
               startTime: now - days * oneDay,
               endTime: now,
               signal: abortController.signal,
@@ -112,6 +118,7 @@ export function handleHotTopics() {
               renderNewTopicList(result)
             })
           }
+
           return
         }
       }

@@ -27,15 +27,16 @@ chrome.runtime.onMessage.addListener((message: Message) => {
               128: '../images/icon-128.png',
             },
     })
-  } else if (Object.hasOwn(message, MessageKey.showOptions)) {
+  }
+  else if (Object.hasOwn(message, MessageKey.showOptions)) {
     if (message[MessageKey.showOptions] === true) {
-      chrome.runtime.openOptionsPage()
+      void chrome.runtime.openOptionsPage()
     }
   }
 })
 
 chrome.contextMenus.removeAll(() => {
-  chrome.storage.sync.get().then((items: StorageItems) => {
+  void chrome.storage.sync.get().then((items: StorageItems) => {
     const options = items[StorageKey.Options]
 
     if (options?.contextMenu?.enabled) {
@@ -62,8 +63,8 @@ chrome.contextMenus.removeAll(() => {
         id: Menu.Root,
       })
 
-      const hasSidePanel =
-        runEnv === 'chrome' && 'sidePanel' in chrome && typeof chrome.sidePanel.open === 'function'
+      const hasSidePanel
+        = runEnv === 'chrome' && 'sidePanel' in chrome && typeof chrome.sidePanel.open === 'function'
 
       if (hasSidePanel) {
         chrome.contextMenus.create({
@@ -134,7 +135,7 @@ chrome.contextMenus.removeAll(() => {
         if (tab?.id) {
           switch (info.menuItemId) {
             case Menu.Options: {
-              chrome.sidePanel.open({ tabId: tab.id })
+              void chrome.sidePanel.open({ tabId: tab.id })
               break
             }
 
@@ -156,8 +157,9 @@ chrome.contextMenus.removeAll(() => {
           }
         }
       })
-    } else {
-      chrome.contextMenus.remove(Menu.Root)
+    }
+    else {
+      void chrome.contextMenus.remove(Menu.Root)
     }
   })
 })
@@ -175,25 +177,26 @@ chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
     const url = new URL(tab.url)
 
     if (
-      url.origin === 'https://www.v2ex.com' ||
-      url.origin === 'https://v2ex.com' ||
-      url.origin === 'https://cn.v2ex.com' ||
-      url.origin === 'https://jp.v2ex.com' ||
-      url.origin === 'https://de.v2ex.com' ||
-      url.origin === 'https://us.v2ex.com' ||
-      url.origin === 'https://hk.v2ex.com' ||
-      url.origin === 'https://global.v2ex.com' ||
-      url.origin === 'https://fast.v2ex.com' ||
-      url.origin === 'https://s.v2ex.com' ||
-      url.origin === 'https://origin.v2ex.com' ||
-      url.origin === 'https://staging.v2ex.com'
+      url.origin === 'https://www.v2ex.com'
+      || url.origin === 'https://v2ex.com'
+      || url.origin === 'https://cn.v2ex.com'
+      || url.origin === 'https://jp.v2ex.com'
+      || url.origin === 'https://de.v2ex.com'
+      || url.origin === 'https://us.v2ex.com'
+      || url.origin === 'https://hk.v2ex.com'
+      || url.origin === 'https://global.v2ex.com'
+      || url.origin === 'https://fast.v2ex.com'
+      || url.origin === 'https://s.v2ex.com'
+      || url.origin === 'https://origin.v2ex.com'
+      || url.origin === 'https://staging.v2ex.com'
     ) {
       await chrome.sidePanel.setOptions({
         tabId,
         path: 'pages/options.html',
         enabled: true,
       })
-    } else {
+    }
+    else {
       await chrome.sidePanel.setOptions({
         tabId,
         enabled: false,
@@ -215,7 +218,7 @@ chrome.alarms.get(checkInAlarmName, (alarm) => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === checkInAlarmName) {
-    chrome.storage.sync.get().then((items: StorageItems) => {
+    void chrome.storage.sync.get().then((items: StorageItems) => {
       const options = items[StorageKey.Options]
 
       if (options?.autoCheckIn.enabled) {

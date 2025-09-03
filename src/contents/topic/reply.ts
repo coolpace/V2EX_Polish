@@ -62,15 +62,17 @@ function handleReplyActions() {
           if (emojiGroup.title === '流行') {
             const emojiLink = emojiLinks[emoji as PopularEmoji].hd
             emoticon.html(`<img src="${emojiLink}" />`).prop('title', emoji)
-          } else {
+          }
+          else {
             emoticon.text(emoji)
           }
 
           emoticon.on('click', () => {
             insertTextToReplyInput(emoji)
           })
+
           return emoticon
-        })
+        }),
       )
 
       group.append(list)
@@ -94,7 +96,7 @@ function handleReplyActions() {
     const keyupHandler = (ev: JQuery.KeyDownEvent) => {
       if (ev.key === 'Escape') {
         ev.preventDefault()
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+
         emojiPopup.close()
       }
     }
@@ -181,7 +183,8 @@ export function handleReply() {
 
             if (replyText.trim() === '') {
               $replyPreview.html('没有可预览的内容')
-            } else {
+            }
+            else {
               const textToPreview = transformEmoji(replyText)
 
               const handlePreview = async () => {
@@ -195,7 +198,8 @@ export function handleReply() {
                   $replyPreview.html(renderedContent)
                   replaceEmojiWithHD($replyPreview.find('.embedded_image'))
                   lastPreviewText = textToPreview
-                } catch {
+                }
+                catch {
                   $replyPreview.html('预览失败，<a class="v2p-preview-retry">点击重试</a>。')
                   $replyPreview.find('.v2p-preview-retry').on('click', () => {
                     void handlePreview()

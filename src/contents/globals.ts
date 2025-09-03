@@ -5,7 +5,7 @@ export const $wrapperContent = $wrapper.find('> .content')
 export const $main = $('#Main')
 
 export const $topicList = $(
-  '#Main #Tabs ~ .cell.item, #Main #TopicsNode > .cell, #Main .cell.item:has(.item_title > .topic-link)'
+  '#Main #Tabs ~ .cell.item, #Main #TopicsNode > .cell, #Main .cell.item:has(.item_title > .topic-link)',
 )
 
 /** 个人信息卡片。 */

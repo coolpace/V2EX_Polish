@@ -11,6 +11,7 @@ const handleCheckedIn = async (htmlText: string) => {
 
   if (matchedArr) {
     const days = Number([...matchedArr].at(1))
+
     if (!Number.isNaN(days)) {
       checkInDays = days
     }
@@ -46,7 +47,7 @@ export async function checkIn() {
   const startIndex = htmlPlainText.indexOf(targetTextFragment)
 
   if (startIndex !== -1) {
-    const endIndex = htmlPlainText.indexOf("'", startIndex + targetTextFragment.length)
+    const endIndex = htmlPlainText.indexOf('\'', startIndex + targetTextFragment.length)
 
     if (endIndex !== -1) {
       const matchedString = htmlPlainText.slice(startIndex, endIndex) // 拿到 /mission/daily/redeem?once=xxxxx
@@ -58,7 +59,8 @@ export async function checkIn() {
         await handleCheckedIn(text)
       }
     }
-  } else {
+  }
+  else {
     if (htmlPlainText.includes(successText)) {
       await handleCheckedIn(htmlPlainText)
     }

@@ -60,7 +60,7 @@ function handleFilteredComments() {
   iconHeart.setAttribute('height', '100%')
 
   const $commentsBtn = $(
-    `<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"></span>热门回复</span>`
+    '<span class="v2p-tool v2p-hover-btn"><span class="v2p-tool-icon"></span>热门回复</span>',
   )
   $commentsBtn.find('.v2p-tool-icon').append(iconHeart)
 
@@ -96,7 +96,7 @@ function handleFilteredComments() {
             if (firstRefMember) {
               // 找出回复的是哪一条回复。
               const replyMember = commentDataList.findLast(
-                (it, idx) => idx < index && it.memberName === firstRefMember
+                (it, idx) => idx < index && it.memberName === firstRefMember,
               )
 
               if (replyMember) {
@@ -106,7 +106,8 @@ function handleFilteredComments() {
 
             $t1.append($clonedCell)
           })
-        } else {
+        }
+        else {
           $t1.append($('<div>暂无热门回复</div>').css({ padding: '20px', textAlign: 'center' }))
         }
 
@@ -116,8 +117,8 @@ function handleFilteredComments() {
       // MARK: 最新回复：
       {
         const len = commentDataList.length
-        const displayNum =
-          len < 10
+        const displayNum
+          = len < 10
             ? len
             : len <= 10
               ? 5
@@ -146,7 +147,7 @@ function handleFilteredComments() {
             if (firstRefMember) {
               // 找出回复的是哪一条回复。
               const replyMember = commentDataList.findLast(
-                (it, idx) => idx < index && it.memberName === firstRefMember
+                (it, idx) => idx < index && it.memberName === firstRefMember,
               )
 
               if (replyMember) {
@@ -156,7 +157,8 @@ function handleFilteredComments() {
 
             $t2.append($clonedCell)
           })
-        } else {
+        }
+        else {
           $t2.append($('<div>暂无最近回复</div>').css({ padding: '20px', textAlign: 'center' }))
         }
 
@@ -166,7 +168,7 @@ function handleFilteredComments() {
       // MARK: 题主回复：
       {
         const opCommentData = commentDataList.filter(
-          ({ memberName }) => memberName === topicOwnerName
+          ({ memberName }) => memberName === topicOwnerName,
         )
 
         if (opCommentData.length > 0) {
@@ -182,7 +184,7 @@ function handleFilteredComments() {
             if (firstRefMember) {
               // 找出回复的是哪一条回复。
               const replyMember = commentDataList.findLast(
-                (it, idx) => idx < index && it.memberName === firstRefMember
+                (it, idx) => idx < index && it.memberName === firstRefMember,
               )
 
               if (replyMember) {
@@ -192,7 +194,8 @@ function handleFilteredComments() {
 
             $t3.append($clonedCell)
           })
-        } else {
+        }
+        else {
           $t3.append($('<div>暂无题主回复</div>').css({ padding: '20px', textAlign: 'center' }))
         }
 
@@ -266,7 +269,7 @@ function processActions($cellDom: JQuery, data: CommentData) {
       data-member-name="${data.memberName}"
      >
         <i data-lucide="heart"></i>
-     </span>`
+     </span>`,
   )
 
   const thankArea = $actions.find('> .thank_area')
@@ -275,13 +278,14 @@ function processActions($cellDom: JQuery, data: CommentData) {
   if (thanked) {
     $thankIcon.addClass('v2p-thanked')
     $controls.append($('<a>').append($thankIcon))
-  } else {
+  }
+  else {
     const thankEle = thankArea.find('> .thank')
     const $hide = thankEle.eq(0).removeClass('thank')
     const $thank = thankEle.eq(1).removeClass('thank')
 
     $hide.html(
-      `<span class="v2p-control v2p-hover-btn v2p-control-hide"><i data-lucide="eye-off"></i></span>`
+      '<span class="v2p-control v2p-hover-btn v2p-control-hide"><i data-lucide="eye-off"></i></span>',
     )
 
     $thankIcon.addClass('v2p-hover-btn').replaceAll($thank)
@@ -294,7 +298,7 @@ function processActions($cellDom: JQuery, data: CommentData) {
   $reply
     .find('> img[alt="Reply"]')
     .replaceWith(
-      `<span class="v2p-control v2p-hover-btn v2p-control-reply"><i data-lucide="message-square"></i></span>`
+      '<span class="v2p-control v2p-hover-btn v2p-control-reply"><i data-lucide="message-square"></i></span>',
     )
 
   $controls.append($reply)
@@ -314,17 +318,20 @@ function processActions($cellDom: JQuery, data: CommentData) {
 
       if (replyComment) {
         const replyMemberName = replyComment.memberName
-        const moreThanOneReply =
-          commentDataList.findIndex(
-            (it) => it.memberName === replyMemberName && it.floor !== floor
+        const moreThanOneReply
+          = commentDataList.findIndex(
+            (it) => it.memberName === replyMemberName && it.floor !== floor,
           ) !== -1
 
         if (moreThanOneReply) {
           insertTextToReplyInput(`#${floor} `)
-        } else {
+        }
+        else {
           const $page = $('.v2p-paging').eq(0).find('.page_normal, .page_current')
+
           if ($page.length > 1) {
             const onLastPage = $page.last().hasClass('page_current')
+
             if (!onLastPage) {
               insertTextToReplyInput(`#${floor} `)
             }
@@ -385,7 +392,7 @@ export async function handleComments() {
 
           if (pages.length > 0) {
             const pagesText = await Promise.all(
-              pages.map((p) => crawlTopicPage(window.location.pathname, p))
+              pages.map((p) => crawlTopicPage(window.location.pathname, p)),
             )
 
             pagesText.map((pageText) => {
@@ -397,7 +404,8 @@ export async function handleComments() {
         }
 
         toastControl.clear()
-      } catch (err) {
+      }
+      catch (err) {
         if (err instanceof Error) {
           console.error(`加载多页回复出错：${err.message}`)
         }
@@ -412,8 +420,8 @@ export async function handleComments() {
     $('.cell .ago').addClass('v2p-auto-hide')
   }
 
-  const canHideRefName =
-    options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
+  const canHideRefName
+    = options.nestedReply.display === 'indent' && !!options.replyContent.hideRefName
 
   commentDataList = getCommentDataList({ options, $commentTableRows, $commentCells })
 
@@ -506,7 +514,8 @@ export async function handleComments() {
                     .addClass('v2p-thanked')
                     .empty()
                     .append($clonedIconHeart, ` ${likes + 1}`)
-                } else {
+                }
+                else {
                   $(`
                       <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
                         &nbsp;&nbsp;<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>1
@@ -543,9 +552,9 @@ export async function handleComments() {
     const memberLink = $topicHeader.find('.fr > a').prop('href')
 
     if (
-      typeof memberName === 'string' &&
-      typeof memberAvatar === 'string' &&
-      typeof memberLink === 'string'
+      typeof memberName === 'string'
+      && typeof memberAvatar === 'string'
+      && typeof memberLink === 'string'
     ) {
       processAvatar({
         $trigger: $opAvatar,
@@ -563,14 +572,14 @@ export async function handleComments() {
       })
 
       // MARK: 获取用户注册时间信息
-      fetchUserInfo(memberName).then((memberData) => {
+      void fetchUserInfo(memberName).then((memberData) => {
         const registerDays = getRegisterDays(memberData.created)
 
         memberDataCache.set(memberName, { ...memberData, registerDays })
 
         if (registerDays <= 30) {
           $opName.append(
-            `<span class="v2p-register-days">${registerDays <= 15 ? '15' : '30'} 天内注册</span>`
+            `<span class="v2p-register-days">${registerDays <= 15 ? '15' : '30'} 天内注册</span>`,
           )
         }
       })

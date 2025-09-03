@@ -15,7 +15,7 @@ void (async () => {
     if (options.openInNewTab) {
       $('#Main .topic-link, .item_hot_topic_title > a, .item_node, a[href="/write"]').prop(
         'target',
-        '_blank'
+        '_blank',
       )
     }
   }

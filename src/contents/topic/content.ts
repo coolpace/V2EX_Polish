@@ -26,7 +26,6 @@ function handleTopicImgHeight(autoFold?: boolean) {
 
       const height = $img.height() ?? 0
       const shouldWrap = height > 600
-      console.log(height)
 
       if (shouldWrap) {
         const collapsedCSS = {
@@ -48,7 +47,7 @@ function handleTopicImgHeight(autoFold?: boolean) {
             .css(
               collapsed
                 ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' }
-                : collapsedCSS
+                : collapsedCSS,
             )
           $expandBtn.html(collapsed ? '收起图片' : '展开图片')
         }
@@ -91,6 +90,7 @@ export function handleContent() {
         if (textLength >= 400) {
           topicContent.style.fontSize = '14px'
         }
+
         topicContent.style.fontSize = '14.5px'
       })
     }
@@ -107,7 +107,7 @@ export function handleContent() {
 
     if (pathTopicId) {
       $topicBtns.append(
-        ` &nbsp;<a href="${Links.Share}/${pathTopicId}" target="_blank" class="tb v2p-tb v2p-hover-btn">分享<span class="v2p-tb-icon"><i data-lucide="arrow-up-right-square"></i></span></a>`
+        ` &nbsp;<a href="${Links.Share}/${pathTopicId}" target="_blank" class="tb v2p-tb v2p-hover-btn">分享<span class="v2p-tb-icon"><i data-lucide="arrow-up-right-square"></i></span></a>`,
       )
     }
 
@@ -189,7 +189,7 @@ export function processReplyContent($cellDom: JQuery) {
       $contentBox
         .toggleClass('v2p-collapsed')
         .css(
-          collapsed ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' } : collapsedCSS
+          collapsed ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' } : collapsedCSS,
         )
       $expandBtn.html(collapsed ? '收起回复' : '展开回复')
     }
@@ -217,7 +217,7 @@ export function updateMemberTag(
     memberAvatar?: Member['avatar']
     tags: Tag[] | undefined
     options: Options
-  } & CallbackFunctions
+  } & CallbackFunctions,
 ) {
   const { memberName, memberAvatar, tags, options, ...callbacks } = params
 
@@ -228,24 +228,26 @@ export function updateMemberTag(
   if ($v2pTags.length > 0) {
     if (tagsText) {
       $v2pTags.html(`<b>#</b>&nbsp;${tagsText}`)
-    } else {
+    }
+    else {
       $v2pTags.remove()
       callbacks.onRemoveExistingTagBlock?.()
     }
-  } else {
+  }
+  else {
     if (tagsText) {
       const $tags = $(
-        `<div class="v2p-reply-tags v2p-tags-${memberName}" title="${tagsText}"><b>#</b>&nbsp;${tagsText}</div>`
+        `<div class="v2p-reply-tags v2p-tags-${memberName}" title="${tagsText}"><b>#</b>&nbsp;${tagsText}</div>`,
       )
 
       $tags.on('click', () => {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         openTagsSetter({ memberName, memberAvatar, ...callbacks })
       })
 
       if (callbacks.onInsertNewTagBlock) {
         callbacks.onInsertNewTagBlock({ $tags })
-      } else {
+      }
+      else {
         if (memberName === topicOwnerName) {
           // 如果为当前题主设置标签，也需要在主题头部区域同步展示标签。
           $topicHeader.append($tags.clone(true))
@@ -257,13 +259,14 @@ export function updateMemberTag(
             .insertBefore(
               $commentCells
                 .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
-                .find('> table .badges')
+                .find('> table .badges'),
             )
-        } else {
+        }
+        else {
           $tags.insertBefore(
             $commentCells
               .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
-              .find('> table .reply_content')
+              .find('> table .reply_content'),
           )
         }
       }
@@ -278,7 +281,7 @@ export function openTagsSetter(
   params: {
     memberName: Member['username']
     memberAvatar?: Member['avatar']
-  } & CallbackFunctions
+  } & CallbackFunctions,
 ) {
   const { memberName, memberAvatar, ...callbacks } = params
 
@@ -298,12 +301,12 @@ export function openTagsSetter(
 
     const newTagsValue = window.prompt(
       `对 @${memberName} 设置标签，多个标签以逗号（，）分隔。`,
-      tagsValue
+      tagsValue,
     )
 
     if (newTagsValue !== null) {
-      const tags =
-        newTagsValue.trim().length > 0
+      const tags
+        = newTagsValue.trim().length > 0
           ? newTagsValue
               .split(/,|，/g)
               .filter((it) => it.trim().length > 0)
@@ -375,7 +378,7 @@ export function handleTopicImg() {
  */
 export function handleLinkPreview() {
   const $topicLinks = $(
-    '.topic_content a[href*="v2ex.com/t/"], .reply_content a[href*="v2ex.com/t/"], .topic_content a[href^="/t/"], .reply_content a[href^="/t/"]'
+    '.topic_content a[href*="v2ex.com/t/"], .reply_content a[href*="v2ex.com/t/"], .topic_content a[href^="/t/"], .reply_content a[href^="/t/"]',
   )
 
   const { handlePreview } = useTopicPreview()
@@ -401,7 +404,8 @@ export function handleLinkPreview() {
 
     if ($previewBtnInLink.length > 0) {
       $previewBtnInLink.replaceWith($cloned)
-    } else {
+    }
+    else {
       $link.append($cloned)
     }
   })
