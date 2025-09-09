@@ -1162,8 +1162,8 @@ a:link.v2p-topic-preview-retry {
   color: var(--v2p-color-font-tertiary);
 }
 
-.v2p-content-layout.v2p-content-layout {
-  max-width: 2000px;
+.v2p-content-layout.v2p-content-layout.content {
+  --v2p-content-width: 2000px;
 
   #Main.v2p-horizontal-layout {
     display: flex;
