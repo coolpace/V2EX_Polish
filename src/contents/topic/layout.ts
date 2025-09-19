@@ -7,7 +7,7 @@ import {
   StorageKey,
 } from '../../constants'
 import { getStorageSync } from '../../utils'
-import { $main, $topicContentBox, $wrapperContent } from '../globals'
+import { $commentBox, $main, $topicContentBox, $wrapperContent } from '../globals'
 
 const $layoutToggle = $('<span class="v2p-layout-toggle v2p-hover-btn">')
 
@@ -36,16 +36,18 @@ iconChevronRight.setAttribute('height', '100%')
 /** 将主题页切换为水平布局。 */
 const switchToHorizontalLayout = () => {
   if (!$wrapperContent.hasClass('v2p-content-layout')) {
-    const $divider1 = $main.find('> .sep20:first-of-type')
-    const $leftGroup = $divider1.add($divider1.next('.box'))
+    const $divider = $commentBox.prev('.sep20')
+    const $rightGroup = $divider.add($divider.nextAll())
+    const $rightSide = $('<div class="v2p-right-side">')
+    $rightGroup.wrapAll($rightSide)
+
+    const $leftGroup = $('.v2p-right-side').prevAll()
     const $leftSide = $('<div class="v2p-left-side">')
     $leftGroup.wrapAll($leftSide)
-    const $content = $leftGroup.find('> .cell')
-    $content.add($content.nextAll('.subtle')).wrapAll('<div class="v2p-left-side-content">')
 
-    const $divider2 = $main.find('.sep20:nth-of-type(2)')
-    const $rightGroup = $divider2.add($divider2.nextAll())
-    $rightGroup.wrapAll('<div class="v2p-right-side">')
+    const $leftSideContent = $('<div class="v2p-left-side-content">')
+    const $topicContent = $leftGroup.find('> .cell')
+    $topicContent.add($topicContent.nextAll('.subtle')).wrapAll($leftSideContent)
 
     $wrapperContent.addClass('v2p-content-layout')
     $main.addClass('v2p-horizontal-layout')
