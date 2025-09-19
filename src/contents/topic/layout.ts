@@ -41,7 +41,7 @@ const switchToHorizontalLayout = () => {
     const $rightSide = $('<div class="v2p-right-side">')
     $rightGroup.wrapAll($rightSide)
 
-    const $leftGroup = $('.v2p-right-side').prevAll()
+    const $leftGroup = $($('.v2p-right-side').prevAll().get().reverse())
     const $leftSide = $('<div class="v2p-left-side">')
     $leftGroup.wrapAll($leftSide)
 
