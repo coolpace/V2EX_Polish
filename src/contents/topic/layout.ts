@@ -48,7 +48,9 @@ const switchToHorizontalLayout = () => {
 
     const $leftGroup = $($('.v2p-right-side').prevAll().get().reverse())
     const $leftSide = $('<div class="v2p-left-side">')
-    $leftGroup.wrapAll($leftSide)
+    const $leftGroupWrapper = $('<div class="v2p-left-group">')
+    $leftGroup.wrapAll($leftGroupWrapper)
+    $('.v2p-left-group').wrapAll($leftSide)
 
     const $leftSideContent = $('<div class="v2p-left-side-content">')
     const $topicContent = $leftGroup.find('> .cell')

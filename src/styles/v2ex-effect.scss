@@ -1175,9 +1175,13 @@ a:link.v2p-topic-preview-retry {
       .v2p-left-side {
         flex: 1;
 
-        > .box {
+        > .v2p-left-group {
           position: sticky;
-          top: var(--v2p-layout-row-gap);
+          z-index: var(--zidx-reply-box);
+          top: 0;
+        }
+
+        > .box:has(.topic_buttons) {
           display: flex;
           flex-direction: column;
           max-height: calc(100vh - 2 * var(--v2p-layout-row-gap));
