@@ -7,7 +7,7 @@ import {
   StorageKey,
 } from '../../constants'
 import { getStorageSync } from '../../utils'
-import { $commentBox, $main, $topicContentBox, $wrapperContent } from '../globals'
+import { $commentBox, $main, $replyBox, $topicContentBox, $wrapperContent } from '../globals'
 
 const $layoutToggle = $('<span class="v2p-layout-toggle v2p-hover-btn">')
 
@@ -36,7 +36,12 @@ iconChevronRight.setAttribute('height', '100%')
 /** 将主题页切换为水平布局。 */
 const switchToHorizontalLayout = () => {
   if (!$wrapperContent.hasClass('v2p-content-layout')) {
-    const $divider = $commentBox.prev('.sep20')
+    const $target = $commentBox.length > 0
+      ? $commentBox
+      : $('#no-comments-yet').get().length > 0
+        ? $('#no-comments-yet')
+        : $replyBox
+    const $divider = $target.prev('.sep20')
     const $rightGroup = $divider.add($divider.nextAll())
     const $rightSide = $('<div class="v2p-right-side">')
     $rightGroup.wrapAll($rightSide)
