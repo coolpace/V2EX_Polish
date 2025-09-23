@@ -1179,15 +1179,19 @@ a:link.v2p-topic-preview-retry {
           position: sticky;
           z-index: var(--zidx-reply-box);
           top: 0;
-        }
-
-        > .box:has(.topic_buttons) {
           display: flex;
           flex-direction: column;
-          max-height: calc(100vh - 2 * var(--v2p-layout-row-gap));
+          max-height: calc(100vh - var(--v2p-nav-height) - var(--v2p-layout-row-gap));
 
-          > .header {
-            flex-shrink: 0;
+          > .box:has(.topic_buttons) {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-height: 0;
+
+            > .header {
+              flex-shrink: 0;
+            }
           }
         }
 
