@@ -3,7 +3,7 @@ import { createModal } from '../../components/modal'
 import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
 import { useTopicPreview } from '../../use-topic-preview'
-import { getStorage, getStorageSync } from '../../utils'
+import { extractDays, getStorage, getStorageSync, parseDateTime } from '../../utils'
 import {
   $body,
   $commentCells,
@@ -81,6 +81,8 @@ export function handleContent() {
   }
 
   {
+    // 处理主题页的正文内容。
+
     const $topicContents = $topicContentBox.find('.subtle > .topic_content')
 
     const textLength = $topicContents.text().length
@@ -94,9 +96,31 @@ export function handleContent() {
         topicContent.style.fontSize = '14.5px'
       })
     }
+
+    const $topicTime = $topicHeader.find('small.gray > span[title]')
+    $topicTime.addClass('v2p-topic-time')
+
+    const topicRelativeTime = $topicTime.text()
+    const daysAgo = extractDays(topicRelativeTime)
+
+    if (typeof daysAgo === 'number' && daysAgo > 60) {
+      const topicAbsoluteTime = $topicTime.prop('title')
+
+      if (typeof topicAbsoluteTime === 'string') {
+        const parseResult = parseDateTime(topicAbsoluteTime)
+
+        if (parseResult.success) {
+          if (parseResult.formatted) {
+            $topicTime.text(`${parseResult.formatted}（${topicRelativeTime}）`)
+          }
+        }
+      }
+    }
   }
 
   {
+    // 处理主题页的按钮。
+
     const $topicBtns = $('.topic_buttons')
     const $topicBtn = $topicBtns.find('.tb').addClass('v2p-tb v2p-hover-btn')
     const $favoriteBtn = $topicBtn.eq(0)

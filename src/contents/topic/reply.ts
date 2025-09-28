@@ -128,6 +128,9 @@ function handleReplyActions() {
   }
 }
 
+/**
+ * 处理主题回复功能。
+ */
 export function handleReply() {
   $replyTextArea.attr('placeholder', '留下对他人有帮助的回复').wrap('<div class="v2p-reply-wrap">')
 

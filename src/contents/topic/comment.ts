@@ -6,7 +6,7 @@ import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { crawlTopicPage, fetchUserInfo, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
-import { escapeHTML, getStorageSync } from '../../utils'
+import { escapeHTML, extractDays, getStorageSync, parseDateTime } from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
 import {
   $commentBox,
@@ -416,8 +416,10 @@ export async function handleComments() {
     }
   }
 
+  const $commentTime = $('.cell .ago')
+
   if (options.replyContent.hideReplyTime) {
-    $('.cell .ago').addClass('v2p-auto-hide')
+    $commentTime.addClass('v2p-auto-hide')
   }
 
   const canHideRefName
@@ -595,5 +597,26 @@ export async function handleComments() {
   window.requestIdleCallback(() => {
     replaceCommentEmojiWithHD()
     handleLinkPreview()
+
+    $commentTime
+      .each((_, el) => {
+        const $el = $(el)
+        const time = $el.text()
+        const daysAgo = extractDays(time)
+
+        if (typeof daysAgo === 'number' && daysAgo > 60) {
+          const absoluteTime = $el.prop('title')
+
+          if (typeof absoluteTime === 'string') {
+            const parseResult = parseDateTime(absoluteTime)
+
+            if (parseResult.success) {
+              if (parseResult.formatted) {
+                $el.text(`${parseResult.formatted}`)
+              }
+            }
+          }
+        }
+      })
   })
 }

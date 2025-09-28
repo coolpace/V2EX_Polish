@@ -15,6 +15,7 @@ export default [
     },
     rules: {
       '@typescript-eslint/prefer-readonly-parameter-types': 0,
+      '@typescript-eslint/no-unsafe-assignment': 0,
     },
   },
 
