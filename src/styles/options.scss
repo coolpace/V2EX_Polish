@@ -537,7 +537,7 @@ fieldset {
     position: relative;
     top: -5px;
     width: max-content;
-    padding: 12px;
+    padding: var(--v2p-spacing-box);
     border: 1px solid var(--box-border-color);
     border-radius: 8px;
     background: var(--v2p-color-bg-widget);

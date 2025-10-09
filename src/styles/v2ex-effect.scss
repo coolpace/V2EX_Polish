@@ -1198,6 +1198,8 @@ a:link.v2p-topic-preview-retry {
         .v2p-left-side-content {
           overflow: auto;
           flex: 1;
+          margin-right: calc(var(--v2p-spacing-box) * -1);
+          padding-right: var(--v2p-spacing-box);
           border-bottom: 1px solid var(--box-border-color);
         }
       }
