@@ -195,13 +195,19 @@ body {
 
 .v2p-topic-preview-btn {
   cursor: pointer;
-  border: none;
+  border: 1px solid var(--v2p-color-border-darker);
   border-radius: 3px;
   font-size: 13px;
   color: var(--v2p-color-button-foreground);
   visibility: hidden;
   background-color: var(--v2p-color-button-background-hover);
   outline: none;
+
+  &:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 0 3px 1px var(--v2p-color-border-darker);
+    transition: all 0.25s;
+  }
 }
 
 .v2p-topic-ignore-btn {
