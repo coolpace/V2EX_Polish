@@ -1353,6 +1353,13 @@ body {
       }
     }
   }
+
+  .settings.block {
+    .block-stat {
+      padding: var(--v2p-spacing-box);
+      background-color: transparent;
+    }
+  }
 }
 
 /* ================================================================ */
