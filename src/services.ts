@@ -95,10 +95,6 @@ async function request<Data>(url: string, options?: RequestInit): Promise<DataWr
   return resultData
 }
 
-export function fetchProfile() {
-  return request<Member>(`${V2EX_API}/member`, { method: 'GET' })
-}
-
 export function fetchTopic(topicId: string, options?: RequestInit) {
   return request<Topic>(`${V2EX_API}/topics/${topicId}`, { method: 'GET', ...options })
 }
@@ -216,6 +212,68 @@ export async function crawlTopicPage(path: string, page = '1'): Promise<string> 
   const htmlText = await res.text()
 
   return htmlText
+}
+
+/**
+ * 爬取用户内容页，返回 HTML 纯文本。
+ */
+export async function crawlUserPage(username: string): Promise<string> {
+  const res = await fetch(`${V2EX_ORIGIN}/member/${username}`)
+  const htmlText = await res.text()
+
+  return htmlText
+}
+
+/**
+ * 屏蔽用户。
+ *
+ * @param username - 要屏蔽的用户名
+ * @returns 屏蔽是否成功
+ */
+export async function blockUser(username: string): Promise<{ success: boolean, message: string }> {
+  try {
+    // 1. 先爬取用户页面
+    const htmlText = await crawlUserPage(username)
+
+    // 2. 从页面中提取 Block URL
+    const $page = $(htmlText)
+    const $blockBtn = $page.find('input[type="button"][value="Block"]')
+
+    if ($blockBtn.length === 0) {
+      return { success: false, message: '未找到 Block 按钮，该用户可能已被屏蔽' }
+    }
+
+    const onclick = $blockBtn.attr('onclick')
+
+    if (!onclick) {
+      return { success: false, message: '无法获取屏蔽链接' }
+    }
+
+    // 从 onclick 属性中提取 URL
+    // 格式: location.href = '/block/622504?once=96942'
+    const match = onclick.match(/location\.href\s*=\s*['"]([^'"]+)['"]/)
+
+    if (!match || !match[1]) {
+      return { success: false, message: '无法解析屏蔽链接' }
+    }
+
+    const blockUrl = match[1]
+
+    // 3. 执行屏蔽操作
+    const res = await fetch(`${V2EX_ORIGIN}${blockUrl}`)
+
+    if (res.ok) {
+      return { success: true, message: '✅ 已屏蔽该用户' }
+    }
+    else {
+      return { success: false, message: '屏蔽操作失败，请稍后重试' }
+    }
+  }
+  catch (error) {
+    console.error('屏蔽用户失败:', error)
+
+    return { success: false, message: '屏蔽操作出错，请稍后重试' }
+  }
 }
 
 export async function addFavorite(url: string): Promise<void> {

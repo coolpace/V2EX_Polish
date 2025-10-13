@@ -12,6 +12,10 @@ body {
     &.v2p-next-btn {
       padding: 0 15px;
     }
+
+    &.v2p-btn-loading {
+      pointer-events: none;
+    }
   }
 
   #Top {
@@ -750,6 +754,9 @@ a.v2p-topic-preview-title-link {
 }
 
 .v2p-member-card-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
   padding: 10px 0 0;
 }
 

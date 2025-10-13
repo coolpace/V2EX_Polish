@@ -41,6 +41,7 @@ import { $body, $commentCells, $wrapper, replyTextArea } from './globals'
 /**
  * 检查请求的错误是否由 V2EX 发出。
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isV2EX_RequestError(error: any): error is V2EX_RequestErrorResponce {
   if ('cause' in error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -300,7 +301,7 @@ export function decodeBase64TopicPage() {
  */
 export function postTask(expression: string, callback?: (result: unknown) => void) {
   if (!isBrowserExtension()) {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
     const result = Function(`"use strict"; ${expression}`)()
     callback?.(result)
   }
@@ -537,7 +538,7 @@ export function replaceCommentEmojiWithHD($cells: JQuery = $commentCells) {
  * 打开 V2EX Polish 的设置页面。
  */
 export function openV2PSettings() {
-  chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
+  void chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
 }
 
 /**
@@ -556,4 +557,48 @@ export function getRegisterDays(created: number): number {
  */
 export function getTimestampFromDateString(dateString: string): number {
   return Math.floor(Date.parse(dateString) / 1000)
+}
+
+/**
+ * 从用户页面 HTML 中提取 Block 按钮的 URL。
+ *
+ * @param htmlText - 用户页面的 HTML 文本
+ * @returns Block URL，格式如 "/block/622504?once=96942"；如果未找到则返回 null
+ */
+
+export function extractBlockUrl(htmlText: string): string | null {
+  try {
+    // 方法1: 使用 jQuery 解析 DOM（最稳定）
+    const $page = $(htmlText)
+    const $blockBtn = $page.find('input[type="button"][value="Block"]')
+
+    if ($blockBtn.length > 0) {
+      const onclick = $blockBtn.attr('onclick')
+
+      if (onclick) {
+        // 从 onclick 属性中提取 URL
+        // 格式: location.href = '/block/622504?once=96942'
+        const match = onclick.match(/location\.href\s*=\s*['"]([^'"]+)['"]/)
+
+        if (match && match[1]) {
+          return match[1]
+        }
+      }
+    }
+
+    // 方法2: 使用正则表达式作为备用方案（处理 DOM 解析失败的情况）
+    const regexPattern = /<input[^>]*type="button"[^>]*value="Block"[^>]*onclick="[^"]*location\.href\s*=\s*'([^']+)'[^"]*"/
+    const regexMatch = htmlText.match(regexPattern)
+
+    if (regexMatch && regexMatch[1]) {
+      return regexMatch[1]
+    }
+
+    return null
+  }
+  catch (error) {
+    console.error('提取 Block URL 失败:', error)
+
+    return null
+  }
 }

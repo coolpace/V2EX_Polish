@@ -1,6 +1,7 @@
 import { createButton } from '../../components/button'
 import { hoverDelay, type PopupControl } from '../../components/popup'
-import { fetchUserInfo } from '../../services'
+import { createToast } from '../../components/toast'
+import { blockUser, fetchUserInfo } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { formatTimestamp } from '../../utils'
 import { getRegisterDays } from '../helpers'
@@ -80,6 +81,35 @@ export function processAvatar(params: ProcessAvatar) {
         popupControl.close()
         openTagsSetter({ memberName, memberAvatar })
         onSetTagsClick?.()
+      })
+      .appendTo($('.v2p-member-card-actions'))
+
+    createButton({ children: '屏蔽该用户' })
+      .on('click', (event) => {
+        const $btn = $(event.currentTarget)
+
+        // 防止重复点击
+        if ($btn.hasClass('v2p-btn-loading')) {
+          return
+        }
+
+        // 确认操作
+        if (!confirm(`确定要屏蔽用户 ${memberName} 吗？`)) {
+          return
+        }
+
+        $btn.addClass('v2p-btn-loading').text('屏蔽中...')
+
+        void blockUser(memberName).then((result) => {
+          createToast({ message: result.message })
+
+          if (result.success) {
+            popupControl.close()
+          }
+          else {
+            $btn.removeClass('v2p-btn-loading').text('屏蔽该用户')
+          }
+        })
       })
       .appendTo($('.v2p-member-card-actions'))
 
