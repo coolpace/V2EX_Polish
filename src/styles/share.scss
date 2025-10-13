@@ -15,7 +15,7 @@
   align-items: center;
   height: 28px;
   padding: 0 12px;
-  border: 1px solid var(--v2p-color-button-border) !important;
+  border: none;
   border-radius: var(--v2p-input-radius);
   font-family: inherit;
   font-size: 14px;
@@ -35,6 +35,7 @@
     box-shadow 0.25s;
 
   &:is(:hover:enabled, :active:enabled) {
+    border: none;
     font-weight: 500;
     color: var(--v2p-color-button-foreground-hover);
     text-shadow: none;
@@ -43,6 +44,7 @@
   }
 
   &:is(.hover_now, .disable_now) {
+    border: none !important;
     color: var(--v2p-color-button-foreground) !important;
     text-shadow: none !important;
     background: var(--button-background-color) !important;
