@@ -1200,6 +1200,11 @@ a:link.v2p-topic-preview-retry {
           flex-direction: column;
           max-height: calc(100vh - var(--v2p-nav-height) - var(--v2p-layout-row-gap));
 
+          .sep,
+          .sep20 {
+            flex-shrink: 0;
+          }
+
           > .box:has(.topic_buttons) {
             display: flex;
             flex: 1;
