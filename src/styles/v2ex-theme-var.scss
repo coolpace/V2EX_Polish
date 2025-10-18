@@ -1,3 +1,84 @@
+@font-face {
+  font-family: vivoSans;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Codennnn/assets@main/fonts/vivoSans-Regular.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Codennnn/assets@main/fonts/vivoSans-Medium.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Codennnn/assets@main/fonts/vivoSans-SemiBold.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Codennnn/assets@main/fonts/vivoSans-Bold.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Codennnn/assets@main/fonts/vivoSans-Bold.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Leo/assets@main/fonts/MapleMonoNormalNL-Regular.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Leo/assets@main/fonts/MapleMonoNormalNL-Medium.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Leo/assets@main/fonts/MapleMonoNormalNL-SemiBold.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Leo/assets@main/fonts/MapleMonoNormalNL-Bold.woff2')
+    format('woff2');
+}
+
 :root {
   --zidx-serach: 100;
   --zidx-tabs: 10;
@@ -142,9 +223,10 @@
   }
 
   body {
-    @include light-mode;
+    --code-font: MapleMono, 'Consolas', 'Panic Sans', 'Bitstream Vera Sans Mono', 'Menlo',
+      'Microsoft Yahei', monospace;
 
-    font-family: system-ui, sans-serif;
+    font-family: vivoSans, system-ui, sans-serif;
     color: var(--v2p-color-foreground);
     background-color: var(--v2p-color-background);
 
@@ -165,5 +247,7 @@
     img::selection {
       background-color: var(--v2p-color-selection-background-img);
     }
+
+    @include light-mode;
   }
 }
