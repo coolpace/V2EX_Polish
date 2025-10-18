@@ -223,12 +223,15 @@
   }
 
   body {
+    @include light-mode;
+
     --code-font: MapleMono, 'Consolas', 'Panic Sans', 'Bitstream Vera Sans Mono', 'Menlo',
       'Microsoft Yahei', monospace;
 
     font-family: vivoSans, system-ui, sans-serif;
     color: var(--v2p-color-foreground);
     background-color: var(--v2p-color-background);
+    text-autospace: normal;
 
     &.v2p-theme-light-default,
     .v2p-theme-light-default {
@@ -247,7 +250,11 @@
     img::selection {
       background-color: var(--v2p-color-selection-background-img);
     }
+  }
 
-    @include light-mode;
+  code,
+  pre,
+  table {
+    text-autospace: no-autospace;
   }
 }
