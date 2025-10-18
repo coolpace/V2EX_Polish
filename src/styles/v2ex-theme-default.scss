@@ -180,6 +180,11 @@ body {
       background-color: var(--v2p-color-bg-search-active);
     }
 
+    #search {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
     #search-result {
       z-index: var(--zidx-serach);
       top: 42px;

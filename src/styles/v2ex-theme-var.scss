@@ -32,6 +32,7 @@
     /* 基础色（参考自 TailwindCSS Slate）： */
     --v2p-color-main-50: #f7f9fb;
     --v2p-color-main-100: #f1f5f9;
+    --v2p-color-main-150: #eaeff5;
     --v2p-color-main-200: #e2e8f0;
     --v2p-color-main-300: #cbd5e1;
     --v2p-color-main-350: #94a3b8cc;
@@ -77,7 +78,7 @@
     --v2p-color-bg-subtle: rgb(236 253 245 / 90%);
     --v2p-color-bg-input: var(--v2p-color-main-50);
     --v2p-color-bg-search: var(--v2p-color-main-100);
-    --v2p-color-bg-search-active: var(--v2p-color-main-200);
+    --v2p-color-bg-search-active: var(--v2p-color-main-150);
     --v2p-color-bg-widget: rgb(255 255 255 / 70%);
     --v2p-color-bg-reply: var(--v2p-color-main-100);
     --v2p-color-bg-tooltip: var(--v2p-color-bg-content);
