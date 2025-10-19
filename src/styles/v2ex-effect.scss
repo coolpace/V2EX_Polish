@@ -114,6 +114,7 @@ body {
     &.v2p-layout-rightbar-float {
       position: fixed;
       z-index: var(--zidx-rightbar);
+      top: calc(var(--v2p-nav-height) + var(--v2p-layout-column-gap));
       right: 10px;
       display: none;
       margin: 0;
