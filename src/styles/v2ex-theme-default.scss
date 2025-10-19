@@ -762,6 +762,10 @@ body {
     color: var(--v2p-color-foreground);
     background-color: var(--v2p-color-bg-content);
 
+    &::placeholder {
+      color: var(--v2p-color-font-tertiary);
+    }
+
     &:focus {
       border-color: var(--v2p-color-input-border-focus);
     }

@@ -350,6 +350,16 @@ fieldset {
   justify-content: center;
 }
 
+.tags-list-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tags-count {
+  font-weight: bold;
+}
+
 .tags-tip {
   display: flex;
   gap: 10px;
@@ -399,6 +409,11 @@ fieldset {
       }
     }
   }
+}
+
+.tags-desc {
+  font-size: 14px;
+  color: var(--v2p-color-font-tertiary);
 }
 
 .tags-divider {

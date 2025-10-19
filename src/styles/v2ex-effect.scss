@@ -114,9 +114,11 @@ body {
     &.v2p-layout-rightbar-float {
       position: fixed;
       z-index: var(--zidx-rightbar);
-      top: calc(var(--v2p-nav-height) + var(--v2p-layout-column-gap));
+      top: var(--v2p-layout-column-gap);
       right: 10px;
+      overflow-y: auto;
       display: none;
+      max-height: calc(100vh - 2 * var(--v2p-layout-column-gap));
       margin: 0;
       padding: 10px;
       border: 1px solid var(--v2p-color-border);
@@ -131,6 +133,10 @@ body {
           background-color: var(--v2p-color-background);
           box-shadow: none;
         }
+      }
+
+      .v2p-tool-box {
+        border: 1px solid var(--v2p-color-border);
       }
     }
   }
@@ -431,10 +437,20 @@ a.v2p-topic-preview-title-link {
   @at-root {
     .v2p-modal-header {
       display: flex;
-      gap: 0 20px;
+      gap: 5px 15px;
       align-items: center;
-      padding: 15px 20px 20px;
+      padding: 15px;
       border-bottom: 1px solid var(--box-border-color);
+      background-color: var(--v2p-color-bg-content);
+    }
+
+    .v2p-modal-footer {
+      display: flex;
+      gap: 5px 15px;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px;
+      border-top: 1px solid var(--box-border-color);
       background-color: var(--v2p-color-bg-content);
     }
 

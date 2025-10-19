@@ -4,6 +4,7 @@ interface ModalElements {
   $mask: JQuery
   $main: JQuery
   $header: JQuery
+  $footer: JQuery
   $container: JQuery
   $title: JQuery
   $actions: JQuery
@@ -18,6 +19,7 @@ interface ModalControl extends ModalElements {
 interface CreateModalProps {
   root?: JQuery
   title?: string
+  footer?: boolean
   onMount?: (elements: ModalElements) => void
   onOpen?: (elements: ModalElements) => void
   onClose?: (elements: ModalElements) => void
@@ -27,7 +29,14 @@ interface CreateModalProps {
  * 创建 modal 框。
  */
 export function createModal(props: CreateModalProps): ModalControl {
-  const { root, title, onMount, onOpen, onClose } = props
+  const {
+    root,
+    title,
+    footer = false,
+    onMount,
+    onOpen,
+    onClose,
+  } = props
 
   const $mask = $('<div class="v2p-modal-mask">')
 
@@ -44,18 +53,21 @@ export function createModal(props: CreateModalProps): ModalControl {
 
   const $header = $('<div class="v2p-modal-header">').append($title, $actions)
 
+  const $footer = $('<div class="v2p-modal-footer">')
+
   const $main = $('<div class="v2p-modal-main">')
-    .append($header, $content)
+    .append($header, $content, footer ? $footer : '<div></div>')
     .on('click', (ev) => {
       ev.stopPropagation()
     })
 
   const $container = $mask.append($main).hide()
 
-  const modalElements = {
+  const modalElements: ModalElements = {
     $mask,
     $main,
     $header,
+    $footer,
     $container,
     $title,
     $actions,

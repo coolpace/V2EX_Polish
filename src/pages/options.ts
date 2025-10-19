@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   ArchiveRestore,
   Check,
@@ -237,20 +236,25 @@ void (async function init() {
         if (count > 0) {
           const $tagList = $(`
             <div class="tags-list-wrapper">
-              <div class="tags-tip">
-                <span>已设置 ${count} 条用户标签</span>
-
-                <div class="usage">
-                  用量：${(bytesUsed / 1024).toFixed(2)}KB / 8KB
-                  <div class="usage-help">
-                    <span data-lucide="circle-help"></span>
-                    <div class="usage-popover">
-                      <div class="usage-popover-title">用量限制</div>
-                      <div class="usage-popover-content">
-                        由于浏览器的存储空间限制，你只能存储 8KB 的用户标签数据。
+              <div class="tags-list-header">
+                <div class="tags-tip">
+                  <div class="tags-count">已设置 ${count} 条用户标签</div>
+                  <div class="usage">
+                    用量：${(bytesUsed / 1024).toFixed(2)}KB / 8KB
+                    <div class="usage-help">
+                      <span data-lucide="circle-help"></span>
+                      <div class="usage-popover">
+                        <div class="usage-popover-title">用量限制</div>
+                        <div class="usage-popover-content">
+                          由于浏览器的存储空间限制，你只能存储 8KB 的用户标签数据。
+                        </div>
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <div class="tags-desc">
+                  用户标签用于为用户添加自定义标记，便于在主题与回帖中快速识别。
                 </div>
               </div>
               <hr class="tags-divider" />
