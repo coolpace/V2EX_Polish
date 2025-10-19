@@ -124,5 +124,9 @@ export function createModal(props: CreateModalProps): ModalControl {
     root.append($container)
   }
 
-  return { ...modalElements, open: handleModalOpen, close: handleModalClose }
+  return {
+    ...modalElements,
+    open: handleModalOpen,
+    close: handleModalClose,
+  }
 }

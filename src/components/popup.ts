@@ -16,7 +16,9 @@ interface PopupElements {
   $content: JQuery
 }
 
-/** 用户信息弹出框控制。 */
+/**
+ * Popup 框控制。
+ */
 export interface PopupControl extends PopupElements, Pick<CreatePopupProps, 'onClose'> {
   /** 鼠标是否悬浮在弹出框上。 */
   isOver: boolean
@@ -77,7 +79,6 @@ export function createPopup(props: CreatePopupProps): PopupControl {
 
   const handleClickOutside = (ev: JQuery.ClickEvent) => {
     if ($(ev.target).closest(popup).length === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       handlePopupClose()
     }
   }
@@ -86,7 +87,7 @@ export function createPopup(props: CreatePopupProps): PopupControl {
     $popup.css('visibility', 'hidden')
     $(document).off('click', handleClickOutside)
     onClose?.()
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+
     popupControl.onClose?.()
   }
 
@@ -151,7 +152,8 @@ export function createPopup(props: CreatePopupProps): PopupControl {
   trigger?.on('click', () => {
     if (popup.style.visibility !== 'hidden') {
       handlePopupClose()
-    } else {
+    }
+    else {
       handlePopupOpen(trigger)
     }
   })

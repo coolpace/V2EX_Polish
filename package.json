@@ -33,7 +33,7 @@
     "deps": "pnpm up --interactive --latest"
   },
   "dependencies": {
-    "@floating-ui/dom": "1.4.5",
+    "@floating-ui/dom": "1.7.4",
     "lucide": "0.445.0",
     "webext-patterns": "1.5.1"
   },
