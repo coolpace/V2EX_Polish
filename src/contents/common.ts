@@ -9,13 +9,13 @@ import {
   getV2P_Settings,
   injectScript,
   isBrowserExtension,
+  isMobileView,
   setStorage,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
 import { openV2PSettings, postTask, toggleTheme } from './helpers'
 
-// 通过判断 `#site-header` 元素是否存在，来判断当前是否为移动端。
-if ($('#site-header').length > 0) {
+if (isMobileView()) {
   $body.addClass('v2p-mobile')
 }
 
@@ -132,7 +132,7 @@ void (async () => {
   // 更换主题颜色切换的按钮。
   {
     const $toggleImg = $toggle.find('> img')
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     const alt = $toggleImg.prop('alt')
 
     if (alt === 'Light') {

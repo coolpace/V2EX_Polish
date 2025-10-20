@@ -1,5 +1,5 @@
 import { StorageKey } from '../../constants'
-import { getStorage } from '../../utils'
+import { getStorage, isMobileView } from '../../utils'
 import { $body, $commentTableRows, $replyBox, $topicHeader } from '../globals'
 import { loadIcons } from '../helpers'
 import { handleComments } from './comment'
@@ -22,8 +22,8 @@ void (async () => {
     $('#Bottom').hide()
   }
 
-  // 减少内容区的最小宽度，适配小屏预览的情况。
-  {
+  // 非移动端时，减少内容区的最小宽度，适配小屏预览的情况。
+  if (!isMobileView()) {
     $body.css('min-width', '450px')
     $('.content').css('min-width', '450px')
   }

@@ -962,16 +962,6 @@ body {
   }
 
   .cell {
-    @mixin count {
-      user-select: none;
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 12px;
-      font-weight: 400;
-      white-space: nowrap;
-    }
-
     .topic-link {
       color: var(--v2p-color-foreground);
       text-decoration: none;
@@ -1016,7 +1006,7 @@ body {
     }
 
     .count_livid {
-      @include count;
+      @include share.count;
 
       margin-right: 0;
       color: var(--v2p-color-button-foreground);
@@ -1024,7 +1014,7 @@ body {
     }
 
     .count_orange {
-      @include count;
+      @include share.count;
 
       font-weight: bold;
       color: var(--v2p-color-badge);

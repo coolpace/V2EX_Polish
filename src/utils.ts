@@ -345,6 +345,15 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+/**
+ * 判断当前是否为移动端
+ * 通过检查 `#site-header` 元素是否存在来判断
+ * @returns 是否为移动端
+ */
+export function isMobileView(): boolean {
+  return $('#site-header').length > 0
+}
+
 const mark = `${EXTENSION_NAME}_settings`
 
 /**

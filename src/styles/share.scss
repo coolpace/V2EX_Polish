@@ -191,3 +191,13 @@
   font-size: 15px;
   line-height: 1.6;
 }
+
+@mixin count {
+  user-select: none;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
