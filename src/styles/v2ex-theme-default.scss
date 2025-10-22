@@ -581,7 +581,7 @@ body {
     .select2-selection {
       height: 33px !important;
       border: 1px solid var(--v2p-color-border);
-      border-radius: var(--v2p-input-radius);
+      border-radius: var(--v2p-input-radius) !important;
       background-color: var(--v2p-color-bg-content);
 
       .select2-selection__rendered,
@@ -618,9 +618,11 @@ body {
         padding: 5px;
       }
 
-      .select2-container--default .select2-results__option--selected {
-        color: currentColor;
-        background-color: var(--v2p-color-accent-100);
+      .select2-container--default {
+        .select2-results__option--selected {
+          color: currentColor;
+          background-color: var(--v2p-color-accent-100);
+        }
       }
     }
 
