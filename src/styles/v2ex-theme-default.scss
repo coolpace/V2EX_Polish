@@ -715,6 +715,19 @@ body {
   textarea {
     color: var(--v2p-color-foreground);
   }
+
+  /* ------ 浏览器窗口滚动条 ------ */
+  // Webkit
+  &::-webkit-scrollbar-track {
+    background-color: var(--v2p-scrollbar-background-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--v2p-color-foreground);
+  }
+
+  // Firefox
+  scrollbar-color: var(--v2p-color-foreground) var(--v2p-scrollbar-background-color);
 }
 
 /* ====== 帖子标签 ====== */
