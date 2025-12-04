@@ -230,26 +230,44 @@ const generateManifest = (): Manifest => {
    * 为所有 V2EX 域名生成对应的 URL 匹配模式，支持：
    * - 通配符匹配所有路径
    * - 特定路径匹配（如 /t/*, /write/* 等）
+   * - 可选地为不带尾部斜杠的基础路径（如 /write, /settings, /notifications）
+   *   额外生成带 query string 的匹配规则（例如 /write?*），用于覆盖
+   *   `/write?node=create` 这类场景
    *
    * @param suffix - 可选的路径后缀，如 't', 'write', 'member' 等
+   * @param addQueryForBasePath - 是否为基础路径额外生成 `?*` 匹配，仅用于
+   *   像 /write、/settings、/notifications 这类不带尾部斜杠但可能携带
+   *   query string 的页面。对带有子路径前缀（如 /t/*, /member/*）不需要
+   *   开启此选项。
    * @returns {string[]} URL 匹配规则数组
    */
-  const getMatches = (suffix?: string) => {
-    return HOSTS.map((host) => {
+  const getMatches = (suffix?: string, addQueryForBasePath?: boolean) => {
+    return HOSTS.reduce<string[]>((result, host) => {
       const base = `https://${host}`
-      const path = suffix ? `/${suffix}` : ''
 
-      return `${base}${path}/*`
-    })
+      if (suffix) {
+        const path = `/${suffix}`
+        result.push(`${base}${path}/*`)
+
+        if (addQueryForBasePath === true) {
+          result.push(`${base}${path}?*`)
+        }
+      }
+      else {
+        result.push(`${base}/*`)
+      }
+
+      return result
+    }, [])
   }
 
   // 为不同页面类型生成专用的匹配规则
   const matches = getMatches() // 全站匹配
   const topicMatches = getMatches('t') // 主题页面
-  const writeMatches = getMatches('write') // 发帖页面
+  const writeMatches = getMatches('write', true) // 发帖页面
   const memberMatches = getMatches('member') // 用户页面
-  const settingsMatches = getMatches('settings') // 设置页面
-  const notificationsMatches = getMatches('notifications') // 通知页面
+  const settingsMatches = getMatches('settings', true) // 设置页面
+  const notificationsMatches = getMatches('notifications', true) // 通知页面
   const nodeMatches = getMatches('go') // 节点页面
 
   return {
