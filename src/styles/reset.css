@@ -26,8 +26,8 @@
 }
 
 :where(body) {
-  -webkit-font-smoothing: antialiased;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 :where(input, button, textarea, select, textarea) {

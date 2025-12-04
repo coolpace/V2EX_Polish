@@ -9,6 +9,12 @@ export default {
     'no-descending-specificity': null,
     'at-rule-no-unknown': null,
     'value-keyword-case': null,
+    'nesting-selector-no-missing-scoping-root': [
+      true,
+      {
+        ignoreAtRules: ['mixin'],
+      },
+    ],
   },
 
   ignoreFiles: [
