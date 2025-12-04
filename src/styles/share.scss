@@ -15,7 +15,7 @@
   align-items: center;
   height: 28px;
   padding: 0 12px;
-  border: none;
+  border: 1px solid var(--v2p-color-button-border);
   border-radius: var(--v2p-input-radius);
   font-family: inherit;
   font-size: 14px;
@@ -34,23 +34,49 @@
     background-color 0.25s,
     box-shadow 0.25s;
 
+  &.special {
+    border-color: var(--v2p-color-accent-300);
+  }
+
+  &.v2p-btn-small {
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  &.v2p-btn-large {
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
   &:is(:hover:enabled, :active:enabled) {
-    border: none;
+    border: 1px solid var(--v2p-color-button-border);
     font-weight: 500;
     color: var(--v2p-color-button-foreground-hover);
     text-shadow: none;
     background: var(--v2p-color-button-background-hover);
     box-shadow: var(--button-hover-shadow);
+
+    &.special {
+      border-color: var(--v2p-color-accent-300);
+    }
   }
 
   &:is(.hover_now, .disable_now) {
-    border: none !important;
+    border: 1px solid var(--v2p-color-button-border);
     color: var(--v2p-color-button-foreground) !important;
     text-shadow: none !important;
     background: var(--button-background-color) !important;
     box-shadow:
       0 1.8px 0 var(--box-background-hover-color) !important,
       0 1.8px 0 var(--button-background-color) !important;
+
+    &.special {
+      border-color: var(--v2p-color-accent-300);
+    }
   }
 
   &:is(.disable_now, :disabled) {

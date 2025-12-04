@@ -76,7 +76,7 @@ export function processAvatar(params: ProcessAvatar) {
 
     popupControl.$content.empty().append($content)
 
-    createButton({ children: '添加用户标签' })
+    createButton({ children: '添加用户标签', size: 'small' })
       .on('click', () => {
         popupControl.close()
         openTagsSetter({ memberName, memberAvatar })
@@ -84,7 +84,7 @@ export function processAvatar(params: ProcessAvatar) {
       })
       .appendTo($('.v2p-member-card-actions'))
 
-    createButton({ children: '屏蔽该用户' })
+    createButton({ children: '屏蔽该用户', size: 'small' })
       .on('click', (event) => {
         const $btn = $(event.currentTarget)
 

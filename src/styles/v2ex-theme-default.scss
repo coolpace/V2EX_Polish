@@ -256,7 +256,6 @@ body {
       &:hover {
         &,
         &:enabled {
-          border: none;
           color: var(--v2p-color-accent-600);
           background: var(--v2p-color-accent-100);
           box-shadow: var(--button-hover-shadow);
@@ -450,11 +449,16 @@ body {
   #syntax-selector {
     .radio-group {
       padding: 3px;
+      border-radius: 6px;
       background-color: var(--v2p-color-background);
+      box-shadow: 0 1px 2px var(--v2p-box-shadow) inset;
 
       & > input[type='radio'] {
         &:checked + label {
+          border-radius: 5px;
+          color: var(--v2p-color-accent-600);
           background-color: var(--v2p-color-accent-100);
+          box-shadow: 1px 1px 2px var(--v2p-box-shadow);
         }
 
         + label {
