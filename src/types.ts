@@ -201,6 +201,19 @@ export interface Topic {
 
 export type HotTopic = Pick<Topic, 'id' | 'title' | 'url' | 'member'>
 
+/** 用户发帖记录项 */
+export interface UserTopicItem {
+  /** 帖子标题 */
+  title: string
+  /** 帖子链接 */
+  url: string
+  /** 所属节点 */
+  node?: {
+    name: string
+    url: string
+  }
+}
+
 export interface TopicReply {
   id: number
   created: number

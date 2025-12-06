@@ -1,18 +1,25 @@
 import { createButton } from '../../components/button'
 import { hoverDelay, type PopupControl } from '../../components/popup'
 import { createToast } from '../../components/toast'
-import { blockUser, fetchUserInfo } from '../../services'
-import type { CommentData, Member } from '../../types'
+import { blockUser, crawlUserPage, fetchUserInfo, parseUserTopics } from '../../services'
+import type { CommentData, Member, UserTopicItem } from '../../types'
 import { formatTimestamp } from '../../utils'
 import { getRegisterDays } from '../helpers'
 import { openTagsSetter } from './content'
 
 const banned = Symbol()
 
+/** 缓存的用户数据类型 */
+interface CachedMemberData extends Member {
+  registerDays: number
+  /** 用户发帖记录（仅在成功获取时存在） */
+  topics?: UserTopicItem[]
+}
+
 /** 缓存用户卡片的信息，减少重复的请求。 */
 export const memberDataCache = new Map<
   Member['username'],
-  Member & { registerDays: number } | typeof banned
+  CachedMemberData | typeof banned
 >()
 
 interface ProcessAvatar {
@@ -113,6 +120,30 @@ export function processAvatar(params: ProcessAvatar) {
       })
       .appendTo($('.v2p-member-card-actions'))
 
+    /**
+     * 渲染用户发帖记录列表。
+     * 只有在成功获取到数据且有发帖记录时才插入 DOM。
+     */
+    const renderTopics = (topics: UserTopicItem[]) => {
+      if (topics.length > 0) {
+        const topicItemsHtml = topics
+          .map(
+            (topic) =>
+              `<a class="v2p-member-topic-item" href="${topic.url}" target="_blank" title="${topic.title}">${topic.title}</a>`,
+          )
+          .join('')
+
+        const $topicsSection = $(`
+          <div class="v2p-member-topics">
+            <div class="v2p-member-topics-header">最近发帖</div>
+            <div class="v2p-member-topics-list">${topicItemsHtml}</div>
+          </div>
+        `)
+
+        $content.find('.v2p-member-card-actions').before($topicsSection)
+      }
+    }
+
     void (async () => {
       // 只有在无缓存时才请求远程数据。
       if (!memberDataCache.has(memberName)) {
@@ -123,13 +154,26 @@ export function processAvatar(params: ProcessAvatar) {
         }
 
         try {
-          const memberData = await fetchUserInfo(memberName, {
-            signal: abortController.signal,
-          })
+          // 并行发起用户信息和发帖记录请求
+          const [memberData, userPageHtml] = await Promise.all([
+            fetchUserInfo(memberName, { signal: abortController.signal }),
+            crawlUserPage(memberName).catch(() => ''),
+          ])
+
+          // 解析发帖记录（静默处理错误）
+          let topics: UserTopicItem[] = []
+
+          try {
+            topics = parseUserTopics(userPageHtml, 5)
+          }
+          catch {
+            // 静默处理解析错误
+          }
 
           memberDataCache.set(memberName, {
             ...memberData,
             registerDays: getRegisterDays(memberData.created),
+            topics,
           })
         }
         catch (err) {
@@ -165,6 +209,14 @@ export function processAvatar(params: ProcessAvatar) {
 
         if (data.bio && data.bio.trim().length > 0) {
           $content.find('.v2p-bio').css('disply', 'block').text(data.bio)
+        }
+        else {
+          $content.find('.v2p-bio').remove()
+        }
+
+        // 渲染发帖记录（只在有数据时显示）
+        if (data.topics && data.topics.length > 0) {
+          renderTopics(data.topics)
         }
       }
       else if (typeof data === 'symbol' && data === banned) {

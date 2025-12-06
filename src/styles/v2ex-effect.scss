@@ -207,12 +207,18 @@ body {
 .v2p-topic-preview-btn {
   cursor: pointer;
   border: 1px solid var(--v2p-color-border-darker);
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 13px;
   color: var(--v2p-color-button-foreground);
   visibility: hidden;
-  background-color: var(--v2p-color-button-background-hover);
+  background-color: var(--v2p-color-button-background);
   outline: none;
+  transition: color 0.25s;
+
+  &:is(:hover, :focus) {
+    color: var(--v2p-color-button-foreground-hover);
+    background-color: var(--v2p-color-button-background-hover);
+  }
 
   &:active {
     transform: scale(0.95);
@@ -714,8 +720,10 @@ a.v2p-topic-preview-title-link {
 }
 
 .v2p-member-card {
-  max-width: 300px;
-  max-height: 285px;
+  --v2p-card-spacing: 10px;
+
+  max-width: 320px;
+  max-height: 420px;
   padding: 12px;
   font-size: 13px;
   text-align: left;
@@ -766,7 +774,7 @@ a.v2p-topic-preview-title-link {
   .v2p-bio {
     @include share.line-clamp(3);
 
-    margin-top: 10px;
+    padding-top: var(--v2p-card-spacing);
   }
 }
 
@@ -774,7 +782,49 @@ a.v2p-topic-preview-title-link {
   display: flex;
   gap: 6px;
   align-items: center;
-  padding: 10px 0 0;
+  padding: var(--v2p-card-spacing) 0 0;
+}
+
+.v2p-member-topics {
+  margin-top: var(--v2p-card-spacing);
+  padding-top: var(--v2p-card-spacing);
+  border-top: 1px solid var(--box-border-color);
+}
+
+.v2p-member-topics-header {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--v2p-color-font-secondary);
+}
+
+.v2p-member-topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v2p-member-topic-item {
+  overflow: hidden;
+  display: inline-flex;
+  border-radius: 3px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--v2p-color-font-primary);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &::before {
+    content: '▸';
+    margin-right: 4px;
+    color: var(--v2p-color-font-tertiary);
+  }
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--v2p-color-bg-link-hover);
+  }
 }
 
 .v2p-reply-tags {

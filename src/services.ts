@@ -10,6 +10,7 @@ import type {
   Once,
   Topic,
   TopicReply,
+  UserTopicItem,
   V2EX_Response,
 } from './types'
 import { getStorage, setStorage, V2EX_ORIGIN } from './utils'
@@ -222,6 +223,58 @@ export async function crawlUserPage(username: string): Promise<string> {
   const htmlText = await res.text()
 
   return htmlText
+}
+
+/**
+ * 从用户页面 HTML 中解析发帖记录列表。
+ *
+ * @param htmlText - 用户页面的 HTML 文本
+ * @param limit - 最多返回的记录数量，默认为 5
+ * @returns 发帖记录数组，解析失败时返回空数组
+ */
+export function parseUserTopics(htmlText: string, limit = 5): UserTopicItem[] {
+  try {
+    const $page = $(htmlText)
+    const $topicItems = $page.find('.cell.item')
+    const topics: UserTopicItem[] = []
+
+    $topicItems.each((index, item) => {
+      if (index >= limit) {
+        return false
+      }
+
+      const $item = $(item)
+      const $topicLink = $item.find('.item_title .topic-link')
+      const $nodeLink = $item.find('.node')
+
+      const title = $topicLink.text().trim()
+      const url = $topicLink.attr('href')
+
+      if (title && url) {
+        const topic: UserTopicItem = {
+          title,
+          url,
+        }
+
+        const nodeName = $nodeLink.text().trim()
+        const nodeUrl = $nodeLink.attr('href')
+
+        if (nodeName && nodeUrl) {
+          topic.node = {
+            name: nodeName,
+            url: nodeUrl,
+          }
+        }
+
+        topics.push(topic)
+      }
+    })
+
+    return topics
+  }
+  catch {
+    return []
+  }
 }
 
 /**
