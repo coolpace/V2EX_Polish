@@ -6,6 +6,7 @@ import { handleComments } from './comment'
 import { handleContent } from './content'
 import { handleLayout } from './layout'
 import { handlePaging } from './paging'
+import { handleRelatedTopics } from './related-topics'
 import { handleReply } from './reply'
 import { handleTools } from './tool'
 
@@ -76,6 +77,9 @@ void (async () => {
   handleReply()
 
   loadIcons()
+
+  // 加载相关主题推荐（异步执行，不阻塞主流程）
+  void handleRelatedTopics()
 
   {
     const isFlamewarNode = $topicHeader.find('a[href^="/go"]').attr('href')?.endsWith('/flamewar')

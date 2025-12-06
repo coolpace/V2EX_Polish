@@ -226,6 +226,16 @@ export async function crawlUserPage(username: string): Promise<string> {
 }
 
 /**
+ * 爬取标签页面，返回 HTML 纯文本。
+ */
+export async function crawlTagPage(tag: string): Promise<string> {
+  const res = await fetch(`${V2EX_ORIGIN}/tag/${encodeURIComponent(tag)}`)
+  const htmlText = await res.text()
+
+  return htmlText
+}
+
+/**
  * 从用户页面 HTML 中解析发帖记录列表。
  *
  * @param htmlText - 用户页面的 HTML 文本
