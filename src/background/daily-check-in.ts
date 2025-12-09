@@ -51,7 +51,7 @@ export async function checkIn() {
     if (endIndex !== -1) {
       const matchedString = htmlPlainText.slice(startIndex, endIndex) // 拿到 /mission/daily/redeem?once=xxxxx
       const checkInUrl = `${V2EX.Origin}${matchedString}`
-      const checkInResult = await fetch(checkInUrl)
+      const checkInResult = await fetch(checkInUrl, { headers: { Referer: `${V2EX.Origin}/mission/daily` } })
       const text = await checkInResult.text()
 
       if (text.includes(successText)) {
