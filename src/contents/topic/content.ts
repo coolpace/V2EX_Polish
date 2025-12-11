@@ -275,8 +275,8 @@ export function handleTopicImg() {
       root: $body,
       onMount: ({ $main, $header, $content }) => {
         $main.css({
-          width: 'auto',
-          height: 'auto',
+          width: '100%',
+          height: '100%',
           display: 'flex',
           'justify-content': 'center',
           'background-color': 'transparent',
@@ -306,10 +306,70 @@ export function handleTopicImg() {
 
           $img.on('click', () => {
             const $clonedImg = $img.clone()
-            $clonedImg.css({ cursor: 'default', 'pointer-events': 'auto' })
+            $clonedImg.css({
+              cursor: 'default',
+              'pointer-events': 'auto',
+              transition: 'transform 0.3s ease',
+              display: 'block',
+              margin: '0 auto',
+              transform: 'scale(1)',
+            })
 
+            let scale = 1
+            const step = 0.5
+            const maxScale = 3
+            const minScale = 0.5
+
+            const $controls = $('<div></div>').css({
+              position: 'fixed',
+              bottom: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '10px',
+              'z-index': 1001,
+              'pointer-events': 'auto',
+            })
+
+            const $zoomInBtn = $('<button>放大</button>').css({
+              padding: '6px 12px',
+              'border-radius': '6px',
+              border: 'none',
+              cursor: 'pointer',
+              background: '#1677ff',
+              color: '#fff',
+              'font-size': '14px',
+            })
+
+            const $zoomOutBtn = $('<button>缩小</button>').css({
+              padding: '6px 12px',
+              'border-radius': '6px',
+              border: 'none',
+              cursor: 'pointer',
+              background: '#1677ff',
+              color: '#fff',
+              'font-size': '14px',
+            })
+
+            $zoomInBtn.on('click', (e) => {
+              e.stopPropagation()
+              if (scale < maxScale) {
+                scale += step
+                $clonedImg.css({ transform: `scale(${scale})` })
+              }
+            })
+
+            $zoomOutBtn.on('click', (e) => {
+              e.stopPropagation()
+              if (scale > minScale) {
+                scale -= step
+                $clonedImg.css({ transform: `scale(${scale})` })
+              }
+            })
+
+            $controls.append($zoomInBtn, $zoomOutBtn)
             modal.open()
-            modal.$content.append($clonedImg)
+            modal.$content.append($clonedImg, $controls)
           })
         }
       }
