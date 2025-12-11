@@ -2,6 +2,7 @@ import { StorageKey } from '../../constants'
 import { getStorage } from '../../utils'
 import { $commentTableRows, $replyBox, $topicHeader } from '../globals'
 import { loadIcons } from '../helpers'
+import { handleActivationCodes } from './activation_code'
 import { handleComments } from './comment'
 import { handleContent } from './content'
 import { handleLayout } from './layout'
@@ -58,6 +59,9 @@ void (async () => {
   handlePaging()
   await handleComments()
   handleReply()
+
+  // 处理帖子中的激活码，标记已使用的激活码
+  handleActivationCodes()
 
   loadIcons()
 })()
