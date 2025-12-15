@@ -51,7 +51,7 @@ export function useTopicPreview() {
 
   const $detailBtn = createButton({
     children: '进入主题',
-    className: 'special',
+    variant: 'special',
     tag: 'a',
   })
 

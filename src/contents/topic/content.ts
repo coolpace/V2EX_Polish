@@ -543,11 +543,11 @@ export function handleTopicImg() {
             })
 
             const $zoomInBtn = createButton({
-              children: '放大', size: 'small', className: 'special',
+              children: '放大', size: 'small', variant: 'special',
             })
 
             const $zoomOutBtn = createButton({
-              children: '缩小', size: 'small', className: 'special',
+              children: '缩小', size: 'small', variant: 'special',
             })
 
             const $resetBtn = createButton({
