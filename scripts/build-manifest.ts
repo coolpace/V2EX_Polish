@@ -39,6 +39,8 @@ import path from 'node:path'
 
 import { consola } from 'consola'
 
+import { V2EX_DOMAINS } from '../src/constants'
+
 /**
  * 从 package.json 读取版本号，统一版本来源。
  *
@@ -99,21 +101,9 @@ function getPackageVersion(): string {
  * - 仅填写主机名，不包含协议与路径，例如 "v2ex.com"
  * - 变更此列表会同时影响权限与脚本注入域，请审慎评估
  * - 不要添加通配符或端口；路径后缀在下游规则中统一追加
+ * - 域名列表从 src/constants.ts 中的 V2EX_DOMAINS 导入，统一维护
  */
-export const HOSTS = [
-  'v2ex.com',
-  'www.v2ex.com',
-  'cn.v2ex.com',
-  'jp.v2ex.com',
-  'de.v2ex.com',
-  'us.v2ex.com',
-  'hk.v2ex.com',
-  'global.v2ex.com',
-  'fast.v2ex.com',
-  's.v2ex.com',
-  'origin.v2ex.com',
-  'staging.v2ex.com',
-]
+export const HOSTS = V2EX_DOMAINS
 
 type Manifest = chrome.runtime.ManifestV3
 

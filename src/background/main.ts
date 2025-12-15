@@ -1,4 +1,4 @@
-import { Menu, MessageKey, StorageKey } from '../constants'
+import { Menu, MessageKey, StorageKey, V2EX_DOMAINS } from '../constants'
 import type { StorageItems } from '../types'
 import { getRunEnv } from '../utils'
 import { checkIn } from './daily-check-in'
@@ -7,6 +7,14 @@ interface Message {
   [MessageKey.action]?: 'openPopup'
   [MessageKey.colorScheme]?: 'dark' | 'light'
   [MessageKey.showOptions]?: true
+}
+
+function generateUrlPatterns(path: string): string[] {
+  return V2EX_DOMAINS.map((domain) => `https://${domain}${path}`)
+}
+
+function generateOrigins(): string[] {
+  return V2EX_DOMAINS.map((domain) => `https://${domain}`)
 }
 
 chrome.runtime.onMessage.addListener((message: Message) => {
@@ -43,20 +51,7 @@ chrome.contextMenus.removeAll(() => {
       const runEnv = getRunEnv()
 
       chrome.contextMenus.create({
-        documentUrlPatterns: [
-          'https://v2ex.com/*',
-          'https://www.v2ex.com/*',
-          'https://cn.v2ex.com/*',
-          'https://jp.v2ex.com/*',
-          'https://de.v2ex.com/*',
-          'https://us.v2ex.com/*',
-          'https://hk.v2ex.com/*',
-          'https://global.v2ex.com/*',
-          'https://fast.v2ex.com/*',
-          'https://s.v2ex.com/*',
-          'https://origin.v2ex.com/*',
-          'https://staging.v2ex.com/*',
-        ],
+        documentUrlPatterns: generateUrlPatterns('/*'),
         contexts: ['page'],
         title: 'V2EX Polish',
         visible: true,
@@ -68,20 +63,7 @@ chrome.contextMenus.removeAll(() => {
 
       if (hasSidePanel) {
         chrome.contextMenus.create({
-          documentUrlPatterns: [
-            'https://v2ex.com/*',
-            'https://www.v2ex.com/*',
-            'https://cn.v2ex.com/*',
-            'https://jp.v2ex.com/*',
-            'https://de.v2ex.com/*',
-            'https://us.v2ex.com/*',
-            'https://hk.v2ex.com/*',
-            'https://global.v2ex.com/*',
-            'https://fast.v2ex.com/*',
-            'https://s.v2ex.com/*',
-            'https://origin.v2ex.com/*',
-            'https://staging.v2ex.com/*',
-          ],
+          documentUrlPatterns: generateUrlPatterns('/*'),
           contexts: ['page'],
           title: '选项设置',
           id: Menu.Options,
@@ -90,20 +72,7 @@ chrome.contextMenus.removeAll(() => {
       }
 
       chrome.contextMenus.create({
-        documentUrlPatterns: [
-          'https://v2ex.com/t/*',
-          'https://www.v2ex.com/t/*',
-          'https://cn.v2ex.com/t/*',
-          'https://jp.v2ex.com/t/*',
-          'https://de.v2ex.com/t/*',
-          'https://us.v2ex.com/t/*',
-          'https://hk.v2ex.com/t/*',
-          'https://global.v2ex.com/t/*',
-          'https://fast.v2ex.com/t/*',
-          'https://s.v2ex.com/t/*',
-          'https://origin.v2ex.com/t/*',
-          'https://staging.v2ex.com/t/*',
-        ],
+        documentUrlPatterns: generateUrlPatterns('/t/*'),
         contexts: ['page'],
         title: '解析本页 Base64',
         id: Menu.Decode,
@@ -111,20 +80,7 @@ chrome.contextMenus.removeAll(() => {
       })
 
       chrome.contextMenus.create({
-        documentUrlPatterns: [
-          'https://v2ex.com/t/*',
-          'https://www.v2ex.com/t/*',
-          'https://cn.v2ex.com/t/*',
-          'https://jp.v2ex.com/t/*',
-          'https://de.v2ex.com/t/*',
-          'https://us.v2ex.com/t/*',
-          'https://hk.v2ex.com/t/*',
-          'https://global.v2ex.com/t/*',
-          'https://fast.v2ex.com/t/*',
-          'https://s.v2ex.com/t/*',
-          'https://origin.v2ex.com/t/*',
-          'https://staging.v2ex.com/t/*',
-        ],
+        documentUrlPatterns: generateUrlPatterns('/t/*'),
         contexts: ['page'],
         title: '添加进稍后阅读',
         id: Menu.Reading,
@@ -175,21 +131,9 @@ chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
     }
 
     const url = new URL(tab.url)
+    const origins = generateOrigins()
 
-    if (
-      url.origin === 'https://www.v2ex.com'
-      || url.origin === 'https://v2ex.com'
-      || url.origin === 'https://cn.v2ex.com'
-      || url.origin === 'https://jp.v2ex.com'
-      || url.origin === 'https://de.v2ex.com'
-      || url.origin === 'https://us.v2ex.com'
-      || url.origin === 'https://hk.v2ex.com'
-      || url.origin === 'https://global.v2ex.com'
-      || url.origin === 'https://fast.v2ex.com'
-      || url.origin === 'https://s.v2ex.com'
-      || url.origin === 'https://origin.v2ex.com'
-      || url.origin === 'https://staging.v2ex.com'
-    ) {
+    if (origins.includes(url.origin)) {
       await chrome.sidePanel.setOptions({
         tabId,
         path: 'pages/options.html',

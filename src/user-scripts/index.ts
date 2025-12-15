@@ -2,12 +2,14 @@
 
 import { patternToRegex } from 'webext-patterns'
 
+import { V2EX_DOMAINS } from '../constants'
 import { style } from './style'
 
 function runAfterLoaded(fn: () => void): void {
   if (document.readyState !== 'loading') {
     fn()
-  } else {
+  }
+  else {
     document.addEventListener('DOMContentLoaded', () => {
       fn()
     })
@@ -17,26 +19,14 @@ function runAfterLoaded(fn: () => void): void {
 if (typeof window.GM_addStyle !== 'undefined') {
   // 使用「GM_addStyle」配合「@run-at document-start」，可以解决样式切换导致的页面闪烁问题。
   window.GM_addStyle(style)
-} else {
+}
+else {
   runAfterLoaded(() => {
     $(`<style type='text/css'>${style}</style>`).appendTo('head')
   })
 }
 
-const allowedHosts = [
-  'https://v2ex.com',
-  'https://www.v2ex.com',
-  'https://cn.v2ex.com',
-  'https://jp.v2ex.com',
-  'https://de.v2ex.com',
-  'https://us.v2ex.com',
-  'https://hk.v2ex.com',
-  'https://global.v2ex.com',
-  'https://fast.v2ex.com',
-  'https://s.v2ex.com',
-  'https://origin.v2ex.com',
-  'https://staging.v2ex.com',
-]
+const allowedHosts = V2EX_DOMAINS.map((domain) => `https://${domain}`)
 
 const commonRegex = patternToRegex(...allowedHosts.map((host) => `${host}/*`))
 const topicRegex = patternToRegex(...allowedHosts.map((host) => `${host}/t/*`))
