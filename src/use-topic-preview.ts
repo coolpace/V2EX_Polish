@@ -324,7 +324,7 @@ export function useTopicPreview() {
                     $cellDom
                       .find('.badges')
                       .append(
-                        `<div class="badge ${memberName === topic.member.username ? 'mod' : 'you'}">YOU</div>`,
+                        `<div class="badge ${memberName === topic.member.username ? 'mod' : 'you'}">Me</div>`,
                       )
                   }
 

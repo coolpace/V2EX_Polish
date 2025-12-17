@@ -454,7 +454,7 @@ export async function handleComments() {
       if (memberName === loginName && !options.hideAccount) {
         $cellDom
           .find('.badges')
-          .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">YOU</div>`)
+          .append(`<div class="badge ${memberName === topicOwnerName ? 'mod' : 'you'}">Me</div>`)
       }
 
       // 增加感谢爱心的样式。
