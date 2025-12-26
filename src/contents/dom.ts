@@ -1,5 +1,4 @@
 import type { CommentData, Options } from '../types'
-import { processReplyContent } from './topic/content'
 
 export function getCommentDataList({
   options,
@@ -100,69 +99,94 @@ export function handleNestedComment({
   const display = options.nestedReply.display
 
   if (display !== 'off') {
-    $commentCells.each((i, cellDom) => {
-      const $cellDom = $(cellDom)
+    const cellList = $commentCells.get()
 
-      const dataFromIndex = commentDataList.at(i)
+    const commentById = new Map<string, CommentData>()
+    const floorMemberToIndex = new Map<string, number>()
+    const lastSeenByMember = new Map<string, number>()
 
-      if (options.replyContent.autoFold) {
-        processReplyContent($cellDom)
+    for (let i = 0; i < commentDataList.length; i++) {
+      const data = commentDataList[i]
+      commentById.set(data.id, data)
+
+      if (data.memberName && data.floor) {
+        floorMemberToIndex.set(`${data.memberName}:${data.floor}`, i)
+      }
+    }
+
+    for (let i = 0; i < cellList.length; i++) {
+      const cellDom = cellList[i]
+
+      if (!cellDom || !(cellDom instanceof HTMLElement)) {
+        continue
       }
 
-      // 先根据索引去找，如果能对应上就不需要再去 find 了，这样能加快处理速度。
-      const currentComment
-        = dataFromIndex?.id === cellDom.id
-          ? dataFromIndex
-          : commentDataList.find((data) => data.id === cellDom.id)
+      const currentComment = commentById.get(cellDom.id)
 
       if (currentComment) {
-        const { refMemberNames, refFloors } = currentComment
+        const refMemberNames = currentComment.refMemberNames
+        const refFloors = currentComment.refFloors
+
+        let canNest = true
 
         if (!refMemberNames || refMemberNames.length === 0) {
-          return
+          canNest = false
         }
 
-        const moreThanOneRefMember = refMemberNames.length > 1
+        const moreThanOneRefMember = !!refMemberNames && refMemberNames.length > 1
 
-        if (options.nestedReply.multipleInsideOne === 'off' && refMemberNames.length > 1) {
-          return
+        if (canNest) {
+          if (options.nestedReply.multipleInsideOne === 'off' && moreThanOneRefMember) {
+            canNest = false
+          }
         }
 
-        for (const refName of moreThanOneRefMember ? refMemberNames.toReversed() : refMemberNames) {
-          // 从当前评论往前找，找到第一个引用的用户的评论，然后把当前评论插入到那个评论的后面。
-          for (let j = i - 1; j >= 0; j--) {
-            const { memberName: compareName, floor: eachFloor } = commentDataList.at(j) || {}
+        if (canNest && refMemberNames) {
+          const refNamesInOrder = moreThanOneRefMember
+            ? refMemberNames.toReversed()
+            : refMemberNames
 
-            if (compareName === refName) {
-              let refCommentIdx = j
+          const floorsInOrder = moreThanOneRefMember
+            ? refFloors?.toReversed()
+            : refFloors
 
-              const firstRefFloor = moreThanOneRefMember
-                ? refFloors?.toReversed().at(0)
-                : refFloors?.at(0)
+          const desiredFloor = floorsInOrder?.at(0)
 
-              // 找到了指定回复的用户后，发现跟指定楼层对不上，则继续寻找。
-              // 如果手动指定了楼层，那么就以指定的楼层为准（一般来说，由用户指定会更精确），否则就以第一个引用的用户的评论的楼层为准。
-              if (firstRefFloor && firstRefFloor !== eachFloor) {
-                const targetIdx = commentDataList
-                  .slice(0, j)
-                  .findIndex((data) => data.floor === firstRefFloor && data.memberName === refName)
+          let refCommentIdx = -1
 
-                if (targetIdx >= 0) {
-                  refCommentIdx = targetIdx
-                }
+          for (const refName of refNamesInOrder) {
+            refCommentIdx = -1
+
+            if (desiredFloor) {
+              const idxByFloor = floorMemberToIndex.get(`${refName}:${desiredFloor}`)
+
+              if (typeof idxByFloor === 'number' && idxByFloor < i) {
+                refCommentIdx = idxByFloor
               }
+            }
 
+            if (refCommentIdx < 0) {
+              const idxByLastSeen = lastSeenByMember.get(refName)
+
+              if (typeof idxByLastSeen === 'number') {
+                refCommentIdx = idxByLastSeen
+              }
+            }
+
+            if (refCommentIdx >= 0) {
               if (display === 'indent') {
                 cellDom.classList.add('v2p-indent')
               }
 
-              $commentCells.eq(refCommentIdx).append(cellDom)
-
-              return
+              const refCell = cellList[refCommentIdx]
+              refCell.append(cellDom)
+              break
             }
           }
         }
+
+        lastSeenByMember.set(currentComment.memberName, i)
       }
-    })
+    }
   }
 }

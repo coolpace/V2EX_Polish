@@ -186,44 +186,45 @@ export function handleContent() {
  *  - 对同一个元素重复执行此方法时，效果不会叠加。
  */
 export function processReplyContent($cellDom: JQuery) {
-  if ($cellDom.find('.v2p-reply-content').length > 0) {
-    return
-  }
+  const $existing = $cellDom.find('.v2p-reply-content')
 
-  const $replyContent = $cellDom.find('.reply_content')
+  if ($existing.length === 0) {
+    const $replyContent = $cellDom.find('.reply_content')
+    const replyContentEl = $replyContent.get(0)
 
-  const contentHeight = $replyContent.height() ?? 0
+    if (replyContentEl) {
+      const textLength = ($replyContent.text() ?? '').length
+      const hasHeavyNodes = $replyContent.find('img, pre, blockquote, ul, ol, table').length > 0
+      const maybeLong = textLength >= 300 || hasHeavyNodes
 
-  const shouldCollapsed = contentHeight + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
+      if (maybeLong) {
+        const contentHeight = $replyContent.height() ?? 0
+        const shouldCollapsed = contentHeight + READABLE_CONTENT_HEIGHT >= MAX_CONTENT_HEIGHT
 
-  if (shouldCollapsed) {
-    const collapsedCSS = {
-      maxHeight: `${READABLE_CONTENT_HEIGHT}px`,
-      overflow: 'hidden',
-      paddingBottom: '0',
+        if (shouldCollapsed) {
+          const contentBox = document.createElement('div')
+          contentBox.className = 'v2p-reply-content v2p-collapsed'
+
+          replyContentEl.parentNode?.insertBefore(contentBox, replyContentEl)
+          contentBox.append(replyContentEl)
+
+          const $expandBtn = createButton({ children: '展开回复', className: 'v2p-expand-btn' })
+
+          const handleToggle = () => {
+            const collapsed = contentBox.classList.contains('v2p-collapsed')
+            contentBox.classList.toggle('v2p-collapsed')
+            $expandBtn.html(collapsed ? '收起回复' : '展开回复')
+          }
+
+          $expandBtn.on('click', (ev) => {
+            ev.preventDefault()
+            handleToggle()
+          })
+
+          $(contentBox).append($expandBtn)
+        }
+      }
     }
-
-    const $contentBox = $('<div class="v2p-reply-content v2p-collapsed">').css(collapsedCSS)
-
-    const $expandBtn = createButton({ children: '展开回复', className: 'v2p-expand-btn' })
-
-    const toggleContent = () => {
-      const collapsed = $contentBox.hasClass('v2p-collapsed')
-
-      $contentBox
-        .toggleClass('v2p-collapsed')
-        .css(
-          collapsed ? { maxHeight: 'none', overflow: 'auto', paddingBottom: '40px' } : collapsedCSS,
-        )
-      $expandBtn.html(collapsed ? '收起回复' : '展开回复')
-    }
-
-    $expandBtn.on('click', (ev) => {
-      ev.preventDefault()
-      toggleContent()
-    })
-
-    $contentBox.append($replyContent.clone()).replaceAll($replyContent).append($expandBtn)
   }
 }
 

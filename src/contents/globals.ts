@@ -11,8 +11,8 @@ export const $topicList = $(
 /** 个人信息卡片。 */
 export const $infoCard = $('#Rightbar > .box:has("#member-activity")')
 
-/** 主题内容区。 */
-export const $topicContentBox = $('#Main .box:has(.topic_buttons)')
+/** 主题内容区。优先匹配有 topic_buttons 的，否则匹配有 topic_content 的 */
+export const $topicContentBox = $('#Main .box:has(.topic_buttons), #Main .box:has(.topic_content)').first()
 
 /** 主题内容区的头部 */
 export const $topicHeader = $topicContentBox.find('.header')

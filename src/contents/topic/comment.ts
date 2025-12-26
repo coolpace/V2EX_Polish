@@ -52,6 +52,41 @@ function generateReplyRefHTML(replyMember: CommentData) {
 let commentDataList: readonly CommentData[] = []
 
 /**
+ * 分批执行任务，避免主线程长时间阻塞。
+ */
+function scheduleInChunks<T>(
+  items: T[],
+  chunkSize: number,
+  handler: (item: T) => void,
+) {
+  let index = 0
+
+  const runChunk = () => {
+    const end = Math.min(index + chunkSize, items.length)
+
+    for (; index < end; index++) {
+      handler(items[index])
+    }
+
+    if (index < items.length) {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(runChunk)
+      }
+      else {
+        (window as Window).requestAnimationFrame(runChunk)
+      }
+    }
+  }
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(runChunk)
+  }
+  else {
+    (window as Window).requestAnimationFrame(runChunk)
+  }
+}
+
+/**
  * 设置经过筛选后的回复。
  */
 function handleFilteredComments() {
@@ -395,9 +430,24 @@ export async function handleComments() {
               pages.map((p) => crawlTopicPage(window.location.pathname, p)),
             )
 
-            pagesText.map((pageText) => {
-              $pagingBottom.before($(pageText).find('.cell[id^="r_"]'))
-            })
+            const fragment = document.createDocumentFragment()
+
+            for (const htmlText of pagesText) {
+              const doc = new DOMParser().parseFromString(htmlText, 'text/html')
+              const cells = doc.querySelectorAll('.cell[id^="r_"]')
+
+              for (const cell of cells) {
+                if (cell instanceof HTMLElement) {
+                  fragment.append(document.importNode(cell, true))
+                }
+              }
+            }
+
+            const pagingBottomEl = $pagingBottom.get(0)
+
+            if (pagingBottomEl?.parentNode) {
+              pagingBottomEl.parentNode.insertBefore(fragment, pagingBottomEl)
+            }
           }
 
           updateCommentCells()
@@ -543,6 +593,14 @@ export async function handleComments() {
 
   // MARK: 处理嵌套回复
   handleNestedComment({ options, $commentCells, commentDataList })
+
+  // MARK: 分批处理回复内容折叠（避免主线程长时间阻塞）
+  if (options.replyContent.autoFold) {
+    const cells = $commentCells.get()
+    scheduleInChunks(cells, 30, (cell) => {
+      processReplyContent($(cell))
+    })
+  }
 
   // MARK: 鼠标悬浮展示用户弹框
   // 让主题内容区的 OP 头像在鼠标悬浮时也能展示用户信息弹框。

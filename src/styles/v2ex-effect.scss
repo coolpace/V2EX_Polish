@@ -926,6 +926,10 @@ a.v2p-topic-preview-title-link {
   }
 
   &.v2p-collapsed {
+    overflow: hidden;
+    max-height: 250px;
+    padding-bottom: 0;
+
     &::before {
       pointer-events: none;
       content: '';
@@ -949,6 +953,12 @@ a.v2p-topic-preview-title-link {
       bottom: 10px;
       transform: translateX(-50%);
     }
+  }
+
+  &:not(.v2p-collapsed) {
+    overflow: auto;
+    max-height: none;
+    padding-bottom: 40px;
   }
 }
 
