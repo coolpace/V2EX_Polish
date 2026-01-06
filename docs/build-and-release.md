@@ -21,7 +21,7 @@ pnpm build
 
 - Chrome 压缩包：`build-chrome/*.zip`
 - Firefox 压缩包：`build-firefox/*.zip`
-- 油猴脚本：`dist/index.js`
+- 油猴脚本：`dist/index.min.js`
 
 清理：
 

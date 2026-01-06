@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /**
  * Popup 功能描述：
  * 1. 切换到某个 tab 时，如果该 tab 的内容没有加载过，则加载内容。

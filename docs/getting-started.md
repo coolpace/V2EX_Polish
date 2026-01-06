@@ -43,13 +43,13 @@ V2EX_Polish_Pro/
 │  └─ manifest-firefox.json    # 由 scripts/build-manifest.ts 生成
 ├─ build-chrome/               # 提交到 CWS/Edge 的源目录（由 scripts/build.ts 拷贝）
 ├─ build-firefox/              # 提交到 AMO 的源目录（由 scripts/build.ts 拷贝）
-├─ dist/                       # 油猴脚本产物（dist/index.js）
+├─ dist/                       # 油猴脚本产物（dist/index.min.js）
 ├─ chrome-profile/             # Chromium 调试用独立用户数据目录（web-ext run 使用）
 ├─ firefox-dev-profile/        # Firefox 调试用独立用户配置目录（web-ext run 使用）
 ├─ scripts/                    # 构建脚本
 │  ├─ build.ts                 # 复制 extension → build-*
 │  └─ build-manifest.ts        # 生成 manifest*.json
-└─ website/                    # 网站与文档（含 Safari 使用说明）
+└─ docs/                       # 开发文档
 ```
 
 构建主线：
@@ -59,7 +59,7 @@ V2EX_Polish_Pro/
 - 清单生成：`scripts/build-manifest.ts` 产出 `extension/manifest*.json`
 - 复制产出：`scripts/build.ts` 复制 `extension/` 到 `build-chrome` / `build-firefox`
 - 压缩打包：`web-ext build` 生成 zip 到 `build-*`
-- 用户脚本：`src/user-scripts/write-style.mjs` 合并样式到 `src/user-scripts/style.ts`，再由 `tsup` 产出 `dist/index.js`
+- 用户脚本：`src/user-scripts/write-style.mjs` 合并样式到 `src/user-scripts/style.ts`，再由 `tsup` 产出 `dist/index.min.js`
 
 ## 常用命令速查
 
