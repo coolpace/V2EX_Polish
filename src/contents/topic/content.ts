@@ -1,4 +1,5 @@
 import { createButton } from '../../components/button'
+import { createImagePreview } from '../../components/image-preview'
 import { createModal } from '../../components/modal'
 import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
@@ -442,167 +443,28 @@ export function openTagsSetter(
 export function handleTopicImg() {
   const $imgs = $('.embedded_image')
 
-  if ($imgs.length > 0) {
-    const modal = createModal({
-      root: $body,
-      onMount: ({ $main, $header, $content }) => {
-        $main.css({
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          'justify-content': 'center',
-          'background-color': 'transparent',
-          'pointer-events': 'none',
-        })
-        $header.remove()
-        $content.css({
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          'justify-content': 'center',
-          'align-items': 'center',
-          'pointer-events': 'auto',
-        })
-      },
-      onOpen: ({ $content }) => {
-        $content.empty()
-      },
-      onClose: ({ $content }) => {
-        $content.empty()
-      },
-    })
-
-    modal.$content.on('click', (ev) => {
-      if (ev.target === modal.$content.get(0)) {
-        modal.close()
-      }
-    })
-
-    $imgs.each((_, img) => {
-      const $img = $(img)
-
-      if (img instanceof HTMLImageElement) {
-        $img.parent().removeAttr('href')
-
-        if (img.clientWidth !== img.naturalWidth) {
-          $img.css({ cursor: 'zoom-in' })
-
-          $img.on('click', () => {
-            const $clonedImg = $img.clone().css({
-              cursor: 'default',
-              'pointer-events': 'auto',
-              transition: 'transform 0.3s ease',
-              display: 'block',
-              margin: '0 auto',
-              transform: 'scale(1)',
-              'max-width': '90vw',
-              'max-height': '90vh',
-              'object-fit': 'contain',
-            }).attr('draggable', 'false')
-
-            let scale = 1
-            const step = 0.5
-            const maxScale = 3
-            const minScale = 0.5
-
-            const applyTransform = () => {
-              $clonedImg.css({
-                transform: `scale(${scale})`,
-              })
-            }
-
-            const clampScale = (value: number) => {
-              let nextScale = value
-
-              if (nextScale > maxScale) {
-                nextScale = maxScale
-              }
-
-              if (nextScale < minScale) {
-                nextScale = minScale
-              }
-
-              scale = nextScale
-              applyTransform()
-            }
-
-            const $controls = $('<div></div>').css({
-              position: 'fixed',
-              bottom: '20px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              gap: '10px',
-              zIndex: 1001,
-              pointerEvents: 'auto',
-              padding: '6px 10px',
-              background: 'var(--v2p-color-bg-widget)',
-              border: '1px solid var(--v2p-color-border)',
-              borderRadius: '8px',
-              boxShadow: 'var(--v2p-widget-shadow)',
-              backdropFilter: 'blur(12px)',
-            })
-
-            const $zoomInBtn = createButton({
-              children: '放大', size: 'small', variant: 'special',
-            })
-
-            const $zoomOutBtn = createButton({
-              children: '缩小', size: 'small', variant: 'special',
-            })
-
-            const $resetBtn = createButton({
-              children: '复位', size: 'small',
-            })
-
-            $zoomInBtn.on('click', (e) => {
-              e.stopPropagation()
-
-              if (scale < maxScale) {
-                scale += step
-                applyTransform()
-              }
-            })
-
-            $zoomOutBtn.on('click', (e) => {
-              e.stopPropagation()
-
-              if (scale > minScale) {
-                scale -= step
-                applyTransform()
-              }
-            })
-
-            $resetBtn.on('click', (e) => {
-              e.stopPropagation()
-              scale = 1
-              applyTransform()
-            })
-
-            $clonedImg.on('dblclick', (e) => {
-              e.stopPropagation()
-              scale = 1
-              applyTransform()
-            })
-
-            $clonedImg.on('wheel', (e) => {
-              e.preventDefault()
-              e.stopPropagation()
-
-              const deltaY = e.originalEvent instanceof WheelEvent ? e.originalEvent.deltaY : 0
-              const direction = deltaY > 0 ? -1 : 1
-
-              clampScale(scale + direction * step)
-            })
-
-            $controls.append($zoomInBtn, $zoomOutBtn, $resetBtn)
-            modal.open()
-            modal.$content.append($clonedImg, $controls)
-          })
-        }
-      }
-    })
+  if ($imgs.length === 0) {
+    return
   }
+
+  const preview = createImagePreview()
+
+  $imgs.each((_, img) => {
+    const $img = $(img)
+
+    if (img instanceof HTMLImageElement) {
+      $img.parent().removeAttr('href')
+
+      // 只有当图片被缩小显示时才启用预览功能
+      if (img.clientWidth !== img.naturalWidth) {
+        $img.css({ cursor: 'zoom-in' })
+
+        $img.on('click', () => {
+          preview.open($img)
+        })
+      }
+    }
+  })
 }
 
 /**
