@@ -1,5 +1,5 @@
 import { imgurClientIdPool, StorageKey, V2EX } from './constants'
-import { postTask } from './contents/helpers'
+import { postTask } from './post-task'
 import type {
   API_Info,
   DataWrapper,
@@ -13,7 +13,15 @@ import type {
   UserTopicItem,
   V2EX_Response,
 } from './types'
-import { getStorage, setStorage, V2EX_ORIGIN } from './utils'
+import {
+  ApiError,
+  createApiErrorFromResponse,
+  getStorage,
+  isAbortError,
+  setStorage,
+  V2EX_ORIGIN,
+  wrapApiError,
+} from './utils'
 
 const V2EX_LEGACY_API = `${V2EX_ORIGIN}/api`
 const V2EX_API = `${V2EX_ORIGIN}/api/v2`
@@ -30,7 +38,7 @@ async function legacyRequest<Data>(url: string, options?: RequestInit): Promise<
     return res.json() as Data
   }
 
-  throw new Error('调用 V2EX API v1 出错', { cause: res.status })
+  throw createApiErrorFromResponse(res, '调用 V2EX API v1 出错')
 }
 
 export async function fetchUserInfo(memberName: Member['username'], options?: RequestInit) {
@@ -43,16 +51,19 @@ export async function fetchUserInfo(memberName: Member['username'], options?: Re
     return member
   }
   catch (err) {
-    if (err instanceof Error) {
-      if (err.name === 'AbortError') {
-        throw new Error('请求被取消')
-      }
-      else if (err.cause === 404) {
-        throw new Error('查无此用户，疑似已被封禁', { cause: err.cause })
-      }
+    if (isAbortError(err)) {
+      throw new ApiError({ message: '请求被取消', cause: err })
     }
 
-    throw new Error('获取用户信息失败')
+    if (err instanceof ApiError && err.statusCode === 404) {
+      throw new ApiError({
+        message: '查无此用户，疑似已被封禁',
+        cause: err,
+        statusCode: 404,
+      })
+    }
+
+    throw wrapApiError(err, '获取用户信息失败')
   }
 }
 
@@ -158,7 +169,7 @@ export async function uploadImage(file: File): Promise<string> {
     }
   }
 
-  throw new Error('上传失败')
+  throw createApiErrorFromResponse(res, '上传失败')
 }
 
 // ==================== 以下为非官方提供的接口 ====================
@@ -350,7 +361,7 @@ export async function addFavorite(url: string): Promise<void> {
     }
   }
 
-  throw new Error('加入收藏失败')
+  throw new ApiError({ message: '加入收藏失败' })
 }
 
 export async function unfavorite(url: string): Promise<void> {
@@ -364,7 +375,7 @@ export async function unfavorite(url: string): Promise<void> {
     }
   }
 
-  throw new Error('取消收藏失败')
+  throw new ApiError({ message: '取消收藏失败' })
 }
 
 /**
@@ -387,9 +398,8 @@ export async function getCommentPreview(params: {
 
     return renderedContent
   }
-  else {
-    throw new Error('预览失败')
-  }
+
+  throw createApiErrorFromResponse(res, '预览失败')
 }
 
 export async function getUnreadMessagesCount(): Promise<number> {
@@ -411,7 +421,7 @@ export async function getUnreadMessagesCount(): Promise<number> {
     return 0
   }
 
-  throw new Error('无法获取未读消息数量')
+  throw new ApiError({ message: '无法获取未读消息数量' })
 }
 
 /**

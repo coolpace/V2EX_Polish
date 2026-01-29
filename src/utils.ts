@@ -346,6 +346,88 @@ export function sleep(ms: number) {
 }
 
 /**
+ * API 错误类型定义
+ */
+export interface ApiErrorOptions {
+  /** 用户友好的错误消息 */
+  message: string
+  /** 原始错误，用于保留错误链 */
+  cause?: unknown
+  /** HTTP 状态码 */
+  statusCode?: number
+}
+
+/**
+ * 统一的 API 错误类
+ * 继承自 Error，保留完整的错误链
+ */
+export class ApiError extends Error {
+  readonly statusCode?: number
+
+  constructor(options: ApiErrorOptions) {
+    super(options.message, { cause: options.cause })
+    this.name = 'ApiError'
+    this.statusCode = options.statusCode
+  }
+}
+
+/**
+ * 判断错误是否为请求取消错误
+ */
+export function isAbortError(error: unknown): boolean {
+  return error instanceof Error && error.name === 'AbortError'
+}
+
+/**
+ * 包装 fetch 请求错误，提供用户友好的错误消息
+ *
+ * @param error - 原始错误
+ * @param fallbackMessage - 默认的用户友好错误消息
+ * @returns ApiError 实例
+ */
+export function wrapApiError(error: unknown, fallbackMessage: string): ApiError {
+  if (error instanceof ApiError) {
+    return error
+  }
+
+  if (isAbortError(error)) {
+    return new ApiError({
+      message: '请求被取消',
+      cause: error,
+    })
+  }
+
+  if (error instanceof Error) {
+    return new ApiError({
+      message: fallbackMessage,
+      cause: error,
+    })
+  }
+
+  return new ApiError({
+    message: fallbackMessage,
+    cause: error,
+  })
+}
+
+/**
+ * 从 HTTP 响应创建 API 错误
+ *
+ * @param response - fetch 响应对象
+ * @param fallbackMessage - 默认的用户友好错误消息
+ */
+export function createApiErrorFromResponse(
+  response: Response,
+  fallbackMessage: string,
+): ApiError {
+  return new ApiError({
+    message: fallbackMessage,
+    statusCode: response.status,
+    cause: new Error(`HTTP ${response.status}: ${response.statusText}`),
+  })
+}
+
+/**
  * 判断当前是否为移动端
  * 通过检查 `#site-header` 元素是否存在来判断
  * @returns 是否为移动端

@@ -1,5 +1,5 @@
 import { bindImageUpload } from '../../components/image-upload'
-import { postTask } from '../helpers'
+import { postTask } from '../../post-task'
 
 export function handleWrite() {
   bindImageUpload({

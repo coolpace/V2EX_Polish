@@ -2,6 +2,7 @@ import './polyfill'
 
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
+import { postTask } from '../post-task'
 import type { MessageData, Options } from '../types'
 import {
   deepMerge,
@@ -13,7 +14,7 @@ import {
   setStorage,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
-import { openV2PSettings, postTask, toggleTheme } from './helpers'
+import { openV2PSettings, toggleTheme } from './helpers'
 
 if (isMobileView()) {
   $body.addClass('v2p-mobile')

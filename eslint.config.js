@@ -27,6 +27,7 @@ export default [
       'src/user-scripts/style.ts',
       'website/**/*',
       'chrome-profile/**/*',
+      'firefox-dev-profile/**/*',
     ],
   },
 ]
