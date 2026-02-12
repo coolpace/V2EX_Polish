@@ -45,6 +45,7 @@ export async function checkIn() {
     headers: {
       Referer: `${V2EX.Origin}/mission/daily`,
     },
+    credentials: 'include',
   })
   const htmlPlainText = await res.text()
 
