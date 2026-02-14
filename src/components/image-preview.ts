@@ -201,8 +201,7 @@ function createControlBar(controller: ImageTransformController): JQuery {
 function bindPreviewEvents(
   $img: JQuery,
   controller: ImageTransformController,
-  cleanup: () => void,
-): void {
+): () => void {
   // 鼠标按下开始拖拽
   $img.on('mousedown', (e) => {
     if (controller.startDrag(e.clientX, e.clientY)) {
@@ -238,6 +237,11 @@ function bindPreviewEvents(
     const deltaY = e.originalEvent instanceof WheelEvent ? e.originalEvent.deltaY : 0
     controller.zoomByWheel(deltaY)
   })
+
+  return () => {
+    $(document).off('mousemove.imgPreview')
+    $(document).off('mouseup.imgPreview')
+  }
 }
 
 /** 创建预览图片元素 */
@@ -312,14 +316,7 @@ export function createImagePreview(): ImagePreviewControl {
     const controller = new ImageTransformController($previewImg)
     const $controls = createControlBar(controller)
 
-    // 清理函数：移除事件监听
-    const cleanup = () => {
-      $(document).off('mousemove.imgPreview')
-      $(document).off('mouseup.imgPreview')
-    }
-
-    cleanupFn = cleanup
-    bindPreviewEvents($previewImg, controller, cleanup)
+    cleanupFn = bindPreviewEvents($previewImg, controller)
 
     modal.open()
     modal.$content.append($previewImg, $controls)
