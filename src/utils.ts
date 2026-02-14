@@ -575,18 +575,27 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
       resolve(data)
     }
     else {
-      chrome.storage.sync
-        .get()
-        .then((items: StorageItems) => {
+      Promise.all([
+        chrome.storage.sync.get(),
+        chrome.storage.local.get(StorageKey.MemberTag),
+      ])
+        .then(([syncItems, localItems]: [StorageItems, Partial<StorageItems>]) => {
           let data: StorageSettings
 
-          const options = items[StorageKey.Options]
+          const options = syncItems[StorageKey.Options]
+
+          // 合并 sync 和 local 的数据，MemberTag 优先从 local 读取。
+          const mergedItems: StorageItems = {
+            ...syncItems,
+            [StorageKey.MemberTag]: localItems[StorageKey.MemberTag]
+              ?? syncItems[StorageKey.MemberTag],
+          }
 
           if (options) {
-            data = { ...items, [StorageKey.Options]: deepMerge(defaultOptions, options) }
+            data = { ...mergedItems, [StorageKey.Options]: deepMerge(defaultOptions, options) }
           }
           else {
-            data = { ...items, [StorageKey.Options]: defaultOptions }
+            data = { ...mergedItems, [StorageKey.Options]: defaultOptions }
           }
 
           if (typeof window !== 'undefined') {
@@ -622,6 +631,30 @@ export async function setStorage<T extends StorageKey>(
   storageItem: StorageItems[T],
 ) {
   switch (storageKey) {
+    case StorageKey.MemberTag:
+      try {
+        await chrome.storage.local.set({ [storageKey]: storageItem })
+
+        // 当检测到配置更新时，自动备份到远程。
+        if (typeof $ !== 'undefined') {
+          const settings = await getStorage(false)
+
+          if (controller) {
+            controller.abort()
+          }
+
+          controller = new AbortController()
+
+          await setV2P_Settings(settings, controller.signal)
+        }
+      }
+      catch (err) {
+        console.error(err)
+        throw new Error(`❌ 无法设置：${storageKey}`)
+      }
+
+      break
+
     case StorageKey.Options:
       // fall through
 
@@ -629,14 +662,11 @@ export async function setStorage<T extends StorageKey>(
       // fall through
 
     case StorageKey.Daily:
-
       // fall through
-    case StorageKey.MemberTag:
 
-      // fall through
     case StorageKey.SyncInfo:
-
       // fall through
+
     case StorageKey.ReadingList:
       try {
         await chrome.storage.sync.set({ [storageKey]: storageItem })

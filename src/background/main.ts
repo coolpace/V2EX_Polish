@@ -1,7 +1,71 @@
 import { Menu, MessageKey, StorageKey, V2EX_DOMAINS } from '../constants'
-import type { StorageItems } from '../types'
+import type { LegacyTag, MemberTag, StorageItems } from '../types'
 import { getRunEnv } from '../utils'
 import { checkIn } from './daily-check-in'
+
+/**
+ * 旧格式的 MemberTag 数据，用于迁移时的类型兼容。
+ * tags 可能是旧格式 `LegacyTag[]` 或新格式 `string[]`。
+ */
+type OldMemberTag = Record<string, { tags?: (LegacyTag | string)[], avatar?: string }>
+
+/**
+ * 一次性迁移：将 MemberTag 从 chrome.storage.sync 迁移到 chrome.storage.local，
+ * 并将旧的 Tag 格式 `{name: string}[]` 转换为新的 `string[]` 格式。
+ */
+async function migrateMemberTagToLocal() {
+  try {
+    const syncData = await chrome.storage.sync.get(StorageKey.MemberTag)
+    const localData = await chrome.storage.local.get(StorageKey.MemberTag)
+
+    // 如果 local 中已经有数据，说明已经迁移过了，跳过。
+    if (localData[StorageKey.MemberTag]) {
+      return
+    }
+
+    const oldTagData = syncData[StorageKey.MemberTag] as OldMemberTag | undefined
+
+    if (!oldTagData) {
+      return
+    }
+
+    // 转换旧格式标签到新格式。
+    const newTagData: MemberTag = {}
+
+    for (const [memberName, memberInfo] of Object.entries(oldTagData)) {
+      const oldTags = memberInfo.tags
+
+      if (oldTags && oldTags.length > 0) {
+        // 兼容旧格式：如果 tag 是对象 {name: string} 则提取 name，否则保留字符串。
+        const newTags: string[] = oldTags.map((tag): string => {
+          if (typeof tag === 'object' && tag !== null && 'name' in tag) {
+            return tag.name
+          }
+
+          return String(tag)
+        })
+        newTagData[memberName] = { tags: newTags, avatar: memberInfo.avatar }
+      }
+      else {
+        newTagData[memberName] = { avatar: memberInfo.avatar }
+      }
+    }
+
+    // 写入到 local。
+    await chrome.storage.local.set({ [StorageKey.MemberTag]: newTagData })
+
+    // 从 sync 中删除旧数据以释放配额。
+    await chrome.storage.sync.remove(StorageKey.MemberTag as string)
+  }
+  catch (err) {
+    console.error('[V2EX Polish] MemberTag 迁移失败：', err)
+  }
+}
+
+// 在扩展安装或更新时执行迁移。
+chrome.runtime.onInstalled.addListener(() => {
+  void migrateMemberTagToLocal()
+})
 
 interface Message {
   [MessageKey.action]?: 'openPopup'

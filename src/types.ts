@@ -98,7 +98,17 @@ export interface DailyInfo {
   checkInDays?: number
 }
 
-export interface Tag {
+/**
+ * 用户标签类型。
+ *
+ * 旧格式为 `{ name: string }`，现已简化为纯字符串以节省存储空间。
+ */
+export type Tag = string
+
+/**
+ * 旧版 Tag 格式，用于数据迁移时的类型兼容。
+ */
+export interface LegacyTag {
   name: string
 }
 

@@ -348,7 +348,7 @@ export function transformEmoji(textValue: string) {
  * 将用户标签数据转换为字符串。
  */
 export function getTagsText(tags: Tag[]): string {
-  return tags.map((it) => it.name).join('，')
+  return tags.join('，')
 }
 
 export function setTheme(type: ThemeType) {

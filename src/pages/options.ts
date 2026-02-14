@@ -224,7 +224,7 @@ void (async function init() {
     const renderTagsContent = async () => {
       const storage = await getStorage(false)
       const tagData = storage[StorageKey.MemberTag]
-      const bytesUsed = await chrome.storage.sync.getBytesInUse(
+      const bytesUsed = await chrome.storage.local.getBytesInUse(
         [StorageKey.MemberTag as string],
       )
 
@@ -240,13 +240,13 @@ void (async function init() {
                 <div class="tags-tip">
                   <div class="tags-count">已设置 ${count} 条用户标签</div>
                   <div class="usage">
-                    用量：${(bytesUsed / 1024).toFixed(2)}KB / 8KB
+                    用量：${(bytesUsed / 1024).toFixed(2)}KB / 5120KB
                     <div class="usage-help">
                       <span data-lucide="circle-help"></span>
                       <div class="usage-popover">
                         <div class="usage-popover-title">用量限制</div>
                         <div class="usage-popover-content">
-                          由于浏览器的存储空间限制，你只能存储 8KB 的用户标签数据。
+                          用户标签数据存储在本地，最多可存储约 5MB。
                         </div>
                       </div>
                     </div>
@@ -280,9 +280,9 @@ void (async function init() {
                                       class="tag-item-tag"
                                       data-member-name="${memberName}"
                                       data-tag-idx="${idx}"
-                                      data-tag-name="${tag.name}"
+                                      data-tag-name="${tag}"
                                     >
-                                      ${tag.name}
+                                      ${tag}
 
                                       <span class="tag-remove">
                                         <span data-lucide="x"></span>
@@ -324,7 +324,7 @@ void (async function init() {
                     if (currentMemberTags) {
                       await setMemberTags({
                         memberName,
-                        tags: [...currentMemberTags, { name: newTagValue }],
+                        tags: [...currentMemberTags, newTagValue.trim()],
                       })
 
                       void renderTagsContent()
@@ -355,7 +355,7 @@ void (async function init() {
                       await setMemberTags({
                         memberName,
                         tags: currentMemberTags.map((it, idx) =>
-                          idx === tagIdx ? { name: changedTagValue } : it,
+                          idx === tagIdx ? changedTagValue.trim() : it,
                         ),
                       })
 
