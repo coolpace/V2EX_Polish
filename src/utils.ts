@@ -451,10 +451,31 @@ export function injectScript(scriptSrc: string) {
 }
 
 /**
- * 简单地校验数据类型，更好的做法是使用 zod、yup 等库，但在此插件没必要。
+ * 校验远程配置数据的基本结构是否有效。
+ *
+ * 不使用 zod 等库，仅做核心字段的结构性检查，
+ * 确保数据不是随意对象（如被用户误编辑的记事本内容）。
  */
 export function isValidSettings(settings: unknown): settings is StorageSettings {
-  return !!settings && typeof settings === 'object' && StorageKey.Options in settings
+  if (!settings || typeof settings !== 'object') {
+    return false
+  }
+
+  // Options 必须存在且为对象
+  if (!(StorageKey.Options in settings)) {
+    return false
+  }
+
+  const options = (settings as Record<string, unknown>)[StorageKey.Options]
+
+  if (!options || typeof options !== 'object') {
+    return false
+  }
+
+  // 校验 Options 中的核心字段存在（theme 和 nestedReply 是必填项）
+  const opts = options as Record<string, unknown>
+
+  return 'theme' in opts && 'nestedReply' in opts
 }
 
 export function sleep(ms: number) {
@@ -565,15 +586,23 @@ const mark = `${EXTENSION_NAME}_settings`
  * - 成功时返回包含记事本 ID 和配置数据的对象
  * - 未找到有效配置或解析失败时返回 undefined
  *
- * @throws 网络请求失败或 HTML 解析异常时可能抛出错误
+ * @param signal - 可选的 AbortSignal，用于取消请求
+ * @throws 网络请求失败时可能抛出错误
  */
-export async function getV2P_Settings(): Promise<
+export async function getV2P_Settings(signal?: AbortSignal): Promise<
   { noteId: string, config: StorageSettings } | undefined
 > {
   let noteId: string | undefined
 
   {
-    const res = await fetch(`${V2EX_ORIGIN}/notes`)
+    const res = await fetch(`${V2EX_ORIGIN}/notes`, { signal })
+
+    if (!res.ok) {
+      console.warn(`[${EXTENSION_NAME}] 获取记事本列表失败：HTTP ${res.status}`)
+
+      return undefined
+    }
+
     const htmlText = await res.text()
     const $page = $(htmlText)
     const $note = $page.find('.note_item > .note_item_title > a[href^="/notes"]')
@@ -595,17 +624,29 @@ export async function getV2P_Settings(): Promise<
   }
 
   if (noteId) {
-    const res = await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`)
+    const res = await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, { signal })
+
+    if (!res.ok) {
+      console.warn(`[${EXTENSION_NAME}] 获取记事本内容失败：HTTP ${res.status}`)
+
+      return undefined
+    }
+
     const htmlText = await res.text()
 
     const $editor = $(htmlText).find('#note_content.note_editor')
     const value = $editor.val()
 
     if (typeof value === 'string') {
-      const syncSettings = JSON.parse(value.replace(mark, '')) as unknown
+      try {
+        const syncSettings = JSON.parse(value.replace(mark, '')) as unknown
 
-      if (isValidSettings(syncSettings)) {
-        return { noteId, config: syncSettings }
+        if (isValidSettings(syncSettings)) {
+          return { noteId, config: syncSettings }
+        }
+      }
+      catch {
+        console.warn(`[${EXTENSION_NAME}] 解析远程配置数据失败，记事本内容可能已损坏`)
       }
     }
   }
@@ -618,13 +659,17 @@ export async function setV2P_Settings(
   storageSettings: StorageSettings,
   signal?: AbortSignal,
 ): Promise<SettingsSyncInfo> {
-  const data = await getV2P_Settings()
+  const data = await getV2P_Settings(signal)
 
   const updating = !!data // 判断操作是「初始化数据」还是「更新数据」。
 
   const formData = new FormData()
 
-  const syncVersion = updating ? data.config[StorageKey.SyncInfo]!.version + 1 : 1
+  // 安全获取远程版本号：如果远程数据存在但缺少 SyncInfo，则视为版本 0。
+  const remoteVersion = updating
+    ? data.config[StorageKey.SyncInfo]?.version ?? 0
+    : 0
+  const syncVersion = remoteVersion + 1
 
   const syncInfo: SettingsSyncInfo = {
     version: syncVersion,
@@ -644,21 +689,29 @@ export async function setV2P_Settings(
   if (updating) {
     const { noteId } = data
 
-    await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, {
+    const res = await fetch(`${V2EX_ORIGIN}/notes/edit/${noteId}`, {
       method: 'POST',
       body: formData,
       signal,
     })
+
+    if (!res.ok) {
+      throw new Error(`备份配置失败：HTTP ${res.status}`)
+    }
   }
   else {
     // 如果是第一次备份，则新建一个 V2EX 记事本来存储。
     formData.append('parent_id', '0')
 
-    await fetch(`${V2EX_ORIGIN}/notes/new`, {
+    const res = await fetch(`${V2EX_ORIGIN}/notes/new`, {
       method: 'POST',
       body: formData,
       signal,
     })
+
+    if (!res.ok) {
+      throw new Error(`创建备份记事本失败：HTTP ${res.status}`)
+    }
   }
 
   await setStorage(StorageKey.SyncInfo, syncInfo)
@@ -748,7 +801,52 @@ export function getStorageSync(): StorageSettings {
   return storage
 }
 
+/**
+ * 判断当前环境是否支持自动备份。
+ *
+ * 自动备份依赖 jQuery 解析 V2EX 页面 HTML（getV2P_Settings / setV2P_Settings），
+ * 在 Service Worker（后台脚本）中 jQuery 不可用，因此仅在页面上下文中启用。
+ */
+function canAutoBackup(): boolean {
+  return typeof $ === 'function'
+}
+
 let controller: AbortController | null = null
+let backupTimer: ReturnType<typeof setTimeout> | null = null
+const BACKUP_DEBOUNCE_MS = 3000
+
+/**
+ * 延迟调度自动备份。
+ *
+ * 连续配置变更会重置计时器，确保在最后一次变更后的 3 秒才触发备份，
+ * 避免短时间内产生大量网络请求。
+ */
+function scheduleBackup() {
+  if (backupTimer) {
+    clearTimeout(backupTimer)
+  }
+
+  if (controller) {
+    controller.abort()
+  }
+
+  backupTimer = setTimeout(() => {
+    backupTimer = null
+    controller = new AbortController()
+    const { signal } = controller
+
+    void getStorage(false)
+      .then((settings) => setV2P_Settings(settings, signal))
+      .catch((err) => {
+        // AbortError 是正常的取消行为，无需报告
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return
+        }
+
+        console.warn(`[${EXTENSION_NAME}] 自动备份失败：`, err)
+      })
+  }, BACKUP_DEBOUNCE_MS)
+}
 
 export async function setStorage<T extends StorageKey>(
   storageKey: T,
@@ -759,17 +857,9 @@ export async function setStorage<T extends StorageKey>(
       try {
         await chrome.storage.local.set({ [storageKey]: storageItem })
 
-        // 当检测到配置更新时，自动备份到远程。
-        if (typeof $ !== 'undefined') {
-          const settings = await getStorage(false)
-
-          if (controller) {
-            controller.abort()
-          }
-
-          controller = new AbortController()
-
-          await setV2P_Settings(settings, controller.signal)
+        // 当检测到配置更新时，延迟自动备份到远程。
+        if (canAutoBackup()) {
+          scheduleBackup()
         }
       }
       catch (err) {
@@ -795,21 +885,13 @@ export async function setStorage<T extends StorageKey>(
       try {
         await chrome.storage.sync.set({ [storageKey]: storageItem })
 
-        // 当检测到配置更新时，自动备份到远程。
+        // 当检测到配置更新时，延迟自动备份到远程。
         if (
           storageKey !== StorageKey.API
           && storageKey !== StorageKey.SyncInfo
-          && typeof $ !== 'undefined'
+          && canAutoBackup()
         ) {
-          const settings = await getStorage(false)
-
-          if (controller) {
-            controller.abort()
-          }
-
-          controller = new AbortController()
-
-          await setV2P_Settings(settings, controller.signal)
+          scheduleBackup()
         }
       }
       catch (err) {

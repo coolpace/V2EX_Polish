@@ -32,15 +32,13 @@ import {
 } from '../services'
 import type { Notification, Topic } from '../types'
 import {
-  applyRemoteSettings,
   formatTimestamp,
   getStorage,
   getStorageSync,
-  getV2P_Settings,
   isSameDay,
   setStorage,
-  setV2P_Settings,
 } from '../utils'
+import { initBackupForm } from './backup-form'
 import {
   calculateLocalStorageSize,
   formatSizeUnits,
@@ -177,99 +175,10 @@ function loadSettings() {
   }
 
   {
-    const $localVersion = $('#local-version')
-    const $remoteVersion = $('#remote-version')
-    const $syncTime = $('#last-sync-time')
-    const $checkTime = $('#last-check-time')
-
-    const syncInfo = storage[StorageKey.SyncInfo]
-    $localVersion.val(syncInfo?.version ?? defaultValue)
-
-    if (syncInfo?.lastCheckTime) {
-      $checkTime.val(formatTimestamp(syncInfo.lastCheckTime, { format: 'YMDHMS' }))
-    }
-
-    void getV2P_Settings()
-      .then((res) => {
-        const settings = res?.config
-        const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
-
-        const version = remoteSyncInfo?.version
-        const lastSyncTime = remoteSyncInfo?.lastSyncTime
-
-        $remoteVersion.val(version ?? defaultValue)
-        $syncTime.val(
-          lastSyncTime ? formatTimestamp(lastSyncTime, { format: 'YMDHMS' }) : defaultValue,
-        )
-
-        const $syncBtn = $('#sync-settings')
-
-        const backupAvailable
-          = syncInfo && remoteSyncInfo && syncInfo.version >= remoteSyncInfo.version
-
-        if (!remoteSyncInfo || backupAvailable) {
-          if (!remoteSyncInfo) {
-            $('.storage-tip').text('未发现远程存储的配置')
-          }
-
-          if (backupAvailable) {
-            $('.storage-tip').text('你可以将目前使用的配置备份到远程')
-          }
-
-          $syncBtn
-            .text('开始备份')
-            .prop('disabled', false)
-            .on('click', () => {
-              void (async () => {
-                const txt = $syncBtn.text()
-
-                try {
-                  $syncBtn.text('备份中...').css('pointer-events', 'none')
-                  const storage = await getStorage(false)
-                  const newSyncInfo = await setV2P_Settings(storage)
-                  $localVersion.val(newSyncInfo.version)
-                  $remoteVersion.val(newSyncInfo.version)
-                  $syncTime.val(formatTimestamp(newSyncInfo.lastSyncTime, { format: 'YMDHMS' }))
-                }
-                finally {
-                  $syncBtn.text(txt).css('pointer-events', 'auto')
-                }
-              })()
-            })
-        }
-        else {
-          if (!syncInfo || syncInfo.version < remoteSyncInfo.version) {
-            $('.storage-tip').text('远程备份的版本较新')
-            $syncBtn
-              .text('同步至本地')
-              .prop('disabled', false)
-              .on('click', () => {
-                void (async () => {
-                  const txt = $syncBtn.text()
-
-                  try {
-                    $syncBtn.text('同步中...').css('pointer-events', 'none')
-                    await new Promise((resolve) =>
-                      setTimeout(() => {
-                        resolve(undefined)
-                      }, 1000),
-                    )
-                    await applyRemoteSettings(settings)
-                    await getStorage(false)
-                    loadSettings() // 同步配置后重新加载以应用最新配置。
-                  }
-                  finally {
-                    $syncBtn.text(txt).css('pointer-events', 'auto')
-                  }
-                })()
-              })
-          }
-        }
-      })
-      .catch(() => {
-        $('.storage-tip').text('无法获取远程备份，请检查网络或登录状态')
-        $('#sync-settings').text('重试').prop('disabled', true)
-      })
+    initBackupForm({
+      syncInfo: storage[StorageKey.SyncInfo],
+      onSyncComplete: () => loadSettings(),
+    })
   }
 }
 

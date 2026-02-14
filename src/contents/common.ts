@@ -105,27 +105,35 @@ void (async () => {
     const shouldCheck = neverChecked || lastCheckTime && Date.now() - lastCheckTime >= tenMinutes
 
     if (shouldCheck && !isAuthPage) {
+      // ✅ 乐观更新 lastCheckTime：在发起网络请求前先写入，
+      // 防止多个标签页同时通过 shouldCheck 判断导致重复请求。
+      const updatedSyncInfo: SettingsSyncInfo = {
+        ...syncInfo,
+        lastCheckTime: Date.now(),
+      }
+      void chrome.storage.sync.set({ [StorageKey.SyncInfo]: updatedSyncInfo })
+
       void getV2P_Settings()
         .then(async (res) => {
           /** 远程备份的配置信息。 */
           const settings = res?.config
           const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
 
-          // ✅ 无论是否需要同步，都更新 lastCheckTime，避免重复网络请求。
-          const updatedSyncInfo: SettingsSyncInfo = {
-            ...syncInfo,
-            lastCheckTime: Date.now(),
-          }
-
           if (remoteSyncInfo && syncInfo.version < remoteSyncInfo.version) {
             // 远程版本较新 → 执行同步（通过 applyRemoteSettings 正确分发数据）
             await applyRemoteSettings(settings, { lastCheckTime: Date.now() })
-            createToast({ message: '远程配置已同步，即将刷新页面…', duration: 0 })
-            setTimeout(() => window.location.reload(), 3000)
-          }
-          else {
-            // 无需同步 → 仅更新检查时间
-            await chrome.storage.sync.set({ [StorageKey.SyncInfo]: updatedSyncInfo })
+
+            // 不强制刷新页面，避免打断用户正在进行的编辑操作（如撰写回复）。
+            // 显示持久 toast，用户可点击手动刷新。
+            const toast = createToast({
+              message: '远程配置已同步，<a class="v2p-toast-action" href="javascript:void(0)" style="text-decoration:underline;cursor:pointer;">刷新页面</a>以应用更改',
+              duration: 0,
+            })
+
+            $('.v2p-toast-action').on('click', () => {
+              toast.clear()
+              window.location.reload()
+            })
           }
         })
         .catch((err) => {
