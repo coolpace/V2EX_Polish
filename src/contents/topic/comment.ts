@@ -109,7 +109,7 @@ function handleFilteredComments() {
 
   const modal = createModal({
     root: $main,
-    onMount: ({ $title, $content }) => {
+    onMount: ({ $mask, $title, $content }) => {
       const $template = $('<div class="v2p-modal-comments">')
 
       const $t1 = $template.clone().attr('data-tab-key', 'hot').addClass('v2p-tab-content-active')
@@ -259,6 +259,35 @@ function handleFilteredComments() {
             .removeClass('v2p-tab-content-active')
         }
       })
+
+      // 为模态框中的克隆 cell 绑定头像悬浮弹框。
+      {
+        const modalPopupControl = createPopup({
+          root: $mask,
+          triggerType: 'hover',
+          placement: 'right-start',
+          offsetOptions: { mainAxis: 8, crossAxis: -4 },
+        })
+
+        const storage = getStorageSync()
+        const options = storage[StorageKey.Options]
+
+        $content.find('.cell[id^="r_"]').each((_, cellDom) => {
+          const commentData = commentDataList.find((c) => c.id === cellDom.id)
+
+          if (commentData) {
+            const $cellDom = $(cellDom)
+
+            processAvatar({
+              $trigger: $cellDom.find('.avatar, .dark'),
+              popupControl: modalPopupControl,
+              commentData,
+              shouldWrap: false,
+              openInNewTab: options.openInNewTab,
+            })
+          }
+        })
+      }
 
       replaceCommentEmojiWithHD($content.find('.cell[id^="r_"]'))
     },
