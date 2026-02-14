@@ -43,6 +43,7 @@ async function saveOptions() {
         const isLightDefault = $('#theme_type_light-default').prop('checked')
         const isDarkDefault = $('#theme_type_dark-default').prop('checked')
         const isDawn = $('#theme_type_dawn').prop('checked')
+        const isMinimalist = $('#theme_type_minimalist').prop('checked')
 
         if (isLightDefault) {
           return 'light-default'
@@ -54,6 +55,10 @@ async function saveOptions() {
 
         if (isDawn) {
           return 'dawn'
+        }
+
+        if (isMinimalist) {
+          return 'minimalist'
         }
 
         return undefined
@@ -125,8 +130,9 @@ function setThemeOptions() {
   const themeTypes = [
     { name: 'Light default', type: 'light-default' },
     { name: 'Dark default', type: 'dark-default' },
-    { name: 'Rose Pine Dawn', type: 'dawn', vip: true },
-  ] satisfies { name: string, type: ThemeType, vip?: boolean }[]
+    { name: 'Rose Pine Dawn', type: 'dawn' },
+    { name: 'Minimalist', type: 'minimalist' },
+  ] satisfies { name: string, type: ThemeType }[]
 
   themeTypes.forEach((themeConfig) => {
     const $themeOption = $($('#theme-option').clone().html())
@@ -135,7 +141,6 @@ function setThemeOptions() {
     const $label = $themeOption.find('.theme-option')
     const $preview = $themeOption.find('.theme-pv-view')
     const $typeName = $themeOption.find('.theme-type-name')
-    const $vipTip = $themeOption.find('.vip-tip')
 
     $input.prop('value', themeConfig.type)
     const id = `theme_type_${themeConfig.type}`
@@ -143,10 +148,6 @@ function setThemeOptions() {
     $label.prop('for', id)
     $preview.addClass(`v2p-theme-${themeConfig.type}`)
     $typeName.text(themeConfig.name)
-
-    if (themeConfig.vip) {
-      $vipTip.css('display', 'block')
-    }
 
     $('.theme-select').append($themeOption)
   })
@@ -173,6 +174,7 @@ void (async function init() {
     )
     $('#theme_type_dark-default').prop('checked', options.theme.type === 'dark-default')
     $('#theme_type_dawn').prop('checked', options.theme.type === 'dawn')
+    $('#theme_type_minimalist').prop('checked', options.theme.type === 'minimalist')
     $('#theme_autoSwitch').prop('checked', options.theme.autoSwitch)
     $('#theme_mode_default').prop(
       'checked',

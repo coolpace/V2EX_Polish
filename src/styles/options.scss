@@ -242,15 +242,35 @@ body {
         .theme-type-name {
           padding-left: 20px;
         }
+      }
 
-        .vip-tip {
-          display: none;
-          margin-left: auto;
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-size: 12px;
-          color: var(--v2p-color-orange-400);
-          background-color: var(--v2p-color-orange-100);
+      .v2p-theme-minimalist {
+        .tpv-header {
+          background-color: var(--v2p-color-background);
+
+          .tpv-header-item {
+            background-color: var(--v2p-color-bg-content);
+          }
+        }
+
+        .tpv-main {
+          .tpv-main-top {
+            .tpv-top-line {
+              background-color: var(--v2p-color-bg-content);
+            }
+          }
+
+          .tpv-main-content {
+            .tpv-main-left {
+              border: 1px solid var(--v2p-color-border);
+              border-radius: 0;
+            }
+
+            .tpv-main-right {
+              border: 1px solid var(--v2p-color-border);
+              border-radius: 0;
+            }
+          }
         }
       }
     }

@@ -19,7 +19,7 @@ export interface SettingsSyncInfo {
   lastCheckTime?: number
 }
 
-export type ThemeType = 'light-default' | 'dark-default' | 'dawn'
+export type ThemeType = 'light-default' | 'dark-default' | 'dawn' | 'minimalist'
 
 /** V2EX Polish 选项设置。 */
 export interface Options {

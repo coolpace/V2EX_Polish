@@ -293,6 +293,7 @@ const generateManifest = (): Manifest => {
           'css/v2ex-theme-dark.css',
           'css/v2ex-theme-compact.css',
           'css/v2ex-theme-dawn.css',
+          'css/v2ex-theme-minimalist.css',
           'css/v2ex-theme-mobile.css',
         ],
         run_at: 'document_start',
