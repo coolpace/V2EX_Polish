@@ -1,6 +1,6 @@
 import { StorageKey } from '../constants'
 import {
-  deepMerge,
+  applyRemoteSettings,
   formatTimestamp,
   getStorage,
   getV2P_Settings,
@@ -78,72 +78,45 @@ export async function handleBackupForm() {
     $checkTime.val(formatTimestamp(syncInfo.lastCheckTime, { format: 'YMDHMS' }))
   }
 
-  void getV2P_Settings().then((res) => {
-    const settings = res?.config
-    const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
+  void getV2P_Settings()
+    .then((res) => {
+      const settings = res?.config
+      const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
 
-    const version = remoteSyncInfo?.version
-    const lastSyncTime = remoteSyncInfo?.lastSyncTime
+      const version = remoteSyncInfo?.version
+      const lastSyncTime = remoteSyncInfo?.lastSyncTime
 
-    $remoteVersion.val(version ?? defaultValue)
-    $syncTime.val(lastSyncTime ? formatTimestamp(lastSyncTime, { format: 'YMDHMS' }) : defaultValue)
+      $remoteVersion.val(version ?? defaultValue)
+      $syncTime.val(lastSyncTime ? formatTimestamp(lastSyncTime, { format: 'YMDHMS' }) : defaultValue)
 
-    const $syncBtn = $('#sync-settings')
+      const $syncBtn = $('#sync-settings')
 
-    const backupAvailable = syncInfo && remoteSyncInfo && syncInfo.version >= remoteSyncInfo.version
+      const backupAvailable
+        = syncInfo && remoteSyncInfo && syncInfo.version >= remoteSyncInfo.version
 
-    if (!remoteSyncInfo || backupAvailable) {
-      if (!remoteSyncInfo) {
-        $('.storage-tip').text('未发现远程存储的配置')
-      }
+      if (!remoteSyncInfo || backupAvailable) {
+        if (!remoteSyncInfo) {
+          $('.storage-tip').text('未发现远程存储的配置')
+        }
 
-      if (backupAvailable) {
-        $('.storage-tip').text('你可以将目前使用的配置备份到远程')
-      }
+        if (backupAvailable) {
+          $('.storage-tip').text('你可以将目前使用的配置备份到远程')
+        }
 
-      $syncBtn
-        .text('开始备份')
-        .prop('disabled', false)
-        .on('click', () => {
-          void (async () => {
-            const txt = $syncBtn.text()
-
-            try {
-              $syncBtn.text('备份中...').css('pointer-events', 'none')
-              const storage = await getStorage(false)
-              const newSyncInfo = await setV2P_Settings(storage)
-              $localVersion.val(newSyncInfo.version)
-              $remoteVersion.val(newSyncInfo.version)
-              $syncTime.val(formatTimestamp(newSyncInfo.lastSyncTime, { format: 'YMDHMS' }))
-            }
-            finally {
-              $syncBtn.text(txt).css('pointer-events', 'auto')
-            }
-          })()
-        })
-    }
-    else {
-      if (!syncInfo || syncInfo.version < remoteSyncInfo.version) {
-        $('.storage-tip').text('远程备份的版本较新')
         $syncBtn
-          .text('同步至本地')
+          .text('开始备份')
           .prop('disabled', false)
           .on('click', () => {
             void (async () => {
               const txt = $syncBtn.text()
 
               try {
-                $syncBtn.text('同步中...').css('pointer-events', 'none')
-                await new Promise((resolve) =>
-                  setTimeout(() => {
-                    resolve(undefined)
-                  }, 1000),
-                )
+                $syncBtn.text('备份中...').css('pointer-events', 'none')
                 const storage = await getStorage(false)
-                await chrome.storage.sync.set(deepMerge(storage, settings))
-                await getStorage(false)
-
-                void loadSettings() // 同步配置后重新加载以应用最新配置。
+                const newSyncInfo = await setV2P_Settings(storage)
+                $localVersion.val(newSyncInfo.version)
+                $remoteVersion.val(newSyncInfo.version)
+                $syncTime.val(formatTimestamp(newSyncInfo.lastSyncTime, { format: 'YMDHMS' }))
               }
               finally {
                 $syncBtn.text(txt).css('pointer-events', 'auto')
@@ -151,6 +124,38 @@ export async function handleBackupForm() {
             })()
           })
       }
-    }
-  })
+      else {
+        if (!syncInfo || syncInfo.version < remoteSyncInfo.version) {
+          $('.storage-tip').text('远程备份的版本较新')
+          $syncBtn
+            .text('同步至本地')
+            .prop('disabled', false)
+            .on('click', () => {
+              void (async () => {
+                const txt = $syncBtn.text()
+
+                try {
+                  $syncBtn.text('同步中...').css('pointer-events', 'none')
+                  await new Promise((resolve) =>
+                    setTimeout(() => {
+                      resolve(undefined)
+                    }, 1000),
+                  )
+                  await applyRemoteSettings(settings)
+                  await getStorage(false)
+
+                  void loadSettings() // 同步配置后重新加载以应用最新配置。
+                }
+                finally {
+                  $syncBtn.text(txt).css('pointer-events', 'auto')
+                }
+              })()
+            })
+        }
+      }
+    })
+    .catch(() => {
+      $('.storage-tip').text('无法获取远程备份，请检查网络或登录状态')
+      $('#sync-settings').text('重试').prop('disabled', true)
+    })
 }

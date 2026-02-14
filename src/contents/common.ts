@@ -1,10 +1,12 @@
 import './polyfill'
 
+import { createToast } from '../components/toast'
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import { postTask } from '../post-task'
-import type { MessageData, Options } from '../types'
+import type { MessageData, Options, SettingsSyncInfo } from '../types'
 import {
+  applyRemoteSettings,
   deepMerge,
   getStorage,
   getV2P_Settings,
@@ -88,46 +90,63 @@ void (async () => {
   /** 用户从浏览器扩展中同步的配置信息（不是远程备份）。 */
   const syncInfo = storage[StorageKey.SyncInfo]
 
+  // Warning: 不能在登录/注册等认证页面请求 getV2P_Settings 接口，否则会导致无法成功跳转页面。
+  const authPaths = ['/signin', '/signup', '/forgot', '/2fa']
+  const isAuthPage = authPaths.some((path) => window.location.pathname.startsWith(path))
+
   // 当发现远程的配置有更新时，自动同步到本地。
   if (syncInfo) {
     const lastCheckTime = syncInfo.lastCheckTime
     const tenMinutes = 10 * 60 * 1000
     const neverChecked = !lastCheckTime
 
+    // neverChecked 仅影响「是否发起检查」，不影响「是否执行同步」。
     // eslint-disable-next-line @stylistic/no-mixed-operators
-    const shouldCheck = lastCheckTime && Date.now() - lastCheckTime >= tenMinutes || neverChecked
+    const shouldCheck = neverChecked || lastCheckTime && Date.now() - lastCheckTime >= tenMinutes
 
-    if (shouldCheck) {
-      const isSignInPage = window.location.href.includes('/signin')
-
-      // Warning: 不能在登录页请求 getV2P_Settings 接口，否则会导致无法成功跳转页面。
-      if (!isSignInPage) {
-        void getV2P_Settings().then(async (res) => {
+    if (shouldCheck && !isAuthPage) {
+      void getV2P_Settings()
+        .then(async (res) => {
           /** 远程备份的配置信息。 */
           const settings = res?.config
           const remoteSyncInfo = settings?.[StorageKey.SyncInfo]
 
-          // 远程备份的配置信息存在时，才进行同步。
-          if (remoteSyncInfo) {
-            // 远程备份的版本更新时，才进行同步。
-            if (syncInfo.version < remoteSyncInfo.version || neverChecked) {
-              await chrome.storage.sync.set(
-                deepMerge(storage, {
-                  ...settings,
-                  [StorageKey.SyncInfo]: {
-                    ...remoteSyncInfo,
-                    lastCheckTime: Date.now(),
-                  },
-                }),
-              )
+          // ✅ 无论是否需要同步，都更新 lastCheckTime，避免重复网络请求。
+          const updatedSyncInfo: SettingsSyncInfo = {
+            ...syncInfo,
+            lastCheckTime: Date.now(),
+          }
 
-              // 同步完成后，刷新页面以应用最新配置。
-              window.location.reload()
-            }
+          if (remoteSyncInfo && syncInfo.version < remoteSyncInfo.version) {
+            // 远程版本较新 → 执行同步（通过 applyRemoteSettings 正确分发数据）
+            await applyRemoteSettings(settings, { lastCheckTime: Date.now() })
+            createToast({ message: '远程配置已同步，即将刷新页面…', duration: 0 })
+            setTimeout(() => window.location.reload(), 3000)
+          }
+          else {
+            // 无需同步 → 仅更新检查时间
+            await chrome.storage.sync.set({ [StorageKey.SyncInfo]: updatedSyncInfo })
           }
         })
-      }
+        .catch((err) => {
+          console.warn('[V2EX Polish] 检查远程配置更新失败：', err)
+        })
     }
+  }
+  else if (!isAuthPage) {
+    // 首次安装：静默检查远程是否存在备份，如果有则提示用户
+    void getV2P_Settings()
+      .then((res) => {
+        if (res?.config?.[StorageKey.SyncInfo]) {
+          createToast({
+            message: '发现远程配置备份，可在插件设置中同步至本地',
+            duration: 8000,
+          })
+        }
+      })
+      .catch(() => {
+        // 首次安装时检查失败是正常的（可能未登录），静默忽略
+      })
   }
 
   // 更换主题颜色切换的按钮。

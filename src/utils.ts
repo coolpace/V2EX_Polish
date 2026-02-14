@@ -1,5 +1,5 @@
 import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
-import type { SettingsSyncInfo, StorageItems, StorageSettings } from './types'
+import type { ReadingItem, SettingsSyncInfo, StorageItems, StorageSettings } from './types'
 
 /** 动态获取 V2EX 的域名，防止跨域。 */
 export const V2EX_ORIGIN
@@ -274,6 +274,122 @@ export function deepMerge<
 }
 
 /**
+ * 合并两个 ReadingList，按 URL 去重，保留最新的添加时间。
+ */
+function mergeReadingList(
+  local: ReadingItem[] | undefined,
+  remote: ReadingItem[] | undefined,
+): ReadingItem[] {
+  if (!local) {
+    return remote ?? []
+  }
+
+  if (!remote) {
+    return local
+  }
+
+  const map = new Map<string, ReadingItem>()
+
+  for (const item of local) {
+    map.set(item.url, item)
+  }
+
+  for (const item of remote) {
+    const existing = map.get(item.url)
+
+    if (!existing || item.addedTime > existing.addedTime) {
+      map.set(item.url, item)
+    }
+  }
+
+  return [...map.values()].sort((a, b) => b.addedTime - a.addedTime)
+}
+
+/**
+ * 准备用于远程备份的数据。排除不应备份的设备特定字段。
+ *
+ * - API（个人 Token）和 Daily（签到数据）是设备/账户特定的，不参与远程备份。
+ */
+export function prepareBackupData(storage: StorageSettings): StorageSettings {
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [StorageKey.API]: _api,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [StorageKey.Daily]: _daily,
+    ...backupData
+  } = storage
+
+  return backupData as StorageSettings
+}
+
+/**
+ * 将远程配置正确分发到 sync 和 local storage。
+ *
+ * - MemberTag → chrome.storage.local（合并策略：本地优先）
+ * - ReadingList → chrome.storage.sync（合并策略：按 URL 去重合并）
+ * - 其他配置 → chrome.storage.sync（与当前本地配置 deepMerge）
+ * - 排除设备特定数据（API、Daily）不被远程覆盖
+ */
+export async function applyRemoteSettings(
+  remoteSettings: StorageSettings,
+  syncInfoOverride?: Partial<SettingsSyncInfo>,
+): Promise<void> {
+  // 1. 从远程配置中提取 MemberTag，写入 local storage
+  const remoteMemberTag = remoteSettings[StorageKey.MemberTag]
+
+  if (remoteMemberTag) {
+    const localData = await chrome.storage.local.get(StorageKey.MemberTag)
+    const localMemberTag = (localData as Partial<StorageItems>)[StorageKey.MemberTag]
+    // 合并 MemberTag：远程数据补充，本地已有的条目优先保留
+    const mergedMemberTag = localMemberTag
+      ? { ...remoteMemberTag, ...localMemberTag }
+      : remoteMemberTag
+    await chrome.storage.local.set({ [StorageKey.MemberTag]: mergedMemberTag })
+  }
+
+  // 2. 准备写入 sync storage 的数据（排除 MemberTag、API、Daily）
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [StorageKey.MemberTag]: _mt,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [StorageKey.API]: _api,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [StorageKey.Daily]: _daily,
+    ...syncableRemoteSettings
+  } = remoteSettings
+
+  // 3. 合并 SyncInfo（允许调用方覆盖 lastCheckTime 等字段）
+  const remoteSyncInfo = remoteSettings[StorageKey.SyncInfo]
+
+  if (remoteSyncInfo ?? syncInfoOverride) {
+    syncableRemoteSettings[StorageKey.SyncInfo] = {
+      ...remoteSyncInfo,
+      ...syncInfoOverride,
+    } as SettingsSyncInfo
+  }
+
+  // 4. 与当前 sync storage 的数据合并后写入
+  const currentSyncData = await chrome.storage.sync.get()
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [StorageKey.MemberTag]: _currentMt, // 排除 MemberTag 残留
+    ...currentSyncOnly
+  } = currentSyncData as StorageItems
+
+  // 5. ReadingList 使用去重合并而非简单覆盖
+  const remoteReadingList = syncableRemoteSettings[StorageKey.ReadingList]
+  const localReadingList = currentSyncOnly[StorageKey.ReadingList]
+
+  if (remoteReadingList?.data ?? localReadingList?.data) {
+    syncableRemoteSettings[StorageKey.ReadingList] = {
+      data: mergeReadingList(localReadingList?.data, remoteReadingList?.data),
+    }
+  }
+
+  await chrome.storage.sync.set(deepMerge(currentSyncOnly, syncableRemoteSettings))
+}
+
+/**
  * 检查运行在哪个扩展中。
  */
 export function getRunEnv(): 'chrome' | 'web-ext' | null {
@@ -513,11 +629,15 @@ export async function setV2P_Settings(
   const syncInfo: SettingsSyncInfo = {
     version: syncVersion,
     lastSyncTime: Date.now(),
+    lastCheckTime: Date.now(), // 备份后视为已检查，避免 neverChecked 陷阱
   }
+
+  // 备份前过滤掉设备特定数据（API Token、Daily 签到信息）
+  const backupData = prepareBackupData(storageSettings)
 
   formData.append(
     'content',
-    mark + JSON.stringify({ ...storageSettings, [StorageKey.SyncInfo]: syncInfo }),
+    mark + JSON.stringify({ ...backupData, [StorageKey.SyncInfo]: syncInfo }),
   )
   formData.append('syntax', '0')
 
@@ -562,6 +682,8 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
     if (useCache) {
       if (window.__V2P_StorageCache) {
         resolve(window.__V2P_StorageCache)
+
+        return
       }
     }
 
@@ -573,6 +695,8 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
       }
 
       resolve(data)
+
+      return
     }
     else {
       Promise.all([
