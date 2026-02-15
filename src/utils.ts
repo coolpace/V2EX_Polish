@@ -1,3 +1,6 @@
+import { createButton } from './components/button'
+import type { ModalElements } from './components/modal'
+import { createModal } from './components/modal'
 import { defaultOptions, EXTENSION_NAME, StorageKey, V2EX } from './constants'
 import type { ReadingItem, SettingsSyncInfo, StorageItems, StorageSettings } from './types'
 
@@ -910,4 +913,160 @@ export async function setStorage<T extends StorageKey>(
     default:
       throw new Error(`未知的 storageKey： ${storageKey}`)
   }
+}
+
+/**
+ * 计算配置复杂度（配置项数量）。
+ */
+function calculateConfigComplexity(settings: StorageSettings): number {
+  return Object.keys(settings).filter(
+    (key) =>
+      key as StorageKey !== StorageKey.SyncInfo
+      && key as StorageKey !== StorageKey.API
+      && key as StorageKey !== StorageKey.Daily
+      && settings[key as StorageKey] !== undefined,
+  ).length
+}
+
+/**
+ * 远程配置同步对话框的类型。
+ */
+type SyncDialogType = 'gentle' | 'confirm' | 'auto'
+
+/**
+ * 远程配置同步对话框的选项。
+ */
+interface ShowRemoteSyncDialogOptions {
+  /** 对话框类型，根据配置复杂度和新鲜度自动选择 */
+  type?: SyncDialogType
+  /** 是否显示详细信息（如配置项数量） */
+  showDetails?: boolean
+}
+
+/**
+ * 显示远程配置同步确认对话框。
+ *
+ * @param settings - 远程配置数据
+ * @param options - 对话框选项
+ * @returns Promise<boolean> - 用户是否选择同步
+ */
+export async function showRemoteSyncDialog(
+  settings: StorageSettings,
+  options: ShowRemoteSyncDialogOptions = {},
+): Promise<boolean> {
+  const { type: explicitType, showDetails: explicitShowDetails } = options
+
+  const remoteSyncInfo = settings[StorageKey.SyncInfo]
+
+  if (!remoteSyncInfo) {
+    return false
+  }
+
+  // 计算配置复杂度和新鲜度
+  const configComplexity = calculateConfigComplexity(settings)
+  const backupAge = Date.now() - (remoteSyncInfo.lastSyncTime || remoteSyncInfo.lastCheckTime || 0)
+  const daysSinceBackup = backupAge / (1000 * 60 * 60 * 24)
+
+  // 根据场景自动决定对话框类型
+  let dialogType: SyncDialogType = explicitType || 'confirm'
+  let showDetails = explicitShowDetails ?? false
+
+  if (!explicitType) {
+    // 场景 1: 备份简单且新鲜（<7天，<10项）→ 温和提示
+    if (configComplexity < 10 && daysSinceBackup < 7) {
+      dialogType = 'gentle'
+    }
+    // 场景 2: 备份复杂（≥10项）或陈旧（≥30天）→ 需要用户确认
+    else if (configComplexity >= 10 || daysSinceBackup >= 30) {
+      dialogType = 'confirm'
+      showDetails = true
+    }
+    // 场景 3: 只有基础配置（≤3项）→ 可以考虑自动同步（但在首次安装时仍需确认）
+    else if (configComplexity <= 3 && daysSinceBackup < 7) {
+      dialogType = 'gentle'
+    }
+  }
+
+  return new Promise<boolean>((resolve) => {
+    const lastSyncTime = formatTimestamp(
+      remoteSyncInfo.lastSyncTime || remoteSyncInfo.lastCheckTime || 0,
+      { format: 'YMDHM' },
+    )
+
+    // 构建消息内容
+    let message = ''
+
+    if (dialogType === 'gentle') {
+      message = `
+        <p>检测到您在 <strong>${lastSyncTime}</strong> 有保存的配置备份。</p>
+        ${showDetails ? `<p>备份包含 <strong>${configComplexity}</strong> 项设置。</p>` : ''}
+        <p>是否立即同步到当前设备？</p>
+      `
+    }
+    else {
+      // confirm 类型
+      const ageText
+        = daysSinceBackup < 1
+          ? '今天'
+          : daysSinceBackup < 7
+            ? `${Math.floor(daysSinceBackup)} 天前`
+            : `${Math.floor(daysSinceBackup / 7)} 周前`
+
+      message = `
+        <p>检测到远程配置备份（${ageText}创建）</p>
+        ${showDetails
+          ? `<p style="color: var(--color-fade); font-size: 0.9em; margin-top: 0.5em;">
+          包含 <strong>${configComplexity}</strong> 项设置，
+          同步后将覆盖当前插件的默认配置
+        </p>`
+          : ''}
+        <p style="margin-top: 1em;">是否立即同步到当前设备？</p>
+      `
+    }
+
+    // 创建模态框
+    const modal = createModal({
+      title: '发现远程配置备份',
+      footer: true,
+      onMount: (elements: ModalElements) => {
+        const { $content, $footer, $actions } = elements
+
+        // 添加消息内容
+        $content.html(message)
+
+        // 清空默认的操作区域
+        $actions.empty()
+
+        // 创建"稍后手动同步"按钮
+        const $skipBtn = createButton({
+          children: '稍后手动同步',
+          className: 'v2p-sync-skip-btn',
+        })
+        $skipBtn.on('click', () => {
+          modal.close()
+          resolve(false)
+        })
+
+        // 创建"立即同步"按钮
+        const $syncBtn = createButton({
+          children: '立即同步',
+          className: 'v2p-sync-confirm-btn super',
+        })
+        $syncBtn.on('click', () => {
+          modal.close()
+          resolve(true)
+        })
+
+        // 添加按钮到页脚
+        $footer.append($skipBtn, $syncBtn)
+      },
+      onClose: () => {
+        // 用户关闭对话框时，视为拒绝同步
+        resolve(false)
+      },
+    })
+
+    // 打开模态框
+    modal.open()
+  })
 }

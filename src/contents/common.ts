@@ -14,6 +14,7 @@ import {
   isBrowserExtension,
   isMobileView,
   setStorage,
+  showRemoteSyncDialog,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
 import { openV2PSettings, toggleTheme } from './helpers'
@@ -142,14 +143,49 @@ void (async () => {
     }
   }
   else if (!isAuthPage) {
-    // 首次安装：静默检查远程是否存在备份，如果有则提示用户
+    // 首次安装：静默检查远程是否存在备份，如果有则智能处理
     void getV2P_Settings()
-      .then((res) => {
-        if (res?.config?.[StorageKey.SyncInfo]) {
-          createToast({
-            message: '发现远程配置备份，可在插件设置中同步至本地',
-            duration: 8000,
-          })
+      .then(async (res) => {
+        const remoteSettings = res?.config
+        const remoteSyncInfo = remoteSettings?.[StorageKey.SyncInfo]
+
+        if (remoteSettings && remoteSyncInfo) {
+          // 使用智能对话框提示用户选择是否同步
+          const shouldSync = await showRemoteSyncDialog(remoteSettings)
+
+          // 无论用户选择同步还是稍后，都创建初始的 syncInfo，防止重复弹窗
+          // 这样下次检查时会进入 if (syncInfo) 分支，遵循 10 分钟检查间隔
+          const initialSyncInfo: SettingsSyncInfo = {
+            version: remoteSyncInfo.version,
+            lastSyncTime: remoteSyncInfo.lastSyncTime,
+            lastCheckTime: Date.now(),
+          }
+          void chrome.storage.sync.set({ [StorageKey.SyncInfo]: initialSyncInfo })
+
+          if (shouldSync) {
+            // 用户选择同步，执行同步操作
+            await applyRemoteSettings(remoteSettings, {
+              lastCheckTime: Date.now(),
+            })
+
+            // 显示同步成功提示
+            const toast = createToast({
+              message: '远程配置已同步，<a class="v2p-toast-action" href="javascript:void(0)" style="text-decoration:underline;cursor:pointer;">刷新页面</a>以应用更改',
+              duration: 0,
+            })
+
+            $('.v2p-toast-action').on('click', () => {
+              toast.clear()
+              window.location.reload()
+            })
+          }
+          else {
+            // 用户选择不同步，显示简要提示（告知稍后可在设置中手动同步）
+            createToast({
+              message: '您可以随时在插件设置中同步远程配置',
+              duration: 5000,
+            })
+          }
         }
       })
       .catch(() => {

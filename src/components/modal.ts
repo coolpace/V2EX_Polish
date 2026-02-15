@@ -1,6 +1,6 @@
 import { createButton } from './button'
 
-interface ModalElements {
+export interface ModalElements {
   $mask: JQuery
   $main: JQuery
   $header: JQuery
