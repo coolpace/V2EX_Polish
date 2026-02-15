@@ -170,6 +170,14 @@ body.v2p-theme-minimalist,
 
   .v2p-modal-main {
     border: 2px solid var(--v2p-color-border);
+
+    .v2p-modal-header {
+      background-image: linear-gradient(
+        to bottom,
+        lab(30.7907% 22.35 -63.8417 / 3%) 0%,
+        transparent 100%
+      );
+    }
   }
 
   .v2p-control {
