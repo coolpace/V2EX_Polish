@@ -26,7 +26,7 @@ body.v2p-theme-minimalist,
   /* ==== 按钮 ==== */
   --v2p-color-button-background: var(--v2p-color-background);
   --v2p-color-button-foreground: var(--v2p-color-foreground);
-  --v2p-color-button-background-hover: var(--v2p-color-bg-content);
+  --v2p-color-button-background-hover: oklch(from var(--v2p-color-foreground) l c h / 10%);
   --v2p-color-button-foreground-hover: var(--v2p-color-foreground);
 
   /* ---- 按钮 ---- */
