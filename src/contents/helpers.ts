@@ -36,6 +36,11 @@ import type {
 import { getStorage, isBrowserExtension, setStorage, sleep } from '../utils'
 import { $body, $commentCells, $wrapper, replyTextArea } from './globals'
 
+/** 表情图片低清→高清的 URL 映射（模块级常量，避免每次调用重复创建）。 */
+const emojiSrcMap = new Map<string, string>(
+  Object.values(emojiLinks).map(({ ld, hd }) => [ld, hd]),
+)
+
 /**
  * 检查请求的错误是否由 V2EX 发出。
  */
@@ -217,15 +222,19 @@ export function decodeBase64TopicPage() {
       'Windows7',
     ]
 
-    const convertHTMLText = (text: string, excludeTextList?: string[]): string => {
+    /**
+     * 尝试将文本解码为 Base64。
+     * 返回解码后的字符串，如果不是有效的 Base64 则返回 null。
+     */
+    const tryDecodeBase64 = (text: string): string | null => {
       // 检查长度是否为 4 的倍数，字符长度小的也排除掉。
       if (text.length % 4 !== 0 || text.length <= 8) {
-        return text
+        return null
       }
 
       // 从排除列表中排除掉非 base64 字符串。
       if (excludeList.includes(text)) {
-        return text
+        return null
       }
 
       // 检查填充字符 "=" 的位置是否正确。
@@ -233,41 +242,108 @@ export function decodeBase64TopicPage() {
         const paddingIndex = text.indexOf('=')
 
         if (paddingIndex !== text.length - 1 && paddingIndex !== text.length - 2) {
-          return text
+          return null
         }
       }
 
-      // 排除特定标签中的 base64 字符串。
-      if (excludeTextList?.some((excludeText) => excludeText.includes(text))) {
-        return text
-      }
-
       try {
-        const decodedStr = decodeURIComponent(customEscape(window.atob(text)))
-        count += 1
-
-        return `${text}<span class="v2p-decode-block">(<ins class="v2p-decode" data-title="${dataTitle}">${decodedStr}</ins>)</span>`
+        return decodeURIComponent(customEscape(window.atob(text)))
       }
       catch (err) {
         if (err instanceof Error) {
           console.error(`解析 Base64 出错：${err.message}`)
         }
 
-        return text
+        return null
       }
     }
 
-    const base64regex = /[A-z0-9+/=]+/g
+    // 修复正则：原 A-z 范围包含了 [\]^_ 等非 Base64 字符，改为 A-Za-z。
+    const base64regex = /[A-Za-z0-9+/=]+/g
 
+    /**
+     * 使用 TreeWalker 遍历文本节点进行 Base64 解码，
+     * 避免 innerHTML 替换导致的 DOM 结构重建和事件监听器丢失。
+     */
     const contentHandler = (_: number, content: HTMLElement) => {
-      const excludeTextList = [
-        ...content.getElementsByTagName('a'),
-        ...content.getElementsByTagName('img'),
-      ].map((ele) => ele.outerHTML)
+      const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT)
+      const textNodes: Text[] = []
 
-      content.innerHTML = content.innerHTML.replace(base64regex, (htmlText) =>
-        convertHTMLText(htmlText, excludeTextList),
-      )
+      // 先收集所有文本节点，避免在遍历过程中修改 DOM 导致 walker 失效。
+      let node = walker.nextNode()
+
+      while (node) {
+        textNodes.push(node as Text)
+        node = walker.nextNode()
+      }
+
+      for (const textNode of textNodes) {
+        // 跳过 <a> 和 <img> 标签内的文本节点。
+        if (textNode.parentElement?.closest('a, img')) {
+          continue
+        }
+
+        const text = textNode.textContent ?? ''
+        const parts: (string | { original: string, decoded: string })[] = []
+        let lastIndex = 0
+        let match: RegExpExecArray | null
+
+        base64regex.lastIndex = 0
+        match = base64regex.exec(text)
+
+        while (match !== null) {
+          const matched = match[0]
+          const decoded = tryDecodeBase64(matched)
+
+          if (decoded !== null) {
+            // 保留匹配前的普通文本。
+            if (match.index > lastIndex) {
+              parts.push(text.slice(lastIndex, match.index))
+            }
+
+            parts.push({ original: matched, decoded })
+            lastIndex = match.index + matched.length
+            count += 1
+          }
+
+          match = base64regex.exec(text)
+        }
+
+        // 如果没有任何匹配，跳过此节点。
+        if (parts.length === 0) {
+          continue
+        }
+
+        // 保留末尾的普通文本。
+        if (lastIndex < text.length) {
+          parts.push(text.slice(lastIndex))
+        }
+
+        // 构建 DocumentFragment 替换原文本节点。
+        const fragment = document.createDocumentFragment()
+
+        for (const part of parts) {
+          if (typeof part === 'string') {
+            fragment.append(document.createTextNode(part))
+          }
+          else {
+            fragment.append(document.createTextNode(part.original))
+
+            const span = document.createElement('span')
+            span.className = 'v2p-decode-block'
+
+            const ins = document.createElement('ins')
+            ins.className = 'v2p-decode'
+            ins.dataset.title = dataTitle
+            ins.textContent = part.decoded
+
+            span.append('(', ins, ')')
+            fragment.append(span)
+          }
+        }
+
+        textNode.parentNode?.replaceChild(fragment, textNode)
+      }
     }
 
     $commentCells.find('.reply_content').each(contentHandler)
@@ -461,19 +537,13 @@ export function toggleTheme({
  */
 export function replaceEmojiWithHD($emojiImgs: JQuery) {
   if ($emojiImgs.length > 0) {
-    const srcMap = new Map<string, string>()
-
-    Object.values(emojiLinks).forEach(({ ld, hd }) => {
-      srcMap.set(ld, hd)
-    })
-
     $emojiImgs.each((_, img) => {
       const $img = $(img)
 
       const src = $img.attr('src')
 
       if (typeof src === 'string') {
-        const hd = srcMap.get(src)
+        const hd = emojiSrcMap.get(src)
 
         if (typeof hd === 'string') {
           $img.attr('src', hd)
@@ -491,12 +561,6 @@ export function replaceEmojiWithHD($emojiImgs: JQuery) {
  * 处理评论中的表情图片，将其转换为高清表情图片。
  */
 export function replaceCommentEmojiWithHD($cells: JQuery = $commentCells) {
-  const srcMap = new Map<string, string>()
-
-  Object.values(emojiLinks).forEach(({ ld, hd }) => {
-    srcMap.set(ld, hd)
-  })
-
   const $embedImages = $cells.find('.reply_content .embedded_image, .payload .embedded_image')
 
   if ($embedImages.length > 0) {

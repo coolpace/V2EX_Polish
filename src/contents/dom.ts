@@ -114,6 +114,14 @@ export function handleNestedComment({
       }
     }
 
+    // 在批量 DOM 移动前隐藏容器，避免每次 append 都触发 reflow。
+    // 使用 visibility 而非 display:none，保持布局空间不变，避免页面跳动。
+    const commentContainer = cellList[0]?.parentElement
+
+    if (commentContainer) {
+      commentContainer.style.visibility = 'hidden'
+    }
+
     for (let i = 0; i < cellList.length; i++) {
       const cellDom = cellList[i]
 
@@ -187,6 +195,11 @@ export function handleNestedComment({
 
         lastSeenByMember.set(currentComment.memberName, i)
       }
+    }
+
+    // 批量 DOM 移动完成，恢复容器可见性。
+    if (commentContainer) {
+      commentContainer.style.visibility = ''
     }
   }
 }

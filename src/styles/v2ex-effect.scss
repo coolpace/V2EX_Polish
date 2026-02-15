@@ -657,6 +657,7 @@ a.v2p-topic-preview-title-link {
         top: -8px;
         transform: translateY(-100%);
         opacity: 0;
+        background-color: var(--v2p-color-bg-tooltip);
       }
 
       &:hover {
@@ -901,6 +902,7 @@ a.v2p-topic-preview-title-link {
     left: 50%;
     transform: translate(-50%, -100%);
     opacity: 0;
+    background-color: var(--v2p-color-bg-tooltip);
   }
 
   &:hover {

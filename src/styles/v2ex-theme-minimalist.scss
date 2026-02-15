@@ -9,9 +9,9 @@ body.v2p-theme-minimalist,
   --v2p-color-accent-500: oklch(69.6% 0.17 162.48deg);
   --v2p-color-accent-600: oklch(59.6% 0.145 163.225deg);
   --v2p-color-accent-700: oklch(50.8% 0.118 165.612deg);
-  --v2p-color-orange-50: hsl(var(--v2p-color-gold) / 10%);
-  --v2p-color-orange-100: hsl(var(--v2p-color-gold) / 20%);
-  --v2p-color-orange-400: hsl(var(--v2p-color-gold));
+  --v2p-color-orange-50: #fff7ed;
+  --v2p-color-orange-100: #ffedd5;
+  --v2p-color-orange-400: #fb923c;
 
   /* ==== */
   --v2p-color-background: oklch(97.6% 0.005 253deg);
@@ -20,13 +20,13 @@ body.v2p-theme-minimalist,
   --v2p-color-selection-background: oklch(93.2% 0.032 255.585deg);
   --v2p-color-selection-background-img: var(--v2p-color-selection-background);
   --v2p-color-font-secondary: oklch(from var(--v2p-color-foreground) l c h / 80%);
-  --v2p-color-font-tertiary: oklch(from var(--v2p-color-foreground) l c h / 65%);
-  --v2p-color-font-quaternary: oklch(from var(--v2p-color-foreground) l c h / 50%);
+  --v2p-color-font-tertiary: oklch(from var(--v2p-color-foreground) l c h / 68%);
+  --v2p-color-font-quaternary: oklch(from var(--v2p-color-foreground) l c h / 57%);
 
   /* ==== 按钮 ==== */
   --v2p-color-button-background: var(--v2p-color-background);
   --v2p-color-button-foreground: var(--v2p-color-foreground);
-  --v2p-color-button-background-hover: var(--v2p-color-background);
+  --v2p-color-button-background-hover: var(--v2p-color-bg-content);
   --v2p-color-button-foreground-hover: var(--v2p-color-foreground);
 
   /* ---- 按钮 ---- */
@@ -35,13 +35,13 @@ body.v2p-theme-minimalist,
   --v2p-color-bg-content: #fff;
   --v2p-color-bg-footer: var(--v2p-color-background);
   --v2p-color-bg-hover-btn: rgb(152 147 165 / 10%);
-  --v2p-color-bg-subtle: hsl(var(--v2p-color-pine) / 10%);
+  --v2p-color-bg-subtle: oklch(from var(--v2p-color-foreground) l c h / 2%);
   --v2p-color-bg-input: var(--v2p-color-background);
   --v2p-color-bg-search: var(--v2p-color-bg-content);
   --v2p-color-bg-search-active: var(--v2p-color-bg-search);
   --v2p-color-bg-widget: var(--v2p-color-background);
   --v2p-color-bg-reply: var(--v2p-color-background);
-  --v2p-color-bg-tooltip: var(--v2p-color-bg-content);
+  --v2p-color-bg-tooltip: var(--v2p-color-background);
   --v2p-color-bg-tabs: var(--v2p-color-background);
   --v2p-color-bg-tpr: var(--v2p-color-background);
   --v2p-color-bg-avatar: var(--v2p-color-background);
@@ -52,7 +52,7 @@ body.v2p-theme-minimalist,
 
   /* ---- 背景 ---- */
 
-  --v2p-color-tabs: hsl(var(--v2p-color-pine));
+  --v2p-color-tabs: var(--v2p-color-foreground);
   --v2p-color-heart: #eb6f92;
   --v2p-color-heart-fill: rgb(235 111 146 / 50%);
   --v2p-color-mask: rgb(0 0 0 / 25%);
@@ -101,8 +101,13 @@ body.v2p-theme-minimalist,
 
   #Wrapper {
     #Main {
-      > .box:has(.topic_buttons) {
+      > .box:has(.topic_buttons),
+      .v2p-left-group .box:has(.topic_buttons) {
         border-bottom: 1px solid var(--v2p-color-border) !important;
+      }
+
+      #SecondaryTabs {
+        border-radius: 0;
       }
     }
 
@@ -115,8 +120,8 @@ body.v2p-theme-minimalist,
     > .box:has(.member-activity-bar) {
       background-image: linear-gradient(
         to top,
-        rgb(255 255 255 / 100%) 0%,
-        rgb(255 255 255 / 70%) 50%,
+        transparent 0%,
+        transparent 50%,
         lab(30.7907% 22.35 -63.8417/8%) 100%
       );
     }
@@ -164,7 +169,7 @@ body.v2p-theme-minimalist,
   }
 
   .v2p-modal-main {
-    border: 1px solid var(--v2p-color-border);
+    border: 2px solid var(--v2p-color-border);
   }
 
   .v2p-control {
@@ -183,5 +188,15 @@ body.v2p-theme-minimalist,
 
   .onoffswitch label .frame::after {
     background-color: var(--v2p-color-bg-search);
+  }
+
+  :is(.subtle) {
+    border: none;
+    background-color: transparent;
+    background-image: linear-gradient(
+      to right,
+      lab(30.7907% 22.35 -63.8417 / 8%) 0%,
+      transparent 100%
+    );
   }
 }
