@@ -1359,9 +1359,15 @@ body {
     }
   }
 
-  .settings.block {
-    .block-stat {
-      padding: var(--v2p-spacing-box);
+  .settings {
+    &.block {
+      .block-stat {
+        padding: var(--v2p-spacing-box);
+        background-color: transparent;
+      }
+    }
+
+    &.privacy .privacy-settings-form > div:nth-of-type(2n) {
       background-color: transparent;
     }
   }

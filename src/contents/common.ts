@@ -127,7 +127,7 @@ void (async () => {
             // 不强制刷新页面，避免打断用户正在进行的编辑操作（如撰写回复）。
             // 显示持久 toast，用户可点击手动刷新。
             const toast = createToast({
-              message: '远程配置已同步，<a class="v2p-toast-action" href="javascript:void(0)" style="text-decoration:underline;cursor:pointer;">刷新页面</a>以应用更改',
+              message: '远程配置已同步，<a class="v2p-toast-action" href="javascript:void(0)" style="text-decoration:underline;cursor:pointer;color:currentColor;">刷新页面</a>以应用更改',
               duration: 0,
             })
 

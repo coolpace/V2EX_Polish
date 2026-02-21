@@ -133,8 +133,8 @@ body.v2p-theme-minimalist,
 
   .button {
     &.special {
-      --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-500),
-        0 1.8px 0 var(--v2p-color-accent-400);
+      --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-100),
+        0 1.8px 0 var(--v2p-color-accent-50);
 
       border-color: var(--v2p-color-accent-600);
       color: var(--v2p-color-accent-700);
@@ -143,6 +143,9 @@ body.v2p-theme-minimalist,
       &:hover {
         &,
         &:enabled {
+          --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-500),
+            0 1.8px 0 var(--v2p-color-accent-300);
+
           text-shadow: none;
         }
       }
