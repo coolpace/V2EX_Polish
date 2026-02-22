@@ -453,7 +453,7 @@ function initTabs() {
           activeTab({ tabId: TabId.Setting })
         })
         const $tip = $(
-          '<div class="tip"><p>需要设置您的个人访问令牌才能获取消息通知</p></div>',
+          '<div class="tip"><p>需要设置你的个人访问令牌才能获取消息通知</p></div>',
         ).append($tipBtn)
         $tabContent.empty().append($tip)
       }

@@ -391,7 +391,7 @@ export function useTopicPreview() {
           void load()
         }
         else {
-          modal.$content.empty().append(invalidTemplate('您需要先设置 PAT 才能获取预览内容。'))
+          modal.$content.empty().append(invalidTemplate('你需要先设置 PAT 才能获取预览内容。'))
         }
       }
     }

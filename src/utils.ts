@@ -998,9 +998,12 @@ export async function showRemoteSyncDialog(
 
     if (dialogType === 'gentle') {
       message = `
-        <p>检测到您在 <strong>${lastSyncTime}</strong> 有保存的配置备份。</p>
-        ${showDetails ? `<p>备份包含 <strong>${configComplexity}</strong> 项设置。</p>` : ''}
-        <p>是否立即同步到当前设备？</p>
+        <p class="v2p-sync-dialog-message">检测到您在其他设备上保存了插件配置备份</p>
+        <p class="v2p-sync-dialog-message-sub">
+          备份时间：<strong>${lastSyncTime}</strong>
+          ${showDetails ? `<br>包含 <strong>${configComplexity}</strong> 项个性化设置` : ''}
+        </p>
+        <p class="v2p-sync-dialog-message-question">是否同步这些设置到当前设备？</p>
       `
     }
     else {
@@ -1013,23 +1016,27 @@ export async function showRemoteSyncDialog(
             : `${Math.floor(daysSinceBackup / 7)} 周前`
 
       message = `
-        <p>检测到远程配置备份（${ageText}创建）</p>
+        <p class="v2p-sync-dialog-message">检测到远程插件配置备份（${ageText}创建）</p>
         ${showDetails
-          ? `<p style="color: var(--color-fade); font-size: 0.9em; margin-top: 0.5em;">
-          包含 <strong>${configComplexity}</strong> 项设置，
-          同步后将覆盖当前插件的默认配置
+          ? `<p class="v2p-sync-dialog-message-sub">
+          该备份包含 <strong>${configComplexity}</strong> 项设置，同步后将覆盖当前设备的插件默认配置
         </p>`
           : ''}
-        <p style="margin-top: 1em;">是否立即同步到当前设备？</p>
+        <p class="v2p-sync-dialog-message-question">是否同步这些设置到当前设备？</p>
+        <p class="v2p-sync-dialog-message-tip">
+          你也可以稍后在插件设置中手动同步
+        </p>
       `
     }
 
-    // 创建模态框
     const modal = createModal({
-      title: '发现远程配置备份',
+      root: $(document.body),
+      title: 'V2EX Polish - 发现远程配置备份',
       footer: true,
       onMount: (elements: ModalElements) => {
-        const { $content, $footer, $actions } = elements
+        const { $main, $content, $footer, $actions } = elements
+
+        $main.addClass('v2p-sync-dialog-main')
 
         // 添加消息内容
         $content.html(message)
@@ -1037,9 +1044,8 @@ export async function showRemoteSyncDialog(
         // 清空默认的操作区域
         $actions.empty()
 
-        // 创建"稍后手动同步"按钮
         const $skipBtn = createButton({
-          children: '稍后手动同步',
+          children: '稍后同步',
           className: 'v2p-sync-skip-btn',
         })
         $skipBtn.on('click', () => {
@@ -1047,9 +1053,8 @@ export async function showRemoteSyncDialog(
           resolve(false)
         })
 
-        // 创建"立即同步"按钮
         const $syncBtn = createButton({
-          children: '立即同步',
+          children: '立即同步配置',
           className: 'v2p-sync-confirm-btn super',
         })
         $syncBtn.on('click', () => {
