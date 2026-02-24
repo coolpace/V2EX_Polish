@@ -123,18 +123,6 @@ void (async () => {
           if (remoteSyncInfo && syncInfo.version < remoteSyncInfo.version) {
             // 远程版本较新 → 执行同步（通过 applyRemoteSettings 正确分发数据）
             await applyRemoteSettings(settings, { lastCheckTime: Date.now() })
-
-            // 不强制刷新页面，避免打断用户正在进行的编辑操作（如撰写回复）。
-            // 显示持久 toast，用户可点击手动刷新。
-            const toast = createToast({
-              message: '远程配置已同步，<a class="v2p-toast-action" href="javascript:void(0)" style="text-decoration:underline;cursor:pointer;color:currentColor;">刷新页面</a>以应用更改',
-              duration: 0,
-            })
-
-            $('.v2p-toast-action').on('click', () => {
-              toast.clear()
-              window.location.reload()
-            })
           }
         })
         .catch((err) => {
