@@ -15,9 +15,16 @@ body {
 body {
   width: 500px;
   height: 600px;
+  font-family: vivoSans, system-ui, sans-serif !important;
   font-size: 12px;
   color: var(--v2p-color-foreground);
   background-color: var(--v2p-color-bg-content);
+
+  code,
+  pre,
+  kbd {
+    font-family: var(--code-font) !important;
+  }
 
   .lucide-sun {
     display: none;
