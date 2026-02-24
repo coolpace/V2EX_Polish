@@ -35,7 +35,9 @@
     box-shadow 0.25s;
 
   &.special {
-    border-color: var(--v2p-color-accent-300);
+    border-color: var(--v2p-color-button-special-border);
+    color: var(--v2p-color-button-special-foreground);
+    background: var(--v2p-color-button-special-background);
   }
 
   &.v2p-btn-small {
@@ -61,7 +63,9 @@
     box-shadow: var(--button-hover-shadow);
 
     &.special {
-      border-color: var(--v2p-color-accent-300);
+      border-color: var(--v2p-color-button-special-border);
+      color: var(--v2p-color-button-special-foreground-hover);
+      background: var(--v2p-color-button-special-background);
     }
   }
 
@@ -75,7 +79,7 @@
       0 1.8px 0 var(--button-background-color) !important;
 
     &.special {
-      border-color: var(--v2p-color-accent-300);
+      border-color: var(--v2p-color-button-special-border);
     }
   }
 

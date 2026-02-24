@@ -28,6 +28,9 @@ body.v2p-theme-minimalist,
   --v2p-color-button-foreground: var(--v2p-color-foreground);
   --v2p-color-button-background-hover: oklch(from var(--v2p-color-foreground) l c h / 10%);
   --v2p-color-button-foreground-hover: var(--v2p-color-foreground);
+  --v2p-color-button-special-background: var(--v2p-color-accent-50);
+  --v2p-color-button-special-foreground: var(--v2p-color-accent-700);
+  --v2p-color-button-special-border: var(--v2p-color-accent-600);
 
   /* ---- 按钮 ---- */
 
@@ -136,15 +139,11 @@ body.v2p-theme-minimalist,
       --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-100),
         0 1.8px 0 var(--v2p-color-accent-50);
 
-      border-color: var(--v2p-color-accent-600);
-      color: var(--v2p-color-accent-700);
-      background: var(--v2p-color-accent-50);
-
       &:hover {
         &,
         &:enabled {
           --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-500),
-            0 1.8px 0 var(--v2p-color-accent-300);
+            0 1.8px 0 var(--v2p-color-button-special-border);
 
           text-shadow: none;
         }

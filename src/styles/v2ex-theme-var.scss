@@ -105,13 +105,14 @@
     --v2p-color-main-600: #475569;
     --v2p-color-main-700: #334155;
     --v2p-color-main-800: #1e293b;
-    --v2p-color-accent-50: #ecfdf5;
-    --v2p-color-accent-100: #d1fae5;
-    --v2p-color-accent-200: #a7f3d0;
-    --v2p-color-accent-300: #6ee7b7;
-    --v2p-color-accent-400: #34d399;
-    --v2p-color-accent-500: #10b981;
-    --v2p-color-accent-600: #059669;
+    --v2p-color-accent-50: oklch(97.9% 0.021 166.113deg);
+    --v2p-color-accent-100: oklch(95% 0.052 163.051deg);
+    --v2p-color-accent-200: oklch(90.5% 0.093 164.15deg);
+    --v2p-color-accent-300: oklch(84.5% 0.143 164.978deg);
+    --v2p-color-accent-400: oklch(76.5% 0.177 163.223deg);
+    --v2p-color-accent-500: oklch(69.6% 0.17 162.48deg);
+    --v2p-color-accent-600: oklch(59.6% 0.145 163.225deg);
+    --v2p-color-accent-700: oklch(50.8% 0.118 165.612deg);
     --v2p-color-orange-50: #fff7ed;
     --v2p-color-orange-100: #ffedd5;
     --v2p-color-orange-400: #fb923c;
@@ -132,6 +133,10 @@
     --v2p-color-button-background-hover: var(--v2p-color-main-200);
     --v2p-color-button-foreground-hover: var(--v2p-color-main-600);
     --v2p-color-button-border: var(--v2p-color-main-300);
+    --v2p-color-button-special-background: var(--v2p-color-accent-50);
+    --v2p-color-button-special-foreground: var(--v2p-color-accent-700);
+    --v2p-color-button-special-border: var(--v2p-color-accent-600);
+    --v2p-color-button-special-foreground-hover: var(--v2p-color-accent-700);
 
     /* ---- 按钮 ---- */
 

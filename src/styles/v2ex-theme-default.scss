@@ -240,7 +240,8 @@ body {
       0 1.8px 0 var(--button-background-color);
 
     &.normal,
-    &.super {
+    &.super,
+    &.special {
       @include share.common-button;
     }
 
@@ -248,15 +249,12 @@ body {
       --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-200),
         0 1.8px 0 var(--v2p-color-accent-100);
 
-      color: var(--v2p-color-accent-500);
-      background: var(--v2p-color-accent-100);
       box-shadow: var(--button-hover-shadow);
 
       &:hover {
         &,
         &:enabled {
           color: var(--v2p-color-accent-600);
-          background: var(--v2p-color-accent-100);
           box-shadow: var(--button-hover-shadow);
         }
       }
