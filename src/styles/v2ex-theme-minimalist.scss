@@ -56,18 +56,21 @@ body.v2p-theme-minimalist,
   /* ---- 背景 ---- */
 
   --v2p-color-tabs: var(--v2p-color-foreground);
-  --v2p-color-heart: #eb6f92;
-  --v2p-color-heart-fill: rgb(235 111 146 / 50%);
+  --v2p-color-heart: #ef4444;
+  --v2p-color-heart-fill: #fee2e2;
   --v2p-color-mask: rgb(0 0 0 / 25%);
   --v2p-color-divider: lab(30.7907% 22.35 -63.8417 / 20%);
   --v2p-color-border: var(--v2p-color-divider);
   --v2p-color-input-border: var(--v2p-color-border);
   --v2p-color-border-darker: var(--v2p-color-border);
   --v2p-color-link-visited: var(--v2p-color-font-secondary);
-  --v2p-color-error: #eb6f92;
+  --v2p-color-error: #ef4444;
   --v2p-color-bg-error: #fee2e2;
   --v2p-color-cell-num: var(--v2p-color-font-secondary);
   --v2p-box-radius: 0;
+  --v2p-input-radius: 4px;
+  --v2p-button-radius: 4px;
+  --v2p-popup-radius: 0;
 
   /* ==== 阴影 ==== */
   --v2p-box-shadow: none;

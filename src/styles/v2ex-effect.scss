@@ -1490,11 +1490,11 @@ a:link.v2p-topic-preview-retry {
     .v2p-sync-dialog-message-sub {
       margin: 0 0 calc(var(--v2p-spacing-cell) * 0.75);
       padding: calc(var(--v2p-spacing-cell) * 0.75) var(--v2p-spacing-cell);
+      border-radius: var(--v2p-input-radius);
       font-size: 14px;
       line-height: 1.6;
       color: var(--v2p-color-font-secondary);
       background-color: var(--v2p-color-bg-input);
-      border-radius: var(--v2p-input-radius);
 
       strong {
         font-weight: 600;
@@ -1513,11 +1513,11 @@ a:link.v2p-topic-preview-retry {
     .v2p-sync-dialog-message-tip {
       margin: calc(var(--v2p-spacing-cell) * 0.5) 0 0;
       padding: calc(var(--v2p-spacing-cell) * 0.5) var(--v2p-spacing-cell);
+      border-radius: var(--v2p-input-radius);
       font-size: 13px;
       line-height: 1.5;
       color: var(--v2p-color-font-tertiary);
       background-color: var(--v2p-color-bg-subtle);
-      border-radius: var(--v2p-input-radius);
     }
 
     .v2p-modal-footer {

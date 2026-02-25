@@ -16,7 +16,7 @@
   height: 28px;
   padding: 0 12px;
   border: 1px solid var(--v2p-color-button-border);
-  border-radius: var(--v2p-input-radius);
+  border-radius: var(--v2p-button-radius);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -155,7 +155,7 @@
   min-height: $minHeight !important;
   max-height: $maxHeight !important;
   border: 1px solid var(--button-border-color);
-  border-radius: 8px;
+  border-radius: var(--v2p-input-radius);
   font-size: 15px;
   color: currentColor;
   background-color: var(--v2p-color-bg-input);
@@ -198,7 +198,7 @@
 
 @mixin popup {
   border: 1px solid var(--box-border-color);
-  border-radius: 8px;
+  border-radius: var(--v2p-popup-radius);
   font-size: 14px;
   background: var(--v2p-color-bg-widget);
   backdrop-filter: blur(16px);
