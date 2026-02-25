@@ -21,7 +21,7 @@ import {
 
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
-import { dataExpiryTime, Links, StorageKey, V2EX } from '../constants'
+import { dataExpiryTime, Links, RequestMessage, StorageKey, V2EX } from '../constants'
 import { initTheme, replaceEmojiWithHD } from '../contents/helpers'
 import { iconLoading } from '../icons'
 import {
@@ -48,6 +48,9 @@ import {
 } from './popup.helper'
 import type { PopupStorageData, RemoteDataStore } from './popup.type'
 import { defaultValue, TabId } from './popup.var'
+
+/** localStorage 中存储未读消息信息的 key。 */
+const UNREAD_MSG_STORAGE_KEY = 'v2p_last_fetch_unread_info'
 
 interface LastFetchUnreadMsgInfoInfo {
   time: number
@@ -376,10 +379,28 @@ function initTabs() {
 
         try {
           const { result } = await fetchNotifications()
-          notifications = result
+          notifications = result ?? []
         }
-        catch {
-          $tabContent.html(errorDisplay)
+        catch (err) {
+          const isTokenError = err instanceof Error
+            && (err.message.includes(RequestMessage.InvalidToken)
+              || err.message.includes(RequestMessage.TokenExpired))
+
+          if (isTokenError) {
+            // PAT 无效或已过期，引导用户去重新设置。
+            const $tipBtn = createButton({ children: '去设置' }).on('click', () => {
+              activeTab({ tabId: TabId.Setting })
+            })
+            const $tip = $(
+              '<div class="tip"><p>个人访问令牌无效或已过期，请重新设置</p></div>',
+            ).append($tipBtn)
+            $tabContent.empty().append($tip)
+          }
+          else {
+            $tabContent.html(errorDisplay)
+          }
+
+          return
         }
 
         if (notifications.length > 0) {
@@ -420,7 +441,7 @@ function initTabs() {
             $checkMsgBtn.on('click', () => {
               // 当在 Popup 中主动点击查看消息时，应该重置未读数量。
               const storeInfo: LastFetchUnreadMsgInfoInfo = { time: Date.now(), count: 0 }
-              window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
+              window.localStorage.setItem(UNREAD_MSG_STORAGE_KEY, JSON.stringify(storeInfo))
               $tabMsg.text('消息')
             })
 
@@ -435,6 +456,11 @@ function initTabs() {
             replaceEmojiWithHD($noticeList.find('.notice-item .embedded_image'))
 
             $tabContent.empty().append($tabHeader).append($noticeList)
+
+            // 消息列表渲染完成后，重置未读计数徽标。
+            const storeInfo: LastFetchUnreadMsgInfoInfo = { time: Date.now(), count: 0 }
+            window.localStorage.setItem(UNREAD_MSG_STORAGE_KEY, JSON.stringify(storeInfo))
+            $tabMsg.text('消息')
           }
           catch {
             $tabContent.html(`
@@ -544,7 +570,7 @@ window.addEventListener('load', () => {
 
   // 展示消息未读数量。
   {
-    const infoStr = window.localStorage.getItem('v2p_last_fetch_unread_info')
+    const infoStr = window.localStorage.getItem(UNREAD_MSG_STORAGE_KEY)
     const fiveMinutes = 5 * 1000 * 60
 
     const info: LastFetchUnreadMsgInfoInfo = infoStr ? JSON.parse(infoStr) : { time: 0, count: 0 }
@@ -553,17 +579,21 @@ window.addEventListener('load', () => {
 
     // 每 5 分钟获取一次未读消息数量。
     if (now - info.time >= fiveMinutes) {
-      void getUnreadMessagesCount().then((count) => {
-        const storeInfo: LastFetchUnreadMsgInfoInfo = { time: now, count }
-        window.localStorage.setItem('v2p_last_fetch_unread_info', JSON.stringify(storeInfo))
+      void getUnreadMessagesCount()
+        .then((count) => {
+          const storeInfo: LastFetchUnreadMsgInfoInfo = { time: now, count }
+          window.localStorage.setItem(UNREAD_MSG_STORAGE_KEY, JSON.stringify(storeInfo))
 
-        if (count > 0) {
-          $tabMsg.text(`消息(${count})`)
-        }
-        else {
-          $tabMsg.text('消息')
-        }
-      })
+          if (count > 0) {
+            $tabMsg.text(`消息(${count})`)
+          }
+          else {
+            $tabMsg.text('消息')
+          }
+        })
+        .catch((err: unknown) => {
+          console.warn('[V2EX Polish] 获取未读消息数量失败：', err)
+        })
     }
     else {
       if (info.count > 0) {
