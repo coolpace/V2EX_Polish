@@ -57,27 +57,6 @@
 
             <form id="options-form">
               <div class="options-form-inner">
-                <!-- MARK: 新标签页打开主题 -->
-                <div class="form-checkbox">
-                  <input type="checkbox" id="openInNewTab" checked="false" />
-                  <div class="combo">
-                    <label for="openInNewTab">新标签页打开主题</label>
-                    <p>启用后点击主题将在新的页签中打开</p>
-                  </div>
-                </div>
-
-                <hr />
-
-                <div class="form-checkbox">
-                  <input type="checkbox" id="autoCheckIn" checked="false" />
-                  <div class="combo">
-                    <label for="autoCheckIn">每日自动签到</label>
-                    <p>自动领取每日的登录奖励</p>
-                  </div>
-                </div>
-
-                <hr />
-
                 <!-- MARK: 颜色主题 -->
                 <fieldset>
                   <legend>颜色主题</legend>
@@ -139,6 +118,63 @@
 
                 <hr />
 
+                <!-- MARK: 新标签页打开主题 -->
+                <div class="form-checkbox">
+                  <input type="checkbox" id="openInNewTab" checked="false" />
+                  <div class="combo">
+                    <label for="openInNewTab">新标签页打开主题</label>
+                    <p>启用后点击主题将在新的页签中打开</p>
+                  </div>
+                </div>
+
+                <hr />
+
+                <fieldset>
+                  <legend>
+                    主题内容布局
+                    <!-- <sup>新功能</sup> -->
+                  </legend>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="replyLayoutVertical"
+                      name="reply.layout"
+                      value="vertical"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="replyLayoutVertical">垂直排列</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="replyLayoutHorizontal"
+                      name="reply.layout"
+                      value="horizontal"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="replyLayoutHorizontal">水平排列</label>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="replyLayoutAuto"
+                      name="reply.layout"
+                      value="block"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="replyLayoutAuto">自动</label>
+                      <p>内容过高时自动切换为水平布局</p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <hr />
+
                 <!-- MARK: 预加载多页回复 -->
                 <fieldset>
                   <legend>预加载多页回复</legend>
@@ -186,20 +222,20 @@
 
                   <div>
                     <div class="form-checkbox">
-                      <input type="checkbox" id="hideReplyTime" checked="false" />
+                      <input type="checkbox" id="showImgInPage" checked="false" />
                       <div class="combo">
-                        <label for="hideReplyTime">自动隐藏回复时间</label>
+                        <label for="showImgInPage">
+                          在主题中点击图片时，是否在页内预览图片大图
+                        </label>
                       </div>
                     </div>
                   </div>
 
                   <div>
                     <div class="form-checkbox">
-                      <input type="checkbox" id="nestedReply_multipleInsideOne" checked="false" />
+                      <input type="checkbox" id="hideReplyTime" checked="false" />
                       <div class="combo">
-                        <label for="nestedReply_multipleInsideOne"
-                          >一条回复中 @ 多个人时参与嵌套</label
-                        >
+                        <label for="hideReplyTime">自动隐藏回复时间</label>
                       </div>
                     </div>
                   </div>
@@ -215,11 +251,11 @@
 
                   <div>
                     <div class="form-checkbox">
-                      <input type="checkbox" id="showImgInPage" checked="false" />
+                      <input type="checkbox" id="nestedReply_multipleInsideOne" checked="false" />
                       <div class="combo">
-                        <label for="showImgInPage">
-                          在主题中点击图片时，是否在页内预览图片大图
-                        </label>
+                        <label for="nestedReply_multipleInsideOne"
+                          >一条回复中 @ 多个人时参与嵌套</label
+                        >
                       </div>
                     </div>
                   </div>
@@ -301,49 +337,13 @@
 
                 <hr />
 
-                <fieldset>
-                  <legend>
-                    主题内容布局
-                    <!-- <sup>新功能</sup> -->
-                  </legend>
-                  <div class="form-radio">
-                    <input
-                      type="radio"
-                      id="replyLayoutVertical"
-                      name="reply.layout"
-                      value="vertical"
-                      checked="false"
-                    />
-                    <div class="combo">
-                      <label for="replyLayoutVertical">垂直排列</label>
-                    </div>
+                <div class="form-checkbox">
+                  <input type="checkbox" id="autoCheckIn" checked="false" />
+                  <div class="combo">
+                    <label for="autoCheckIn">每日自动签到</label>
+                    <p>自动领取每日的登录奖励</p>
                   </div>
-                  <div class="form-radio">
-                    <input
-                      type="radio"
-                      id="replyLayoutHorizontal"
-                      name="reply.layout"
-                      value="horizontal"
-                      checked="false"
-                    />
-                    <div class="combo">
-                      <label for="replyLayoutHorizontal">水平排列</label>
-                    </div>
-                  </div>
-                  <div class="form-radio">
-                    <input
-                      type="radio"
-                      id="replyLayoutAuto"
-                      name="reply.layout"
-                      value="block"
-                      checked="false"
-                    />
-                    <div class="combo">
-                      <label for="replyLayoutAuto">自动</label>
-                      <p>内容过高时自动切换为水平布局</p>
-                    </div>
-                  </div>
-                </fieldset>
+                </div>
 
                 <hr />
 
