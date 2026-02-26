@@ -71,7 +71,7 @@
 
               <form id="settings-form">
                 <div>
-                  <h2>
+                  <h2 class="token-form-title">
                     <label for="pat">设置你的个人访问令牌（PAT）</label>
                   </h2>
 
@@ -85,11 +85,11 @@
                     <button class="submit-btn" type="submit">保存令牌</button>
                   </div>
 
-                  <div class="description">
-                    <div class="description-title">这将授权 V2EX Polish 使用令牌：</div>
-                    <ul>
-                      <li>
-                        <span class="description-icon">
+                  <div class="token-desc">
+                    <div class="token-desc-title">这将授权 V2EX Polish 使用令牌：</div>
+                    <ul class="token-usage-list">
+                      <li class="token-usage-item">
+                        <span class="token-desc-icon">
                           <i data-lucide="check"></i>
                         </span>
                         <p>
@@ -100,8 +100,8 @@
                           以获取所需数据。
                         </p>
                       </li>
-                      <li>
-                        <span class="description-icon">
+                      <li class="token-usage-item">
+                        <span class="token-desc-icon">
                           <i data-lucide="check"></i>
                         </span>
                         <p>自动更新令牌（需手动开启）。</p>
@@ -118,7 +118,7 @@
                       </a>
                     </div>
 
-                    <details class="details">
+                    <details class="token-details">
                       <summary>
                         <span class="summary-text">如何获取 PAT？哪些功能需要它？</span>
                       </summary>

@@ -43,14 +43,14 @@
   &.v2p-btn-small {
     height: 24px;
     padding: 0 10px;
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     font-size: 12px;
   }
 
   &.v2p-btn-large {
     height: 32px;
     padding: 0 14px;
-    border-radius: 8px;
+    border-radius: var(--v2p-box-radius);
     font-size: 16px;
   }
 
@@ -101,7 +101,7 @@
     right: -4px;
     padding: 0 3px;
     border: 1px solid var(--button-border-color);
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     font-family: inherit;
     font-size: 90%;
     line-height: initial;
@@ -126,7 +126,7 @@
     z-index: -1;
     inset: 0 -5px;
     transform: scale(0.65);
-    border-radius: 5px;
+    border-radius: var(--v2p-button-radius);
     opacity: 0;
     background-color: var(--v2p-color-bg-hover-btn);
     transition:
@@ -183,7 +183,7 @@
   width: max-content;
   min-width: 30px;
   padding: 2px 5px;
-  border-radius: 4px;
+  border-radius: var(--v2p-popup-radius);
   font-size: 12px;
   color: var(--v2p-color-foreground);
   text-align: center;
@@ -214,7 +214,7 @@
 @mixin select-box {
   padding: 6px 8px;
   border: 1px solid var(--v2p-color-border);
-  border-radius: 4px;
+  border-radius: var(--v2p-input-radius);
   color: var(--v2p-color-foreground);
   background-color: var(--v2p-color-background);
 }
@@ -228,7 +228,7 @@
   user-select: none;
   display: inline-block;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: var(--v2p-button-radius);
   font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
@@ -253,7 +253,7 @@
       margin-left: 5px;
       padding: 2px 4px;
       border: 1px solid currentColor;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       font-weight: normal;
       line-height: 1;
       color: var(--v2p-color-orange-400);
@@ -300,7 +300,7 @@
     #clear-storage,
     #sync-settings {
       padding: 0 5px;
-      border-radius: 3px;
+      border-radius: var(--v2p-button-radius);
       background-color: var(--v2p-color-button-background-hover);
       transition:
         background-color 0.2s,
@@ -330,7 +330,7 @@
     margin-left: 5px;
     padding: 3px 4px;
     border: 1px solid currentColor;
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     font-weight: normal;
     line-height: 1;
     color: var(--v2p-color-orange-400);

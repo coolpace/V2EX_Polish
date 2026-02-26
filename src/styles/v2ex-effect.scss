@@ -122,7 +122,7 @@ body {
       margin: 0;
       padding: 10px;
       border: 1px solid var(--v2p-color-border);
-      border-radius: 10px;
+      border-radius: var(--v2p-box-radius);
       background-color: var(--v2p-color-bg-content);
       box-shadow: var(--v2p-widget-shadow);
 
@@ -189,7 +189,7 @@ body {
   justify-content: center;
   width: 24px;
   height: 40px;
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--v2p-button-radius) 0 0 var(--v2p-button-radius);
   background: var(--v2p-color-bg-content);
   box-shadow: var(--v2p-widget-shadow);
 }
@@ -207,7 +207,7 @@ body {
 .v2p-topic-preview-btn {
   cursor: pointer;
   border: 1px solid var(--v2p-color-border-darker);
-  border-radius: 4px;
+  border-radius: var(--v2p-button-radius);
   font-size: 13px;
   color: var(--v2p-color-button-foreground);
   visibility: hidden;
@@ -250,7 +250,7 @@ body {
       padding: 25px;
 
       .v2p-tpr {
-        border-radius: 5px;
+        border-radius: var(--v2p-button-radius);
         background-color: var(--v2p-color-bg-tpr);
       }
 
@@ -326,7 +326,7 @@ body {
       gap: 20px;
       align-items: center;
       padding: 5px 10px;
-      border-radius: 5px;
+      border-radius: var(--v2p-button-radius);
       font-size: 13px;
       background-color: var(--v2p-color-button-background);
     }
@@ -356,7 +356,7 @@ body {
     .v2p-tp-avatar {
       width: 20px;
       height: 20px;
-      border-radius: 3px;
+      border-radius: var(--v2p-box-radius);
       background-color: var(--v2p-color-bg-avatar);
     }
 
@@ -421,7 +421,7 @@ a.v2p-topic-preview-title-link {
   left: 50%;
   transform: translateX(-50%);
   padding: 10px 15px;
-  border-radius: 8px;
+  border-radius: var(--v2p-popup-radius);
   font-size: 14px;
   color: var(--v2p-color-background);
   background: var(--v2p-color-foreground);
@@ -508,7 +508,7 @@ a.v2p-topic-preview-title-link {
       gap: 4px;
       align-items: center;
       padding: 4px 5px;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       font-size: 14px;
       font-weight: normal;
       background-color: var(--button-background-color);
@@ -516,7 +516,7 @@ a.v2p-topic-preview-title-link {
       > [data-tab-key] {
         cursor: pointer;
         padding: 4px 5px;
-        border-radius: 4px;
+        border-radius: var(--v2p-button-radius);
 
         &:hover {
           background-color: var(--v2p-color-button-background-hover);
@@ -553,7 +553,7 @@ a.v2p-topic-preview-title-link {
     align-items: center;
     margin: 0 5px;
     padding: 2px 10px;
-    border-radius: 2px;
+    border-radius: var(--v2p-box-radius);
     background-color: var(--v2p-color-bg-block);
   }
 
@@ -564,7 +564,7 @@ a.v2p-topic-preview-title-link {
     max-width: 800px;
     margin-top: 20px;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: var(--v2p-box-radius);
     background-color: var(--v2p-color-bg-block);
   }
 
@@ -574,7 +574,7 @@ a.v2p-topic-preview-title-link {
 
   .v2p-no-pat-img {
     width: 100%;
-    border-radius: 8px;
+    border-radius: var(--v2p-box-radius);
     box-shadow: var(--v2p-widget-shadow);
   }
 
@@ -743,7 +743,7 @@ a.v2p-topic-preview-title-link {
     display: inline-block;
     width: 73px;
     height: 73px;
-    border-radius: 5px;
+    border-radius: var(--v2p-box-radius);
     background-color: var(--button-background-hover-color);
   }
 
@@ -768,7 +768,7 @@ a.v2p-topic-preview-title-link {
   }
 
   .v2p-loading {
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     background-color: var(--button-background-hover-color);
   }
 
@@ -807,7 +807,7 @@ a.v2p-topic-preview-title-link {
 
 .v2p-member-topic-item {
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: var(--v2p-button-radius);
   font-size: 13px;
   line-height: 1.5;
   color: var(--v2p-color-font-primary);
@@ -832,7 +832,7 @@ a.v2p-topic-preview-title-link {
   display: inline-flex;
   margin: 0 0 2px;
   padding: 0 3px;
-  border-radius: 3px;
+  border-radius: var(--v2p-button-radius);
   font-size: 12px;
   background-color: var(--button-background-hover-color);
 }
@@ -872,7 +872,7 @@ a.v2p-topic-preview-title-link {
   cursor: pointer;
   height: 20px;
   padding: 3px;
-  border-radius: 4px;
+  border-radius: var(--v2p-button-radius);
   line-height: 20px;
 
   &:hover {
@@ -991,7 +991,7 @@ a.v2p-topic-preview-title-link {
 .v2p-topic-reply-ref {
   margin: 0 -10px 15px;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: var(--v2p-box-radius);
   font-size: 13px;
   color: var(--v2p-color-font-tertiary);
   background-color: var(--v2p-color-bg-block);
@@ -1025,7 +1025,7 @@ a.v2p-topic-preview-title-link {
           width: 15px;
           height: 15px;
           margin-right: 5px;
-          border-radius: 2px;
+          border-radius: var(--v2p-box-radius);
           object-fit: cover;
           background-color: var(--v2p-color-bg-avatar);
         }
@@ -1185,7 +1185,7 @@ a.v2p-topic-preview-title-link {
   flex-direction: column;
   gap: 1px;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: var(--v2p-popup-radius);
   font-size: 12px;
   text-align: left;
 
@@ -1193,7 +1193,7 @@ a.v2p-topic-preview-title-link {
     .v2p-select-item {
       cursor: pointer;
       padding: 5px 10px;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       white-space: nowrap;
 
       &:hover {
@@ -1312,7 +1312,7 @@ a:link.v2p-topic-preview-retry {
   align-items: center;
   margin-left: 2px;
   padding: 0 2px;
-  border-radius: 2px;
+  border-radius: var(--v2p-button-radius);
   color: var(--v2p-color-orange-400);
   background-color: var(--v2p-color-orange-100);
 
@@ -1320,7 +1320,7 @@ a:link.v2p-topic-preview-retry {
     display: inline-flex;
     margin-left: 10px;
     padding: 2px 5px;
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     font-size: 16px;
     line-height: 1.4;
   }
@@ -1350,7 +1350,7 @@ a:link.v2p-topic-preview-retry {
   align-items: center;
   margin-left: auto;
   padding: 1px 6px;
-  border-radius: 4px;
+  border-radius: var(--v2p-button-radius);
   font-size: 13px;
   background-color: var(--v2p-color-button-background);
 
@@ -1442,7 +1442,7 @@ a:link.v2p-topic-preview-retry {
   height: 100%;
   margin-left: 5px;
   padding: 0 5px;
-  border-radius: 3px;
+  border-radius: var(--v2p-button-radius);
   font-size: 12px;
   color: var(--v2p-color-bg-content);
   background-color: var(--v2p-color-accent-500);

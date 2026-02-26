@@ -199,7 +199,7 @@ body {
       }
 
       .search-item {
-        border-radius: 5px;
+        border-radius: var(--v2p-button-radius);
         font-weight: bold;
         color: var(--v2p-color-foreground);
 
@@ -275,14 +275,14 @@ body {
 
     &:first-child {
       border: 1px solid var(--v2p-color-accent-400);
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
+      border-top-left-radius: var(--v2p-button-radius);
+      border-bottom-left-radius: var(--v2p-button-radius);
     }
 
     &:last-child {
       border: 1px solid var(--v2p-color-accent-400);
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
+      border-top-right-radius: var(--v2p-button-radius);
+      border-bottom-right-radius: var(--v2p-button-radius);
     }
 
     &.op {
@@ -312,7 +312,7 @@ body {
 
   a.node:is(:active, :link, :visited) {
     padding: 5px 6px;
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     font-size: 13px;
     color: var(--v2p-color-font-secondary);
     background-color: var(--v2p-color-bg-block);
@@ -334,7 +334,7 @@ body {
       user-select: none;
       padding: 6px 9px;
       border: none;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       font-size: 14px;
     }
   }
@@ -393,7 +393,7 @@ body {
   .online {
     user-select: none;
     padding: 6px 8px;
-    border-radius: 5px;
+    border-radius: var(--v2p-button-radius);
     font-size: 13px;
     color: var(--v2p-color-bg-content);
     background: var(--v2p-color-accent-400);
@@ -446,13 +446,13 @@ body {
   #syntax-selector {
     .radio-group {
       padding: 3px;
-      border-radius: 6px;
+      border-radius: var(--v2p-box-radius);
       background-color: var(--v2p-color-background);
       box-shadow: 0 1px 2px var(--v2p-box-shadow) inset;
 
       & > input[type='radio'] {
         &:checked + label {
-          border-radius: 5px;
+          border-radius: var(--v2p-button-radius);
           color: var(--v2p-color-accent-600);
           background-color: var(--v2p-color-accent-100);
           box-shadow: 1px 1px 2px var(--v2p-box-shadow);
@@ -605,7 +605,7 @@ body {
         .select2-search__field {
           padding: 6px 4px;
           border: 1px solid var(--v2p-color-border);
-          border-radius: 4px;
+          border-radius: var(--v2p-input-radius);
           background-color: transparent;
 
           &:focus-visible {
@@ -800,7 +800,7 @@ body {
 
     &:link,
     &:visited {
-      border-radius: 5px;
+      border-radius: var(--v2p-button-radius);
       font-size: 12px;
       color: var(--v2p-color-font-secondary);
       background-color: var(--v2p-color-main-100);
@@ -835,7 +835,7 @@ body {
     .top {
       height: 26px;
       padding: 0 6px;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       line-height: 26px;
       color: var(--v2p-color-button-foreground);
       white-space: nowrap;
@@ -940,7 +940,7 @@ body {
       column-gap: 5px;
       align-items: center;
       padding: 5px;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       text-shadow: none;
       white-space: nowrap;
       background: none;
@@ -958,7 +958,7 @@ body {
 
   .vote:link {
     border-color: var(--v2p-color-border-darker);
-    border-radius: 5px;
+    border-radius: var(--v2p-button-radius);
     color: var(--v2p-color-font-tertiary);
 
     &:hover {
@@ -1089,7 +1089,7 @@ body {
             aspect-ratio: 1;
             width: 40px !important;
             height: 40px !important;
-            border-radius: 5px;
+            border-radius: var(--v2p-box-radius);
             background-color: var(--v2p-color-bg-avatar);
           }
         }
@@ -1124,7 +1124,7 @@ body {
             .avatar {
               width: 25px !important;
               height: 25px !important;
-              border-radius: 4px;
+              border-radius: var(--v2p-box-radius);
             }
           }
 
@@ -1182,7 +1182,7 @@ body {
       position: relative;
       top: -4px;
       padding: 5px 10px;
-      border-radius: 5px;
+      border-radius: var(--v2p-button-radius);
       font-size: 12px;
       font-variant-numeric: tabular-nums;
       color: var(--v2p-color-cell-num);
@@ -1220,7 +1220,7 @@ body {
 
   #SecondaryTabs {
     padding: 10px;
-    border-radius: 5px;
+    border-radius: var(--v2p-box-radius);
     background-color: var(--v2p-color-bg-tabs);
 
     a {
@@ -1253,7 +1253,7 @@ body {
   /** 「设置页」的选项标签样式： */
   .tab {
     user-select: none;
-    border-radius: 3px;
+    border-radius: var(--v2p-button-radius);
     color: var(--v2p-color-foreground);
     background-color: transparent;
 
@@ -1265,7 +1265,7 @@ body {
   /** 「设置页」的选项标签样式： */
   .tab_current {
     user-select: none;
-    border-radius: 5px;
+    border-radius: var(--v2p-button-radius);
     color: var(--v2p-color-bg-content);
     background-color: var(--v2p-color-foreground);
   }
@@ -1385,7 +1385,7 @@ body {
   .box {
     .item_node {
       border-color: var(--v2p-color-border);
-      border-radius: 5px;
+      border-radius: var(--v2p-button-radius);
       font-size: 12px;
       color: var(--v2p-color-font-secondary);
 

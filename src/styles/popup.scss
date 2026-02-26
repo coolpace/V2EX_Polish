@@ -86,7 +86,7 @@ button {
   align-items: center;
   justify-content: center;
   padding: 5px 8px;
-  border-radius: 5px;
+  border-radius: var(--v2p-button-radius);
   color: var(--v2p-color-foreground);
   text-decoration: none;
   background-color: var(--v2p-color-button-background);
@@ -109,7 +109,7 @@ button {
   align-items: center;
   width: 100%;
   padding: 4px 6px;
-  border-radius: 5px;
+  border-radius: var(--v2p-box-radius);
   font-size: 14px;
   background-color: var(--v2p-color-bg-tabs);
 
@@ -121,7 +121,7 @@ button {
     justify-content: center;
     min-height: 30px;
     padding: 0 10px;
-    border-radius: 3px;
+    border-radius: var(--v2p-button-radius);
     letter-spacing: 1px;
 
     &:hover {
@@ -224,7 +224,7 @@ button {
 
     .topic-item-action-remove {
       padding: 1px 6px;
-      border-radius: 2px;
+      border-radius: var(--v2p-button-radius);
       color: var(--v2p-color-foreground);
       background-color: var(--v2p-color-bg-block-darker);
       box-shadow: var(--v2p-box-shadow);
@@ -258,7 +258,7 @@ button {
     .payload {
       margin-top: 5px;
       padding: 5px;
-      border-radius: 5px;
+      border-radius: var(--v2p-box-radius);
       background-color: var(--v2p-color-bg-block);
     }
   }
@@ -280,28 +280,39 @@ button {
         align-items: center;
       }
 
-      .description {
+      // PAT 设置部分样式（与 options.scss 保持一致）
+      .token-form-title {
+        margin-bottom: 8px;
+        font-size: 15px;
+        font-weight: bold;
+
+        @include share.settings-title-sup;
+      }
+
+      .token-desc {
         @include share.token-description;
+      }
 
-        ul {
-          padding: 10px 0;
+      .token-usage-list {
+        padding: 10px 0;
 
-          li {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
+        .token-usage-item {
+          display: flex;
+          align-items: center;
+          font-size: 13px;
 
-            & ~ li {
-              margin-top: 6px;
-            }
+          & ~ .token-usage-item {
+            margin-top: 6px;
+          }
 
-            > {
-              p {
-                flex: 1;
-              }
-            }
+          > p {
+            flex: 1;
           }
         }
+      }
+
+      .token-details {
+        @include share.details-collapse;
       }
     }
 
@@ -361,7 +372,7 @@ hr {
     #clear-storage,
     #sync-settings {
       padding: 0 5px;
-      border-radius: 3px;
+      border-radius: var(--v2p-button-radius);
       background-color: var(--v2p-color-button-background-hover);
       transition:
         background-color 0.2s,
@@ -405,10 +416,6 @@ hr {
   &.normal {
     @include share.common-button;
   }
-}
-
-.details {
-  @include share.details-collapse;
 }
 
 a {
@@ -516,7 +523,7 @@ a {
     width: 100%;
     height: 1em;
     margin: var(--gap) 0;
-    border-radius: 3px;
+    border-radius: var(--v2p-button-radius);
     background-color: var(--v2p-color-bg-block);
   }
 
@@ -527,7 +534,7 @@ a {
     justify-content: space-between;
     margin: var(--gap) -5px;
     padding: 1px 5px;
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     font-size: 12px;
     background-color: var(--v2p-color-button-background-hover);
 

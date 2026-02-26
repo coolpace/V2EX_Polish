@@ -68,7 +68,7 @@ body {
   gap: 0 10px;
   align-items: center;
   padding: 8px 18px;
-  border-radius: 5px;
+  border-radius: var(--v2p-button-radius);
 
   &:hover {
     background-color: var(--v2p-color-button-background-hover);
@@ -125,7 +125,7 @@ body {
 .backup-tip {
   margin-bottom: 20px;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: var(--v2p-box-radius);
   font-size: 14px;
   background-color: var(--v2p-color-bg-block);
 }
@@ -211,7 +211,7 @@ body {
             .tpv-main-left {
               position: relative;
               flex: 1;
-              border-radius: 5px;
+              border-radius: var(--v2p-box-radius);
               background-color: var(--v2p-color-bg-content);
 
               .tpv-main-line {
@@ -233,7 +233,7 @@ body {
             .tpv-main-right {
               width: 25%;
               height: 65%;
-              border-radius: 5px;
+              border-radius: var(--v2p-box-radius);
               background-color: var(--v2p-color-bg-content);
             }
           }
@@ -349,7 +349,7 @@ body {
       }
 
       &:focus {
-        border-color: var(--v2p-color-accent-400);
+        border-color: var(--v2p-color-border-darker);
       }
     }
 
@@ -412,7 +412,7 @@ fieldset {
       z-index: 1;
       width: 16px;
       height: 16px;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
 
       &:hover {
         .usage-popover {
@@ -426,7 +426,7 @@ fieldset {
         right: -5px;
         min-width: 180px;
         padding: 10px;
-        border-radius: 5px;
+        border-radius: var(--v2p-popup-radius);
         font-size: 12px;
         visibility: hidden;
         background-color: var(--v2p-color-bg-content);
@@ -487,7 +487,7 @@ fieldset {
         > img {
           width: 30px;
           height: 30px;
-          border-radius: 5px;
+          border-radius: var(--v2p-box-radius);
           background-color: var(--v2p-color-bg-block);
         }
       }
@@ -508,7 +508,7 @@ fieldset {
       align-items: center;
       justify-content: center;
       padding: 2px 6px;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       background-color: var(--v2p-color-bg-block);
 
       &.tag-item-tag-add {
@@ -570,7 +570,7 @@ fieldset {
     gap: 10px;
     justify-content: center;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: var(--v2p-box-radius);
     background-color: var(--v2p-color-bg-block);
   }
 
@@ -578,7 +578,7 @@ fieldset {
     position: relative;
     width: 48px;
     height: 48px;
-    border-radius: 5px;
+    border-radius: var(--v2p-box-radius);
     background-color: var(--v2p-color-main-300);
   }
 
@@ -588,7 +588,7 @@ fieldset {
     width: max-content;
     padding: var(--v2p-spacing-box);
     border: 1px solid var(--box-border-color);
-    border-radius: 8px;
+    border-radius: var(--v2p-box-radius);
     background: var(--v2p-color-bg-widget);
     backdrop-filter: blur(16px);
     box-shadow: var(--v2p-widget-shadow);
@@ -624,7 +624,7 @@ fieldset {
   .userinfo-avatar {
     width: 73px;
     height: 73px;
-    border-radius: 6px;
+    border-radius: var(--v2p-box-radius);
     background-color: var(--v2p-color-main-200);
   }
 
@@ -635,7 +635,7 @@ fieldset {
 
     div {
       height: 15px;
-      border-radius: 4px;
+      border-radius: var(--v2p-button-radius);
       background-color: var(--v2p-color-main-200);
     }
   }
@@ -690,7 +690,7 @@ fieldset {
     width: 100%;
     min-height: 1em;
     margin: var(--gap) 0;
-    border-radius: 3px;
+    border-radius: var(--v2p-button-radius);
     background-color: var(--v2p-color-bg-block);
   }
 
@@ -701,7 +701,7 @@ fieldset {
     justify-content: space-between;
     margin: var(--gap) -5px;
     padding: 1px 5px;
-    border-radius: 4px;
+    border-radius: var(--v2p-button-radius);
     font-size: 12px;
     background-color: var(--v2p-color-button-background-hover);
 
