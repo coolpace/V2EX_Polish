@@ -22,7 +22,7 @@ import {
 import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, RequestMessage, StorageKey, V2EX } from '../constants'
-import { initTheme, replaceEmojiWithHD } from '../contents/helpers'
+import { initTheme, replaceEmojiWithHD, setFont } from '../contents/helpers'
 import { iconLoading } from '../icons'
 import {
   fetchHotTopics,
@@ -565,6 +565,7 @@ window.addEventListener('load', () => {
   void getStorage().then((storage) => {
     const options = storage[StorageKey.Options]
     initTheme({ autoSwitch: options.theme.autoSwitch, themeType: options.theme.type })
+    setFont(options.font?.type ?? 'system')
     initTabs()
   })
 

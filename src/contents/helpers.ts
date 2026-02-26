@@ -26,6 +26,7 @@ import {
   StorageKey,
 } from '../constants'
 import type {
+  FontType,
   Member,
   MemberTag,
   ReadingItem,
@@ -425,6 +426,43 @@ export function transformEmoji(textValue: string) {
  */
 export function getTagsText(tags: Tag[]): string {
   return tags.join('，')
+}
+
+/**
+ * 向页面 head 注入字体 CSS 链接（幂等，重复调用安全）。
+ * 用于绕过 Chrome 扩展 content script CSS 中 @import 规则被静默忽略的限制。
+ */
+function ensureFontStylesheet(id: string, href: string) {
+  if (!document.getElementById(id)) {
+    const link = document.createElement('link')
+    link.id = id
+    link.rel = 'stylesheet'
+    link.href = href
+    document.head.appendChild(link)
+  }
+}
+
+export function setFont(type: FontType) {
+  if (type === 'system') {
+    document.body.style.removeProperty('font-family')
+  }
+  else if (type === 'vivoSans') {
+    document.body.style.setProperty('font-family', 'vivoSans, system-ui, sans-serif')
+  }
+  else if (type === 'notoSans') {
+    ensureFontStylesheet(
+      'v2p-font-noto-sans',
+      'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400..900&display=swap',
+    )
+    document.body.style.setProperty('font-family', '\'Noto Sans SC\', system-ui, sans-serif')
+  }
+  else if (type === 'lxgwWenKai') {
+    ensureFontStylesheet(
+      'v2p-font-lxgw-wenkai',
+      'https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css',
+    )
+    document.body.style.setProperty('font-family', '\'LXGW WenKai\', system-ui, sans-serif')
+  }
 }
 
 export function setTheme(type: ThemeType) {

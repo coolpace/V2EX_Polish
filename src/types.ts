@@ -21,6 +21,8 @@ export interface SettingsSyncInfo {
 
 export type ThemeType = 'light-default' | 'dark-default' | 'dawn' | 'minimalist'
 
+export type FontType = 'system' | 'vivoSans' | 'notoSans' | 'lxgwWenKai'
+
 /** V2EX Polish 选项设置。 */
 export interface Options {
   /** 链接打开方式：是否在新标签页中打开主题链接 */
@@ -84,6 +86,12 @@ export interface Options {
 
   /** 是否隐藏用户账号信息 */
   hideAccount?: boolean
+
+  /** 界面字体配置 */
+  font?: {
+    /** 字体类型：系统默认或在线字体 */
+    type: FontType
+  }
 }
 
 export interface API_Info {

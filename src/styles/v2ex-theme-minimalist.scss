@@ -42,7 +42,7 @@ body.v2p-theme-minimalist,
   --v2p-color-bg-input: var(--v2p-color-background);
   --v2p-color-bg-search: var(--v2p-color-bg-content);
   --v2p-color-bg-search-active: var(--v2p-color-bg-search);
-  --v2p-color-bg-widget: var(--v2p-color-background);
+  --v2p-color-bg-widget: var(--v2p-color-bg-content);
   --v2p-color-bg-reply: var(--v2p-color-background);
   --v2p-color-bg-tooltip: var(--v2p-color-background);
   --v2p-color-bg-tabs: var(--v2p-color-background);
@@ -50,8 +50,8 @@ body.v2p-theme-minimalist,
   --v2p-color-bg-avatar: var(--v2p-color-background);
   --v2p-color-bg-block: var(--v2p-color-background);
   --v2p-color-bg-block-darker: var(--v2p-color-background);
-  --v2p-color-bg-link: var(--v2p-color-background);
-  --v2p-color-bg-link-hover: var(--v2p-color-button-background);
+  --v2p-color-bg-link: transparent;
+  --v2p-color-bg-link-hover: var(--v2p-color-background);
 
   /* ---- 背景 ---- */
 
@@ -62,20 +62,20 @@ body.v2p-theme-minimalist,
   --v2p-color-divider: lab(30.7907% 22.35 -63.8417 / 20%);
   --v2p-color-border: var(--v2p-color-divider);
   --v2p-color-input-border: var(--v2p-color-border);
-  --v2p-color-border-darker: var(--v2p-color-border);
+  --v2p-color-border-darker: lab(30.7907% 22.35 -63.8417 / 30%);
   --v2p-color-link-visited: var(--v2p-color-font-secondary);
   --v2p-color-error: #ef4444;
   --v2p-color-bg-error: #fee2e2;
   --v2p-color-cell-num: var(--v2p-color-font-secondary);
   --v2p-box-radius: 0;
   --v2p-input-radius: 4px;
-  --v2p-button-radius: 4px;
-  --v2p-popup-radius: 0;
+  --v2p-button-radius: var(--v2p-input-radius);
+  --v2p-popup-radius: var(--v2p-input-radius);
 
   /* ==== 阴影 ==== */
   --v2p-box-shadow: none;
-  --v2p-widget-shadow: none;
-  --v2p-toast-shadow: none;
+  --v2p-widget-shadow: 0 2px 8px -2px lab(30.7907% 22.35 -63.8417 / 12%);
+  --v2p-toast-shadow: 0 4px 12px -2px lab(30.7907% 22.35 -63.8417 / 15%);
 
   /* ---- 阴影 ---- */
 

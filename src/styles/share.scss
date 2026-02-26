@@ -169,9 +169,10 @@
   }
 
   &:is(:focus, :focus-within) {
+    border-color: var(--button-border-hover-color);
     background-color: transparent;
     outline: none;
-    box-shadow: 0 0 0 1px var(--button-border-color);
+    box-shadow: none;
   }
 }
 
@@ -211,6 +212,7 @@
 }
 
 @mixin select-box {
+  padding: 6px 8px;
   border: 1px solid var(--v2p-color-border);
   border-radius: 4px;
   color: var(--v2p-color-foreground);
@@ -230,4 +232,204 @@
   font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
+}
+
+// ==============================
+// 备份与同步相关样式
+// ==============================
+
+// 备份表单容器
+@mixin backup-form {
+  font-size: 13px;
+
+  .backup-form-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: bold;
+
+    sup {
+      margin-left: 5px;
+      padding: 2px 4px;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      font-weight: normal;
+      line-height: 1;
+      color: var(--v2p-color-orange-400);
+      background-color: var(--v2p-color-orange-100);
+    }
+  }
+
+  .storage-data-bar {
+    display: inline-flex;
+    gap: 0 20px;
+    align-items: center;
+    margin-top: 10px;
+    padding: 5px 8px;
+    border-radius: var(--v2p-input-radius);
+    color: var(--v2p-color-foreground);
+    background-color: var(--v2p-color-bg-block);
+  }
+
+  // 表单项样式
+  .form-item {
+    display: flex;
+    gap: 0 20px;
+    align-items: center;
+    font-size: 13px;
+
+    & ~ .form-item {
+      margin-top: 5px;
+    }
+
+    > label {
+      min-width: 95px;
+      font-size: inherit;
+      font-weight: normal;
+      color: var(--v2p-color-font-secondary);
+    }
+
+    > input {
+      background-color: transparent;
+    }
+  }
+
+  @at-root {
+    // 清除存储和同步设置按钮
+    #clear-storage,
+    #sync-settings {
+      padding: 0 5px;
+      border-radius: 3px;
+      background-color: var(--v2p-color-button-background-hover);
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+    }
+
+    #clear-storage {
+      &:hover {
+        color: var(--v2p-color-error);
+        background-color: var(--v2p-color-bg-error);
+      }
+    }
+
+    #sync-settings {
+      &:hover {
+        color: var(--v2p-color-accent-600);
+        background-color: var(--v2p-color-accent-100);
+      }
+    }
+  }
+}
+
+// 设置页面标题的上标样式（通用）
+@mixin settings-title-sup {
+  sup {
+    cursor: help;
+    margin-left: 5px;
+    padding: 3px 4px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    font-weight: normal;
+    line-height: 1;
+    color: var(--v2p-color-orange-400);
+    background-color: var(--v2p-color-orange-100);
+  }
+}
+
+// PAT 输入框样式
+@mixin pat-input {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  gap: 0 10px;
+  align-items: center;
+  padding: 0 5px 0 0;
+  border: 1px solid var(--v2p-color-border);
+  border-radius: var(--v2p-input-radius);
+  font-size: 13px;
+  background-color: var(--v2p-color-bg-block);
+
+  &:has(.has-value) {
+    border: 1px solid var(--v2p-color-font-tertiary);
+    background-color: transparent;
+  }
+
+  #pat {
+    flex: 1;
+    padding: 9px 8px;
+    border: none;
+    background-color: transparent;
+    outline: none;
+
+    &::placeholder {
+      color: var(--v2p-color-font-secondary);
+    }
+
+    &.has-value {
+      opacity: 0.6;
+      filter: blur(6px);
+
+      &:focus {
+        opacity: 1;
+        filter: none;
+      }
+    }
+  }
+
+  .submit-btn {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--v2p-button-radius);
+    font-size: 12px;
+    color: var(--v2p-color-background);
+    white-space: nowrap;
+    background-color: var(--v2p-color-foreground);
+  }
+}
+
+// 详情折叠样式
+@mixin details-collapse {
+  padding: 5px 0;
+
+  summary:hover {
+    .summary-text {
+      text-decoration: underline dashed;
+      text-underline-offset: var(--v2p-underline-offset);
+    }
+  }
+
+  @at-root {
+    .details-content {
+      padding: 8px 0 0;
+      color: var(--v2p-color-font-secondary);
+    }
+  }
+}
+
+// Token/设置描述样式
+@mixin token-description {
+  padding-top: 20px;
+  font-size: 13px;
+
+  .token-desc-title {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .token-desc-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 10px 0 3px;
+  }
+
+  .learn-more {
+    padding: 10px 0;
+    font-size: 14px;
+  }
 }

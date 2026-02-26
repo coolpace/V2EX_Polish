@@ -11,8 +11,8 @@ import {
 } from 'lucide'
 
 import { StorageKey, V2EX } from '../constants'
-import { initTheme, setMemberTags } from '../contents/helpers'
-import type { Options, ThemeType } from '../types'
+import { initTheme, setFont, setMemberTags } from '../contents/helpers'
+import type { FontType, Options, ThemeType } from '../types'
 import { getStorage, setStorage } from '../utils'
 import { handleBackupForm, handleTokenForm } from './options.helper'
 
@@ -121,6 +121,9 @@ async function saveOptions() {
       enabled: $('#contextMenuEnabled').prop('checked'),
     },
     hideAccount: $('#hideAccount').prop('checked'),
+    font: {
+      type: ($('#font-type-select').val() as FontType) ?? 'system',
+    },
   }
 
   await setStorage(StorageKey.Options, currentOptions)
@@ -209,6 +212,10 @@ void (async function init() {
     )
     $('#contextMenuEnabled').prop('checked', !!options.contextMenu?.enabled)
     $('#hideAccount').prop('checked', options.hideAccount === true)
+
+    const fontType = options.font?.type ?? 'system'
+    $('#font-type-select').val(fontType)
+    setFont(fontType)
 
     $('input[type]').on('change', () => {
       void saveOptions()
@@ -481,5 +488,10 @@ void (async function init() {
     }
 
     $('#theme_autoSwitch').prop('checked', false)
+  })
+
+  $('#font-type-select').on('change', (ev) => {
+    const fontType = $(ev.currentTarget).val() as FontType
+    setFont(fontType)
   })
 })()

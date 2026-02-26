@@ -481,6 +481,9 @@ export const defaultOptions: Options = {
   contextMenu: {
     enabled: true,
   },
+  font: {
+    type: 'system',
+  },
 }
 
 export const enum MessageKey {

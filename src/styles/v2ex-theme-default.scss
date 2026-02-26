@@ -628,7 +628,7 @@ body {
     }
 
     .select2-results__option {
-      border-radius: 4px;
+      border-radius: var(--v2p-popup-radius);
     }
 
     .select2-results__option--highlighted.select2-results__option--selectable {
@@ -742,13 +742,15 @@ body {
     @include share.select-box;
 
     cursor: pointer;
-    padding: 7px 10.5px;
     border-radius: var(--v2p-input-radius);
     background-color: var(--v2p-color-bg-content);
 
-    &:hover,
-    &:focus {
+    &:hover {
       border-color: var(--v2p-color-input-border-focus);
+    }
+
+    &:focus {
+      border-color: var(--v2p-color-border);
     }
   }
 

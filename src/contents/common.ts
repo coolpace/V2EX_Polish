@@ -17,7 +17,7 @@ import {
   showRemoteSyncDialog,
 } from '../utils'
 import { $body, $infoCard, $wrapper } from './globals'
-import { openV2PSettings, toggleTheme } from './helpers'
+import { openV2PSettings, setFont, toggleTheme } from './helpers'
 
 if (isMobileView()) {
   $body.addClass('v2p-mobile')
@@ -32,6 +32,9 @@ void (async () => {
   if (options.theme.mode === 'compact') {
     $body.addClass('v2p-mode-compact')
   }
+
+  // 应用用户选择的界面字体。
+  setFont(options.font?.type ?? 'system')
 
   const $toggle = $('#Rightbar .light-toggle').addClass('v2p-color-mode-toggle')
 
@@ -357,6 +360,14 @@ void (async () => {
               $body.removeClass('v2p-mode-compact')
             }
           }
+        }
+
+        // 监听字体设置的变化，实时切换字体。
+        const newFontType = newOptions?.font?.type
+        const oldFontType = oldOptions?.font?.type
+
+        if (newFontType !== oldFontType) {
+          setFont(newFontType ?? 'system')
         }
       }
     }

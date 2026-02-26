@@ -15,7 +15,6 @@ body {
 body {
   width: 500px;
   height: 600px;
-  font-family: vivoSans, system-ui, sans-serif !important;
   font-size: 12px;
   color: var(--v2p-color-foreground);
   background-color: var(--v2p-color-bg-content);
@@ -273,16 +272,7 @@ button {
         font-size: 15px;
         font-weight: bold;
 
-        sup {
-          margin-left: 5px;
-          padding: 2px 4px;
-          border: 1px solid currentColor;
-          border-radius: 4px;
-          font-weight: normal;
-          line-height: 1;
-          color: var(--v2p-color-orange-400);
-          background-color: var(--v2p-color-orange-100);
-        }
+        @include share.settings-title-sup;
       }
 
       .settings-top {
@@ -291,19 +281,7 @@ button {
       }
 
       .description {
-        padding-top: 20px;
-
-        .description-title {
-          font-size: 15px;
-          font-weight: 500;
-        }
-
-        .description-icon {
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          margin: 0 10px 0 3px;
-        }
+        @include share.token-description;
 
         ul {
           padding: 10px 0;
@@ -324,63 +302,11 @@ button {
             }
           }
         }
-
-        .learn-more {
-          padding: 10px 0;
-          font-size: 14px;
-        }
       }
     }
 
     .pat-input {
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      gap: 0 10px;
-      align-items: center;
-      padding: 0 5px 0 0;
-      border: 1px solid var(--v2p-color-border);
-      border-radius: var(--v2p-input-radius);
-      background-color: var(--v2p-color-bg-block);
-
-      &:has(.has-value) {
-        border: 1px solid var(--v2p-color-font-tertiary);
-        background-color: transparent;
-      }
-
-      #pat {
-        flex: 1;
-        padding: 10px 8px;
-        border: none;
-        background-color: transparent;
-        outline: none;
-
-        &::placeholder {
-          color: var(--v2p-color-font-secondary);
-        }
-
-        &.has-value {
-          opacity: 0.6;
-          filter: blur(6px);
-
-          &:focus {
-            opacity: 1;
-            filter: none;
-          }
-        }
-      }
-
-      .submit-btn {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        padding: 5px 10px;
-        border: none;
-        border-radius: 5px;
-        font-size: 12px;
-        color: var(--v2p-color-background);
-        background-color: var(--v2p-color-foreground);
-      }
+      @include share.pat-input;
     }
 
     .form-item {
@@ -427,7 +353,7 @@ hr {
   align-items: center;
   margin-top: 10px;
   padding: 5px 8px;
-  border-radius: 5px;
+  border-radius: var(--v2p-input-radius);
   color: var(--v2p-color-foreground);
   background-color: var(--v2p-color-bg-block);
 
@@ -482,21 +408,7 @@ hr {
 }
 
 .details {
-  padding: 5px 0;
-
-  summary:hover {
-    .summary-text {
-      text-decoration: underline dashed;
-      text-underline-offset: var(--v2p-underline-offset);
-    }
-  }
-
-  @at-root {
-    .details-content {
-      padding: 8px 0 0;
-      color: var(--v2p-color-font-secondary);
-    }
-  }
+  @include share.details-collapse;
 }
 
 a {
@@ -574,7 +486,7 @@ a {
   overflow: hidden;
   width: 320px;
   margin-top: 20px;
-  border-radius: 8px;
+  border-radius: var(--v2p-box-radius);
   background-color: var(--v2p-color-bg-block);
 }
 

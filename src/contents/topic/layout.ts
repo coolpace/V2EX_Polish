@@ -149,6 +149,10 @@ export function handleLayout() {
     }
   }
 
+  // 初始化布局切换按钮的图标（设置默认图标）
+  $layoutToggle.html(iconLayoutH)
+  $layoutToggle.attr('title', '切换为水平布局')
+
   // 初始化时执行一次
   handleResize()
 
