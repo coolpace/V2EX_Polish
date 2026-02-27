@@ -74,7 +74,7 @@ export function handleContent() {
   const storage = getStorageSync()
   const options = storage[StorageKey.Options]
 
-  if (options.openInNewTab) {
+  if (options.topic.openMode !== 'default') {
     $topicContentBox
       .find('.topic_content a[href]')
       .prop('target', '_blank')

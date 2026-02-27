@@ -16,6 +16,17 @@ const MAX_RELATED_TOPICS = 10
 /** 最大提取的标签数量 */
 const MAX_TAGS = 3
 
+/** V2EX 回复数样式类选择器 */
+const REPLY_COUNT_SELECTOR = '.count_livid, .count_orange'
+
+/** HTML 转义 */
+function escapeHtml(text: string): string {
+  const div = document.createElement('div')
+  div.textContent = text
+
+  return div.innerHTML
+}
+
 /**
  * 从当前主题页面提取标签关键词
  */
@@ -51,8 +62,7 @@ function parseTagPageTopics(htmlText: string): RelatedTopic[] {
     $topicItems.each((_, item) => {
       const $item = $(item)
       const $topicLink = $item.find('.item_title .topic-link')
-      // V2EX 用 .count_livid（普通）或 .count_orange（热门）显示回复数
-      const $replyCount = $item.find('.count_livid, .count_orange')
+      const $replyCount = $item.find(REPLY_COUNT_SELECTOR)
 
       const title = $topicLink.text().trim()
       const url = $topicLink.attr('href')
@@ -70,7 +80,9 @@ function parseTagPageTopics(htmlText: string): RelatedTopic[] {
 
     return topics
   }
-  catch {
+  catch (error) {
+    console.error('[RelatedTopics] 解析标签页面失败:', error)
+
     return []
   }
 }
@@ -82,9 +94,11 @@ async function fetchRelatedTopics(tag: string): Promise<RelatedTopic[]> {
   try {
     const htmlText = await crawlTagPage(tag)
 
-    return parseTagPageTopics(htmlText).sort((a, b) => b.replies - a.replies)
+    return parseTagPageTopics(htmlText)
   }
-  catch {
+  catch (error) {
+    console.error(`[RelatedTopics] 获取标签 "${tag}" 失败:`, error)
+
     return []
   }
 }
@@ -99,42 +113,44 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
     return
   }
 
+  const shouldEnablePreview = isBrowserExtension()
+  const topicPreview = shouldEnablePreview ? useTopicPreview() : null
+
+  // 批量构建 HTML
+  const itemsHtml = topics.map((topic) => {
+    const previewBtnHtml = shouldEnablePreview && topicPreview
+      ? `<button class="v2p-topic-preview-btn" data-topic-id="${topic.id}" data-url="${topic.url}" data-title="${escapeHtml(topic.title)}">预览</button>`
+      : ''
+
+    return `
+      <div class="cell">
+        <div class="item_hot_topic_title">
+          <a href="${topic.url}" target="_blank">${escapeHtml(topic.title)}</a>
+          ${previewBtnHtml}
+        </div>
+      </div>
+    `
+  }).join('')
+
   const $relatedBox = $(`
     <div class="box">
       <div class="cell">
         <span class="fade">相关主题</span>
       </div>
+      ${itemsHtml}
     </div>
   `)
 
-  const shouldEnablePreview = isBrowserExtension()
-  const topicPreview = shouldEnablePreview ? useTopicPreview() : null
-  const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
-
-  topics.forEach((topic) => {
-    const $item = $(`
-      <div class="cell">
-        <div class="item_hot_topic_title">
-          <a href="${topic.url}" target="_blank">${topic.title}</a>
-        </div>
-      </div>
-    `)
-
-    if (shouldEnablePreview && topicPreview) {
-      $previewBtn
-        .clone()
-        .on('click', () => {
-          topicPreview.handlePreview({
-            topicId: topic.id,
-            topicTitle: topic.title,
-            linkHref: topic.url,
-          })
-        })
-        .appendTo($item.find('.item_hot_topic_title'))
-    }
-
-    $relatedBox.append($item)
-  })
+  if (shouldEnablePreview && topicPreview) {
+    $relatedBox.on('click', '.v2p-topic-preview-btn', function (this: HTMLElement) {
+      const $btn = $(this)
+      topicPreview.handlePreview({
+        topicId: $btn.data('topic-id'),
+        topicTitle: $btn.data('title'),
+        linkHref: $btn.data('url'),
+      })
+    })
+  }
 
   $rightbar.append($relatedBox)
 }
@@ -143,10 +159,19 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
  * 处理相关主题推荐功能
  */
 export async function handleRelatedTopics(): Promise<void> {
+  // 检查当前主题 ID
+  if (!pathTopicId) {
+    console.warn('[RelatedTopics] 无法获取当前主题 ID，跳过相关主题推荐')
+
+    return
+  }
+
   try {
     const tags = extractTopicTags()
 
     if (tags.length === 0) {
+      console.warn('[RelatedTopics] 当前主题没有标签，跳过相关主题推荐')
+
       return
     }
 
@@ -169,12 +194,15 @@ export async function handleRelatedTopics(): Promise<void> {
       .slice(0, MAX_RELATED_TOPICS)
 
     if (finalTopics.length === 0) {
+      console.warn('[RelatedTopics] 未找到相关主题')
+
       return
     }
 
     renderRelatedTopics(finalTopics)
+    console.warn(`[RelatedTopics] 成功渲染 ${finalTopics.length} 个相关主题`)
   }
-  catch {
-    // 静默处理错误，不影响页面其他功能
+  catch (error) {
+    console.error('[RelatedTopics] 获取相关主题失败:', error)
   }
 }

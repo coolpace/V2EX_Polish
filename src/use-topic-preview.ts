@@ -55,7 +55,7 @@ export function useTopicPreview() {
     tag: 'a',
   })
 
-  if (options.topic?.openMode === 'newTab') {
+  if (options.topic?.openMode !== 'default') {
     $detailBtn.prop('target', '_blank')
   }
 
@@ -94,7 +94,7 @@ export function useTopicPreview() {
         </a>
       `)
 
-      if (options.topic?.openMode === 'newTab') {
+      if (options.topic?.openMode !== 'default') {
         $titleLink.prop('target', '_blank')
       }
 
@@ -371,7 +371,7 @@ export function useTopicPreview() {
                 replaceCommentEmojiWithHD($commentCells)
               }
 
-              if (options.topic?.openMode === 'newTab') {
+              if (options.topic?.openMode !== 'default') {
                 $topicPreview.find('a').prop('target', '_blank')
               }
 

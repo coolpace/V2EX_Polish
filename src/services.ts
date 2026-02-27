@@ -31,8 +31,15 @@ const V2EX_API = `${V2EX_ORIGIN}/api/v2`
  *
  * 相关的接口文档参考：https://www.v2ex.com/p/7v9TEc53
  */
-async function legacyRequest<Data>(url: string, options?: RequestInit): Promise<Data> {
-  const res = await fetch(url, options)
+async function legacyRequest<Data>(
+  url: string,
+  options?: RequestInit & { timeout?: number },
+): Promise<Data> {
+  // 从 options 中排除 timeout，避免传递给 fetch
+  const opts = options ?? ({} as RequestInit & { timeout?: number })
+  const { timeout: timeoutValue, ...restOptions } = opts
+  const timeout = timeoutValue ?? FETCH_TIMEOUT.DEFAULT
+  const res = await fetchWithTimeout(url, timeout, restOptions)
 
   if (res.ok) {
     return res.json() as Data
@@ -75,13 +82,21 @@ export function fetchHotTopics(options?: RequestInit) {
   return legacyRequest<Topic[]>(`${V2EX_LEGACY_API}/topics/hot.json?r=${Date.now()}`, options)
 }
 
-async function request<Data>(url: string, options?: RequestInit): Promise<DataWrapper<Data>> {
+async function request<Data>(
+  url: string,
+  options?: RequestInit & { timeout?: number },
+): Promise<DataWrapper<Data>> {
   const storage = await getStorage()
   const PAT = storage[StorageKey.API]?.pat
 
-  const res = await fetch(url, {
-    ...options,
-    headers: { Authorization: PAT ? `Bearer ${PAT}` : '', ...options?.headers },
+  // 从 options 中排除 timeout，避免传递给 fetch
+  const opts = options ?? ({} as RequestInit & { timeout?: number })
+  const { timeout: timeoutValue, ...restOptions } = opts
+  const timeout = timeoutValue ?? FETCH_TIMEOUT.DEFAULT
+
+  const res = await fetchWithTimeout(url, timeout, {
+    ...restOptions,
+    headers: { Authorization: PAT ? `Bearer ${PAT}` : '', ...restOptions?.headers },
   })
 
   {
@@ -155,7 +170,7 @@ export async function uploadImage(file: File): Promise<string> {
   const clidenId = imgurClientIdPool[randomIndex]
 
   // 使用详情参考 Imgur API 文档：https://apidocs.imgur.com/。
-  const res = await fetch('https://api.imgur.com/3/upload', {
+  const res = await fetchWithTimeout('https://api.imgur.com/3/upload', FETCH_TIMEOUT.UPLOAD, {
     method: 'POST',
     headers: { Authorization: `Client-ID ${clidenId}` },
     body: formData,
@@ -220,7 +235,7 @@ export async function thankReply(params: {
  * 爬取主题内容页，返回 HTML 纯文本。
  */
 export async function crawlTopicPage(path: string, page = '1'): Promise<string> {
-  const res = await fetch(`${V2EX_ORIGIN}${path}?p=${page}`)
+  const res = await fetchWithTimeout(`${V2EX_ORIGIN}${path}?p=${page}`, FETCH_TIMEOUT.CRAWL)
   const htmlText = await res.text()
 
   return htmlText
@@ -230,20 +245,65 @@ export async function crawlTopicPage(path: string, page = '1'): Promise<string> 
  * 爬取用户内容页，返回 HTML 纯文本。
  */
 export async function crawlUserPage(username: string): Promise<string> {
-  const res = await fetch(`${V2EX_ORIGIN}/member/${username}`)
+  const res = await fetchWithTimeout(`${V2EX_ORIGIN}/member/${username}`, FETCH_TIMEOUT.CRAWL)
   const htmlText = await res.text()
 
   return htmlText
 }
 
 /**
+ * 网络请求超时时间配置（毫秒）
+ */
+const FETCH_TIMEOUT = {
+  DEFAULT: 10000,
+  CRAWL: 8000,
+  UPLOAD: 60000,
+  BACKGROUND: 20000,
+}
+
+/**
+ * 带超时的 fetch 请求
+ *
+ * @param url - 请求 URL
+ * @param timeout - 超时时间（毫秒），默认为 10 秒
+ * @param options - fetch 选项
+ * @returns Promise<Response>
+ */
+async function fetchWithTimeout(
+  url: string,
+  timeout = FETCH_TIMEOUT.DEFAULT,
+  options?: RequestInit,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      ...options,
+    })
+    clearTimeout(timeoutId)
+
+    return res
+  }
+  catch (error) {
+    clearTimeout(timeoutId)
+    throw error
+  }
+}
+
+/**
  * 爬取标签页面，返回 HTML 纯文本。
  */
 export async function crawlTagPage(tag: string): Promise<string> {
-  const res = await fetch(`${V2EX_ORIGIN}/tag/${encodeURIComponent(tag)}`)
-  const htmlText = await res.text()
+  const url = `${V2EX_ORIGIN}/tag/${encodeURIComponent(tag)}`
+  const res = await fetchWithTimeout(url)
 
-  return htmlText
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${res.statusText} for ${url}`)
+  }
+
+  return await res.text()
 }
 
 /**

@@ -290,7 +290,7 @@ function handleFilteredComments() {
                 popupControl: modalPopupControl,
                 commentData,
                 shouldWrap: false,
-                openInNewTab: options.openInNewTab,
+                openInNewTab: options.topic.openMode !== 'default',
               })
             }
           })
@@ -550,7 +550,7 @@ export async function handleComments() {
         $trigger: $cellDom.find('.avatar, .dark'),
         popupControl,
         commentData: currentComment,
-        openInNewTab: options.openInNewTab,
+        openInNewTab: options.topic.openMode !== 'default',
       })
 
       if (memberName === loginName && !options.hideAccount) {
@@ -672,7 +672,7 @@ export async function handleComments() {
         $trigger: $opAvatar,
         popupControl,
         commentData: { memberName, memberAvatar, memberLink },
-        openInNewTab: options.openInNewTab,
+        openInNewTab: options.topic.openMode !== 'default',
       })
 
       processAvatar({
@@ -680,7 +680,7 @@ export async function handleComments() {
         popupControl,
         commentData: { memberName, memberAvatar, memberLink },
         shouldWrap: false,
-        openInNewTab: options.openInNewTab,
+        openInNewTab: options.topic.openMode !== 'default',
       })
 
       // MARK: 获取用户注册时间信息

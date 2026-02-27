@@ -29,6 +29,7 @@ interface ProcessAvatar {
   commentData: Pick<CommentData, 'memberName' | 'memberAvatar' | 'memberLink'>
   /** 是否要包裹一层可点击链接。 */
   shouldWrap?: boolean
+  /** 是否在新标签页中打开用户主页。 */
   openInNewTab?: boolean
   /** 点击「添加用户标签」按钮的回调。 */
   onSetTagsClick?: () => void

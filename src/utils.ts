@@ -850,9 +850,17 @@ function scheduleBackup() {
     controller = new AbortController()
     const { signal } = controller
 
+    const timeoutId = setTimeout(() => {
+      if (controller) {
+        controller.abort()
+      }
+    }, 15000)
+
     void getStorage(false)
       .then((settings) => setV2P_Settings(settings, signal))
       .catch((err) => {
+        clearTimeout(timeoutId)
+
         // AbortError 是正常的取消行为，无需报告
         if (err instanceof DOMException && err.name === 'AbortError') {
           return
