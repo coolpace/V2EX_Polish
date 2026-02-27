@@ -1,9 +1,11 @@
 import { createButton } from '../../components/button'
 import { hoverDelay, type PopupControl } from '../../components/popup'
 import { createToast } from '../../components/toast'
+import { StorageKey } from '../../constants'
 import { blockUser, crawlUserPage, fetchUserInfo, parseUserTopics } from '../../services'
 import type { CommentData, Member, UserTopicItem } from '../../types'
-import { formatTimestamp } from '../../utils'
+import { useTopicPreview } from '../../use-topic-preview'
+import { formatTimestamp, getStorageSync, isBrowserExtension } from '../../utils'
 import { getRegisterDays } from '../helpers'
 import { openTagsSetter } from './content'
 
@@ -50,6 +52,9 @@ export function processAvatar(params: ProcessAvatar) {
   } = params
 
   const { memberName, memberAvatar, memberLink } = commentData
+
+  // 只在浏览器扩展环境中启用主题预览功能，避免在非扩展环境中创建无效的模态框。
+  const topicPreview = isBrowserExtension() ? useTopicPreview() : null
 
   let abortController: AbortController | null = null
 
@@ -121,6 +126,9 @@ export function processAvatar(params: ProcessAvatar) {
       })
       .appendTo($('.v2p-member-card-actions'))
 
+    const options = getStorageSync()[StorageKey.Options]
+    const openMode = options.topic?.openMode ?? 'default'
+
     /**
      * 渲染用户发帖记录列表。
      * 只有在成功获取到数据且有发帖记录时才插入 DOM。
@@ -128,10 +136,28 @@ export function processAvatar(params: ProcessAvatar) {
     const renderTopics = (topics: UserTopicItem[]) => {
       if (topics.length > 0) {
         const topicItemsHtml = topics
-          .map(
-            (topic) =>
-              `<a class="v2p-member-topic-item" href="${topic.url}" target="_blank" title="${topic.title}">${topic.title}</a>`,
-          )
+          .map((topic) => {
+            const match = topic.url.match(/\/t\/(\d+)/)
+            const topicId = match?.at(1) ?? ''
+
+            // 根据 openMode 决定链接的 target 属性
+            let linkTarget = '_self'
+
+            if (openMode === 'newTab') {
+              linkTarget = '_blank'
+            }
+
+            const previewBtnHtml = topicPreview
+              ? `<button class="v2p-topic-preview-btn" data-topic-id="${topicId}" data-url="${topic.url}" data-title="${topic.title}">预览</button>`
+              : ''
+
+            return `
+              <div class="v2p-member-topic-item-row" data-topic-id="${topicId}" data-url="${topic.url}" data-title="${topic.title}">
+                <a class="v2p-member-topic-item" href="${topic.url}" target="${linkTarget}" title="${topic.title}">${topic.title}</a>
+                ${previewBtnHtml}
+              </div>
+            `
+          })
           .join('')
 
         const $topicsSection = $(`
@@ -140,6 +166,29 @@ export function processAvatar(params: ProcessAvatar) {
             <div class="v2p-member-topics-list">${topicItemsHtml}</div>
           </div>
         `)
+
+        if (openMode === 'preview' && topicPreview) {
+          $topicsSection.on('click', '.v2p-member-topic-item', function (this: HTMLElement, ev) {
+            ev.preventDefault()
+            const $row = $(this).closest('.v2p-member-topic-item-row')
+            topicPreview.handlePreview({
+              topicId: $row.data('topic-id') as string,
+              topicTitle: $row.data('title') as string,
+              linkHref: $row.data('url') as string,
+            })
+          })
+        }
+
+        if (topicPreview) {
+          $topicsSection.on('click', '.v2p-topic-preview-btn', function (this: HTMLElement) {
+            const $btn = $(this)
+            topicPreview.handlePreview({
+              topicId: $btn.data('topic-id') as string,
+              topicTitle: $btn.data('title') as string,
+              linkHref: $btn.data('url') as string,
+            })
+          })
+        }
 
         $content.find('.v2p-member-card-actions').before($topicsSection)
       }

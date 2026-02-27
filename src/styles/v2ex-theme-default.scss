@@ -1089,7 +1089,7 @@ body {
             aspect-ratio: 1;
             width: 40px !important;
             height: 40px !important;
-            border-radius: var(--v2p-box-radius);
+            border-radius: var(--v2p-button-radius);
             background-color: var(--v2p-color-bg-avatar);
           }
         }
@@ -1124,7 +1124,7 @@ body {
             .avatar {
               width: 25px !important;
               height: 25px !important;
-              border-radius: var(--v2p-box-radius);
+              border-radius: var(--v2p-button-radius);
             }
           }
 

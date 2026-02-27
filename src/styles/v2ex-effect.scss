@@ -104,6 +104,9 @@ body {
     top: 0;
     right: 0;
     bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     height: 20px;
     font-size: 12px;
     backdrop-filter: blur(8px);
@@ -805,8 +808,32 @@ a.v2p-topic-preview-title-link {
   gap: 4px;
 }
 
+.v2p-member-topic-item-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  .v2p-topic-preview-btn {
+    max-width: 0;
+    height: 19px;
+    max-height: 0;
+    padding: 0 4px;
+    font-size: 12px;
+    visibility: hidden;
+  }
+
+  &:hover .v2p-topic-preview-btn {
+    max-width: unset;
+    max-height: unset;
+    visibility: visible;
+  }
+}
+
 .v2p-member-topic-item {
   overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  padding-left: 2px;
   border-radius: var(--v2p-button-radius);
   font-size: 13px;
   line-height: 1.5;
