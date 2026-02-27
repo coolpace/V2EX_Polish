@@ -4,6 +4,7 @@ import { createModal } from '../../components/modal'
 import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
+import { postTask } from '../../post-task'
 import { crawlTopicPage, fetchUserInfo, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
 import { escapeHTML, extractDays, getStorageSync, parseDateTime } from '../../utils'
@@ -478,6 +479,19 @@ export async function handleComments() {
                 if (cell instanceof HTMLElement) {
                   fragment.append(document.importNode(cell, true))
                 }
+              }
+            }
+
+            // 从最后一页的 HTML 中提取最新的 once 值，
+            // 因为预加载请求会导致服务器生成新的 once 并使旧值失效。
+            {
+              const lastPageHtml = pagesText[pagesText.length - 1]
+              const onceMatch = lastPageHtml.match(/once\s*=\s*"?(\d+)"?/)
+
+              if (onceMatch?.[1]) {
+                const latestOnce = onceMatch[1]
+                window.once = latestOnce
+                postTask(`window.once = "${latestOnce}"`)
               }
             }
 
