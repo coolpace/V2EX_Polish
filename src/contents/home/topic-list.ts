@@ -1,14 +1,17 @@
 import { createToast } from '../../components/toast'
-import { V2EX } from '../../constants'
+import { StorageKey, V2EX } from '../../constants'
 import { crawlTopicPage } from '../../services'
 import { useTopicPreview } from '../../use-topic-preview'
-import { isBrowserExtension } from '../../utils'
+import { getStorageSync, isBrowserExtension } from '../../utils'
 import { $topicList } from '../globals'
 
 export function handleTopicList() {
   if (!isBrowserExtension()) {
     return
   }
+
+  const options = getStorageSync()[StorageKey.Options]
+  const isPreviewMode = options.topic?.openMode === 'preview'
 
   const { handlePreview } = useTopicPreview()
 
@@ -29,6 +32,14 @@ export function handleTopicList() {
     const $lastChild = $topicInfo.find('> span:first-of-type')
     const $clonedTopicActions = $topicActions.clone()
     $clonedTopicActions.insertAfter($lastChild)
+
+    // 预览模式：点击主题标题时拦截默认导航，改为弹出预览窗口。
+    if (isPreviewMode) {
+      $itemTitle.find('.topic-link').on('click', (ev) => {
+        ev.preventDefault()
+        handlePreview({ topicId, topicTitle, linkHref })
+      })
+    }
 
     $ignoreBtn
       .clone()
@@ -81,16 +92,24 @@ export function handleTopicList() {
     .each((_, topicTitle) => {
       const $topicItem = $(topicTitle)
 
+      const $link = $topicItem.find('> a')
+      const linkHref = $link.attr('href')
+      const match = linkHref?.match(/\/t\/(\d+)/)
+      const topicId = match?.at(1)
+      const hotTopicTitle = $link.text()
+
+      // 预览模式：点击主题链接时弹出预览窗口。
+      if (isPreviewMode) {
+        $link.on('click', (ev) => {
+          ev.preventDefault()
+          handlePreview({ topicId, topicTitle: hotTopicTitle, linkHref })
+        })
+      }
+
       $previewBtn
         .clone()
         .on('click', () => {
-          const $link = $topicItem.find('> a')
-          const linkHref = $link.attr('href')
-          const match = linkHref?.match(/\/t\/(\d+)/)
-          const topicId = match?.at(1)
-          const topicTitle = $link.text()
-
-          handlePreview({ topicId, topicTitle, linkHref })
+          handlePreview({ topicId, topicTitle: hotTopicTitle, linkHref })
         })
         .appendTo($topicItem)
     })

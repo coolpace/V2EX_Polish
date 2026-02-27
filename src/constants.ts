@@ -454,7 +454,9 @@ export const imgurClientIdPool = [
 
 /** 扩展初始化提供的默认选项。 */
 export const defaultOptions: Options = {
-  openInNewTab: false,
+  topic: {
+    openMode: 'default',
+  },
   autoCheckIn: {
     enabled: true,
   },

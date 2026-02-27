@@ -31,7 +31,7 @@ void (async () => {
 
   handleLayout()
 
-  if (options.openInNewTab) {
+  if (options.topic?.openMode === 'newTab') {
     $topicHeader.find('a[href^="/member/"]').prop('target', '_blank')
 
     // 支持新页签打开用户主页链接。

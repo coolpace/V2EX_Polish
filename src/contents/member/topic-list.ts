@@ -1,8 +1,8 @@
 import { createToast } from '../../components/toast'
-import { V2EX } from '../../constants'
+import { StorageKey, V2EX } from '../../constants'
 import { crawlTopicPage } from '../../services'
 import { useTopicPreview } from '../../use-topic-preview'
-import { isBrowserExtension } from '../../utils'
+import { getStorageSync, isBrowserExtension } from '../../utils'
 import { $topicList } from '../globals'
 
 interface HandleTopicListParams {
@@ -16,6 +16,9 @@ export function handleTopicList(params: HandleTopicListParams) {
   }
 
   const { isOwner } = params
+
+  const options = getStorageSync()[StorageKey.Options]
+  const isPreviewMode = options.topic?.openMode === 'preview'
 
   const { handlePreview } = useTopicPreview()
 
@@ -36,6 +39,13 @@ export function handleTopicList(params: HandleTopicListParams) {
     const $lastChild = $topicInfo.find('> span:first-of-type')
     const $clonedTopicActions = $topicActions.clone()
     $clonedTopicActions.insertAfter($lastChild)
+
+    if (isPreviewMode) {
+      $itemTitle.find('.topic-link').on('click', (ev) => {
+        ev.preventDefault()
+        handlePreview({ topicId, topicTitle, linkHref })
+      })
+    }
 
     if (!isOwner) {
       $ignoreBtn

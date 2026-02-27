@@ -12,7 +12,7 @@ void (async () => {
   {
     $('#Main .tab').addClass('v2p-hover-btn')
 
-    if (options.openInNewTab) {
+    if (options.topic?.openMode === 'newTab') {
       $('#Main .topic-link, .item_hot_topic_title > a, .item_node, a[href="/write"]').prop(
         'target',
         '_blank',

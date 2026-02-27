@@ -118,14 +118,49 @@
 
                 <hr />
 
-                <!-- MARK: 新标签页打开主题 -->
-                <div class="form-checkbox">
-                  <input type="checkbox" id="openInNewTab" checked="false" />
-                  <div class="combo">
-                    <label for="openInNewTab">新标签页打开主题</label>
-                    <p>启用后点击主题将在新的页签中打开</p>
+                <!-- MARK: 主题打开方式 -->
+                <fieldset>
+                  <legend>主题打开方式</legend>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="topic_openMode_preview"
+                      name="topic.openMode"
+                      value="preview"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="topic_openMode_preview">预览方式查看</label>
+                      <p>点击主题链接时在当前页面弹出预览窗口</p>
+                    </div>
                   </div>
-                </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="topic_openMode_newTab"
+                      name="topic.openMode"
+                      value="newTab"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="topic_openMode_newTab">新标签页打开</label>
+                      <p>点击主题链接在新的页签中打开</p>
+                    </div>
+                  </div>
+                  <div class="form-radio">
+                    <input
+                      type="radio"
+                      id="topic_openMode_default"
+                      name="topic.openMode"
+                      value="default"
+                      checked="false"
+                    />
+                    <div class="combo">
+                      <label for="topic_openMode_default">当前标签页打开</label>
+                      <p>点击主题链接在当前页面中跳转</p>
+                    </div>
+                  </div>
+                </fieldset>
 
                 <hr />
 

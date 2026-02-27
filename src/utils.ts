@@ -772,7 +772,19 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
           }
 
           if (options) {
-            data = { ...mergedItems, [StorageKey.Options]: deepMerge(defaultOptions, options) }
+            const mergedOptions = deepMerge(defaultOptions, options)
+
+            // TODO: 临时迁移逻辑，用于兼容旧版 `openInNewTab` 字段。
+            // 当旧数据中存在 openInNewTab === true 且新字段 topic 尚未写入时，
+            // 自动将 topic.openMode 迁移为 'newTab'，避免用户设置静默丢失。
+            // 待大多数用户升级后（建议下一个大版本发布时）可安全删除此块。
+            const legacyOptions = options as unknown as Record<string, unknown>
+
+            if (legacyOptions['openInNewTab'] === true && !legacyOptions['topic']) {
+              mergedOptions.topic = { openMode: 'newTab' }
+            }
+
+            data = { ...mergedItems, [StorageKey.Options]: mergedOptions }
           }
           else {
             data = { ...mergedItems, [StorageKey.Options]: defaultOptions }

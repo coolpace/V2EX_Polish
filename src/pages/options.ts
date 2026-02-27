@@ -34,7 +34,9 @@ function loadIcons() {
 
 async function saveOptions() {
   const currentOptions: Options = {
-    openInNewTab: $('#openInNewTab').prop('checked'),
+    topic: {
+      openMode: ($('input[name="topic.openMode"]:checked').val() as Options['topic']['openMode']) ?? 'default',
+    },
     autoCheckIn: {
       enabled: $('#autoCheckIn').prop('checked'),
     },
@@ -168,7 +170,11 @@ void (async function init() {
 
     initTheme({ autoSwitch: options.theme.autoSwitch, themeType: options.theme.type })
 
-    $('#openInNewTab').prop('checked', options.openInNewTab)
+    const openMode = options.topic?.openMode ?? 'default'
+    $('#topic_openMode_default').prop('checked', openMode === 'default')
+    $('#topic_openMode_newTab').prop('checked', openMode === 'newTab')
+    $('#topic_openMode_preview').prop('checked', openMode === 'preview')
+
     $('#autoCheckIn').prop('checked', options.autoCheckIn.enabled)
 
     $('#theme_type_light-default').prop(

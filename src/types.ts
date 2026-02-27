@@ -25,8 +25,10 @@ export type FontType = 'system' | 'vivoSans' | 'notoSans' | 'lxgwWenKai'
 
 /** V2EX Polish 选项设置。 */
 export interface Options {
-  /** 链接打开方式：是否在新标签页中打开主题链接 */
-  openInNewTab: boolean
+  /** 主题查看方式配置 */
+  topic: {
+    openMode: 'default' | 'newTab' | 'preview'
+  }
 
   /** 自动签到功能配置 */
   autoCheckIn: {

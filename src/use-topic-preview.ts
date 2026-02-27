@@ -55,7 +55,7 @@ export function useTopicPreview() {
     tag: 'a',
   })
 
-  if (options.openInNewTab) {
+  if (options.topic?.openMode === 'newTab') {
     $detailBtn.prop('target', '_blank')
   }
 
@@ -94,7 +94,7 @@ export function useTopicPreview() {
         </a>
       `)
 
-      if (options.openInNewTab) {
+      if (options.topic?.openMode === 'newTab') {
         $titleLink.prop('target', '_blank')
       }
 
@@ -371,7 +371,7 @@ export function useTopicPreview() {
                 replaceCommentEmojiWithHD($commentCells)
               }
 
-              if (options.openInNewTab) {
+              if (options.topic?.openMode === 'newTab') {
                 $topicPreview.find('a').prop('target', '_blank')
               }
 
