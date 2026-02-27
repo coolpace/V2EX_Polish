@@ -3,14 +3,11 @@ import { useTopicPreview } from '../../use-topic-preview'
 import { isBrowserExtension } from '../../utils'
 import { pathTopicId } from '../globals'
 
-/** 相关主题的数据结构 */
 interface RelatedTopic {
-  /** 主题 ID */
   id: string
-  /** 主题标题 */
   title: string
-  /** 主题链接 */
   url: string
+  replies: number
 }
 
 /** 最大显示的相关主题数量 */
@@ -20,9 +17,7 @@ const MAX_RELATED_TOPICS = 10
 const MAX_TAGS = 3
 
 /**
- * 从当前主题页面提取标签关键词。
- *
- * @returns 前 3 个标签的文本数组
+ * 从当前主题页面提取标签关键词
  */
 function extractTopicTags(): string[] {
   const $tags = $('.cell .fr a.tag')
@@ -33,8 +28,6 @@ function extractTopicTags(): string[] {
       return false
     }
 
-    // 获取标签文本，去除 <li> 图标部分
-    // 标签结构：<a class="tag"><li class="fa fa-tag"></li> 标签名</a>
     const $el = $(el)
     const tagText = $el.text().trim()
 
@@ -47,10 +40,7 @@ function extractTopicTags(): string[] {
 }
 
 /**
- * 从标签页面 HTML 中解析主题列表。
- *
- * @param htmlText - 标签页面的 HTML 文本
- * @returns 主题列表数组
+ * 从标签页面 HTML 中解析主题列表
  */
 function parseTagPageTopics(htmlText: string): RelatedTopic[] {
   try {
@@ -61,17 +51,19 @@ function parseTagPageTopics(htmlText: string): RelatedTopic[] {
     $topicItems.each((_, item) => {
       const $item = $(item)
       const $topicLink = $item.find('.item_title .topic-link')
+      // V2EX 用 .count_livid（普通）或 .count_orange（热门）显示回复数
+      const $replyCount = $item.find('.count_livid, .count_orange')
 
       const title = $topicLink.text().trim()
       const url = $topicLink.attr('href')
+      const replies = parseInt($replyCount.text().trim(), 10) || 0
 
       if (title && url) {
-        // 从 URL 中提取主题 ID
         const match = url.match(/\/t\/(\d+)/)
         const id = match?.at(1)
 
         if (id) {
-          topics.push({ id, title, url })
+          topics.push({ id, title, url, replies })
         }
       }
     })
@@ -84,16 +76,13 @@ function parseTagPageTopics(htmlText: string): RelatedTopic[] {
 }
 
 /**
- * 根据标签获取相关主题列表。
- *
- * @param tag - 标签名称
- * @returns 主题列表数组
+ * 根据标签获取相关主题列表
  */
 async function fetchRelatedTopics(tag: string): Promise<RelatedTopic[]> {
   try {
     const htmlText = await crawlTagPage(tag)
 
-    return parseTagPageTopics(htmlText)
+    return parseTagPageTopics(htmlText).sort((a, b) => b.replies - a.replies)
   }
   catch {
     return []
@@ -101,9 +90,7 @@ async function fetchRelatedTopics(tag: string): Promise<RelatedTopic[]> {
 }
 
 /**
- * 渲染相关主题列表到右侧栏。
- *
- * @param topics - 相关主题列表
+ * 渲染相关主题列表到右侧栏
  */
 function renderRelatedTopics(topics: RelatedTopic[]): void {
   const $rightbar = $('#Rightbar')
@@ -112,7 +99,6 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
     return
   }
 
-  // 创建符合 V2EX 风格的 box 容器
   const $relatedBox = $(`
     <div class="box">
       <div class="cell">
@@ -121,12 +107,10 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
     </div>
   `)
 
-  // 仅在浏览器扩展环境下添加预览功能
   const shouldEnablePreview = isBrowserExtension()
   const topicPreview = shouldEnablePreview ? useTopicPreview() : null
   const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
 
-  // 添加主题列表项
   topics.forEach((topic) => {
     const $item = $(`
       <div class="cell">
@@ -136,7 +120,6 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
       </div>
     `)
 
-    // 为每个主题添加预览按钮
     if (shouldEnablePreview && topicPreview) {
       $previewBtn
         .clone()
@@ -153,51 +136,43 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
     $relatedBox.append($item)
   })
 
-  // 追加到右侧栏底部
   $rightbar.append($relatedBox)
 }
 
 /**
- * 处理相关主题推荐功能。
- *
- * 该函数会：
- * 1. 从当前主题页面提取前 3 个标签
- * 2. 根据标签并行获取相关主题
- * 3. 合并、去重、排除当前主题
- * 4. 渲染前 10 个相关主题到右侧栏底部
+ * 处理相关主题推荐功能
  */
 export async function handleRelatedTopics(): Promise<void> {
   try {
-    // 1. 提取标签关键词
     const tags = extractTopicTags()
 
     if (tags.length === 0) {
       return
     }
 
-    // 2. 并行获取所有标签的相关主题
     const topicsArrays = await Promise.all(tags.map(fetchRelatedTopics))
 
-    // 3. 合并所有主题并去重
-    const allTopics = topicsArrays.flat()
-    const uniqueTopicsMap = new Map<string, RelatedTopic>()
+    const seenIds = new Set<string>()
+    const candidateTopics: RelatedTopic[] = []
 
-    allTopics.forEach((topic) => {
-      // 排除当前正在浏览的主题
-      if (topic.id !== pathTopicId && !uniqueTopicsMap.has(topic.id)) {
-        uniqueTopicsMap.set(topic.id, topic)
+    for (const topics of topicsArrays) {
+      for (const topic of topics) {
+        if (topic.id !== pathTopicId && !seenIds.has(topic.id)) {
+          seenIds.add(topic.id)
+          candidateTopics.push(topic)
+        }
       }
-    })
+    }
 
-    // 4. 取前 10 个主题
-    const uniqueTopics = Array.from(uniqueTopicsMap.values()).slice(0, MAX_RELATED_TOPICS)
+    const finalTopics = candidateTopics
+      .sort((a, b) => b.replies - a.replies)
+      .slice(0, MAX_RELATED_TOPICS)
 
-    if (uniqueTopics.length === 0) {
+    if (finalTopics.length === 0) {
       return
     }
 
-    // 5. 渲染到右侧栏
-    renderRelatedTopics(uniqueTopics)
+    renderRelatedTopics(finalTopics)
   }
   catch {
     // 静默处理错误，不影响页面其他功能
