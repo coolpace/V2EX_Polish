@@ -306,11 +306,30 @@ function handleFilteredComments() {
           const storage = getStorageSync()
           const options = storage[StorageKey.Options]
 
-          $content.find('.cell[id^="r_"]').each((_, cellDom) => {
-            if (options.replyContent.autoFold) {
+          if (options.replyContent.autoFold) {
+            // 克隆时使用的是 clone()（不带 true），不会复制事件处理器。
+            // 如果原始 cell 已被 scheduleInChunks 异步处理过，
+            // 克隆后的 DOM 会包含 .v2p-reply-content 包裹结构和展开按钮，但按钮没有事件绑定。
+            // 直接为这些按钮重新绑定点击事件，避免拆解 DOM 后重新处理时高度测量不准确。
+            $content.find('.v2p-reply-content').each((_, contentBox) => {
+              const $expandBtn = $(contentBox).children('.v2p-expand-btn')
+
+              if ($expandBtn.length > 0) {
+                $expandBtn.off('click').on('click', (ev) => {
+                  ev.preventDefault()
+                  contentBox.classList.toggle('v2p-collapsed')
+                  $expandBtn.html(
+                    contentBox.classList.contains('v2p-collapsed') ? '展开回复' : '收起回复',
+                  )
+                })
+              }
+            })
+
+            // 处理尚未被 scheduleInChunks 处理的 cell（幂等性守卫会跳过已处理的）。
+            $content.find('.cell[id^="r_"]').each((_, cellDom) => {
               processReplyContent($(cellDom))
-            }
-          })
+            })
+          }
 
           handleLinkPreview()
         },
