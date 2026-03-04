@@ -41,7 +41,23 @@ interface TopicData {
 
 const topicDataCache = new Map<string, TopicData>()
 
+/** 单例实例，避免每次调用 useTopicPreview 都创建新的 modal。 */
+let singletonInstance: { handlePreview: (params: HandlePreviewParams) => void } | null = null
+
+interface HandlePreviewParams {
+  /** 主题 ID。不传则不会加载主题。 */
+  topicId?: string
+  /** 主题标题。不传则在加载时不显示标题。 */
+  topicTitle?: string
+  /** 主题链接。 */
+  linkHref?: string
+}
+
 export function useTopicPreview() {
+  if (singletonInstance) {
+    return singletonInstance
+  }
+
   const storage = getStorageSync()
 
   const options = storage[StorageKey.Options]
@@ -59,31 +75,32 @@ export function useTopicPreview() {
     $detailBtn.prop('target', '_blank')
   }
 
-  const modal = createModal({
-    root: $body,
-    onMount: ({ $actions }) => {
-      $actions.prepend($detailBtn)
-    },
-    onClose: ({ $title, $content }) => {
-      $title.empty()
-      $content.empty()
-      abortController?.abort()
-    },
-  })
+  let modal: ReturnType<typeof createModal> | null = null
 
-  interface HandlePreviewParams {
-    /** 主题 ID。不传则不会加载主题。 */
-    topicId?: string
-    /** 主题标题。不传则在加载时不显示标题。 */
-    topicTitle?: string
-    /** 主题链接。 */
-    linkHref?: string
+  const getModal = () => {
+    if (!modal) {
+      modal = createModal({
+        root: $body,
+        onMount: ({ $actions }) => {
+          $actions.prepend($detailBtn)
+        },
+        onClose: ({ $title, $content }) => {
+          $title.empty()
+          $content.empty()
+          abortController?.abort()
+        },
+      })
+    }
+
+    return modal
   }
 
   const handlePreview = (params: HandlePreviewParams) => {
     const { topicId, topicTitle = '', linkHref } = params
 
     if (topicId) {
+      const modal = getModal()
+
       modal.open()
 
       $detailBtn.prop('href', linkHref)
@@ -397,7 +414,7 @@ export function useTopicPreview() {
     }
   }
 
-  return {
-    handlePreview,
-  }
+  singletonInstance = { handlePreview }
+
+  return singletonInstance
 }

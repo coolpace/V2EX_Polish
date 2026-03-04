@@ -411,6 +411,7 @@ export function openTagsSetter(
           onClose: () => {
             // 如果没有通过确认按钮关闭，则返回 null（用户点击关闭或按 Esc）
             resolve(null)
+            modal.destroy()
           },
         })
 

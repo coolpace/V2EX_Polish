@@ -108,214 +108,215 @@ function handleFilteredComments() {
 
   const popularCount = popularCommentData.length
 
-  // 延迟构建 modal 内容：将评论克隆等重操作推迟到用户首次打开 modal 时执行，
-  // 避免在页面加载时就进行大量 DOM 克隆操作（100+ 评论时尤为明显）。
+  let modal: ReturnType<typeof createModal> | null = null
   let contentBuilt = false
 
-  const modal = createModal({
-    root: $main,
-    onOpen: ({ $mask, $title, $content }) => {
-      // 仅在首次打开时构建内容，后续打开复用已构建的 DOM。
-      if (!contentBuilt) {
-        const $template = $('<div class="v2p-modal-comments">')
+  $commentsBtn.on('click', () => {
+    if (!modal) {
+      modal = createModal({
+        root: $main,
+        onOpen: ({ $mask, $title, $content }) => {
+          // 仅在首次打开时构建内容，后续打开复用已构建的 DOM。
+          if (!contentBuilt) {
+            const $template = $('<div class="v2p-modal-comments">')
 
-        const $t1 = $template.clone().attr('data-tab-key', 'hot').addClass('v2p-tab-content-active')
-        const $t2 = $template.clone().attr('data-tab-key', 'recent')
-        const $t3 = $template.clone().attr('data-tab-key', 'op')
+            const $t1 = $template.clone().attr('data-tab-key', 'hot').addClass('v2p-tab-content-active')
+            const $t2 = $template.clone().attr('data-tab-key', 'recent')
+            const $t3 = $template.clone().attr('data-tab-key', 'op')
 
-        // MARK: 热门回复：
-        {
-          if (popularCount > 0) {
-            popularCommentData.forEach(({ index, refMemberNames }) => {
-              const $clonedCell = $commentCells.eq(index).clone()
+            // MARK: 热门回复：
+            {
+              if (popularCount > 0) {
+                popularCommentData.forEach(({ index, refMemberNames }) => {
+                  const $clonedCell = $commentCells.eq(index).clone()
 
-              // 禁用回复操作和楼层锚点。
-              $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-              $clonedCell.find('.no').css('pointer-events', 'none')
+                  // 禁用回复操作和楼层锚点。
+                  $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+                  $clonedCell.find('.no').css('pointer-events', 'none')
 
-              const firstRefMember = refMemberNames?.at(0)
+                  const firstRefMember = refMemberNames?.at(0)
 
-              if (firstRefMember) {
-                // 找出回复的是哪一条回复。
-                const replyMember = commentDataList.findLast(
-                  (it, idx) => idx < index && it.memberName === firstRefMember,
-                )
+                  if (firstRefMember) {
+                    // 找出回复的是哪一条回复。
+                    const replyMember = commentDataList.findLast(
+                      (it, idx) => idx < index && it.memberName === firstRefMember,
+                    )
 
-                if (replyMember) {
-                  $clonedCell.prepend(generateReplyRefHTML(replyMember))
-                }
+                    if (replyMember) {
+                      $clonedCell.prepend(generateReplyRefHTML(replyMember))
+                    }
+                  }
+
+                  $t1.append($clonedCell)
+                })
+              }
+              else {
+                $t1.append($('<div>暂无热门回复</div>').css({ padding: '20px', textAlign: 'center' }))
               }
 
-              $t1.append($clonedCell)
-            })
-          }
-          else {
-            $t1.append($('<div>暂无热门回复</div>').css({ padding: '20px', textAlign: 'center' }))
-          }
+              $content.append($t1)
+            }
 
-          $content.append($t1)
-        }
+            // MARK: 最新回复：
+            {
+              const len = commentDataList.length
+              const displayNum
+                = len < 10
+                  ? len
+                  : len <= 10
+                    ? 5
+                    : len <= 30
+                      ? 10
+                      : len <= 60
+                        ? 20
+                        : len <= 100
+                          ? 40
+                          : len <= 200
+                            ? 60
+                            : 90
 
-        // MARK: 最新回复：
-        {
-          const len = commentDataList.length
-          const displayNum
-            = len < 10
-              ? len
-              : len <= 10
-                ? 5
-                : len <= 30
-                  ? 10
-                  : len <= 60
-                    ? 20
-                    : len <= 100
-                      ? 40
-                      : len <= 200
-                        ? 60
-                        : 90
+              if (displayNum > 0) {
+                const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
 
-          if (displayNum > 0) {
-            const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
+                recentCommentData.forEach(({ index, refMemberNames }) => {
+                  const $clonedCell = $commentCells.eq(index).clone()
 
-            recentCommentData.forEach(({ index, refMemberNames }) => {
-              const $clonedCell = $commentCells.eq(index).clone()
+                  // 禁用回复操作和楼层锚点。
+                  $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+                  $clonedCell.find('.no').css('pointer-events', 'none')
 
-              // 禁用回复操作和楼层锚点。
-              $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-              $clonedCell.find('.no').css('pointer-events', 'none')
+                  const firstRefMember = refMemberNames?.at(0)
 
-              const firstRefMember = refMemberNames?.at(0)
+                  if (firstRefMember) {
+                    // 找出回复的是哪一条回复。
+                    const replyMember = commentDataList.findLast(
+                      (it, idx) => idx < index && it.memberName === firstRefMember,
+                    )
 
-              if (firstRefMember) {
-                // 找出回复的是哪一条回复。
-                const replyMember = commentDataList.findLast(
-                  (it, idx) => idx < index && it.memberName === firstRefMember,
-                )
+                    if (replyMember) {
+                      $clonedCell.prepend(generateReplyRefHTML(replyMember))
+                    }
+                  }
 
-                if (replyMember) {
-                  $clonedCell.prepend(generateReplyRefHTML(replyMember))
-                }
+                  $t2.append($clonedCell)
+                })
+              }
+              else {
+                $t2.append($('<div>暂无最近回复</div>').css({ padding: '20px', textAlign: 'center' }))
               }
 
-              $t2.append($clonedCell)
-            })
-          }
-          else {
-            $t2.append($('<div>暂无最近回复</div>').css({ padding: '20px', textAlign: 'center' }))
-          }
+              $content.append($t2)
+            }
 
-          $content.append($t2)
-        }
+            // MARK: 题主回复：
+            {
+              const opCommentData = commentDataList.filter(
+                ({ memberName }) => memberName === topicOwnerName,
+              )
 
-        // MARK: 题主回复：
-        {
-          const opCommentData = commentDataList.filter(
-            ({ memberName }) => memberName === topicOwnerName,
-          )
+              if (opCommentData.length > 0) {
+                opCommentData.forEach(({ index, refMemberNames }) => {
+                  const $clonedCell = $commentCells.eq(index).clone()
 
-          if (opCommentData.length > 0) {
-            opCommentData.forEach(({ index, refMemberNames }) => {
-              const $clonedCell = $commentCells.eq(index).clone()
+                  // 禁用回复操作和楼层锚点。
+                  $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+                  $clonedCell.find('.no').css('pointer-events', 'none')
 
-              // 禁用回复操作和楼层锚点。
-              $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-              $clonedCell.find('.no').css('pointer-events', 'none')
+                  const firstRefMember = refMemberNames?.at(0)
 
-              const firstRefMember = refMemberNames?.at(0)
+                  if (firstRefMember) {
+                    // 找出回复的是哪一条回复。
+                    const replyMember = commentDataList.findLast(
+                      (it, idx) => idx < index && it.memberName === firstRefMember,
+                    )
 
-              if (firstRefMember) {
-                // 找出回复的是哪一条回复。
-                const replyMember = commentDataList.findLast(
-                  (it, idx) => idx < index && it.memberName === firstRefMember,
-                )
+                    if (replyMember) {
+                      $clonedCell.prepend(generateReplyRefHTML(replyMember))
+                    }
+                  }
 
-                if (replyMember) {
-                  $clonedCell.prepend(generateReplyRefHTML(replyMember))
-                }
+                  $t3.append($clonedCell)
+                })
+              }
+              else {
+                $t3.append($('<div>暂无题主回复</div>').css({ padding: '20px', textAlign: 'center' }))
               }
 
-              $t3.append($clonedCell)
+              $content.append($t3)
+            }
+
+            const $tabs = $(`
+              <div class="v2p-modal-comment-tabs">
+                <div data-tab-key="hot" class="v2p-tab-active">热门回复</div>
+                <div data-tab-key="recent">最新回复</div>
+                <div data-tab-key="op">题主回复</div>
+              </div>
+            `)
+            $title.append($tabs)
+
+            $tabs.find('[data-tab-key]').on('click', (ev) => {
+              const $target = $(ev.currentTarget)
+              const { tabKey } = $target.data()
+
+              if (typeof tabKey === 'string') {
+                $target.addClass('v2p-tab-active').siblings().removeClass('v2p-tab-active')
+
+                $(`.v2p-modal-comments[data-tab-key="${tabKey}"]`)
+                  .addClass('v2p-tab-content-active')
+                  .siblings()
+                  .removeClass('v2p-tab-content-active')
+              }
             })
+
+            // 为模态框中的克隆 cell 绑定头像悬浮弹框。
+            {
+              const modalPopupControl = createPopup({
+                root: $mask,
+                triggerType: 'hover',
+                placement: 'right-start',
+                offsetOptions: { mainAxis: 8, crossAxis: -4 },
+              })
+
+              const storage = getStorageSync()
+              const options = storage[StorageKey.Options]
+
+              $content.find('.cell[id^="r_"]').each((_, cellDom) => {
+                const commentData = commentDataList.find((c) => c.id === cellDom.id)
+
+                if (commentData) {
+                  const $cellDom = $(cellDom)
+
+                  processAvatar({
+                    $trigger: $cellDom.find('.avatar, .dark'),
+                    popupControl: modalPopupControl,
+                    commentData,
+                    shouldWrap: false,
+                    openInNewTab: options.topic.openMode !== 'default',
+                  })
+                }
+              })
+            }
+
+            replaceCommentEmojiWithHD($content.find('.cell[id^="r_"]'))
+
+            contentBuilt = true
           }
-          else {
-            $t3.append($('<div>暂无题主回复</div>').css({ padding: '20px', textAlign: 'center' }))
-          }
 
-          $content.append($t3)
-        }
-
-        const $tabs = $(`
-          <div class="v2p-modal-comment-tabs">
-            <div data-tab-key="hot" class="v2p-tab-active">热门回复</div>
-            <div data-tab-key="recent">最新回复</div>
-            <div data-tab-key="op">题主回复</div>
-          </div>
-        `)
-        $title.append($tabs)
-
-        $tabs.find('[data-tab-key]').on('click', (ev) => {
-          const $target = $(ev.currentTarget)
-          const { tabKey } = $target.data()
-
-          if (typeof tabKey === 'string') {
-            $target.addClass('v2p-tab-active').siblings().removeClass('v2p-tab-active')
-
-            $(`.v2p-modal-comments[data-tab-key="${tabKey}"]`)
-              .addClass('v2p-tab-content-active')
-              .siblings()
-              .removeClass('v2p-tab-content-active')
-          }
-        })
-
-        // 为模态框中的克隆 cell 绑定头像悬浮弹框。
-        {
-          const modalPopupControl = createPopup({
-            root: $mask,
-            triggerType: 'hover',
-            placement: 'right-start',
-            offsetOptions: { mainAxis: 8, crossAxis: -4 },
-          })
-
+          // 以下逻辑每次打开都需要执行。
           const storage = getStorageSync()
           const options = storage[StorageKey.Options]
 
           $content.find('.cell[id^="r_"]').each((_, cellDom) => {
-            const commentData = commentDataList.find((c) => c.id === cellDom.id)
-
-            if (commentData) {
-              const $cellDom = $(cellDom)
-
-              processAvatar({
-                $trigger: $cellDom.find('.avatar, .dark'),
-                popupControl: modalPopupControl,
-                commentData,
-                shouldWrap: false,
-                openInNewTab: options.topic.openMode !== 'default',
-              })
+            if (options.replyContent.autoFold) {
+              processReplyContent($(cellDom))
             }
           })
-        }
 
-        replaceCommentEmojiWithHD($content.find('.cell[id^="r_"]'))
-
-        contentBuilt = true
-      }
-
-      // 以下逻辑每次打开都需要执行。
-      const storage = getStorageSync()
-      const options = storage[StorageKey.Options]
-
-      $content.find('.cell[id^="r_"]').each((_, cellDom) => {
-        if (options.replyContent.autoFold) {
-          processReplyContent($(cellDom))
-        }
+          handleLinkPreview()
+        },
       })
+    }
 
-      handleLinkPreview()
-    },
-  })
-
-  $commentsBtn.on('click', () => {
     modal.open()
   })
 

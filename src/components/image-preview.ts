@@ -257,6 +257,7 @@ function createPreviewImage($sourceImg: JQuery): JQuery {
     maxHeight: '90vh',
     objectFit: 'contain',
     userSelect: 'none',
+    boxShadow: 'var(--v2p-widget-shadow)',
   }).attr('draggable', 'false')
 }
 
@@ -272,58 +273,71 @@ interface ImagePreviewControl {
  */
 export function createImagePreview(): ImagePreviewControl {
   let cleanupFn: (() => void) | null = null
+  let modal: ReturnType<typeof createModal> | null = null
 
-  const modal = createModal({
-    root: $body,
-    onMount: ({ $main, $header, $content }) => {
-      $main.css({
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: 'transparent',
-        pointerEvents: 'none',
+  const getModal = () => {
+    if (!modal) {
+      modal = createModal({
+        root: $body,
+        onMount: ({ $main, $header, $content }) => {
+          $main.css({
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            backgroundColor: 'transparent',
+            pointerEvents: 'none',
+            border: 'none',
+          })
+          $header.remove()
+          $content.css({
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            pointerEvents: 'auto',
+          })
+        },
+        onOpen: ({ $content }) => {
+          $content.empty()
+        },
+        onClose: ({ $content }) => {
+          $content.empty()
+          cleanupFn?.()
+          cleanupFn = null
+        },
       })
-      $header.remove()
-      $content.css({
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        pointerEvents: 'auto',
-      })
-    },
-    onOpen: ({ $content }) => {
-      $content.empty()
-    },
-    onClose: ({ $content }) => {
-      $content.empty()
-      cleanupFn?.()
-      cleanupFn = null
-    },
-  })
 
-  // 点击背景关闭预览
-  modal.$content.on('click', (ev) => {
-    if (ev.target === modal.$content.get(0)) {
-      modal.close()
+      // 点击背景关闭预览
+      modal.$content.on('click', (ev) => {
+        if (ev.target === modal!.$content.get(0)) {
+          modal!.close()
+        }
+      })
     }
-  })
+
+    return modal
+  }
 
   const open = ($sourceImg: JQuery): void => {
+    const m = getModal()
     const $previewImg = createPreviewImage($sourceImg)
     const controller = new ImageTransformController($previewImg)
     const $controls = createControlBar(controller)
 
     cleanupFn = bindPreviewEvents($previewImg, controller)
 
-    modal.open()
-    modal.$content.append($previewImg, $controls)
+    m.open()
+    m.$content.append($previewImg, $controls)
+  }
+
+  const close = (): void => {
+    modal?.close()
   }
 
   return {
     open,
-    close: modal.close,
+    close,
   }
 }

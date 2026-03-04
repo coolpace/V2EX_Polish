@@ -14,6 +14,7 @@ export interface ModalElements {
 interface ModalControl extends ModalElements {
   open: () => void
   close: () => void
+  destroy: () => void
 }
 
 interface CreateModalProps {
@@ -76,6 +77,7 @@ export function createModal(props: CreateModalProps): ModalControl {
 
   // 用于判定是否已经绑定了事件, 避免重复绑定。
   let boundEvent = false
+  let destroyed = false
 
   let mouseDownTarget: HTMLElement
 
@@ -136,9 +138,27 @@ export function createModal(props: CreateModalProps): ModalControl {
     root.append($container)
   }
 
+  const handleDestroy = () => {
+    if (destroyed) {
+      return
+    }
+
+    destroyed = true
+
+    // 清理事件绑定，但不触发 onClose 回调（避免递归调用）。
+    $mask.off('mousedown', mouseDownHandler)
+    $mask.off('mouseup', mouseUpHandler)
+    $(document).off('keydown', keyupHandler)
+    boundEvent = false
+
+    $container.remove()
+    document.body.classList.remove('v2p-modal-open')
+  }
+
   return {
     ...modalElements,
     open: handleModalOpen,
     close: handleModalClose,
+    destroy: handleDestroy,
   }
 }

@@ -1088,6 +1088,7 @@ export async function showRemoteSyncDialog(
       onClose: () => {
         // 用户关闭对话框时，视为拒绝同步
         resolve(false)
+        modal.destroy()
       },
     })
 
