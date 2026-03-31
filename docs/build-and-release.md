@@ -17,6 +17,11 @@ pnpm build
   - 同时处理 Firefox 清单重命名为 `manifest.json`
 - `web-ext build` 将 `build-*` 目录各自打包为 zip（位于相同目录内）
 
+说明：
+
+- `pnpm build` 只负责浏览器扩展与油猴脚本产物
+- `hot-topics/` Worker 的部署由独立命令 `pnpm worker:deploy` 处理
+
 产物定位：
 
 - Chrome 压缩包：`build-chrome/*.zip`
@@ -80,6 +85,26 @@ pnpm run clean
 
 > Safari 的调试与转换、上架建议参见仓库文档：`website/src/content/docs/use-in-safari.md`
 
+### 发布 Cloudflare Worker（`hot-topics/`）
+
+先决条件：
+
+- 已在 `hot-topics/wrangler.toml` 中配置真实的 D1 `database_id`
+- 已将 `hot-topics/schema.sql` 初始化到目标数据库
+- 已确认扩展端使用的是部署后可访问的 Worker 地址
+
+部署命令：
+
+```bash
+pnpm worker:deploy
+```
+
+建议：
+
+- 先运行 `pnpm worker:check` 确认 Worker TypeScript 无误
+- 部署后手动验证 `/hot-topics` 接口返回格式是否与扩展侧预期一致
+- 如果更换了 Worker 域名，记得同步更新扩展中的热议主题接口地址
+
 ## 发布前检查清单
 
 - 已更新版本号（`package.json`）
@@ -89,5 +114,6 @@ pnpm run clean
 - Chrome / Firefox 压缩包来源目录正确（不要混用）
 - 油猴脚本为可用的单文件（必要时调整构建参数）
 - 如增加权限，已在商店文案中说明用途
+- 如本次改动涉及热议主题功能，已完成 Worker 部署与接口联调验证
 
 若遇到问题，前往 [troubleshooting.md](./troubleshooting.md)。

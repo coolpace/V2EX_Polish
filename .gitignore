@@ -18,3 +18,11 @@ node_modules
 # web-ext 产生的浏览器配置
 /*-profile
 /.idea
+
+# hot-topics 本地产物与环境文件
+/hot-topics/.wrangler/
+/hot-topics/.dev.vars
+/hot-topics/.env
+/hot-topics/.env.*
+/hot-topics/*.sqlite*
+/hot-topics/*.db*

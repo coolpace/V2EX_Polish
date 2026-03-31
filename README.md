@@ -120,6 +120,22 @@ V2EX Polish 的目标是提供一个更加完善的插件，并保证持续更�
 - 提供反馈，帮助我们改进。
 - 改善代码，请阅读我们的[代码贡献指南](./.github/CONTRIBUTING.md)。
 
+## 开发说明
+
+仓库当前使用 `pnpm workspace` 管理两个项目：
+
+- 根目录：浏览器扩展与油猴脚本主项目
+- `hot-topics/`：Cloudflare Workers 热议主题接口
+
+常用命令：
+
+- `pnpm install`：安装整个 workspace 的依赖
+- `pnpm dev`：启动扩展本地开发
+- `pnpm worker:dev`：启动 `hot-topics/` Worker 本地开发
+- `pnpm worker:deploy`：部署 `hot-topics/` Worker
+
+更多开发说明见 [docs/README.md](./docs/README.md)。
+
 ## 常见问题
 
 <details>

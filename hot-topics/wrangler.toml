@@ -1,0 +1,21 @@
+name = "v2ex-hot-topics"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+# Cron Trigger：根据 V2EX 用户访问模式分时段调整抓取频率
+# 所有时间均为 UTC（北京时间 = UTC + 8）
+[triggers]
+crons = [
+  # 高峰期每 15 分钟：BJT 9-12, 14-18, 20-23（用户最活跃时段）
+  "*/15 1-3,6-9,12-14 * * *",
+  # 过渡期每 30 分钟：BJT 8, 12-14, 18-20, 23（上下班/午休衔接时段）
+  "*/30 0,4-5,10-11,15 * * *",
+  # 低峰期每 60 分钟：BJT 0-8（深夜至清晨）
+  "0 16-23 * * *",
+]
+
+# D1 数据库绑定
+[[d1_databases]]
+binding = "DB"
+database_name = "v2ex-hot-topics"
+database_id = "0d237391-5838-4c5a-a3ac-482c7b78111e"

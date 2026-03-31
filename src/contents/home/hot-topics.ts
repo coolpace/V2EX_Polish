@@ -44,12 +44,33 @@ export function handleHotTopics() {
 
   let abortController: AbortController | null = null
 
-  const now = Math.floor(Date.now() / 1000)
   const oneDay = 60 * 60 * 24
-  const cache = new Map<string, HotTopic[]>()
+
+  /** 缓存 TTL（毫秒），5 分钟后自动失效。 */
+  const CACHE_TTL = 5 * 60 * 1000
+  const cache = new Map<string, { data: HotTopic[], timestamp: number }>()
+
+  const getCachedData = (key: string): HotTopic[] | null => {
+    const entry = cache.get(key)
+
+    if (entry && Date.now() - entry.timestamp < CACHE_TTL) {
+      return entry.data
+    }
+
+    // 过期则清除
+    cache.delete(key)
+
+    return null
+  }
 
   const renderNewTopicList = (result: HotTopic[]) => {
     $listWrapper.empty()
+
+    if (result.length === 0) {
+      $listWrapper.append('<div class="v2p-topics-hot-empty">暂无热议主题</div>')
+
+      return
+    }
 
     result.forEach((it) => {
       const $clonedCell = $cell.clone()
@@ -59,6 +80,10 @@ export function handleHotTopics() {
       $clonedCell.find('.item_hot_topic_title > a').text(it.title).attr('href', `/t/${it.id}`)
       $listWrapper.append($clonedCell)
     })
+  }
+
+  const renderError = () => {
+    $listWrapper.empty().append('<div class="v2p-topics-hot-empty">加载失败，请稍后再试</div>')
   }
 
   $dropdownContent.find('.v2p-select-item').on('click', (ev) => {
@@ -99,13 +124,14 @@ export function handleHotTopics() {
           // fall through
 
         case '近一月': {
-          const cacheResult = cache.get(alias)
+          const cachedData = getCachedData(alias)
 
-          if (cacheResult) {
-            renderNewTopicList(cacheResult)
+          if (cachedData) {
+            renderNewTopicList(cachedData)
           }
           else {
             const days = alias === '近三日' ? 3 : alias === '近七日' ? 7 : 30
+            const now = Math.floor(Date.now() / 1000)
 
             abortController = new AbortController()
 
@@ -113,10 +139,20 @@ export function handleHotTopics() {
               startTime: now - days * oneDay,
               endTime: now,
               signal: abortController.signal,
-            }).then(({ result }) => {
-              cache.set(alias, result)
-              renderNewTopicList(result)
             })
+              .then(({ result }) => {
+                cache.set(alias, { data: result, timestamp: Date.now() })
+                renderNewTopicList(result)
+              })
+              .catch((err) => {
+                // AbortError 是用户主动取消，不需要显示错误
+                if (err instanceof Error && err.name === 'AbortError') {
+                  return
+                }
+
+                console.error('获取热议主题失败:', err)
+                renderError()
+              })
           }
 
           return

@@ -276,19 +276,29 @@ async function fetchWithTimeout(
 ): Promise<Response> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeout)
+  const externalSignal = options?.signal
+  const abortWithExternalSignal = () => controller.abort()
+
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      controller.abort()
+    }
+    else {
+      externalSignal.addEventListener('abort', abortWithExternalSignal, { once: true })
+    }
+  }
 
   try {
     const res = await fetch(url, {
-      signal: controller.signal,
       ...options,
+      signal: controller.signal,
     })
-    clearTimeout(timeoutId)
 
     return res
   }
-  catch (error) {
+  finally {
     clearTimeout(timeoutId)
-    throw error
+    externalSignal?.removeEventListener('abort', abortWithExternalSignal)
   }
 }
 
@@ -485,6 +495,34 @@ export async function getUnreadMessagesCount(): Promise<number> {
 }
 
 /**
+ * 热议主题 API 地址候选列表。
+ *
+ * 迁移到自建 Worker 期间，优先使用已配置的 Worker 地址；
+ * 如果仍然是占位符，则自动回退到现有可用接口，避免首页历史热议直接失效。
+ */
+const HOT_TOPICS_API_CANDIDATES = [
+  'https://v2ex-hot-topics.<your-subdomain>.workers.dev/hot-topics',
+  'https://wbhvzt9dzy.us.aircode.run/hot-topics',
+] as const
+
+function resolveHotTopicsApi(): URL {
+  for (const candidate of HOT_TOPICS_API_CANDIDATES) {
+    if (candidate.includes('<your-subdomain>')) {
+      continue
+    }
+
+    try {
+      return new URL(candidate)
+    }
+    catch {
+      // 忽略非法候选地址，继续尝试下一个。
+    }
+  }
+
+  throw new ApiError({ message: '未配置可用的热议主题接口地址' })
+}
+
+/**
  * 获取近期热议主题。
  */
 export async function getHotTopics(params: {
@@ -498,8 +536,7 @@ export async function getHotTopics(params: {
 }): Promise<DataWrapper<HotTopic[]>> {
   const { startTime, endTime, limits = 8, signal } = params
 
-  const url = new URL('https://wbhvzt9dzy.us.aircode.run/hot-topics')
-
+  const url = resolveHotTopicsApi()
   url.searchParams.set('startTime', String(startTime))
   url.searchParams.set('endTime', String(endTime))
 
@@ -507,10 +544,14 @@ export async function getHotTopics(params: {
     url.searchParams.set('limits', String(limits))
   }
 
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url.toString(), FETCH_TIMEOUT.DEFAULT, {
     method: 'GET',
     signal,
   })
+
+  if (!res.ok) {
+    throw createApiErrorFromResponse(res, '获取热议主题失败')
+  }
 
   const data = await res.json() as DataWrapper<HotTopic[]>
 

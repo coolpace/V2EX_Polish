@@ -4,7 +4,12 @@
 
 ## 开发模式切换
 
-项目支持同时为 Chrome 和 Firefox 开发，通过不同的命令启动对应的开发环境：
+项目当前是一个 `pnpm workspace` 仓库，包含两个开发单元：
+
+- 根目录：浏览器扩展主项目
+- `hot-topics/`：Cloudflare Workers 子项目
+
+扩展主项目支持同时为 Chrome 和 Firefox 开发，通过不同的命令启动对应的开发环境：
 
 ```bash
 # Chrome 开发模式（默认）
@@ -21,6 +26,23 @@ pnpm dev:firefox
 3. 自动打开目标浏览器并加载扩展
 
 > 注意：同一时间只能运行一个开发模式。切换浏览器前需先停止当前进程（`Ctrl + C`）。
+
+## Workspace 约定
+
+统一在仓库根目录执行依赖安装和脚本：
+
+```bash
+# 安装整个 workspace 的依赖
+pnpm install
+
+# 直接调试 Worker
+pnpm worker:dev
+
+# 仅检查 Worker 类型
+pnpm worker:check
+```
+
+如果需要直接使用 `pnpm --filter`，当前 Worker package 名称为 `v2ex-hot-topics`。
 
 ## 浏览器调试配置
 
@@ -167,5 +189,36 @@ pnpm run watch:ext
 # 仅监听 SCSS
 pnpm run watch:style
 ```
+
+## Cloudflare Worker 调试
+
+`hot-topics/` 是一个独立的 Cloudflare Workers 子项目，使用自己的 `package.json`、`tsconfig.json` 和 `wrangler.toml`。
+
+常用命令：
+
+```bash
+# 本地启动 Worker
+pnpm worker:dev
+
+# 类型检查
+pnpm worker:check
+
+# 部署到 Cloudflare
+pnpm worker:deploy
+```
+
+当前限制：
+
+- 扩展侧调用的是已部署的 Worker 地址，不会自动转发到本地 `wrangler dev`
+- 因此 `pnpm worker:dev` 更适合单独调试 API、定时任务和 D1 逻辑
+- 如果要联动扩展验证热议主题功能，需要先部署 Worker，并同步更新扩展中的接口地址
+
+首次接入时请确认：
+
+- `hot-topics/wrangler.toml` 中的 `database_id` 已替换为真实 D1 数据库 ID
+- `hot-topics/schema.sql` 已执行到对应数据库
+- 已为扩展配置正确的 Worker 访问地址
+
+详细说明见 [hot-topics.md](./hot-topics.md)。
 
 下一步：阅读 [build-and-release.md](./build-and-release.md) 了解构建与发布流程。
