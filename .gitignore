@@ -26,3 +26,11 @@ node_modules
 /hot-topics/.env.*
 /hot-topics/*.sqlite*
 /hot-topics/*.db*
+
+# website (Next.js 官网) 本地产物
+/website/.next/
+/website/out/
+/website/.env.local
+/website/.env*.local
+/website/.velite/
+/website/.vercel/

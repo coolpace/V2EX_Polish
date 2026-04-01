@@ -1,0 +1,62 @@
+{
+  "name": "v2ex-polish-website",
+  "private": true,
+  "description": "Official homepage of the V2EX Polish extension.",
+  "license": "UNLECENSED",
+  "scripts": {
+    "build": "next build",
+    "deps": "pnpm up --interactive --latest",
+    "dev": "next dev",
+    "lint": "run-p lint:ts lint:es lint:css",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint:es": "eslint \"**/*.{ts,tsx}\"",
+    "lint:ts": "tsc --noEmit --skipLibCheck",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@notionhq/client": "^4.0.2",
+    "@radix-ui/themes": "^3.2.1",
+    "cheerio": "1.1.2",
+    "date-fns": "^4.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "html-to-image": "^1.11.13",
+    "lucide-react": "^0.542.0",
+    "next": "16.2.2",
+    "qrcode": "^1.5.4",
+    "radash": "^12.1.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-use-event-hook": "^0.9.6",
+    "valibot": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.27.1",
+    "@codennnn/tsconfig": "^1.2.1",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "autoprefixer": "^10.4.21",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.6",
+    "postcss-import": "^16.1.1",
+    "prefer-code-style": "3.9.0",
+    "stylelint": "^16.23.1",
+    "stylelint-config-clean-order": "^8.0.0",
+    "stylelint-config-standard": "^39.0.1",
+    "stylelint-config-tailwindcss": "^1.0.0",
+    "tailwindcss": "^3.4.14",
+    "typescript": "5.9.2",
+    "velite": "^0.3.1"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.14",
+      "@types/react-dom": "19.2.3"
+    }
+  }
+}
