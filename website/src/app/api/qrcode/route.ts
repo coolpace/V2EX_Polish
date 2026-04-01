@@ -25,5 +25,5 @@ export async function POST(request: NextRequest) {
 
   const url = await QRCode.toDataURL(body.text, body.options)
 
-  return NextResponse.json<ResponseJson>({ data: url }, { status: 200 })
+  return NextResponse.json({ data: url } satisfies ResponseJson, { status: 200 })
 }

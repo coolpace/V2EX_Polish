@@ -1,0 +1,12 @@
+[build]
+  # packagePath: website 已在 Netlify UI 设置，构建上下文是 website/ 目录
+  # 因此 command 和 publish 均相对于 website/ 解析
+  command = "pnpm install && pnpm build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# 支持 SSR、API Routes（/api/donation、/api/qrcode 等）
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

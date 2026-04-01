@@ -1,7 +1,6 @@
 {
   "extends": "@codennnn/tsconfig/next.json",
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"],
       "#velite": ["./.velite"]
