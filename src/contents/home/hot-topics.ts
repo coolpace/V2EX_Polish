@@ -1,7 +1,7 @@
 import { createPopup } from '../../components/popup'
 import { iconLoading } from '../../icons'
 import { getHotTopics } from '../../services'
-import type { HotTopic } from '../../types'
+import type { HotTopic, HotTopicRange } from '../../types'
 import { $wrapper } from '../globals'
 
 /**
@@ -44,11 +44,14 @@ export function handleHotTopics() {
 
   let abortController: AbortController | null = null
 
-  const oneDay = 60 * 60 * 24
-
   /** 缓存 TTL（毫秒），与 cron 最小触发间隔（15 分钟）对齐，避免在数据更新前重复请求。 */
   const CACHE_TTL = 15 * 60 * 1000
   const cache = new Map<string, { data: HotTopic[], timestamp: number }>()
+  const rangeByAlias: Record<'近三日' | '近七日' | '近一月', HotTopicRange> = {
+    近三日: '3d',
+    近七日: '7d',
+    近一月: '30d',
+  }
 
   const getCachedData = (key: string): HotTopic[] | null => {
     const entry = cache.get(key)
@@ -130,14 +133,10 @@ export function handleHotTopics() {
             renderNewTopicList(cachedData)
           }
           else {
-            const days = alias === '近三日' ? 3 : alias === '近七日' ? 7 : 30
-            const now = Math.floor(Date.now() / 1000)
-
             abortController = new AbortController()
 
             void getHotTopics({
-              startTime: now - days * oneDay,
-              endTime: now,
+              range: rangeByAlias[alias],
               signal: abortController.signal,
             })
               .then(({ result }) => {

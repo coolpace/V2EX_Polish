@@ -1,9 +1,16 @@
-import { imgurClientIdPool, StorageKey, V2EX } from './constants'
+import {
+  HOT_TOPICS_API_URL,
+  imgurClientIdPool,
+  MessageKey,
+  StorageKey,
+  V2EX,
+} from './constants'
 import { postTask } from './post-task'
 import type {
   API_Info,
   DataWrapper,
   HotTopic,
+  HotTopicRange,
   ImgurResponse,
   Member,
   Notification,
@@ -18,6 +25,7 @@ import {
   createApiErrorFromResponse,
   getStorage,
   isAbortError,
+  isBrowserExtension,
   setStorage,
   V2EX_ORIGIN,
   wrapApiError,
@@ -494,38 +502,84 @@ export async function getUnreadMessagesCount(): Promise<number> {
   throw new ApiError({ message: '无法获取未读消息数量' })
 }
 
-/**
- * 热议主题 Worker 接口地址。
- *
- * 部署后请将占位符替换为实际的 Cloudflare Workers 子域名。
- */
-const HOT_TOPICS_API = 'https://v2ex-hot-topics.leokudev.workers.dev/hot-topics'
-
 function resolveHotTopicsApi(): URL {
-  if (HOT_TOPICS_API.includes('<your-subdomain>')) {
+  if (HOT_TOPICS_API_URL.includes('<your-subdomain>')) {
     throw new ApiError({ message: '未配置热议主题接口地址，请替换 HOT_TOPICS_API 中的占位符' })
   }
 
-  return new URL(HOT_TOPICS_API)
+  return new URL(HOT_TOPICS_API_URL)
 }
 
-/**
- * 获取近期热议主题。
- */
-export async function getHotTopics(params: {
-  /** 开始时间，单位：秒。 */
-  startTime: number
-  /** 结束时间，单位：秒。 */
-  endTime: number
-  /** 限制返回数据条数。 */
+type HotTopicsMessageResponse
+  = | {
+    ok: true
+    data: DataWrapper<HotTopic[]>
+  }
+  | {
+    ok: false
+    error: {
+      message: string
+      statusCode?: number
+    }
+  }
+
+function createAbortDomException(): Error {
+  return new DOMException('The operation was aborted.', 'AbortError')
+}
+
+function canUseExtensionMessaging(): boolean {
+  return isBrowserExtension()
+    && typeof chrome !== 'undefined'
+    && typeof chrome.runtime?.sendMessage === 'function'
+}
+
+async function sendMessageWithAbort<Response>(
+  message: unknown,
+  signal?: AbortSignal,
+): Promise<Response> {
+  if (signal?.aborted) {
+    throw createAbortDomException()
+  }
+
+  const requestPromise = new Promise<Response>((resolve, reject) => {
+    chrome.runtime.sendMessage(message, (response: Response) => {
+      const runtimeError = chrome.runtime.lastError
+
+      if (runtimeError) {
+        reject(new Error(runtimeError.message))
+
+        return
+      }
+
+      resolve(response)
+    })
+  })
+
+  if (!signal) {
+    return requestPromise
+  }
+
+  const abortPromise = new Promise<Response>((_, reject) => {
+    const onAbort = () => reject(createAbortDomException())
+
+    signal.addEventListener('abort', onAbort, { once: true })
+    void requestPromise.finally(() => {
+      signal.removeEventListener('abort', onAbort)
+    })
+  })
+
+  return Promise.race([requestPromise, abortPromise])
+}
+
+async function fetchHotTopicsDirect(params: {
+  range: HotTopicRange
   limits?: number
   signal?: AbortSignal
 }): Promise<DataWrapper<HotTopic[]>> {
-  const { startTime, endTime, limits = 8, signal } = params
+  const { range, limits = 8, signal } = params
 
   const url = resolveHotTopicsApi()
-  url.searchParams.set('startTime', String(startTime))
-  url.searchParams.set('endTime', String(endTime))
+  url.searchParams.set('range', String(range))
 
   if (limits) {
     url.searchParams.set('limits', String(limits))
@@ -540,7 +594,37 @@ export async function getHotTopics(params: {
     throw createApiErrorFromResponse(res, '获取热议主题失败')
   }
 
-  const data = await res.json() as DataWrapper<HotTopic[]>
+  return res.json() as Promise<DataWrapper<HotTopic[]>>
+}
 
-  return data
+/**
+ * 获取近期热议主题。
+ */
+export async function getHotTopics(params: {
+  /** 时间范围。 */
+  range: HotTopicRange
+  /** 限制返回数据条数。 */
+  limits?: number
+  signal?: AbortSignal
+}): Promise<DataWrapper<HotTopic[]>> {
+  const { range, limits = 8, signal } = params
+
+  resolveHotTopicsApi()
+
+  if (!canUseExtensionMessaging()) {
+    return fetchHotTopicsDirect({ range, limits, signal })
+  }
+
+  const response = await sendMessageWithAbort<HotTopicsMessageResponse>({
+    [MessageKey.hotTopics]: { range, limits },
+  }, signal)
+
+  if (!response.ok) {
+    throw new ApiError({
+      message: response.error.message,
+      statusCode: response.error.statusCode,
+    })
+  }
+
+  return response.data
 }

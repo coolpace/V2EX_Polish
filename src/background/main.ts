@@ -1,5 +1,13 @@
-import { Menu, MessageKey, StorageKey, V2EX_DOMAINS } from '../constants'
-import type { LegacyTag, MemberTag, StorageItems } from '../types'
+import {
+  HOT_TOPICS_API_URL,
+  HOT_TOPICS_CLIENT_HEADER,
+  HOT_TOPICS_CLIENT_VALUE,
+  Menu,
+  MessageKey,
+  StorageKey,
+  V2EX_DOMAINS,
+} from '../constants'
+import type { DataWrapper, HotTopic, HotTopicRange, LegacyTag, MemberTag, StorageItems } from '../types'
 import { getRunEnv } from '../utils'
 import { checkIn } from './daily-check-in'
 
@@ -70,8 +78,30 @@ chrome.runtime.onInstalled.addListener(() => {
 interface Message {
   [MessageKey.action]?: 'openPopup'
   [MessageKey.colorScheme]?: 'dark' | 'light'
+  [MessageKey.hotTopics]?: {
+    range: HotTopicRange
+    limits?: number
+  }
   [MessageKey.showOptions]?: true
 }
+
+type HotTopicsPayload = {
+  range: HotTopicRange
+  limits?: number
+}
+
+type HotTopicsMessageResponse
+  = | {
+    ok: true
+    data: DataWrapper<HotTopic[]>
+  }
+  | {
+    ok: false
+    error: {
+      message: string
+      statusCode?: number
+    }
+  }
 
 function generateUrlPatterns(path: string): string[] {
   return V2EX_DOMAINS.map((domain) => `https://${domain}${path}`)
@@ -81,7 +111,109 @@ function generateOrigins(): string[] {
   return V2EX_DOMAINS.map((domain) => `https://${domain}`)
 }
 
-chrome.runtime.onMessage.addListener((message: Message) => {
+async function fetchWithTimeout(
+  url: string,
+  timeout: number,
+  options?: RequestInit,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    })
+  }
+  finally {
+    clearTimeout(timeoutId)
+  }
+}
+
+function isV2EXSender(sender: chrome.runtime.MessageSender): boolean {
+  if (!sender.url) {
+    return false
+  }
+
+  try {
+    const url = new URL(sender.url)
+
+    return V2EX_DOMAINS.includes(url.hostname)
+  }
+  catch {
+    return false
+  }
+}
+
+async function handleHotTopicsRequest(
+  payload: HotTopicsPayload,
+  sender: chrome.runtime.MessageSender,
+): Promise<HotTopicsMessageResponse> {
+  if (!isV2EXSender(sender)) {
+    return {
+      ok: false,
+      error: {
+        message: '非法来源，已拒绝请求',
+        statusCode: 403,
+      },
+    }
+  }
+
+  const url = new URL(HOT_TOPICS_API_URL)
+  url.searchParams.set('range', payload.range)
+
+  if (payload.limits) {
+    url.searchParams.set('limits', String(payload.limits))
+  }
+
+  try {
+    const res = await fetchWithTimeout(url.toString(), 10000, {
+      method: 'GET',
+      headers: {
+        [HOT_TOPICS_CLIENT_HEADER]: HOT_TOPICS_CLIENT_VALUE,
+      },
+    })
+
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: {
+          message: '获取热议主题失败',
+          statusCode: res.status,
+        },
+      }
+    }
+
+    const data = await res.json() as DataWrapper<HotTopic[]>
+
+    if (!data.success) {
+      return {
+        ok: false,
+        error: {
+          message: data.message ?? '获取热议主题失败',
+          statusCode: res.status,
+        },
+      }
+    }
+
+    return {
+      ok: true,
+      data,
+    }
+  }
+  catch (err) {
+    console.error('[V2EX Polish] 获取热议主题失败：', err)
+
+    return {
+      ok: false,
+      error: {
+        message: '获取热议主题失败',
+      },
+    }
+  }
+}
+
+chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
   if (Object.hasOwn(message, MessageKey.colorScheme)) {
     void chrome.action.setIcon({
       path:
@@ -104,6 +236,25 @@ chrome.runtime.onMessage.addListener((message: Message) => {
     if (message[MessageKey.showOptions] === true) {
       void chrome.runtime.openOptionsPage()
     }
+  }
+  else if (Object.hasOwn(message, MessageKey.hotTopics)) {
+    const payload = message[MessageKey.hotTopics]
+
+    if (!payload) {
+      sendResponse({
+        ok: false,
+        error: {
+          message: '缺少热议主题请求参数',
+          statusCode: 400,
+        },
+      } satisfies HotTopicsMessageResponse)
+
+      return false
+    }
+
+    void handleHotTopicsRequest(payload, sender).then(sendResponse)
+
+    return true
   }
 })
 

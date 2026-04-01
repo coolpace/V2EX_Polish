@@ -39,6 +39,23 @@ function deriveAvatarNormal(avatarMini: string): string {
 /** limits 参数的合法范围。 */
 const MIN_LIMITS = 1
 const MAX_LIMITS = 50
+const RANGE_TO_SECONDS = {
+  '3d': 3 * 86400,
+  '7d': 7 * 86400,
+  '30d': 30 * 86400,
+} as const
+
+export type HotTopicsRange = keyof typeof RANGE_TO_SECONDS
+
+function isHotTopicsRange(value: string): value is HotTopicsRange {
+  return value in RANGE_TO_SECONDS
+}
+
+function getAlignedCurrentTime(): number {
+  const now = Math.floor(Date.now() / 1000)
+
+  return now - now % 300
+}
 
 /**
  * 校验并解析查询参数。
@@ -46,19 +63,37 @@ const MAX_LIMITS = 50
  * @returns 校验通过返回解析后的参数，校验失败返回错误信息字符串。
  */
 export function validateQueryParams(params: {
-  startTime: string
-  endTime: string
+  range?: string | null
+  startTime?: string | null
+  endTime?: string | null
   limits?: number
-}): { startTime: number, endTime: number, limits: number } | string {
-  const start = Number(params.startTime)
-  const end = Number(params.endTime)
+}): { startTime: number, endTime: number, limits: number, range: HotTopicsRange | null } | string {
+  let start: number
+  let end: number
 
-  if (Number.isNaN(start) || Number.isNaN(end)) {
-    return 'startTime 和 endTime 必须为有效数字'
+  if (params.range) {
+    if (!isHotTopicsRange(params.range)) {
+      return 'range 必须为 3d、7d 或 30d'
+    }
+
+    end = getAlignedCurrentTime()
+    start = end - RANGE_TO_SECONDS[params.range]
   }
+  else {
+    if (!params.startTime || !params.endTime) {
+      return '缺少 range，或缺少 startTime / endTime 参数'
+    }
 
-  if (start > end) {
-    return 'startTime 不能大于 endTime'
+    start = Number(params.startTime)
+    end = Number(params.endTime)
+
+    if (Number.isNaN(start) || Number.isNaN(end)) {
+      return 'startTime 和 endTime 必须为有效数字'
+    }
+
+    if (start > end) {
+      return 'startTime 不能大于 endTime'
+    }
   }
 
   const limits = params.limits ?? 8
@@ -67,7 +102,12 @@ export function validateQueryParams(params: {
     return `limits 必须为 ${MIN_LIMITS}-${MAX_LIMITS} 之间的整数`
   }
 
-  return { startTime: start, endTime: end, limits }
+  return {
+    startTime: start,
+    endTime: end,
+    limits,
+    range: params.range && isHotTopicsRange(params.range) ? params.range : null,
+  }
 }
 
 /** 短窗口阈值：3 天（秒）。窗口 ≤ 此值时按活跃时间排序，> 此值时按回复数排序并排除短窗口结果。 */

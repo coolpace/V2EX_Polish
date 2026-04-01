@@ -221,6 +221,8 @@ export interface Topic {
 
 export type HotTopic = Pick<Topic, 'id' | 'title' | 'url' | 'member'>
 
+export type HotTopicRange = '3d' | '7d' | '30d'
+
 /** 用户发帖记录项 */
 export interface UserTopicItem {
   /** 帖子标题 */

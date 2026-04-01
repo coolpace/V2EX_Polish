@@ -16,6 +16,13 @@ export const enum V2EX {
   API = 'https://www.v2ex.com/api/v2',
 }
 
+/** 热议主题 Worker 接口地址。 */
+export const HOT_TOPICS_API_URL = 'https://v2ex-hot-topics.leokudev.workers.dev/hot-topics'
+
+/** 扩展访问热议主题 Worker 时附带的客户端标识。 */
+export const HOT_TOPICS_CLIENT_HEADER = 'X-V2P-Client'
+export const HOT_TOPICS_CLIENT_VALUE = 'extension'
+
 /** V2EX 所有支持的域名列表 */
 export const V2EX_DOMAINS: readonly string[] = [
   'v2ex.com',
@@ -491,6 +498,7 @@ export const defaultOptions: Options = {
 export const enum MessageKey {
   action = 'action',
   colorScheme = 'colorSchemes',
+  hotTopics = 'hotTopics',
   showOptions = 'showOptions',
 }
 

@@ -5,24 +5,65 @@ export interface Env {
   DB: D1Database
 }
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-}
+const V2EX_ALLOWED_ORIGINS = [
+  'https://v2ex.com',
+  'https://www.v2ex.com',
+  'https://cn.v2ex.com',
+  'https://jp.v2ex.com',
+  'https://de.v2ex.com',
+  'https://us.v2ex.com',
+  'https://hk.v2ex.com',
+  'https://global.v2ex.com',
+  'https://fast.v2ex.com',
+  'https://s.v2ex.com',
+  'https://origin.v2ex.com',
+  'https://staging.v2ex.com',
+] as const
+const EXTENSION_CLIENT_HEADER = 'X-V2P-Client'
+const EXTENSION_CLIENT_VALUE = 'extension'
 
 /** API 响应缓存时间（秒），与 cron 更新频率对齐。 */
 const CACHE_MAX_AGE = 300
 
+function getAllowedOrigin(origin: string | null): string | null {
+  if (!origin) {
+    return null
+  }
+
+  return V2EX_ALLOWED_ORIGINS.includes(origin as typeof V2EX_ALLOWED_ORIGINS[number])
+    ? origin
+    : null
+}
+
 function jsonResponse(
+  request: Request,
   data: unknown,
   status: number,
   extraHeaders?: Record<string, string>,
 ): Response {
+  const allowedOrigin = getAllowedOrigin(request.headers.get('Origin'))
+
   return Response.json(data, {
     status,
-    headers: { ...CORS_HEADERS, ...extraHeaders },
+    headers: {
+      ...allowedOrigin
+        ? {
+            'Access-Control-Allow-Origin': allowedOrigin,
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, X-V2P-Client',
+            Vary: 'Origin',
+          }
+        : {},
+      ...extraHeaders,
+    },
   })
+}
+
+function isAuthorizedRequest(request: Request): boolean {
+  const client = request.headers.get(EXTENSION_CLIENT_HEADER)
+
+  return Boolean(getAllowedOrigin(request.headers.get('Origin')))
+    || client === EXTENSION_CLIENT_VALUE
 }
 
 export default {
@@ -36,35 +77,54 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     // 处理 CORS 预检请求
     if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: CORS_HEADERS })
+      const origin = getAllowedOrigin(request.headers.get('Origin'))
+
+      if (origin) {
+        return new Response(null, {
+          headers: {
+            'Access-Control-Allow-Origin': origin,
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, X-V2P-Client',
+            Vary: 'Origin',
+          },
+        })
+      }
+
+      return new Response(null, { status: 403 })
     }
 
     const url = new URL(request.url)
 
     if (url.pathname === '/hot-topics' && request.method === 'GET') {
+      if (!isAuthorizedRequest(request)) {
+        return jsonResponse(request, { success: false, message: 'Forbidden' }, 403)
+      }
+
+      const range = url.searchParams.get('range')
       const startTime = url.searchParams.get('startTime')
       const endTime = url.searchParams.get('endTime')
       const limitsParam = url.searchParams.get('limits')
 
-      if (!startTime || !endTime) {
-        return jsonResponse(
-          { success: false, message: '缺少 startTime 或 endTime 参数' },
-          400,
-        )
-      }
-
       // 参数校验
       const limits = limitsParam ? Number(limitsParam) : undefined
-      const validated = validateQueryParams({ startTime, endTime, limits })
+      const validated = validateQueryParams({ range, startTime, endTime, limits })
 
       if (typeof validated === 'string') {
-        return jsonResponse({ success: false, message: validated }, 400)
+        return jsonResponse(request, { success: false, message: validated }, 400)
       }
 
       // Layer 2：查 Cloudflare Cache API，命中则直接返回，省去 D1 查询
       // caches.default 是 Cloudflare Workers 的扩展属性，标准类型定义中不含，需要显式断言
       const cache = (caches as unknown as { default: Cache }).default
-      const cacheKey = new Request(request.url)
+      const cacheUrl = new URL(request.url)
+
+      if (validated.range) {
+        cacheUrl.search = ''
+        cacheUrl.searchParams.set('range', validated.range)
+        cacheUrl.searchParams.set('limits', String(validated.limits))
+      }
+
+      const cacheKey = new Request(cacheUrl.toString())
       const cachedResponse = await cache.match(cacheKey)
 
       if (cachedResponse) {
@@ -74,7 +134,7 @@ export default {
       try {
         const data = await queryHotTopics(env.DB, validated)
 
-        const response = jsonResponse(data, 200, {
+        const response = jsonResponse(request, data, 200, {
           'Cache-Control': `public, max-age=${CACHE_MAX_AGE}`,
         })
 
@@ -87,13 +147,14 @@ export default {
         console.error('查询热议主题失败:', err)
 
         return jsonResponse(
+          request,
           { success: false, message: '服务器内部错误' },
           500,
         )
       }
     }
 
-    return jsonResponse({ success: false, message: 'Not Found' }, 404)
+    return jsonResponse(request, { success: false, message: 'Not Found' }, 404)
   },
 
   /**
