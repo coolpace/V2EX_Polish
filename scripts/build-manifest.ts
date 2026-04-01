@@ -39,7 +39,7 @@ import path from 'node:path'
 
 import { consola } from 'consola'
 
-import { HOT_TOPICS_API_URL, V2EX_DOMAINS } from '../src/constants'
+import { V2EX_DOMAINS } from '../src/constants'
 
 /**
  * 从 package.json 读取版本号，统一版本来源。
@@ -79,8 +79,6 @@ function getPackageVersion(): string {
 
   return version
 }
-
-const hotTopicsApiOrigin = new URL(HOT_TOPICS_API_URL).origin
 
 // 将版本读取操作放在生成时机，便于被主流程的 try/catch 捕获并输出一致化日志。
 
@@ -275,7 +273,7 @@ const generateManifest = (): Manifest => {
     permissions: ['scripting', 'contextMenus', 'storage', 'alarms', 'sidePanel'],
 
     // 允许访问的主机权限（所有 V2EX 域名）
-    host_permissions: [...matches, `${hotTopicsApiOrigin}/*`],
+    host_permissions: matches,
 
     // 扩展图标配置（多尺寸适配）
     icons: {
