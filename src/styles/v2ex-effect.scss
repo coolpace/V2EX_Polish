@@ -1365,6 +1365,22 @@ a:link.v2p-topic-preview-retry {
   }
 }
 
+.v2p-topics-hot-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 84px;
+  margin: 12px 10px 10px;
+  padding: 18px 16px;
+  border: 1px dashed var(--v2p-color-divider);
+  border-radius: var(--v2p-input-radius);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--v2p-color-font-tertiary);
+  text-align: center;
+  background-color: var(--v2p-color-bg-subtle);
+}
+
 .v2p-topics-hot-header {
   display: flex;
   align-items: center;
