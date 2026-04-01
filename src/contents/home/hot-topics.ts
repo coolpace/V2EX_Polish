@@ -46,8 +46,8 @@ export function handleHotTopics() {
 
   const oneDay = 60 * 60 * 24
 
-  /** 缓存 TTL（毫秒），5 分钟后自动失效。 */
-  const CACHE_TTL = 5 * 60 * 1000
+  /** 缓存 TTL（毫秒），与 cron 最小触发间隔（15 分钟）对齐，避免在数据更新前重复请求。 */
+  const CACHE_TTL = 15 * 60 * 1000
   const cache = new Map<string, { data: HotTopic[], timestamp: number }>()
 
   const getCachedData = (key: string): HotTopic[] | null => {

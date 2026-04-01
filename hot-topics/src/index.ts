@@ -28,8 +28,12 @@ function jsonResponse(
 export default {
   /**
    * HTTP 请求处理：响应 /hot-topics 接口查询。
+   *
+   * 缓存策略（两层）：
+   * 1. Cloudflare Cache API：命中则直接返回，不查 D1，跨用户共享；
+   * 2. Cache-Control 响应头：告知浏览器本地缓存时长。
    */
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     // 处理 CORS 预检请求
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS })
@@ -57,12 +61,27 @@ export default {
         return jsonResponse({ success: false, message: validated }, 400)
       }
 
+      // Layer 2：查 Cloudflare Cache API，命中则直接返回，省去 D1 查询
+      // caches.default 是 Cloudflare Workers 的扩展属性，标准类型定义中不含，需要显式断言
+      const cache = (caches as unknown as { default: Cache }).default
+      const cacheKey = new Request(request.url)
+      const cachedResponse = await cache.match(cacheKey)
+
+      if (cachedResponse) {
+        return cachedResponse
+      }
+
       try {
         const data = await queryHotTopics(env.DB, validated)
 
-        return jsonResponse(data, 200, {
+        const response = jsonResponse(data, 200, {
           'Cache-Control': `public, max-age=${CACHE_MAX_AGE}`,
         })
+
+        // 异步写入 Cloudflare Cache，不阻塞当前响应
+        ctx.waitUntil(cache.put(cacheKey, response.clone()))
+
+        return response
       }
       catch (err) {
         console.error('查询热议主题失败:', err)

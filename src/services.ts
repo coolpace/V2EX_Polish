@@ -495,31 +495,18 @@ export async function getUnreadMessagesCount(): Promise<number> {
 }
 
 /**
- * 热议主题 API 地址候选列表。
+ * 热议主题 Worker 接口地址。
  *
- * 迁移到自建 Worker 期间，优先使用已配置的 Worker 地址；
- * 如果仍然是占位符，则自动回退到现有可用接口，避免首页历史热议直接失效。
+ * 部署后请将占位符替换为实际的 Cloudflare Workers 子域名。
  */
-const HOT_TOPICS_API_CANDIDATES = [
-  'https://v2ex-hot-topics.<your-subdomain>.workers.dev/hot-topics',
-  'https://wbhvzt9dzy.us.aircode.run/hot-topics',
-] as const
+const HOT_TOPICS_API = 'https://v2ex-hot-topics.leokudev.workers.dev/hot-topics'
 
 function resolveHotTopicsApi(): URL {
-  for (const candidate of HOT_TOPICS_API_CANDIDATES) {
-    if (candidate.includes('<your-subdomain>')) {
-      continue
-    }
-
-    try {
-      return new URL(candidate)
-    }
-    catch {
-      // 忽略非法候选地址，继续尝试下一个。
-    }
+  if (HOT_TOPICS_API.includes('<your-subdomain>')) {
+    throw new ApiError({ message: '未配置热议主题接口地址，请替换 HOT_TOPICS_API 中的占位符' })
   }
 
-  throw new ApiError({ message: '未配置可用的热议主题接口地址' })
+  return new URL(HOT_TOPICS_API)
 }
 
 /**
