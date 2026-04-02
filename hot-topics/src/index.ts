@@ -66,6 +66,24 @@ function isAuthorizedRequest(request: Request): boolean {
     || client === EXTENSION_CLIENT_VALUE
 }
 
+function getCacheVariant(request: Request): string {
+  const allowedOrigin = getAllowedOrigin(request.headers.get('Origin'))
+
+  if (allowedOrigin) {
+    return `origin:${allowedOrigin}`
+  }
+
+  if (request.headers.get(EXTENSION_CLIENT_HEADER) === EXTENSION_CLIENT_VALUE) {
+    return 'client:extension'
+  }
+
+  return 'client:anonymous'
+}
+
+function createRequestId(): string {
+  return crypto.randomUUID().split('-')[0]
+}
+
 export default {
   /**
    * HTTP 请求处理：响应 /hot-topics 接口查询。
@@ -117,12 +135,15 @@ export default {
       // caches.default 是 Cloudflare Workers 的扩展属性，标准类型定义中不含，需要显式断言
       const cache = (caches as unknown as { default: Cache }).default
       const cacheUrl = new URL(request.url)
+      const cacheVariant = getCacheVariant(request)
 
       if (validated.range) {
         cacheUrl.search = ''
         cacheUrl.searchParams.set('range', validated.range)
         cacheUrl.searchParams.set('limits', String(validated.limits))
       }
+
+      cacheUrl.searchParams.set('__cache_variant', cacheVariant)
 
       const cacheKey = new Request(cacheUrl.toString())
       const cachedResponse = await cache.match(cacheKey)
@@ -144,12 +165,21 @@ export default {
         return response
       }
       catch (err) {
-        console.error('查询热议主题失败:', err)
+        const requestId = createRequestId()
+
+        console.error(`查询热议主题失败 [${requestId}]:`, {
+          range,
+          startTime,
+          endTime,
+          limits: validated.limits,
+          err,
+        })
 
         return jsonResponse(
           request,
-          { success: false, message: '服务器内部错误' },
+          { success: false, message: `服务器内部错误，请稍后重试（请求 ID: ${requestId}）` },
           500,
+          { 'Cache-Control': 'no-store' },
         )
       }
     }

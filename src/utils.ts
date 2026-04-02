@@ -550,20 +550,88 @@ export function wrapApiError(error: unknown, fallbackMessage: string): ApiError 
   })
 }
 
+function extractErrorMessageFromPayload(payload: unknown): string | undefined {
+  if (!isObject(payload)) {
+    return undefined
+  }
+
+  const message = payload.message
+
+  if (typeof message === 'string' && message.trim()) {
+    return message.trim()
+  }
+
+  const error = payload.error
+
+  if (isObject(error) && typeof error.message === 'string' && error.message.trim()) {
+    return error.message.trim()
+  }
+
+  return undefined
+}
+
+export async function getResponseErrorMessage(
+  response: Response,
+  fallbackMessage: string,
+): Promise<string> {
+  const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
+  let detail = ''
+
+  try {
+    if (contentType.includes('application/json')) {
+      detail = extractErrorMessageFromPayload(await response.clone().json()) ?? ''
+    }
+  }
+  catch {
+    // ignore parsing errors and fall back to text / generic message
+  }
+
+  if (!detail) {
+    try {
+      const text = (await response.clone().text()).replace(/\s+/g, ' ').trim()
+
+      if (text && !text.startsWith('<!DOCTYPE') && !text.startsWith('<html')) {
+        detail = text.slice(0, 200)
+      }
+    }
+    catch {
+      // ignore body read errors and fall back to status code
+    }
+  }
+
+  if (detail) {
+    if (
+      detail === fallbackMessage
+      || detail.startsWith(`${fallbackMessage}：`)
+      || detail.startsWith(`${fallbackMessage}:`)
+    ) {
+      return detail
+    }
+
+    return `${fallbackMessage}：${detail}`
+  }
+
+  return response.status
+    ? `${fallbackMessage}（HTTP ${response.status}）`
+    : fallbackMessage
+}
+
 /**
  * 从 HTTP 响应创建 API 错误
  *
  * @param response - fetch 响应对象
  * @param fallbackMessage - 默认的用户友好错误消息
  */
-export function createApiErrorFromResponse(
+export async function createApiErrorFromResponse(
   response: Response,
   fallbackMessage: string,
-): ApiError {
+): Promise<ApiError> {
+  const message = await getResponseErrorMessage(response, fallbackMessage)
+
   return new ApiError({
-    message: fallbackMessage,
+    message,
     statusCode: response.status,
-    cause: new Error(`HTTP ${response.status}: ${response.statusText}`),
+    cause: new Error(`${message} [HTTP ${response.status}: ${response.statusText}]`),
   })
 }
 
