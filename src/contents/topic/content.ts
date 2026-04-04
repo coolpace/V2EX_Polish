@@ -1,6 +1,6 @@
 import { createButton } from '../../components/button'
 import { createImagePreview } from '../../components/image-preview'
-import { createModal } from '../../components/modal'
+import { openTagInputModal } from '../../components/tag-input-modal'
 import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
 import { useTopicPreview } from '../../use-topic-preview'
@@ -325,102 +325,16 @@ export function openTagsSetter(
         : undefined
       : undefined
 
-    /**
-     * 创建 modal 获取用户输入
-     */
-    const getUserInput = (): Promise<string | null> => {
-      return new Promise((resolve) => {
-        let $input: JQuery
-
-        const modal = createModal({
-          root: $body,
-          title: '设置用户标签',
-          footer: true,
-          onMount: ({ $mask, $main, $content, $footer, $actions }) => {
-            $mask.css({
-              display: 'flex',
-              'justify-content': 'center',
-              'align-items': 'center',
-            })
-
-            $main.css({
-              height: 'auto',
-            })
-
-            const $inputWrapper = $('<div class="v2p-tag-input-wrapper">')
-              .css({
-                padding: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '15px',
-              })
-
-            const $hint = $(`<div class="v2p-tag-hint">对 <b>@${memberName}</b> 设置标签（用于个性化标记、筛选和快速检索），多个标签以逗号（，）分隔。</div>`)
-              .css({
-                fontSize: '14px',
-                color: 'var(--v2p-color-font-secondary)',
-              })
-
-            $input = $('<textarea rows="4" type="text" class="sl" name="tags" />')
-              .attr('placeholder', '请输入标签，多个标签以逗号分隔')
-              .val(tagsValue ?? '')
-              .css({
-                width: '100%',
-              })
-
-            $inputWrapper.append($hint, $input)
-            $content.append($inputWrapper)
-
-            const $confirmBtn = createButton({
-              children: '确认设置',
-              className: 'special',
-            })
-
-            $actions.find('.v2p-modal-close-btn').clone(true).appendTo($footer)
-            $footer.append($confirmBtn)
-            $actions.remove()
-
-            const handleConfirm = () => {
-              const value = $input.val() as string
-              resolve(value)
-              modal.close()
-            }
-
-            $confirmBtn.on('click', handleConfirm)
-
-            $input.on('keydown', (ev) => {
-              if (ev.key === 'Enter') {
-                ev.preventDefault()
-                handleConfirm()
-              }
-            })
-          },
-          onOpen: () => {
-            // 打开时自动聚焦到输入框
-            setTimeout(() => {
-              $input?.trigger('focus')
-              // 将光标移到末尾
-              const inputElement = $input?.get(0)
-
-              if (inputElement instanceof HTMLInputElement) {
-                const length = (inputElement.value || '').length
-                inputElement.setSelectionRange(length, length)
-              }
-            }, 100)
-          },
-          onClose: () => {
-            // 如果没有通过确认按钮关闭，则返回 null（用户点击关闭或按 Esc）
-            resolve(null)
-            modal.destroy()
-          },
-        })
-
-        modal.open()
-      })
-    }
-
-    // 获取用户输入
-    const newTagsValue = await getUserInput()
+    const newTagsValue = await openTagInputModal({
+      root: $body,
+      title: '设置用户标签',
+      memberName,
+      hint: '设置标签（用于个性化标记、筛选和快速检索），多个标签以逗号（，）分隔。',
+      placeholder: '请输入标签，多个标签以逗号分隔',
+      initialValue: tagsValue ?? '',
+      confirmText: '确认设置',
+      rows: 4,
+    })
 
     if (newTagsValue !== null) {
       const tags

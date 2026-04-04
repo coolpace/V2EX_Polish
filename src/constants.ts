@@ -11,6 +11,8 @@ export const enum StorageKey {
   ReadingList = 'reading-list',
 }
 
+export const PendingOptionsMenuStorageKey = '__v2p-pending-options-menu'
+
 export const enum V2EX {
   Origin = 'https://www.v2ex.com',
   API = 'https://www.v2ex.com/api/v2',

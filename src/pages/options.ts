@@ -10,7 +10,8 @@ import {
   X,
 } from 'lucide'
 
-import { StorageKey, V2EX } from '../constants'
+import { openTagInputModal } from '../components/tag-input-modal'
+import { PendingOptionsMenuStorageKey, StorageKey, V2EX } from '../constants'
 import { initTheme, setFont, setMemberTags } from '../contents/helpers'
 import type { FontType, Options, ThemeType } from '../types'
 import { getStorage, setStorage } from '../utils'
@@ -231,6 +232,28 @@ void (async function init() {
   // 渲染已设置的用户标签列表。
   {
     const $contentTags = $('[data-content-key="tags"]')
+    const $modalRoot = $(document.body)
+
+    const getTagInputValue = (params: {
+      memberName: string
+      title: string
+      hint: string
+      initialValue?: string
+      confirmText: string
+    }) => {
+      const { memberName, title, hint, initialValue, confirmText } = params
+
+      return openTagInputModal({
+        root: $modalRoot,
+        title,
+        memberName,
+        hint,
+        placeholder: '请输入标签',
+        initialValue,
+        confirmText,
+        rows: 1,
+      })
+    }
 
     const renderEmptyTagsContent = () => {
       $contentTags.append($('#tags-empty').html())
@@ -330,7 +353,12 @@ void (async function init() {
               const { memberName } = $target.data()
 
               if (typeof memberName === 'string') {
-                const newTagValue = window.prompt(`新增对 @${memberName} 的标签。`)
+                const newTagValue = await getTagInputValue({
+                  memberName,
+                  title: '新增用户标签',
+                  hint: '新增一个标签。',
+                  confirmText: '确认新增',
+                })
 
                 if (typeof memberName === 'string') {
                   if (newTagValue && newTagValue.trim() !== '') {
@@ -361,7 +389,13 @@ void (async function init() {
                 const tagName = String(tn)
 
                 if (typeof memberName === 'string' && typeof tagIdx === 'number') {
-                  const changedTagValue = window.prompt(`修改 @${memberName} 的标签。`, tagName)
+                  const changedTagValue = await getTagInputValue({
+                    memberName,
+                    title: '修改用户标签',
+                    hint: '修改当前标签。',
+                    initialValue: tagName,
+                    confirmText: '确认修改',
+                  })
 
                   if (changedTagValue && changedTagValue.trim() !== '') {
                     const currentMemberTags = tagData[memberName].tags
@@ -468,8 +502,28 @@ void (async function init() {
       }
     }
 
-    const initialMenuKey = url.searchParams.get(MENU) || DEFAULT_ACTIVE_KEY
-    activeMenu(initialMenuKey)
+    const initialMenuKey = (() => {
+      const menuKeyFromUrl = url.searchParams.get(MENU)
+
+      if (menuKeyFromUrl) {
+        return Promise.resolve(menuKeyFromUrl)
+      }
+
+      return chrome.storage.local
+        .get(PendingOptionsMenuStorageKey)
+        .then((items) => {
+          const pendingMenuKey = items[PendingOptionsMenuStorageKey]
+
+          if (typeof pendingMenuKey === 'string') {
+            return chrome.storage.local
+              .remove(PendingOptionsMenuStorageKey)
+              .then(() => pendingMenuKey)
+          }
+
+          return DEFAULT_ACTIVE_KEY
+        })
+    })()
+    activeMenu(await initialMenuKey)
 
     $('.menu-item').on('click', (ev) => {
       const $target = $(ev.currentTarget)
