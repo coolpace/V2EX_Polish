@@ -1,16 +1,16 @@
-# `hot-topics/` Worker 子项目
+# `apps/hot-topics/` Worker 子项目
 
 返回索引：[README](./README.md)
 
-`hot-topics/` 是仓库中的 Cloudflare Workers 子项目，用于提供热议主题查询接口，并通过 Cron 定时抓取 V2EX 热门主题写入 D1。
+`apps/hot-topics/` 是仓库中的 Cloudflare Workers 子项目，用于提供热议主题查询接口，并通过 Cron 定时抓取 V2EX 热门主题写入 D1。
 
 ## 目录职责
 
-- `hot-topics/src/index.ts`：Worker 入口，处理 HTTP 请求与定时任务
-- `hot-topics/src/query.ts`：热议主题查询逻辑与参数校验
-- `hot-topics/src/updater.ts`：定时抓取 V2EX 热门主题并写入 D1
-- `hot-topics/schema.sql`：D1 建表脚本
-- `hot-topics/wrangler.toml`：Worker 名称、入口、Cron 与 D1 绑定配置
+- `apps/hot-topics/src/index.ts`：Worker 入口，处理 HTTP 请求与定时任务
+- `apps/hot-topics/src/query.ts`：热议主题查询逻辑与参数校验
+- `apps/hot-topics/src/updater.ts`：定时抓取 V2EX 热门主题并写入 D1
+- `apps/hot-topics/schema.sql`：D1 建表脚本
+- `apps/hot-topics/wrangler.toml`：Worker 名称、入口、Cron 与 D1 绑定配置
 
 ## Workspace 使用方式
 
@@ -43,8 +43,8 @@ pnpm --filter v2ex-hot-topics deploy
 在真正部署前，至少需要完成以下配置：
 
 1. 创建 D1 数据库。
-2. 将 `hot-topics/wrangler.toml` 中的 `database_id` 替换为真实值。
-3. 将 `hot-topics/schema.sql` 执行到目标 D1 数据库。
+2. 将 `apps/hot-topics/wrangler.toml` 中的 `database_id` 替换为真实值。
+3. 将 `apps/hot-topics/schema.sql` 执行到目标 D1 数据库。
 4. 部署 Worker，并拿到实际可访问的域名。
 5. 将扩展侧热议主题接口地址改为真实 Worker 地址。
 
@@ -52,7 +52,7 @@ pnpm --filter v2ex-hot-topics deploy
 
 当前扩展主项目和 Worker 的关系是“HTTP 调用”，而不是源码级共享模块：
 
-- 扩展通过 `src/services.ts` 中的热议主题接口地址访问 Worker
+- 扩展通过 `apps/extension/src/services.ts` 中的热议主题接口地址访问 Worker
 - Worker 独立抓取数据、写入 D1、对外提供 `/hot-topics` 接口
 - 两者目前没有共享 package，也没有共享构建链路
 
@@ -68,7 +68,7 @@ pnpm --filter v2ex-hot-topics deploy
 
 ## 变更建议
 
-当你要继续演进 `hot-topics/` 时，优先考虑以下方向：
+当你要继续演进 `apps/hot-topics/` 时，优先考虑以下方向：
 
 - 如果扩展和 Worker 开始共享接口类型或数据契约，再新增 `packages/contracts`
 - 如果需要统一本地联调体验，再引入可配置的 Worker API 地址

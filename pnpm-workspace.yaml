@@ -1,4 +1,3 @@
 packages:
-  - 'hot-topics'
-  - 'website'
+  - 'apps/*'
   - 'packages/*'

@@ -1,0 +1,14 @@
+export const V2EX_DOMAINS: readonly string[] = [
+  'v2ex.com',
+  'www.v2ex.com',
+  'cn.v2ex.com',
+  'jp.v2ex.com',
+  'de.v2ex.com',
+  'us.v2ex.com',
+  'hk.v2ex.com',
+  'global.v2ex.com',
+  'fast.v2ex.com',
+  's.v2ex.com',
+  'origin.v2ex.com',
+  'staging.v2ex.com',
+]

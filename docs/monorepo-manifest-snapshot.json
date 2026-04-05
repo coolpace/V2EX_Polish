@@ -1,0 +1,214 @@
+{
+  "chrome": {
+    "permissions": ["scripting", "contextMenus", "storage", "alarms", "sidePanel"],
+    "contentScripts": [
+      {
+        "css": [
+          "css/v2ex-theme-var.css",
+          "css/v2ex-theme-default.css",
+          "css/v2ex-theme-dark.css",
+          "css/v2ex-theme-compact.css",
+          "css/v2ex-theme-dawn.css",
+          "css/v2ex-theme-minimalist.css",
+          "css/v2ex-theme-mobile.css"
+        ],
+        "js": [],
+        "runAt": "document_start",
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/polyfill.js"],
+        "runAt": "document_end",
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": ["css/v2ex-effect.css"],
+        "js": ["scripts/jquery.min.js", "scripts/common.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-home.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": [
+          "*://*/t/*",
+          "*://*/notes/*",
+          "*://*/settings",
+          "*://*/write",
+          "*://*/member/*"
+        ]
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-topic.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-write.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-member.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-settings.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-notifications.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-go.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/toggle-icon.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      }
+    ],
+    "background": {
+      "service_worker": "scripts/background.min.js"
+    },
+    "webAccessibleResources": [
+      {
+        "resources": ["scripts/web_accessible_resources.min.js"]
+      }
+    ],
+    "optionsPage": "pages/options.html",
+    "defaultPopup": "pages/popup.html"
+  },
+  "firefox": {
+    "permissions": ["scripting", "contextMenus", "storage", "alarms"],
+    "contentScripts": [
+      {
+        "css": [
+          "css/v2ex-theme-var.css",
+          "css/v2ex-theme-default.css",
+          "css/v2ex-theme-dark.css",
+          "css/v2ex-theme-compact.css",
+          "css/v2ex-theme-dawn.css",
+          "css/v2ex-theme-minimalist.css",
+          "css/v2ex-theme-mobile.css"
+        ],
+        "js": [],
+        "runAt": "document_start",
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/polyfill.js"],
+        "runAt": "document_end",
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": ["css/v2ex-effect.css"],
+        "js": ["scripts/jquery.min.js", "scripts/common.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-home.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": [
+          "*://*/t/*",
+          "*://*/notes/*",
+          "*://*/settings",
+          "*://*/write",
+          "*://*/member/*"
+        ]
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-topic.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-write.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-member.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-settings.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-notifications.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/jquery.min.js", "scripts/v2ex-go.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
+        "css": [],
+        "js": ["scripts/toggle-icon.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
+      }
+    ],
+    "background": {
+      "scripts": ["scripts/background.min.js"]
+    },
+    "webAccessibleResources": [
+      {
+        "resources": ["scripts/web_accessible_resources.min.js"]
+      }
+    ],
+    "optionsPage": "pages/options.html",
+    "defaultPopup": "pages/popup.html"
+  }
+}

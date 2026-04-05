@@ -1,0 +1,8 @@
+{
+  "extends": "@codennnn/tsconfig/esm.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "verbatimModuleSyntax": false
+  }
+}

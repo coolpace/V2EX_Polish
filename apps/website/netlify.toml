@@ -1,0 +1,12 @@
+[build]
+  # packagePath: apps/website 已在 Netlify UI 设置，但 command 仍在仓库根目录执行
+  # 因此需要使用 --filter 指定构建 website 包，publish 路径也需要相对于仓库根目录
+  command = "pnpm install && pnpm --filter v2ex-polish-website build"
+  publish = "apps/website/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# 支持 SSR、API Routes（/api/donation、/api/qrcode 等）
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

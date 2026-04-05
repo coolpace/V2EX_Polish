@@ -1,7 +1,9 @@
-import stylelintPreset from 'prefer-code-style/stylelint'
+import baseConfig from './stylelint.base.js'
+
+const ignoreFiles = baseConfig.ignoreFiles ?? []
 
 export default {
-  extends: [stylelintPreset],
+  ...baseConfig,
 
   rules: {
     'selector-id-pattern': null,
@@ -18,11 +20,10 @@ export default {
   },
 
   ignoreFiles: [
-    'node_modules/**',
-    'dist/**',
-    'asset/**',
-    'extension/css/**',
-    '**/*.min.css',
-    'build*/**',
+    ...ignoreFiles,
+    'apps/extension/dist/**',
+    'apps/website/.next/**',
+    'apps/website/.velite/**',
+    'assets/**',
   ],
 }

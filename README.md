@@ -13,7 +13,7 @@
 
 - Chrome、Edge、Arc 用户请在 [Chrome 商店中安装][Link CWS]
 - Firefox 用户[在此下载安装](https://addons.mozilla.org/zh-CN/firefox/addon/v2ex-polish/)
-- Safari 用户参见[安装教程](./website/src/content/docs/use-in-safari.md)
+- Safari 用户参见[安装教程](./apps/website/src/content/docs/use-in-safari.md)
 - [油猴脚本](https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex)（仅支持部分功能，文档后面介绍了功能差异）
 
 > [!IMPORTANT]
@@ -122,17 +122,28 @@ V2EX Polish 的目标是提供一个更加完善的插件，并保证持续更�
 
 ## 开发说明
 
-仓库当前使用 `pnpm workspace` 管理两个项目：
+仓库当前使用 `pnpm workspace` 管理三个 app，根目录只保留代理命令：
 
-- 根目录：浏览器扩展与油猴脚本主项目
-- `hot-topics/`：Cloudflare Workers 热议主题接口
+- `apps/extension/`：浏览器扩展与油猴脚本主项目
+- `apps/website/`：Next.js 官网
+- `apps/hot-topics/`：Cloudflare Workers 热议主题接口
+
+扩展构建后的最终产物位于：
+
+- `apps/extension/dist/chrome/`
+- `apps/extension/dist/firefox/`
+- `apps/extension/dist/userscript/`
 
 常用命令：
 
 - `pnpm install`：安装整个 workspace 的依赖
 - `pnpm dev`：启动扩展本地开发
-- `pnpm worker:dev`：启动 `hot-topics/` Worker 本地开发
-- `pnpm worker:deploy`：部署 `hot-topics/` Worker
+- `pnpm dev:firefox`：启动 Firefox 扩展本地开发
+- `pnpm build`：构建扩展 zip 与 userscript
+- `pnpm verify:all`：执行 extension、website、worker 和 manifest 快照的完整校验
+- `pnpm worker:dev`：启动 `apps/hot-topics/` Worker 本地开发
+- `pnpm website:dev`：启动 `apps/website/` 本地开发
+- `pnpm worker:deploy`：部署 `apps/hot-topics/` Worker
 
 更多开发说明见 [docs/README.md](./docs/README.md)。
 
