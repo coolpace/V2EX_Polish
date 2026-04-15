@@ -379,6 +379,9 @@ export const defaultOptions: Options = {
   userTag: {
     display: 'inline',
   },
+  activationCode: {
+    enabled: true,
+  },
 }
 
 export const enum MessageKey {
