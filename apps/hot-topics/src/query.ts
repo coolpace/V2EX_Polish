@@ -177,7 +177,7 @@ export async function queryHotTopics(
     results = rows
   }
 
-  // 将数据库行转换为前端期望的格式（保持与原 AirCode 接口兼容）
+  // 将数据库行转换为前端期望的格式
   // url 和 avatar_normal 在此处从存储字段动态推导
   const formattedResults: HotTopicResult[] = results.map((row) => ({
     id: row.id,

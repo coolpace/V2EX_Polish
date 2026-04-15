@@ -15,7 +15,7 @@ import {
 function handleReplyActions() {
   const os = getOS()
 
-  const replyBtnText = `回复<kbd>${os === 'macos' ? 'Cmd' : 'Ctrl'}+Enter</kbd>`
+  const replyBtnText = `回复<kbd>${os === 'macos' ? '⌘' : 'Ctrl'}+Enter</kbd>`
 
   const $replyBtn = createButton({
     children: replyBtnText,

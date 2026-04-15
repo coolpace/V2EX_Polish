@@ -83,6 +83,33 @@ export async function updateHotTopics(
     return { upserted: 0, cleaned: 0 }
   }
 
+  // 过滤掉推广/广告类主题，避免此类内容进入数据库
+  const filteredTopics = topics.filter((tp) => {
+    // 通过节点名称判断
+    if (tp.node.name === 'promotions') {
+      return false
+    }
+
+    // 通过节点 URL 判断
+    if (tp.node.url.includes('/go/promotions')) {
+      return false
+    }
+
+    // 通过主题内容中的推广节点链接判断
+    if (
+      tp.content.includes('/go/promotions')
+      || tp.content_rendered.includes('/go/promotions')
+    ) {
+      return false
+    }
+
+    return true
+  })
+
+  if (filteredTopics.length === 0) {
+    return { upserted: 0, cleaned: 0 }
+  }
+
   // 使用 UPSERT 批量写入，避免先查询全表再判断的开销
   // 不存储 url（可由 id 拼接）和 member_avatar_normal（可由 mini 推导）
   const upsertStmt = db.prepare(
@@ -95,7 +122,7 @@ export async function updateHotTopics(
        member_avatar_mini = excluded.member_avatar_mini`,
   )
 
-  const upsertBatch = topics.map((tp) =>
+  const upsertBatch = filteredTopics.map((tp) =>
     upsertStmt.bind(
       tp.id,
       tp.title,
@@ -118,5 +145,5 @@ export async function updateHotTopics(
 
   const cleaned = cleanResult.meta.changes ?? 0
 
-  return { upserted: topics.length, cleaned }
+  return { upserted: filteredTopics.length, cleaned }
 }
