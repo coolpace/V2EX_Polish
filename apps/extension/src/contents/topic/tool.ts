@@ -6,6 +6,7 @@ import { $infoCard, $replyBox, $replyTextArea, pathTopicId } from '../globals'
 import {
   addToReadingList,
   decodeBase64TopicPage,
+  encodeUtf8AsBase64,
   focusReplyInput,
   insertTextToReplyInput,
   loadIcons,
@@ -87,7 +88,7 @@ export function handleTools() {
           let encodedText: string | undefined
 
           try {
-            encodedText = window.btoa(encodeURIComponent(inputText))
+            encodedText = encodeUtf8AsBase64(inputText)
           }
           catch (err) {
             const errorTip = '该文本无法编码为 Base64'

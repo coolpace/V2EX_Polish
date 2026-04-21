@@ -173,16 +173,56 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
 }
 
 /**
- * 对字符串进行自定义转义处理。
+ * 将 `atob` 得到的 binary string（每个字符对应一个字节）按 UTF-8 解码为字符串。
  *
- * 该函数旨在对字符串中的非ASCII字符进行转义，使其能够安全地在特定环境中使用，比如 URL、HTML 等。
- * 转义规则是将非 ASCII 字符转换为 %xx 的形式，其中xx是字符的 16 进制值。
+ * 相比早期 `decodeURIComponent(escape(atob(...)))` 的 hack 写法，使用 TextDecoder 可以：
+ * - 正确处理 UTF-8 多字节序列（如中文）；
+ * - 不会误伤原始 payload 中已存在的 `%` 字符；
+ * - 通过 `fatal: true` 直接拒绝非法 UTF-8 字节，便于识别非文本的误匹配。
  */
-function customEscape(str: string) {
-  return str.replace(
-    /[^a-zA-Z0-9_.!~*'()-]/g,
-    (c) => `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`,
-  )
+function decodeBinaryAsUtf8(binary: string): string {
+  const bytes = new Uint8Array(binary.length)
+
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i)
+  }
+
+  return new TextDecoder('utf-8', { fatal: true }).decode(bytes)
+}
+
+/**
+ * 将 UTF-8 文本编码为 Base64。
+ */
+export function encodeUtf8AsBase64(text: string): string {
+  const bytes = new TextEncoder().encode(text)
+  let binary = ''
+
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
+  }
+
+  return window.btoa(binary)
+}
+
+/**
+ * 旧版“文本转 Base64”会先执行 `encodeURIComponent`（或 `escape`）再 `btoa`，
+ * 因此从 Base64 还原出的文本里，无论是 ASCII 段（如 `%40` → `@`）还是 UTF-8
+ * 多字节段（如 `%E4%BD%A0` → `你`），都属于需要再做一次 URL 解码的历史数据。
+ *
+ * 对于确实包含字面量 `%` 但不构成合法编码的字符串，`decodeURIComponent` 会抛错，
+ * 此时回退为原文，保证健壮性。
+ */
+function decodeLegacyPercentEncodedText(text: string): string {
+  if (!/%[0-9A-Fa-f]{2}/.test(text)) {
+    return text
+  }
+
+  try {
+    return decodeURIComponent(text)
+  }
+  catch {
+    return text
+  }
 }
 
 /**
@@ -248,7 +288,11 @@ export function decodeBase64TopicPage() {
       }
 
       try {
-        return decodeURIComponent(customEscape(window.atob(text)))
+        // 1) 先按 UTF-8 还原出原始文本（正确处理中文等多字节字符）。
+        const decoded = decodeBinaryAsUtf8(window.atob(text))
+
+        // 2) 兼容旧版先 URL 编码、再 Base64 的历史数据。
+        return decodeLegacyPercentEncodedText(decoded)
       }
       catch (err) {
         if (err instanceof Error) {
