@@ -139,7 +139,8 @@ V2EX Polish 的目标是提供一个更加完善的插件，并保证持续更�
 - `pnpm install`：安装整个 workspace 的依赖
 - `pnpm dev`：启动扩展本地开发
 - `pnpm dev:firefox`：启动 Firefox 扩展本地开发
-- `pnpm build`：构建扩展 zip 与 userscript
+- `pnpm build`：完整构建，生成未打包 dist、扩展 zip 与 userscript
+- `pnpm build:dist`：只生成可加载的扩展目录与 userscript
 - `pnpm verify:all`：执行 extension、website、worker 和 manifest 快照的完整校验
 - `pnpm worker:dev`：启动 `apps/hot-topics/` Worker 本地开发
 - `pnpm website:dev`：启动 `apps/website/` 本地开发

@@ -66,7 +66,8 @@ V2EX_Polish_Pro/
 - `apps/extension/scripts/build-manifest.ts` 生成 `apps/extension/dist/<target>/manifest.json`
 - `apps/extension/scripts/build-userscript-style.mjs` 生成 `apps/extension/src/user-scripts/style.ts`
 - `tsup.userscript.config.ts` 生成 `apps/extension/dist/userscript/index.min.js`
-- `web-ext build` 将 Chrome / Firefox 产物打包到 `apps/extension/dist/packages/<target>/`
+- `pnpm build:dist` 负责生成可加载的未打包扩展目录
+- `pnpm package:zip` 会调用 `web-ext build`，将 Chrome / Firefox 产物打包到 `apps/extension/dist/packages/<target>/`
 
 运行时路径仍保持稳定：
 
@@ -82,7 +83,8 @@ pnpm install
 pnpm dev
 pnpm dev:firefox
 pnpm build
-pnpm build:all
+pnpm build:dist
+pnpm package:zip
 pnpm build:manifest
 pnpm build:userscript
 pnpm verify:all
@@ -96,7 +98,7 @@ pnpm worker:deploy
 ## 手动加载扩展
 
 ```bash
-pnpm build:all
+pnpm build:dist
 ```
 
 然后：

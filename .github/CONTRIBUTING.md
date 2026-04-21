@@ -68,7 +68,8 @@ pnpm worker:dev
 
 - `pnpm verify:all`：完整验收入口，包含 extension typecheck、website typecheck、worker check、manifest 快照、userscript 构建和扩展构建
 - `pnpm build`：生成 Chrome / Firefox zip 与 userscript
-- `pnpm build:all`：生成未打包的 extension dist 与 userscript
+- `pnpm build:dist`：生成未打包的 extension dist 与 userscript
+- `pnpm package:zip`：基于 `dist/chrome` 与 `dist/firefox` 生成 zip 包
 - `pnpm build:manifest`：生成 Chrome 与 Firefox manifest
 - `pnpm build:userscript`：只构建 userscript
 - `pnpm clean`：清理 `apps/extension/dist` 与生成的 userscript 样式文件

@@ -17,6 +17,20 @@ pnpm build
 5. 生成 userscript：`apps/extension/dist/userscript/index.min.js`
 6. 打包 zip 到 `apps/extension/dist/packages/chrome/` 与 `apps/extension/dist/packages/firefox/`
 
+如果只需要本地调试或手动加载扩展，可使用：
+
+```bash
+pnpm build:dist
+```
+
+它只生成 `dist/chrome`、`dist/firefox` 和 userscript，不生成 zip。
+
+如果已经有未打包产物，只想重新归档发布包，可使用：
+
+```bash
+pnpm package:zip
+```
+
 ## 产物位置
 
 - Chrome 可加载目录：`apps/extension/dist/chrome/`

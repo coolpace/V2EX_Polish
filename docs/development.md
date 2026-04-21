@@ -50,10 +50,10 @@ pnpm dev
 
 ## 手动加载扩展
 
-如果不想通过 `web-ext` 启动浏览器，可以先构建，再手动加载：
+如果不想通过 `web-ext` 启动浏览器，可以先构建未打包目录，再手动加载：
 
 ```bash
-pnpm build:all
+pnpm build:dist
 ```
 
 构建完成后：
@@ -89,10 +89,12 @@ pnpm build:all
 ```bash
 pnpm build:ext
 pnpm build:style
+pnpm build:dist
 pnpm build:manifest
 pnpm build:manifest:chrome
 pnpm build:manifest:firefox
 pnpm build:userscript
+pnpm package:zip
 pnpm watch
 pnpm watch:ext
 pnpm watch:style
