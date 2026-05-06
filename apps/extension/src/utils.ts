@@ -6,7 +6,7 @@ import type { ReadingItem, SettingsSyncInfo, StorageItems, StorageSettings } fro
 
 /** 动态获取 V2EX 的域名，防止跨域。 */
 export const V2EX_ORIGIN
-  = typeof window !== 'undefined' && window.location.origin.includes('v2ex.com')
+  = typeof window !== 'undefined' && /v2ex\.(com|co)/.test(window.location.origin)
     ? window.location.origin
     : V2EX.Origin
 

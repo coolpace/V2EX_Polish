@@ -18,6 +18,7 @@ const V2EX_ALLOWED_ORIGINS = [
   'https://s.v2ex.com',
   'https://origin.v2ex.com',
   'https://staging.v2ex.com',
+  'https://global.v2ex.co',
 ] as const
 const EXTENSION_CLIENT_HEADER = 'X-V2P-Client'
 const EXTENSION_CLIENT_VALUE = 'extension'

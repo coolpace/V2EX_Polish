@@ -510,6 +510,8 @@ body {
     /** MARK: 站内链接。 */
     a[href*='v2ex.com/t'],
     a[href*='v2ex.com/t'][href^='http'],
+    a[href*='v2ex.co/t'],
+    a[href*='v2ex.co/t'][href^='http'],
     a[href^='/'] {
       @include share.link;
 
