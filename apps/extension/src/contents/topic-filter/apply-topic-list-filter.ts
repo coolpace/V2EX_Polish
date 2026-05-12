@@ -64,6 +64,9 @@ export function applyTopicListFilter(scope: Extract<TopicFilterScope, 'home' | '
     })
 
     if (hiddenCount > 0) {
+      const $hiddenItems = $('.v2p-home-filter-hidden')
+      let showing = false
+
       const $counter = $(`
         <div class="v2p-filter-counter cell">
           已隐藏 ${hiddenCount} 条主题
@@ -72,9 +75,19 @@ export function applyTopicListFilter(scope: Extract<TopicFilterScope, 'home' | '
         </div>
       `)
 
-      $counter.find('.v2p-filter-show').on('click', () => {
-        $('.v2p-home-filter-hidden').removeClass('v2p-home-filter-hidden')
-        $counter.remove()
+      $counter.find('.v2p-filter-show').on('click', (e) => {
+        const $link = $(e.currentTarget)
+
+        if (showing) {
+          $hiddenItems.addClass('v2p-home-filter-hidden').removeClass('v2p-home-filter-revealed')
+          $link.text('显示')
+          showing = false
+        }
+        else {
+          $hiddenItems.removeClass('v2p-home-filter-hidden').addClass('v2p-home-filter-revealed')
+          $link.text('隐藏')
+          showing = true
+        }
       })
 
       $items.first().before($counter)

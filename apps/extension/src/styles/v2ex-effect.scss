@@ -79,7 +79,16 @@ body {
       display: none;
     }
 
-    .v2p-filter-counter {
+    .v2p-home-filter-revealed {
+      opacity: 0.35;
+      transition: opacity 0.15s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .v2p-filter-counter.cell {
       display: flex;
       align-items: center;
       justify-content: center;

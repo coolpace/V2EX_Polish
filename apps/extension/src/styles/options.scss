@@ -1030,6 +1030,7 @@ input {
 
 .topic-filter-rule-name,
 .topic-filter-condition input,
+.topic-filter-condition textarea,
 .topic-filter-condition select,
 .topic-filter-rule-logic {
   padding: 4px 8px;
@@ -1042,6 +1043,10 @@ input {
   &:focus {
     border-color: var(--v2p-color-accent-400);
   }
+}
+
+.topic-filter-condition textarea {
+  resize: vertical;
 }
 
 .topic-filter-add-rule-btn,

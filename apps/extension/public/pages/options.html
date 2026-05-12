@@ -500,7 +500,7 @@
                     <input type="checkbox" id="topic_filter_advanced_enabled" />
                     <div class="combo">
                       <label for="topic_filter_advanced_enabled">启用高级规则</label>
-                      <p>用于配置「节点 + 标题关键词」等组合条件。普通屏蔽需求无需开启。</p>
+                      <p>用于配置「节点 + 标题关键词」等组合条件。</p>
                     </div>
                   </div>
 
@@ -553,7 +553,7 @@
                   <option value="equals">等于</option>
                   <option value="regex">正则</option>
                 </select>
-                <input class="topic-filter-condition-value" type="text" placeholder="匹配内容" />
+                <textarea class="topic-filter-condition-value" rows="2" placeholder="匹配内容（每行一个，或用逗号分隔）"></textarea>
                 <button class="topic-filter-condition-delete" type="button">删除</button>
               </div>
             </template>

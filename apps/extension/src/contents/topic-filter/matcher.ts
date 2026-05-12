@@ -28,35 +28,47 @@ function getFieldValue(condition: TopicFilterCondition, target: TopicFilterTarge
   return value
 }
 
-function matchCondition(condition: TopicFilterCondition, target: TopicFilterTarget): boolean {
-  const expectedValue = condition.value.trim()
-  const fieldValue = getFieldValue(condition, target)
-  let matched = false
+function parseConditionValues(value: string): string[] {
+  return value
+    .split(/[\n,，]/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
 
-  if (expectedValue) {
+function matchCondition(condition: TopicFilterCondition, target: TopicFilterTarget): boolean {
+  const expectedValues = parseConditionValues(condition.value)
+  const fieldValue = getFieldValue(condition, target)
+
+  if (expectedValues.length === 0) {
+    return false
+  }
+
+  return expectedValues.some((expectedValue) => {
+    const normalized = normalizeText(expectedValue)
+
     if (condition.operator === 'contains') {
-      matched = normalizeText(fieldValue).includes(normalizeText(expectedValue))
+      return normalizeText(fieldValue).includes(normalized)
     }
 
     if (condition.operator === 'equals') {
-      // nodeName 可能包含 URL slug 和中文展示文本，拆分后逐一比较
       const fieldParts = condition.field === 'node'
         ? normalizeText(fieldValue).split(/\s+/)
         : [normalizeText(fieldValue)]
-      matched = fieldParts.some((part) => part === normalizeText(expectedValue))
+
+      return fieldParts.some((part) => part === normalized)
     }
 
     if (condition.operator === 'regex') {
       try {
-        matched = new RegExp(expectedValue, 'i').test(fieldValue)
+        return new RegExp(expectedValue, 'i').test(fieldValue)
       }
       catch {
-        matched = false
+        return false
       }
     }
-  }
 
-  return matched
+    return false
+  })
 }
 
 function matchRule(
