@@ -3,6 +3,7 @@ import {
   Check,
   CircleHelp,
   createIcons,
+  Filter,
   Key,
   Plus,
   Settings,
@@ -16,6 +17,7 @@ import { initTheme, setFont, setMemberTags } from '../contents/helpers'
 import type { FontType, Options, ThemeType } from '../types'
 import { getStorage, setStorage } from '../utils'
 import { handleBackupForm, handleTokenForm } from './options.helper'
+import { initTopicFilterOptions, readTopicFilterOptions } from './options.topic-filter'
 
 function loadIcons() {
   createIcons({
@@ -25,6 +27,7 @@ function loadIcons() {
       Tags,
       Key,
       ArchiveRestore,
+      Filter,
       Plus,
       X,
       CircleHelp,
@@ -127,6 +130,7 @@ async function saveOptions() {
     font: {
       type: ($('#font-type-select').val() as FontType) ?? 'system',
     },
+    topicFilter: readTopicFilterOptions(),
   }
 
   await setStorage(StorageKey.Options, currentOptions)
@@ -224,9 +228,11 @@ void (async function init() {
     $('#font-type-select').val(fontType)
     setFont(fontType)
 
-    $('input[type]').on('change', () => {
+    $('input[type]').not('[data-content-key="filter"] input').on('change', () => {
       void saveOptions()
     })
+
+    initTopicFilterOptions(options.topicFilter, () => void saveOptions())
   }
 
   // 渲染已设置的用户标签列表。

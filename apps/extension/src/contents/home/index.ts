@@ -2,6 +2,7 @@ import { StorageKey } from '../../constants'
 import { getStorage, isSameDay } from '../../utils'
 import { $infoCard } from '../globals'
 import { loadIcons } from '../helpers'
+import { applyTopicListFilter } from '../topic-filter/apply-topic-list-filter'
 import { handleHotTopics } from './hot-topics'
 import { handleTopicList } from './topic-list'
 
@@ -21,6 +22,8 @@ void (async () => {
   }
 
   handleTopicList()
+
+  applyTopicListFilter('home')
 
   {
     const dailyInfo = storage[StorageKey.Daily]

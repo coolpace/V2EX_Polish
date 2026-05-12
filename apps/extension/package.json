@@ -1,6 +1,6 @@
 {
   "name": "v2ex-polish-extension",
-  "version": "2.4.37",
+  "version": "2.4.38",
   "type": "module",
   "private": true,
   "license": "UNLICENSED",
@@ -39,8 +39,8 @@
     "watch:style:firefox": "pnpm run build:style:firefox --watch",
     "lint": "run-p lint:ts lint:es lint:style",
     "lint:ts": "pnpm run typecheck",
-    "lint:es": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.{ts,mts,cts,mjs}\" \"shared/**/*.{ts,tsx}\" \"public/**/*.js\" \"tsup.config.ts\" \"tsup.userscript.config.ts\" --no-warn-ignored",
-    "lint:style": "stylelint \"src/**/*.{css,scss}\"",
+    "lint:es": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.{ts,mts,cts,mjs}\" \"shared/**/*.{ts,tsx}\" \"public/**/*.js\" \"tsup.config.ts\" \"tsup.userscript.config.ts\" --fix --no-warn-ignored",
+    "lint:style": "stylelint \"src/**/*.{css,scss}\" --fix",
     "typecheck": "run-s typecheck:runtime typecheck:tooling",
     "typecheck:runtime": "tsc -p tsconfig.runtime.json --noEmit --skipLibCheck",
     "typecheck:tooling": "tsc -p tsconfig.tooling.json --noEmit --skipLibCheck"

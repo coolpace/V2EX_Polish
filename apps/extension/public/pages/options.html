@@ -30,11 +30,17 @@
               <span class="menu-item-title">控制选项</span>
             </li>
 
+            
             <li data-menu-key="tags" class="menu-item" title="用户标签">
               <i class="menu-item-icon" data-lucide="tags"></i>
               <span class="menu-item-title">用户标签</span>
             </li>
-
+            
+            <li data-menu-key="filter" class="menu-item" title="主题屏蔽">
+              <i class="menu-item-icon" data-lucide="filter"></i>
+              <span class="menu-item-title">主题屏蔽</span>
+            </li>
+            
             <li data-menu-key="token" class="menu-item" title="API Token">
               <i class="menu-item-icon" data-lucide="key"></i>
               <span class="menu-item-title">API Token</span>
@@ -447,6 +453,110 @@
                 </fieldset>
               </div>
             </form>
+          </div>
+
+          <div data-content-key="filter">
+            <div class="topic-filter-form-inner">
+              <h2 class="topic-filter-form-title">主题屏蔽</h2>
+
+              <div class="form-checkbox">
+                <input type="checkbox" id="topic_filter_enabled" />
+                <div class="combo">
+                  <label for="topic_filter_enabled">启用主题屏蔽</label>
+                  <p>隐藏包含指定关键词或来自指定节点的主题。</p>
+                </div>
+              </div>
+
+              <hr />
+
+              <fieldset>
+                <legend>标题关键词</legend>
+                <textarea
+                  id="topic_filter_title_keywords"
+                  class="topic-filter-textarea"
+                  placeholder="招聘&#10;外包&#10;求职"
+                ></textarea>
+                <p class="topic-filter-hint">标题包含任一关键词时隐藏，一行一个。作用于首页、热议主题和节点页。</p>
+              </fieldset>
+
+              <hr />
+
+              <fieldset>
+                <legend>屏蔽节点</legend>
+                <textarea
+                  id="topic_filter_nodes"
+                  class="topic-filter-textarea"
+                  placeholder="推广&#10;jobs&#10;flamewar"
+                ></textarea>
+                <p class="topic-filter-hint">节点名完全匹配时隐藏，支持 URL 中的英文节点名（如 jobs）或页面上的中文节点名（如 推广）。热议主题列表暂无节点信息，因此不受此项影响。</p>
+              </fieldset>
+
+              <hr />
+
+              <details class="topic-filter-advanced">
+                <summary><span class="summary-text">高级规则（可选）</span></summary>
+                <div class="details-content">
+                  <div class="form-checkbox">
+                    <input type="checkbox" id="topic_filter_advanced_enabled" />
+                    <div class="combo">
+                      <label for="topic_filter_advanced_enabled">启用高级规则</label>
+                      <p>用于配置「节点 + 标题关键词」等组合条件。普通屏蔽需求无需开启。</p>
+                    </div>
+                  </div>
+
+                  <div class="topic-filter-advanced-rule-list"></div>
+                  <button class="topic-filter-add-rule-btn" type="button">添加高级规则</button>
+                </div>
+              </details>
+            </div>
+
+            <template id="topic-filter-advanced-rule-template">
+              <div class="topic-filter-advanced-rule">
+                <div class="topic-filter-rule-header">
+                  <input class="topic-filter-rule-name" type="text" placeholder="规则名称（可选）" />
+                  <label>
+                    <input class="topic-filter-rule-enabled" type="checkbox" checked />
+                    启用
+                  </label>
+                  <button class="topic-filter-rule-delete" type="button">删除</button>
+                </div>
+
+                <div class="topic-filter-rule-meta">
+                  <div class="topic-filter-rule-scopes">
+                    <span>生效位置</span>
+                    <label><input class="topic-filter-rule-scope" type="checkbox" value="home" checked /> 首页</label>
+                    <label><input class="topic-filter-rule-scope" type="checkbox" value="node" checked /> 节点页</label>
+                    <label><input class="topic-filter-rule-scope" type="checkbox" value="hot" /> 热议</label>
+                  </div>
+                  <label>
+                    条件关系
+                    <select class="topic-filter-rule-logic">
+                      <option value="all">所有条件满足</option>
+                      <option value="any">任一条件满足</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="topic-filter-condition-list"></div>
+                <button class="topic-filter-add-condition-btn" type="button">添加条件</button>
+              </div>
+            </template>
+
+            <template id="topic-filter-advanced-condition-template">
+              <div class="topic-filter-condition">
+                <select class="topic-filter-condition-field">
+                  <option value="title">标题</option>
+                  <option value="node">节点</option>
+                </select>
+                <select class="topic-filter-condition-operator">
+                  <option value="contains">包含</option>
+                  <option value="equals">等于</option>
+                  <option value="regex">正则</option>
+                </select>
+                <input class="topic-filter-condition-value" type="text" placeholder="匹配内容" />
+                <button class="topic-filter-condition-delete" type="button">删除</button>
+              </div>
+            </template>
           </div>
 
           <div data-content-key="tags"></div>

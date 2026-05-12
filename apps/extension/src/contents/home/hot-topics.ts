@@ -6,6 +6,8 @@ import type { HotTopic, HotTopicRange } from '../../types'
 import { useTopicPreview } from '../../use-topic-preview'
 import { getStorageSync, isBrowserExtension } from '../../utils'
 import { $wrapper } from '../globals'
+import { filterHotTopics } from '../topic-filter/filter-hot-topics'
+import { shouldHideTopic } from '../topic-filter/matcher'
 
 type RangeAlias = '近三日' | '近七日' | '近一月'
 
@@ -40,6 +42,51 @@ export function handleHotTopics() {
   if ($cell.length === 0) {
     return
   }
+
+  const canPreview = isBrowserExtension()
+  const options = canPreview ? getStorageSync()[StorageKey.Options] : undefined
+  const isPreviewMode = options?.topic?.openMode === 'preview'
+  const topicPreview = canPreview ? useTopicPreview() : null
+  const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
+
+  const filterTodayCells = () => {
+    const topicFilter = options?.topicFilter
+
+    if (!topicFilter?.enabled) {
+      return
+    }
+
+    $('.v2p-hot-filter-counter').remove()
+
+    let hiddenCount = 0
+
+    $listWrapper.find('> .cell').each((_, cell) => {
+      const $c = $(cell)
+      const title = $c.find('.item_hot_topic_title > a').text()
+
+      if (shouldHideTopic(topicFilter, 'hot', { title, nodeName: '' })) {
+        $c.addClass('v2p-home-filter-hidden')
+        hiddenCount++
+      }
+    })
+
+    if (hiddenCount > 0) {
+      const $counter = $(`
+        <div class="v2p-hot-filter-counter">
+          已隐藏 ${hiddenCount} 条
+          &nbsp;·&nbsp;
+          <a class="v2p-filter-show">显示</a>
+        </div>
+      `)
+      $counter.find('.v2p-filter-show').on('click', () => {
+        $listWrapper.find('.v2p-home-filter-hidden').removeClass('v2p-home-filter-hidden')
+        $counter.remove()
+      })
+      $listWrapper.prepend($counter)
+    }
+  }
+
+  filterTodayCells()
 
   const $text = $('<span class="v2p-topics-hot-picker-text">今日</span>')
   const $trigger = $(
@@ -83,14 +130,14 @@ export function handleHotTopics() {
     return null
   }
 
-  const canPreview = isBrowserExtension()
-  const options = canPreview ? getStorageSync()[StorageKey.Options] : undefined
-  const isPreviewMode = options?.topic?.openMode === 'preview'
-  const topicPreview = canPreview ? useTopicPreview() : null
-  const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
-
   const renderNewTopicList = (result: HotTopic[]) => {
     $listWrapper.empty()
+
+    const topicFilter = options?.topicFilter
+
+    if (topicFilter?.enabled) {
+      result = filterHotTopics(result, topicFilter)
+    }
 
     if (result.length === 0) {
       $listWrapper.append('<div class="v2p-topics-hot-empty">暂无热议主题</div>')
@@ -147,6 +194,7 @@ export function handleHotTopics() {
   /** 恢复「今日」列表。 */
   const restoreToday = () => {
     $listWrapper.empty().append($todayCells)
+    filterTodayCells()
   }
 
   const fetchAndRender = (alias: RangeAlias) => {

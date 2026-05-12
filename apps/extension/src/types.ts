@@ -23,6 +23,68 @@ export type ThemeType = 'light-default' | 'dark-default' | 'dawn' | 'minimalist'
 
 export type FontType = 'system' | 'vivoSans' | 'notoSans' | 'lxgwWenKai'
 
+export type TopicFilterScope = 'home' | 'node' | 'hot'
+
+export type TopicFilterField = 'title' | 'node'
+
+export type TopicFilterOperator = 'contains' | 'equals' | 'regex'
+
+export type TopicFilterLogic = 'all' | 'any'
+
+/** 单条高级主题屏蔽条件。 */
+export interface TopicFilterCondition {
+  id: string
+  /** 匹配字段。 */
+  field: TopicFilterField
+  /** 匹配方式。 */
+  operator: TopicFilterOperator
+  /** 匹配值。 */
+  value: string
+}
+
+/** 单条高级主题屏蔽规则。 */
+export interface TopicFilterRule {
+  id: string
+  /** 规则名称。 */
+  name: string
+  /** 是否启用 */
+  enabled: boolean
+  /** 生效位置。 */
+  scopes: TopicFilterScope[]
+  /** 条件组合方式。 */
+  logic: TopicFilterLogic
+  /** 规则条件。 */
+  conditions: TopicFilterCondition[]
+}
+
+/** 简单主题屏蔽配置。 */
+export interface TopicFilterQuickSettings {
+  /** 标题包含任一关键词时隐藏。 */
+  titleKeywords: string[]
+  /** 节点名完全匹配时隐藏。 */
+  nodes: string[]
+}
+
+/** 高级主题屏蔽配置。 */
+export interface TopicFilterAdvancedSettings {
+  /** 是否启用高级规则。 */
+  enabled: boolean
+  /** 高级规则列表。 */
+  rules: TopicFilterRule[]
+}
+
+/** 主题屏蔽设置。 */
+export interface TopicFilterSettings {
+  /** 配置结构版本，用于后续升级。 */
+  version: 1
+  /** 是否启用主题屏蔽。 */
+  enabled: boolean
+  /** 简单配置。 */
+  quick: TopicFilterQuickSettings
+  /** 高级配置。 */
+  advanced: TopicFilterAdvancedSettings
+}
+
 /** V2EX Polish 选项设置。 */
 export interface Options {
   /** 主题查看方式配置 */
@@ -94,6 +156,9 @@ export interface Options {
     /** 字体类型：系统默认或在线字体 */
     type: FontType
   }
+
+  /** 主题屏蔽配置 */
+  topicFilter?: TopicFilterSettings
 }
 
 export interface API_Info {

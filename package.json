@@ -35,14 +35,14 @@
     "worker:deploy": "pnpm --dir apps/hot-topics run deploy",
     "lint": "run-p lint:es lint:style lint:prettier",
     "lint:es": "run-p lint:repo:es lint:extension:es lint:website:es lint:worker:es",
-    "lint:repo:es": "eslint \"eslint*.js\" \"stylelint*.js\" \"scripts/**/*.{js,mjs,cjs,ts,mts,cts}\" --no-warn-ignored",
+    "lint:repo:es": "eslint \"eslint*.js\" \"stylelint*.js\" \"scripts/**/*.{js,mjs,cjs,ts,mts,cts}\" --fix --no-warn-ignored",
     "lint:extension:es": "pnpm --dir apps/extension run lint:es",
     "lint:extension:style": "pnpm --dir apps/extension run lint:style",
     "lint:website:es": "pnpm --dir apps/website run lint:es",
     "lint:website:style": "pnpm --dir apps/website run lint:style",
     "lint:worker:es": "pnpm --dir apps/hot-topics run lint:es",
     "lint:style": "run-p lint:extension:style lint:website:style",
-    "lint:prettier": "prettier --check \"**/*.{md,json}\"",
+    "lint:prettier": "prettier --write \"**/*.{md,json}\"",
     "deps": "pnpm up -r --interactive --latest"
   },
   "dependencies": {

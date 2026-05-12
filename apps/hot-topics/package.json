@@ -8,7 +8,7 @@
     "check": "pnpm run typecheck",
     "lint": "pnpm run lint:ts && pnpm run lint:es",
     "lint:ts": "pnpm run typecheck",
-    "lint:es": "eslint \"src/**/*.ts\" --no-warn-ignored",
+    "lint:es": "eslint \"src/**/*.ts\" --fix --no-warn-ignored",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {

@@ -477,6 +477,18 @@ export const defaultOptions: Options = {
   font: {
     type: 'system',
   },
+  topicFilter: {
+    version: 1,
+    enabled: false,
+    quick: {
+      titleKeywords: [],
+      nodes: [],
+    },
+    advanced: {
+      enabled: false,
+      rules: [],
+    },
+  },
 }
 
 export const enum MessageKey {

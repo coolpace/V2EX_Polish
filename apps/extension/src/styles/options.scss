@@ -944,4 +944,130 @@ input {
   }
 }
 
-/** ============================== */
+/** MARK: 主题屏蔽 */
+.topic-filter-form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v2p-section-gap);
+
+  .topic-filter-form-title {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .topic-filter-hint {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--v2p-color-font-secondary);
+  }
+
+  .topic-filter-textarea {
+    @include share.input(90px, 240px);
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px 10px;
+    font-family: inherit;
+    line-height: 1.6;
+  }
+
+  .topic-filter-advanced {
+    @include share.details-collapse;
+  }
+}
+
+.topic-filter-advanced-rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.topic-filter-advanced-rule {
+  padding: 12px;
+  border: 1px solid var(--v2p-color-border);
+  border-radius: var(--v2p-box-radius);
+  background-color: var(--v2p-color-bg-subtle);
+}
+
+.topic-filter-rule-header,
+.topic-filter-rule-meta,
+.topic-filter-condition {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.topic-filter-rule-header,
+.topic-filter-rule-meta {
+  margin-bottom: 8px;
+}
+
+.topic-filter-rule-meta {
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--v2p-color-font-secondary);
+}
+
+.topic-filter-rule-name,
+.topic-filter-condition-value {
+  flex: 1;
+}
+
+.topic-filter-rule-scopes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.topic-filter-condition-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.topic-filter-rule-name,
+.topic-filter-condition input,
+.topic-filter-condition select,
+.topic-filter-rule-logic {
+  padding: 4px 8px;
+  border: 1px solid var(--v2p-color-border);
+  border-radius: var(--v2p-button-radius);
+  font-size: 13px;
+  background: var(--v2p-color-bg-content);
+  outline: none;
+
+  &:focus {
+    border-color: var(--v2p-color-accent-400);
+  }
+}
+
+.topic-filter-add-rule-btn,
+.topic-filter-add-condition-btn,
+.topic-filter-rule-delete,
+.topic-filter-condition-delete {
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid var(--v2p-color-border);
+  border-radius: var(--v2p-button-radius);
+  font-size: 13px;
+  color: var(--v2p-color-font-secondary);
+  background: var(--v2p-color-bg-content);
+
+  &:hover {
+    border-color: var(--v2p-color-accent-400);
+    color: var(--v2p-color-accent-500);
+    background-color: var(--v2p-color-bg-subtle);
+  }
+}
+
+.topic-filter-rule-delete,
+.topic-filter-condition-delete {
+  &:hover {
+    border-color: var(--v2p-color-error);
+    color: var(--v2p-color-error);
+    background-color: var(--v2p-color-bg-error);
+  }
+}
