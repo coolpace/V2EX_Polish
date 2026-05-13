@@ -6,6 +6,8 @@ import type { HotTopic, HotTopicRange } from '../../types'
 import { useTopicPreview } from '../../use-topic-preview'
 import { getStorageSync, isBrowserExtension } from '../../utils'
 import { $wrapper } from '../globals'
+import { filterHotTopics } from '../topic-filter/filter-hot-topics'
+import { shouldHideTopic } from '../topic-filter/matcher'
 
 type RangeAlias = '近三日' | '近七日' | '近一月'
 
@@ -32,6 +34,19 @@ export function handleHotTopics() {
 
   let $todayCells = $listWrapper.find('> .cell')
 
+  const canPreview = isBrowserExtension()
+  const options = canPreview ? getStorageSync()[StorageKey.Options] : undefined
+
+  // 对初始「今日」DOM 主题应用主题屏蔽规则
+  if (options?.topicFilter?.enabled) {
+    $todayCells = $todayCells.filter((_, cell) => {
+      const title = $(cell).find('.item_hot_topic_title > a').text()
+
+      return !shouldHideTopic(options.topicFilter, 'hot', { title, nodeName: '' })
+    })
+    $listWrapper.find('> .cell').not($todayCells).remove()
+  }
+
   // 取第 2 个 cell 作为渲染模板；若列表不足则降级取第 1 个
   const $cell = $todayCells.eq($todayCells.length > 1 ? 1 : 0).clone()
   $cell.find('.v2p-topic-preview-btn').remove()
@@ -41,8 +56,6 @@ export function handleHotTopics() {
     return
   }
 
-  const canPreview = isBrowserExtension()
-  const options = canPreview ? getStorageSync()[StorageKey.Options] : undefined
   const isPreviewMode = options?.topic?.openMode === 'preview'
   const topicPreview = canPreview ? useTopicPreview() : null
   const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
@@ -90,15 +103,18 @@ export function handleHotTopics() {
   }
 
   const renderNewTopicList = (result: HotTopic[]) => {
+    // 应用主题屏蔽规则
+    const filtered = filterHotTopics(result, options?.topicFilter)
+
     $listWrapper.empty()
 
-    if (result.length === 0) {
+    if (filtered.length === 0) {
       $listWrapper.append('<div class="v2p-topics-hot-empty">暂无热议主题</div>')
 
       return
     }
 
-    result.forEach((it) => {
+    filtered.forEach((it) => {
       const $clonedCell = $cell.clone()
       const $user = $clonedCell.find('a[href^="/member"]')
       $user.attr('href', `/member/${it.member.username}`)

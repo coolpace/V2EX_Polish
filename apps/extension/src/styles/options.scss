@@ -984,6 +984,16 @@ input {
   margin: 12px 0;
 }
 
+.topic-filter-advanced-warning {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--v2p-color-orange-100);
+  border-radius: var(--v2p-box-radius);
+  font-size: 13px;
+  color: var(--v2p-color-orange-400);
+  background-color: var(--v2p-color-orange-50);
+}
+
 .topic-filter-advanced-rule {
   padding: 12px;
   border: 1px solid var(--v2p-color-border);
@@ -1004,8 +1014,17 @@ input {
   margin-bottom: 8px;
 }
 
+.topic-filter-rule-header {
+  label {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+}
+
 .topic-filter-rule-meta {
   flex-wrap: wrap;
+  gap: 8px 24px;
   font-size: 13px;
   color: var(--v2p-color-font-secondary);
 }
@@ -1019,6 +1038,13 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  align-items: center;
+
+  label {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
 }
 
 .topic-filter-condition-list {
@@ -1074,5 +1100,33 @@ input {
     border-color: var(--v2p-color-error);
     color: var(--v2p-color-error);
     background-color: var(--v2p-color-bg-error);
+  }
+}
+
+.topic-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--v2p-color-border);
+}
+
+.topic-filter-save-btn {
+  cursor: pointer;
+  padding: 8px 24px;
+  border: none;
+  border-radius: var(--v2p-button-radius);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--v2p-color-background);
+  background-color: var(--v2p-color-foreground);
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:active {
+    opacity: 0.7;
   }
 }

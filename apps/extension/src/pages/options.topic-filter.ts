@@ -43,11 +43,6 @@ function appendAdvancedCondition($rule: JQuery, condition?: Partial<TopicFilterC
 
   $condition.find('.topic-filter-condition-delete').on('click', () => {
     $condition.remove()
-    $('.topic-filter-advanced-rule-list').trigger('topic-filter-change')
-  })
-
-  $condition.find('input, select').on('change', () => {
-    $('.topic-filter-advanced-rule-list').trigger('topic-filter-change')
   })
 
   $rule.find('.topic-filter-condition-list').append($condition)
@@ -76,16 +71,10 @@ function appendAdvancedRule(rule?: TopicFilterRule) {
 
   $rule.find('.topic-filter-rule-delete').on('click', () => {
     $rule.remove()
-    $('.topic-filter-advanced-rule-list').trigger('topic-filter-change')
-  })
-
-  $rule.find('input, select').on('change', () => {
-    $('.topic-filter-advanced-rule-list').trigger('topic-filter-change')
   })
 
   $rule.find('.topic-filter-add-condition-btn').on('click', () => {
     appendAdvancedCondition($rule)
-    $('.topic-filter-advanced-rule-list').trigger('topic-filter-change')
   })
 
   $('.topic-filter-advanced-rule-list').append($rule)
@@ -143,10 +132,7 @@ export function readTopicFilterOptions(): TopicFilterSettings {
   }
 }
 
-export function initTopicFilterOptions(
-  settings: TopicFilterSettings | undefined,
-  handleChange: () => void,
-) {
+export function initTopicFilterOptions(settings: TopicFilterSettings | undefined) {
   $('#topic_filter_enabled').prop('checked', settings?.enabled ?? false)
   $('#topic_filter_title_keywords').val(stringifyLines(settings?.quick.titleKeywords))
   $('#topic_filter_nodes').val(stringifyLines(settings?.quick.nodes))
@@ -162,11 +148,30 @@ export function initTopicFilterOptions(
     $('.topic-filter-advanced').prop('open', true)
   }
 
-  $('#topic_filter_enabled, #topic_filter_advanced_enabled').on('change', handleChange)
-  $('#topic_filter_title_keywords, #topic_filter_nodes').on('input', handleChange)
-  $('.topic-filter-advanced-rule-list').on('topic-filter-change', handleChange)
+  updateAdvancedWarning()
+  $('#topic_filter_enabled').on('change', () => {
+    updateAdvancedWarning()
+  })
+  $('#topic_filter_advanced_enabled').on('change', () => {
+    updateAdvancedWarning()
+  })
   $('.topic-filter-add-rule-btn').on('click', () => {
     appendAdvancedRule()
-    handleChange()
   })
+}
+
+/**
+ * 当「启用高级规则」开启但「启用主题屏蔽」关闭时，显示警告提示。
+ */
+function updateAdvancedWarning() {
+  const $warning = $('.topic-filter-advanced-warning')
+  const advancedEnabled = $('#topic_filter_advanced_enabled').prop('checked')
+  const filterEnabled = $('#topic_filter_enabled').prop('checked')
+
+  if (advancedEnabled && !filterEnabled) {
+    $warning.show()
+  }
+  else {
+    $warning.hide()
+  }
 }

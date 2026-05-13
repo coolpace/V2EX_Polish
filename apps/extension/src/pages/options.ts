@@ -232,8 +232,30 @@ void (async function init() {
       void saveOptions()
     })
 
-    initTopicFilterOptions(options.topicFilter, () => void saveOptions())
+    initTopicFilterOptions(options.topicFilter)
   }
+
+  $('#topic-filter-save-btn').on('click', () => {
+    void (async () => {
+      const $btn = $('#topic-filter-save-btn')
+      const originalText = $btn.text()
+
+      $btn.text('保存中...').prop('disabled', true)
+
+      const currentOptions = {
+        ...(await getStorage())[StorageKey.Options],
+        topicFilter: readTopicFilterOptions(),
+      }
+
+      await setStorage(StorageKey.Options, currentOptions)
+
+      $btn.text('✅ 保存成功')
+
+      setTimeout(() => {
+        $btn.text(originalText).prop('disabled', false)
+      }, 1500)
+    })()
+  })
 
   // 渲染已设置的用户标签列表。
   {
