@@ -320,6 +320,22 @@
         background-color: var(--v2p-color-accent-100);
       }
     }
+
+    #export-file,
+    #import-file {
+      padding: 0 5px;
+      border-radius: var(--v2p-button-radius);
+      color: var(--v2p-color-font-secondary);
+      background-color: transparent;
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+
+      &:hover {
+        color: var(--v2p-color-accent-600);
+        background-color: var(--v2p-color-accent-100);
+      }
+    }
   }
 }
 
