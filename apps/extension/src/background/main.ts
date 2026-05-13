@@ -107,7 +107,11 @@ chrome.runtime.onMessage.addListener((message: Message) => {
   }
   else if (Object.hasOwn(message, MessageKey.showOptions)) {
     if (message[MessageKey.showOptions] === true) {
-      void chrome.runtime.openOptionsPage()
+      // 不使用 `chrome.runtime.openOptionsPage()`：部分 Chromium 衍生浏览器（如 Dia、Arc）
+      // 对该 API 实现不完整，会静默 no-op 且不抛错，导致 `.catch` 也接不到。
+      // 直接由扩展自身上下文发起 `chrome.tabs.create`，不受 web 页面跳转 `chrome-extension://`
+      // 屏蔽规则约束，也无需在 `web_accessible_resources` 中声明 options 页。
+      void chrome.tabs.create({ url: chrome.runtime.getURL('pages/options.html') })
     }
   }
 })

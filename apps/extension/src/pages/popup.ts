@@ -173,7 +173,9 @@ function loadSettings() {
 
   {
     $('#open-options').on('click', () => {
-      void chrome.runtime.openOptionsPage()
+      // 不使用 `chrome.runtime.openOptionsPage()`：在 Dia、Arc 等定制 Chromium 中
+      // 该 API 实现不完整、会静默 no-op。直接 `chrome.tabs.create` 更可靠。
+      void chrome.tabs.create({ url: chrome.runtime.getURL('pages/options.html') })
     })
   }
 
