@@ -58,10 +58,9 @@ function handleTopicImgHeight(autoFold?: boolean) {
           toggleContent()
         })
 
-        const $imgWrapper = $img.parent()
-        const $clonedWrapper = $imgWrapper.clone()
-
-        $contentBox.append($clonedWrapper).replaceAll($imgWrapper).append($expandBtn)
+        $contentBox.insertBefore($img)
+        $contentBox.append($img)
+        $contentBox.append($expandBtn)
       }
     })
   }
