@@ -17,6 +17,7 @@ const V2EX_ALLOWED_ORIGINS = [
   'https://fast.v2ex.com',
   'https://s.v2ex.com',
   'https://origin.v2ex.com',
+  'https://edge.v2ex.com',
   'https://staging.v2ex.com',
   'https://global.v2ex.co',
 ] as const
