@@ -214,6 +214,19 @@ body {
     }
   }
 
+  .v2p-hot-filter-hidden {
+    display: none;
+  }
+
+  .v2p-hot-filter-revealed {
+    opacity: 0.35;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
   .v2p-hot-filter-counter {
     display: flex;
     align-items: center;

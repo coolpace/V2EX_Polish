@@ -6,7 +6,6 @@ import type { HotTopic, HotTopicRange } from '../../types'
 import { useTopicPreview } from '../../use-topic-preview'
 import { getStorageSync, isBrowserExtension } from '../../utils'
 import { $wrapper } from '../globals'
-import { filterHotTopics } from '../topic-filter/filter-hot-topics'
 import { shouldHideTopic } from '../topic-filter/matcher'
 
 type RangeAlias = '近三日' | '近七日' | '近一月'
@@ -38,18 +37,57 @@ export function handleHotTopics() {
   const options = canPreview ? getStorageSync()[StorageKey.Options] : undefined
 
   // 对初始「今日」DOM 主题应用主题屏蔽规则
+  let showing = false
+  let $filterCounter: JQuery | null = null
+
+  const createFilterCounter = (hiddenCount: number): JQuery => {
+    const $items = $listWrapper.find('> .cell.v2p-hot-filter-hidden')
+
+    const $counter = $(`
+      <div class="v2p-hot-filter-counter">
+        已隐藏 ${hiddenCount} 条主题
+        &nbsp;·&nbsp;
+        <a class="v2p-filter-show">显示</a>
+      </div>
+    `)
+
+    $counter.find('.v2p-filter-show').on('click', () => {
+      if (showing) {
+        $items.addClass('v2p-hot-filter-hidden').removeClass('v2p-hot-filter-revealed')
+        $counter.find('.v2p-filter-show').text('显示')
+        showing = false
+      }
+      else {
+        $items.removeClass('v2p-hot-filter-hidden').addClass('v2p-hot-filter-revealed')
+        $counter.find('.v2p-filter-show').text('隐藏')
+        showing = true
+      }
+    })
+
+    return $counter
+  }
+
   if (options?.topicFilter?.enabled) {
-    $todayCells = $todayCells.filter((_, cell) => {
+    let hiddenCount = 0
+    $listWrapper.find('> .cell').each((_, cell) => {
       const title = $(cell).find('.item_hot_topic_title > a').text()
 
-      return !shouldHideTopic(options.topicFilter, 'hot', { title, nodeName: '' })
+      if (shouldHideTopic(options.topicFilter, 'hot', { title, nodeName: '' })) {
+        $(cell).addClass('v2p-hot-filter-hidden')
+        hiddenCount++
+      }
     })
-    $listWrapper.find('> .cell').not($todayCells).remove()
+
+    if (hiddenCount > 0) {
+      $filterCounter = createFilterCounter(hiddenCount)
+      $listWrapper.before($filterCounter)
+    }
   }
 
   // 取第 2 个 cell 作为渲染模板；若列表不足则降级取第 1 个
   const $cell = $todayCells.eq($todayCells.length > 1 ? 1 : 0).clone()
   $cell.find('.v2p-topic-preview-btn').remove()
+  $cell.removeClass('v2p-hot-filter-hidden')
 
   // 没有可用的模板 cell 时跳过后续逻辑，避免渲染出空白条目
   if ($cell.length === 0) {
@@ -103,19 +141,29 @@ export function handleHotTopics() {
   }
 
   const renderNewTopicList = (result: HotTopic[]) => {
-    // 应用主题屏蔽规则
-    const filtered = filterHotTopics(result, options?.topicFilter)
+    $filterCounter?.remove()
+    $filterCounter = null
+    showing = false
 
     $listWrapper.empty()
 
-    if (filtered.length === 0) {
+    if (result.length === 0) {
       $listWrapper.append('<div class="v2p-topics-hot-empty">暂无热议主题</div>')
 
       return
     }
 
-    filtered.forEach((it) => {
+    let hiddenCount = 0
+
+    result.forEach((it) => {
       const $clonedCell = $cell.clone()
+
+      // 应用主题屏蔽规则
+      if (options?.topicFilter?.enabled && shouldHideTopic(options.topicFilter, 'hot', { title: it.title, nodeName: '' })) {
+        $clonedCell.addClass('v2p-hot-filter-hidden')
+        hiddenCount++
+      }
+
       const $user = $clonedCell.find('a[href^="/member"]')
       $user.attr('href', `/member/${it.member.username}`)
       $user.find('> img').attr('src', it.member.avatar_mini)
@@ -146,6 +194,11 @@ export function handleHotTopics() {
 
       $listWrapper.append($clonedCell)
     })
+
+    if (hiddenCount > 0) {
+      $filterCounter = createFilterCounter(hiddenCount)
+      $listWrapper.before($filterCounter)
+    }
   }
 
   const renderError = () => {
@@ -162,7 +215,22 @@ export function handleHotTopics() {
 
   /** 恢复「今日」列表。 */
   const restoreToday = () => {
+    $filterCounter?.remove()
+    $filterCounter = null
+
     $listWrapper.empty().append($todayCells)
+
+    const $hiddenCells = $todayCells.filter('.v2p-hot-filter-hidden')
+
+    if ($hiddenCells.length > 0) {
+      $filterCounter = createFilterCounter($hiddenCells.length)
+      $listWrapper.before($filterCounter)
+
+      if (showing) {
+        $hiddenCells.removeClass('v2p-hot-filter-hidden').addClass('v2p-hot-filter-revealed')
+        $filterCounter.find('.v2p-filter-show').text('隐藏')
+      }
+    }
   }
 
   const fetchAndRender = (alias: RangeAlias) => {

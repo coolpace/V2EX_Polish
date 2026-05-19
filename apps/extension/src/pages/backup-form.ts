@@ -129,9 +129,11 @@ function bindImportExportButtons(): void {
 
   $('#import-file-input').on('change', (ev) => {
     const file = (ev.target as HTMLInputElement).files?.[0]
+
     if (file) {
       void importFromFile(file)
     }
+
     // 重置 input，允许重复选择同一个文件
     ;(ev.target as HTMLInputElement).value = ''
   })
@@ -184,16 +186,19 @@ async function importFromFile(file: File): Promise<void> {
     })
 
     let data: unknown
+
     try {
       data = JSON.parse(text)
     }
     catch {
       $('.storage-tip').text('文件格式错误，无法解析 JSON')
+
       return
     }
 
     if (!isValidSettings(data)) {
       $('.storage-tip').text('无效的配置文件格式')
+
       return
     }
 
