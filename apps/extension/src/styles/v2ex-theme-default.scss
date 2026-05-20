@@ -678,8 +678,11 @@ body {
       color: var(--v2p-color-font-tertiary);
     }
 
-    pre {
+    pre,
+    pre > .hljs {
       line-height: 1.5;
+      color: var(--v2p-color-foreground);
+      background-color: var(--v2p-color-bg-block);
     }
   }
 
