@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.2.1",
+    "@netlify/plugin-nextjs": "^5.15.12",
     "@types/chrome": "^0.1.36",
     "@types/firefox-webext-browser": "^143.0.0",
     "@types/jquery": "^3.5.33",

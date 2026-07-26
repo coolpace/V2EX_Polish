@@ -34,7 +34,6 @@
   "devDependencies": {
     "@babel/preset-react": "^7.27.1",
     "@codennnn/tsconfig": "^1.2.1",
-    "@netlify/plugin-nextjs": "^5.15.9",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.16",
     "@types/qrcode": "^1.5.5",

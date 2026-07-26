@@ -1,0 +1,13 @@
+[build]
+  # 部署 apps/website。构建命令在仓库根目录执行，因此用 --filter 指定 workspace 包，
+  # publish 也需要写成相对于仓库根目录的路径。
+  # 注意：Netlify UI 中的 base / package directory 必须留空，否则读不到本文件。
+  command = "pnpm --filter v2ex-polish-website build"
+  publish = "apps/website/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# 支持 SSR、API Routes（/api/donation、/api/qrcode 等）
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

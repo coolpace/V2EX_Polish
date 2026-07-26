@@ -25,6 +25,9 @@ importers:
       '@codennnn/tsconfig':
         specifier: ^1.2.1
         version: 1.2.1
+      '@netlify/plugin-nextjs':
+        specifier: ^5.15.12
+        version: 5.15.12
       '@types/chrome':
         specifier: ^0.1.36
         version: 0.1.36
@@ -216,9 +219,6 @@ importers:
       '@codennnn/tsconfig':
         specifier: ^1.2.1
         version: 1.2.1
-      '@netlify/plugin-nextjs':
-        specifier: ^5.15.9
-        version: 5.15.9
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
         version: 0.1.1(tailwindcss@3.4.19(yaml@2.8.2))
@@ -1305,8 +1305,8 @@ packages:
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
-  '@netlify/plugin-nextjs@5.15.9':
-    resolution: {integrity: sha512-4kJvV+wrt4/ncehfaOXfhv1FYKCv9EFjq6/tgXXYSlqPDcbsuTXR0DTz9IvyZ/CpPRadRD/zzIqD9wXgCmA2lg==}
+  '@netlify/plugin-nextjs@5.15.12':
+    resolution: {integrity: sha512-eydPd4gtc/OJOx9IbIJ5CRrC5K3rLxfEQS/S/fRNEAAT0qFvPoQVy23VdK3jRXKFJWXdCRl6ZudWLEZECQPSRQ==}
     engines: {node: '>=18.0.0'}
 
   '@next/env@16.2.2':
@@ -6958,7 +6958,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@netlify/plugin-nextjs@5.15.9': {}
+  '@netlify/plugin-nextjs@5.15.12': {}
 
   '@next/env@16.2.2': {}
 
