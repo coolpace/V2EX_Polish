@@ -78,6 +78,33 @@
   --v2p-color-bg-subtle: rgb(6 78 59 / 30%);
 }
 
+/* V2EX 经典主题：还原 V2EX 网站本身的米黄底 + 橄榄灰绿强调色 */
+.theme-v2ex {
+  --v2p-color-main-50: #f5f5f5;
+  --v2p-color-main-100: #efefef;
+  --v2p-color-main-200: #e2e2e2;
+  --v2p-color-main-300: #d0d0d0;
+  --v2p-color-main-350: #999c;
+  --v2p-color-main-400: #999;
+  --v2p-color-main-500: #778087;
+  --v2p-color-main-600: #666;
+  --v2p-color-main-700: #555;
+  --v2p-color-main-800: #333;
+  --v2p-color-accent-50: #f0f3f3;
+  --v2p-color-accent-100: #e0e8e8;
+  --v2p-color-accent-200: #c8d4d4;
+  --v2p-color-accent-300: #a8b8b8;
+  --v2p-color-accent-400: #889898;
+  --v2p-color-accent-500: #778087;
+  --v2p-color-accent-600: #5f676d;
+  --v2p-color-content: #fff;
+  --v2p-color-border: #e2e2e2;
+  --v2p-color-foreground: #333;
+  --v2p-color-background: #e8e8e8;
+  --v2p-color-bg-input: var(--v2p-color-content);
+  --v2p-color-bg-subtle: #f5f5f5;
+}
+
 .text-with-shadow {
   text-shadow: 2px 2px 0 var(--v2p-color-main-300);
 }

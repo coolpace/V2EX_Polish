@@ -1,5 +1,5 @@
 export interface ShareCardThemeConfig {
-  id: 'light' | 'dark'
+  id: 'light' | 'dark' | 'v2ex'
   name: string
   mode: 'light' | 'dark'
   rootClassName: string
@@ -20,6 +20,13 @@ export const shareCardThemes: ShareCardThemeConfig[] = [
     mode: 'dark',
     rootClassName: 'theme-dark',
     qrCode: { dark: '#adbac7', light: '#22272e' },
+  },
+  {
+    id: 'v2ex',
+    name: 'V2EX 经典',
+    mode: 'light',
+    rootClassName: 'theme-v2ex',
+    qrCode: { dark: '#333333', light: '#ffffff' },
   },
 ]
 

@@ -27,6 +27,18 @@ import { isNumeric, trackEvent } from '~/utils'
 import { ShareLoading } from './ShareLoading'
 import { TopicLinkInput, type TopicLinkInputProps } from './TopicLinkInput'
 
+/**
+ * html-to-image 在 canvas 单边超过此值时会自动等比缩小，导致长主题导出发糊。
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
+ */
+const CANVAS_DIMENSION_LIMIT = 16384
+
+/** 分享图默认最高像素比，兼顾清晰度与超长内容的稳定性 */
+const MAX_SHARE_IMAGE_PIXEL_RATIO = 2
+
+/** 贴边余量，避免刚好触及部分浏览器的 canvas 上限 */
+const CANVAS_SAFE_RATIO = 0.98
+
 const fetchTopicInfo = async (topicId: ShareRequestData['topicId']): Promise<ResponseJson> => {
   const res = await window.fetch('/api/share', {
     method: 'POST',
@@ -59,6 +71,30 @@ async function convertImageToBase64(url: string): Promise<string> {
   const { data } = await res.json() as { data: string }
 
   return data
+}
+
+/**
+ * 按卡片实际尺寸计算安全 pixelRatio，避免触发 html-to-image 的自动缩小。
+ * 超长主题允许降到 1 以下，以保证整图清晰度可控。
+ */
+function resolveShareImagePixelRatio(element: HTMLElement): number {
+  const cssWidth = Math.max(element.offsetWidth, 1)
+  const cssHeight = Math.max(element.offsetHeight, 1)
+  const safeLimit = CANVAS_DIMENSION_LIMIT * CANVAS_SAFE_RATIO
+  const maxSafeRatio = Math.min(safeLimit / cssWidth, safeLimit / cssHeight)
+  const preferredRatio = Math.min(window.devicePixelRatio || 1, MAX_SHARE_IMAGE_PIXEL_RATIO)
+
+  return Math.max(0.1, Math.min(preferredRatio, maxSafeRatio))
+}
+
+function getShareImageExportOptions(element: HTMLElement) {
+  return {
+    pixelRatio: resolveShareImagePixelRatio(element),
+    skipFonts: true,
+    style: {
+      imageRendering: '-webkit-optimize-contrast',
+    },
+  } as const
 }
 
 export function ShareInfo() {
@@ -168,9 +204,10 @@ export function ShareInfo() {
             }
 
             try {
-              const blobData = await toBlob(eleRef.current, {
-                skipFonts: true,
-              })
+              const blobData = await toBlob(
+                eleRef.current,
+                getShareImageExportOptions(eleRef.current),
+              )
 
               if (!blobData) {
                 throw new Error()
@@ -232,16 +269,10 @@ export function ShareInfo() {
 
       const triggerDownload = async () => {
         if (eleRef.current) {
-          const scale = window.devicePixelRatio || 1
-
-          const dataURL = await toPng(eleRef.current, {
-            quality: 1.0,
-            pixelRatio: scale,
-            skipFonts: true,
-            style: {
-              imageRendering: '-webkit-optimize-contrast',
-            },
-          })
+          const dataURL = await toPng(
+            eleRef.current,
+            getShareImageExportOptions(eleRef.current),
+          )
 
           const trigger = document.createElement('a')
           trigger.href = dataURL
