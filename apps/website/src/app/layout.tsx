@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: 'V2EX Polish - 浏览器插件',
     description: '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。',
-    url: 'https://www.v2p.app',
+    url: 'https://v2p.leoku.dev',
     images: ' https://i.imgur.com/Vwyqs0V.png',
   },
   authors: [{ name: '陈梓聪 LeoKu', url: 'https://github.com/Codennnn' }],

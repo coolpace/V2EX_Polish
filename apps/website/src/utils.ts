@@ -1,6 +1,6 @@
 const isDev: boolean = process.env.NODE_ENV === 'development'
 
-export const HOST = 'https://www.v2p.app'
+export const HOST = 'https://v2p.leoku.dev'
 
 export const OG_WIDTH = 1200
 export const OG_HEIGHT = 630

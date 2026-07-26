@@ -232,7 +232,7 @@ export default function FeaturesPage() {
             <div className="mt-4 rounded-md border-[3px] border-solid border-main-300 p-4">
               <p>/t/973118</p>
               <p>https://www.v2ex.com/t/973118</p>
-              <p>https://www.v2p.app</p>
+              <p>https://v2p.leoku.dev</p>
               <p>https://i.imgur.com/8POFF6j.jpeg</p>
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function FeaturesPage() {
               </p>
               <p>
                 <span className="bg-main-100 underline decoration-[1.5px] underline-offset-[0.46ex]">
-                  https://www.v2p.app
+                  https://v2p.leoku.dev
                 </span>
               </p>
               <p>

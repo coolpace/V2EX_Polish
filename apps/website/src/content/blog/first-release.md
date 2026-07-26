@@ -45,7 +45,7 @@ author:
 
 关于 V2EX Polish 的更多细节，请关注我们的：
 
-- [官方主页 - www.v2p.app](https://www.v2p.app)
+- [官方主页 - v2p.leoku.dev](https://v2p.leoku.dev)
 - [GitHub 源码仓库](https://github.com/coolpace/V2EX_Polish)
 
 我们会持续发布关于此插件有价值的信息。

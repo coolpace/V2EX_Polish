@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useEvent } from 'react-use-event-hook'
 
 import { useParams, useRouter } from 'next/navigation'
-import { Button, Callout, Checkbox, Flex, Link, Text } from '@radix-ui/themes'
+import { Button, Callout, Checkbox, Flex, Link, SegmentedControl, Text } from '@radix-ui/themes'
 import { toBlob, toPng } from 'html-to-image'
 import { AlertCircleIcon, CopyIcon, DownloadIcon } from 'lucide-react'
 
@@ -16,27 +16,27 @@ import {
   type TopicInfo,
 } from '~/app/api/share/route'
 import { ShareCardThemeBasic } from '~/app/share/components/ShareCardThemeBasic'
-import { HOST, isNumeric, trackEvent } from '~/utils'
+import {
+  defaultShareCardThemeId,
+  getShareCardTheme,
+  shareCardThemes,
+  shareCardThemeStorageKey,
+} from '~/app/share/themes'
+import { isNumeric, trackEvent } from '~/utils'
 
 import { ShareLoading } from './ShareLoading'
 import { TopicLinkInput, type TopicLinkInputProps } from './TopicLinkInput'
 
-const isDev = process.env.NODE_ENV === 'development'
-
 const fetchTopicInfo = async (topicId: ShareRequestData['topicId']): Promise<ResponseJson> => {
-  // 开发环境使用本地数据
-  if (isDev) {
-    return {
-      code: ResponseCode.Success,
-      data: JSON.parse(process.env.NEXT_PUBLIC_DATA!) as TopicInfo,
-    }
-  }
-
   const res = await window.fetch('/api/share', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ topicId }),
-    mode: 'no-cors',
   })
+
+  if (!res.ok) {
+    throw new Error(`请求失败: ${res.status}`)
+  }
 
   const data = await res.json() as ResponseJson
 
@@ -46,11 +46,15 @@ const fetchTopicInfo = async (topicId: ShareRequestData['topicId']): Promise<Res
 async function convertImageToBase64(url: string): Promise<string> {
   const requestData: ImgRequestData = { imgUrl: url }
 
-  const res = await fetch(`${isDev ? HOST : ''}/api/img-to-base64`, {
+  const res = await fetch('/api/img-to-base64', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(requestData),
-    mode: 'no-cors',
   })
+
+  if (!res.ok) {
+    throw new Error(`请求失败: ${res.status}`)
+  }
 
   const { data } = await res.json() as { data: string }
 
@@ -74,6 +78,21 @@ export function ShareInfo() {
   const [showSubtle, setShowSubtle] = useState(true)
   const [showQRCode, setShowQRCode] = useState(true)
 
+  const [themeId, setThemeId] = useState<string>(defaultShareCardThemeId)
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(shareCardThemeStorageKey)
+
+    if (stored) {
+      setThemeId(stored)
+    }
+  }, [])
+
+  const handleThemeChange = (value: string) => {
+    setThemeId(value)
+    window.localStorage.setItem(shareCardThemeStorageKey, value)
+  }
+
   const [downloading, setDownloading] = useState(false)
 
   const canUseClipboardItem = typeof ClipboardItem !== 'undefined'
@@ -95,7 +114,7 @@ export function ShareInfo() {
     if (eleRef.current) {
       const promises: Promise<void>[] = []
 
-      eleRef.current.querySelectorAll('#topic-content img').forEach((ele) => {
+      eleRef.current.querySelectorAll('.topic-content img').forEach((ele) => {
         const src = ele.getAttribute('src')
 
         if (src?.startsWith('http')) {
@@ -294,13 +313,14 @@ export function ShareInfo() {
   return (
     <div className="flex items-start gap-x-8">
       <div className="overflow-hidden shadow-lg">
-        <div ref={eleRef} className="w-[375px]">
+        <div ref={eleRef} className="share-card w-[375px]">
           {topicInfo
             ? (
                 <ShareCardThemeBasic
                   avatarRef={avatarRef}
                   showQRCode={showQRCode}
                   showSubtle={showSubtle}
+                  theme={getShareCardTheme(themeId)}
                   topicInfo={topicInfo}
                 />
               )
@@ -348,6 +368,21 @@ export function ShareInfo() {
           )}
 
           <TopicLinkInput value={topicUrl} onChange={setTopicUrl} onSearh={handleSearchTopic} />
+
+          <Flex direction="column" gap="1">
+            <Text size="2" weight="medium">分享主题</Text>
+            <SegmentedControl.Root
+              size="2"
+              value={themeId}
+              onValueChange={handleThemeChange}
+            >
+              {shareCardThemes.map((theme) => (
+                <SegmentedControl.Item key={theme.id} value={theme.id}>
+                  {theme.name}
+                </SegmentedControl.Item>
+              ))}
+            </SegmentedControl.Root>
+          </Flex>
 
           <Flex gap="3">
             <Text size="2">

@@ -4,16 +4,18 @@ import { Avatar } from '@radix-ui/themes'
 
 import type { RequestData as QRCodeRequestData, ResponseJson } from '~/app/api/qrcode/route'
 import type { TopicInfo } from '~/app/api/share/route'
+import type { ShareCardThemeConfig } from '~/app/share/themes'
 
 interface ShareCardProps {
   avatarRef: React.RefObject<HTMLImageElement | null>
   topicInfo: TopicInfo
+  theme: ShareCardThemeConfig
   showSubtle?: boolean
   showQRCode?: boolean
 }
 
 export function ShareCardThemeBasic(props: ShareCardProps) {
-  const { topicInfo, avatarRef, showSubtle, showQRCode } = props
+  const { topicInfo, avatarRef, theme, showSubtle, showQRCode } = props
 
   const [QRCodeURL, setQRCodeURL] = useState<string>()
 
@@ -26,7 +28,7 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
           options: {
             width: 54,
             margin: 0,
-            color: { dark: '#adbac7', light: '#22272e' },
+            color: theme.qrCode,
           },
         } as QRCodeRequestData),
       })
@@ -35,10 +37,10 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
 
       setQRCodeURL(data)
     })()
-  }, [topicInfo.url])
+  }, [topicInfo.url, theme.id, theme.qrCode])
 
   return (
-    <div className="theme-dark bg-background p-2">
+    <div className={`${theme.rootClassName} bg-background p-2`}>
       <div className="overflow-hidden rounded-lg border border-solid border-main-400 bg-content p-3 text-foreground">
         <div className="pb-2 text-2xl font-extrabold">V2EX</div>
 
@@ -66,7 +68,8 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
 
             <div
               className={`
-              prose prose-slate prose-invert leading-6
+              topic-content
+              prose prose-slate ${theme.mode === 'dark' ? 'prose-invert' : ''} leading-6
               prose-p:mt-0 prose-p:text-foreground
               prose-a:pointer-events-none prose-a:font-normal prose-a:text-accent-600 prose-a:no-underline
               prose-blockquote:-mx-2 prose-blockquote:border-l-accent-200
@@ -74,7 +77,6 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
               prose-blockquote:not-italic prose-blockquote:text-foreground prose-li:m-0
               prose-img:m-0
               `}
-              id="topic-content"
             >
               <div dangerouslySetInnerHTML={{ __html: topicInfo.content }} />
 

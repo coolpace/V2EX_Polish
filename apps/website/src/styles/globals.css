@@ -1,6 +1,7 @@
 /* 解决 tailwindCSS 和 radixCSS 顺序冲突的问题： https://github.com/radix-ui/themes/issues/109 */
 @import url('tailwindcss/base');
 @import url('@radix-ui/themes/styles.css');
+@import url('./share.css');
 
 @tailwind components;
 @tailwind utilities;

@@ -58,7 +58,7 @@ author:
 
 V2EX Polish 是一款开源的浏览器插件，为改善 V2EX 落后的浏览体验而诞生。这款轻量级但功能丰富的插件提供了丰富的功能扩展，让你在浏览 V2EX 时更加得心应手。
 
-- 查看官网了解更多： [https://www.v2p.app](https://www.v2p.app)
+- 查看官网了解更多： [https://v2p.leoku.dev](https://v2p.leoku.dev)
 - 开源地址： [https://github.com/coolpace/V2EX_Polish](https://github.com/coolpace/V2EX_Polish)
 - 安装地址： [https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm](https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm)
 

@@ -1,0 +1,43 @@
+/* 分享卡片内隐藏所有滚动条，并让内容自然撑开而非滚动裁剪 */
+.share-card,
+.share-card * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.share-card::-webkit-scrollbar,
+.share-card *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.share-card .prose pre {
+  overflow-x: visible !important;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.share-card .prose :where(code):not(:where(pre *)) {
+  overflow-wrap: anywhere;
+}
+
+.share-card .topic-content,
+.share-card .topic-content * {
+  max-height: none !important;
+}
+
+.share-card .topic-content pre,
+.share-card .topic-content code,
+.share-card .topic-content table,
+.share-card .topic-content blockquote,
+.share-card .topic-content div,
+.share-card .topic-content iframe {
+  overflow: visible !important;
+}
+
+.share-card .prose img,
+.share-card .topic-content img {
+  max-width: 100%;
+  height: auto;
+}
