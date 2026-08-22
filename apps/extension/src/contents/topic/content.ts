@@ -80,6 +80,12 @@ export function handleContent() {
       .prop('rel', 'noopener noreferrer')
   }
 
+  if (options.replyContent.showImgInPage) {
+    window.requestIdleCallback(() => {
+      handleTopicImg()
+    })
+  }
+
   {
     // 处理主题页的正文内容。
 
@@ -351,34 +357,15 @@ export function openTagsSetter(
   })()
 }
 
+let topicImgPreview: ReturnType<typeof createImagePreview> | null = null
+
 /**
- * 处理主题中的图片，点击图片会弹出图片放大预览。
+ * 启用主题页面的图片预览：点击图片在页内预览，不再跳转到新页签。
+ * 幂等，可重复调用。
  */
 export function handleTopicImg() {
-  const $imgs = $('.embedded_image')
-
-  if ($imgs.length === 0) {
-    return
-  }
-
-  const preview = createImagePreview()
-
-  $imgs.each((_, img) => {
-    const $img = $(img)
-
-    if (img instanceof HTMLImageElement) {
-      $img.parent().removeAttr('href')
-
-      // 只有当图片被缩小显示时才启用预览功能
-      if (img.clientWidth !== img.naturalWidth) {
-        $img.css({ cursor: 'zoom-in' })
-
-        $img.on('click', () => {
-          preview.open($img)
-        })
-      }
-    }
-  })
+  topicImgPreview ??= createImagePreview()
+  topicImgPreview.attach()
 }
 
 /**

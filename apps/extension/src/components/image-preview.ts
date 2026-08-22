@@ -261,11 +261,13 @@ function createPreviewImage($sourceImg: JQuery): JQuery {
   }).attr('draggable', 'false')
 }
 
-interface ImagePreviewControl {
+export interface ImagePreviewControl {
   /** 打开图片预览 */
   open: ($img: JQuery) => void
   /** 关闭图片预览 */
   close: () => void
+  /** 在页面中启用图片点击预览（幂等，可重复调用） */
+  attach: () => void
 }
 
 /**
@@ -336,8 +338,51 @@ export function createImagePreview(): ImagePreviewControl {
     modal?.close()
   }
 
+  // 通过事件委托拦截图片点击，既能覆盖当前页面已有的图片，
+  // 也能覆盖之后动态加载的图片（如预加载的后续页回复）。
+  let attached = false
+
+  const isModifiedClick = (ev: JQuery.TriggeredEvent) =>
+    ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey
+
+  const handleImageClick = (ev: JQuery.TriggeredEvent): void => {
+    // 按住 ⌘/Ctrl/Shift/Alt 点击时保留原链接行为，作为兜底入口。
+    if (isModifiedClick(ev)) {
+      return
+    }
+
+    // 排除预览弹窗内的克隆图片，避免重复触发。
+    const $target = $(ev.target as HTMLElement)
+
+    if ($target.closest('.v2p-modal-mask').length > 0) {
+      return
+    }
+
+    const $img = $(ev.currentTarget as HTMLElement)
+
+    if (!($img.get(0) instanceof HTMLImageElement)) {
+      return
+    }
+
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    open($img)
+  }
+
+  const attach = (): void => {
+    if (attached) {
+      return
+    }
+
+    attached = true
+    document.body.classList.add('v2p-img-preview-enabled')
+    $(document).on('click.v2pImgPreview', '.embedded_image', handleImageClick)
+  }
+
   return {
     open,
     close,
+    attach,
   }
 }

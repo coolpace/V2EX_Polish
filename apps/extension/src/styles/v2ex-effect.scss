@@ -7,6 +7,12 @@ body {
     overflow: hidden;
   }
 
+  &.v2p-img-preview-enabled {
+    .embedded_image {
+      cursor: zoom-in;
+    }
+  }
+
   .button {
     &.v2p-prev-btn,
     &.v2p-next-btn {

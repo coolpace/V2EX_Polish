@@ -28,7 +28,7 @@ import {
   replaceCommentEmojiWithHD,
 } from '../helpers'
 import { memberDataCache, processAvatar } from './avatar'
-import { handleLinkPreview, handleTopicImg, processReplyContent, updateMemberTag } from './content'
+import { handleLinkPreview, processReplyContent, updateMemberTag } from './content'
 
 /**
  * 生成回复引用的 HTML 模板
@@ -716,12 +716,6 @@ export async function handleComments() {
         }
       })
     }
-  }
-
-  if (options.replyContent.showImgInPage) {
-    window.requestIdleCallback(() => {
-      handleTopicImg()
-    })
   }
 
   window.requestIdleCallback(() => {
