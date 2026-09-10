@@ -1,4 +1,5 @@
 import { $body } from '../contents/globals'
+import { isEmojiImage, markEmojiImages } from '../contents/helpers'
 import { createButton } from './button'
 import { createModal } from './modal'
 
@@ -367,6 +368,11 @@ export function createImagePreview(): ImagePreviewControl {
     ev.preventDefault()
     ev.stopPropagation()
 
+    // 表情图片尺寸很小，放大预览没有意义。
+    if (isEmojiImage($img)) {
+      return
+    }
+
     open($img)
   }
 
@@ -377,6 +383,10 @@ export function createImagePreview(): ImagePreviewControl {
 
     attached = true
     document.body.classList.add('v2p-img-preview-enabled')
+
+    // 标记页面中已有的表情图片，避免为它们显示放大光标。
+    markEmojiImages($('.embedded_image'))
+
     $(document).on('click.v2pImgPreview', '.embedded_image', handleImageClick)
   }
 

@@ -10,6 +10,11 @@ body {
   &.v2p-img-preview-enabled {
     .embedded_image {
       cursor: zoom-in;
+
+      /** 表情图片不支持放大预览，不显示放大光标。 */
+      &.v2p-emoji-img {
+        cursor: default;
+      }
     }
   }
 
