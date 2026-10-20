@@ -322,7 +322,7 @@ export function prepareBackupData(storage: StorageSettings): StorageSettings {
     ...backupData
   } = storage
 
-  return backupData as StorageSettings
+  return backupData
 }
 
 /**
@@ -955,7 +955,7 @@ export async function setStorage<T extends StorageKey>(
       }
       catch (err) {
         console.error(err)
-        throw new Error(`❌ 无法设置：${storageKey}`)
+        throw new Error(`❌ 无法设置：${storageKey}`, { cause: err })
       }
 
       break
@@ -993,7 +993,7 @@ export async function setStorage<T extends StorageKey>(
         }
 
         console.error(err)
-        throw new Error(`❌ 无法设置：${storageKey}`)
+        throw new Error(`❌ 无法设置：${storageKey}`, { cause: err })
       }
 
       break

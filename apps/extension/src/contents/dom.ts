@@ -160,7 +160,7 @@ export function handleNestedComment({
 
           const desiredFloor = floorsInOrder?.at(0)
 
-          let refCommentIdx = -1
+          let refCommentIdx: number
 
           for (const refName of refNamesInOrder) {
             refCommentIdx = -1

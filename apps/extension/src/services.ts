@@ -42,7 +42,7 @@ async function legacyRequest<Data>(
   options?: RequestInit & { timeout?: number },
 ): Promise<Data> {
   // 从 options 中排除 timeout，避免传递给 fetch
-  const opts = options ?? ({} as RequestInit & { timeout?: number })
+  const opts = options ?? {}
   const { timeout: timeoutValue, ...restOptions } = opts
   const timeout = timeoutValue ?? FETCH_TIMEOUT.DEFAULT
   const res = await fetchWithTimeout(url, timeout, restOptions)
@@ -96,7 +96,7 @@ async function request<Data>(
   const PAT = storage[StorageKey.API]?.pat
 
   // 从 options 中排除 timeout，避免传递给 fetch
-  const opts = options ?? ({} as RequestInit & { timeout?: number })
+  const opts = options ?? {}
   const { timeout: timeoutValue, ...restOptions } = opts
   const timeout = timeoutValue ?? FETCH_TIMEOUT.DEFAULT
 

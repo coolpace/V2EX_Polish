@@ -252,8 +252,8 @@ body {
   }
 
   .button {
-    --button-hover-shadow: 0 1.8px 0 var(--button-border-color),
-      0 1.8px 0 var(--button-background-color);
+    --button-hover-shadow:
+      0 1.8px 0 var(--button-border-color), 0 1.8px 0 var(--button-background-color);
 
     &.normal,
     &.super,
@@ -262,8 +262,8 @@ body {
     }
 
     &.special {
-      --button-hover-shadow: 0 1.8px 0 var(--v2p-color-accent-200),
-        0 1.8px 0 var(--v2p-color-accent-100);
+      --button-hover-shadow:
+        0 1.8px 0 var(--v2p-color-accent-200), 0 1.8px 0 var(--v2p-color-accent-100);
 
       box-shadow: var(--button-hover-shadow);
 
@@ -516,13 +516,13 @@ body {
   }
 
   :is(
-      .topic_content,
-      .reply_content,
-      .v2p-topic-preview-content,
-      .v2p-topic-preview-addons,
-      .v2p-reply-preview,
-      .markdown_body
-    ) {
+    .topic_content,
+    .reply_content,
+    .v2p-topic-preview-content,
+    .v2p-topic-preview-addons,
+    .v2p-reply-preview,
+    .markdown_body
+  ) {
     /** MARK: 站内链接。 */
     a[href*='v2ex.com/t'],
     a[href*='v2ex.com/t'][href^='http'],

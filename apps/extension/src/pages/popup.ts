@@ -377,7 +377,7 @@ function initTabs() {
 
         $tabContent.html(loading)
 
-        let notifications: Notification[] = []
+        let notifications: Notification[]
 
         try {
           const { result } = await fetchNotifications()

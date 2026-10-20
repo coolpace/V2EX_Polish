@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { Avatar } from '@radix-ui/themes'
 
-import type { RequestData as QRCodeRequestData, ResponseJson } from '~/app/api/qrcode/route'
+import type { ResponseJson } from '~/app/api/qrcode/route'
 import type { TopicInfo } from '~/app/api/share/route'
 import type { ShareCardThemeConfig } from '~/app/share/themes'
 
@@ -30,7 +30,7 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
             margin: 0,
             color: theme.qrCode,
           },
-        } as QRCodeRequestData),
+        }),
       })
 
       const { data } = await res.json() as ResponseJson

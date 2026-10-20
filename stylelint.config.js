@@ -10,6 +10,7 @@ export default {
     'selector-class-pattern': null,
     'no-descending-specificity': null,
     'at-rule-no-unknown': null,
+    'at-rule-prelude-no-invalid': null,
     'value-keyword-case': null,
     'nesting-selector-no-missing-scoping-root': [
       true,
