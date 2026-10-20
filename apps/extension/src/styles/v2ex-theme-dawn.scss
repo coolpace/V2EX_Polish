@@ -1,5 +1,7 @@
 body.v2p-theme-dawn,
-.v2p-theme-dawn {
+.v2p-theme-dawn,
+:root[data-v2p-theme='dawn'],
+:root[data-v2p-theme='dawn'] body {
   /* 色板： */
   --v2p-color-base: 32deg 57% 95%;
   --v2p-color-surface: 35deg 100% 98%;

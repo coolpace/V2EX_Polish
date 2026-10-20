@@ -303,7 +303,15 @@ const generateManifest = (): Manifest => {
     },
 
     content_scripts: [
-      // 1. 主题样式注入（最高优先级，document_start 执行）
+      // 1. 首屏主题启动（document_start，先于功能脚本）
+      {
+        matches,
+        js: ['scripts/theme-boot.min.js'],
+        run_at: 'document_start',
+        all_frames: true,
+      },
+
+      // 2. 主题样式注入（最高优先级，document_start 执行）
       {
         matches,
         css: [
@@ -319,7 +327,7 @@ const generateManifest = (): Manifest => {
         all_frames: true, // 支持所有框架（包括 iframes）
       },
 
-      // 2. Polyfill 脚本注入（兼容性处理）
+      // 3. Polyfill 脚本注入（兼容性处理）
       {
         matches,
         js: ['scripts/polyfill.js'],
@@ -327,7 +335,7 @@ const generateManifest = (): Manifest => {
         all_frames: true,
       },
 
-      // 3. 通用功能脚本（所有页面）
+      // 4. 通用功能脚本（所有页面）
       {
         matches,
         css: ['css/v2ex-effect.css'],
@@ -335,7 +343,7 @@ const generateManifest = (): Manifest => {
         all_frames: true,
       },
 
-      // 4. 首页专用功能（排除特定页面）
+      // 5. 首页专用功能（排除特定页面）
       {
         matches,
         exclude_matches: [
@@ -349,7 +357,7 @@ const generateManifest = (): Manifest => {
         all_frames: true,
       },
 
-      // 5-10. 各页面类型的专用功能脚本
+      // 6-11. 各页面类型的专用功能脚本
       {
         matches: topicMatches,
         js: ['scripts/jquery.min.js', 'scripts/v2ex-topic.min.js'],
@@ -381,7 +389,7 @@ const generateManifest = (): Manifest => {
         all_frames: true,
       },
 
-      // 11. 图标切换功能（全局）
+      // 12. 图标切换功能（全局）
       {
         matches,
         js: ['scripts/toggle-icon.min.js'],

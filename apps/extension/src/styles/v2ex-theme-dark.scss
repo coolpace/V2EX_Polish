@@ -97,6 +97,8 @@
 
   body.v2p-theme-dark-default,
   .v2p-theme-dark-default,
+  &[data-v2p-theme='dark-default'],
+  &[data-v2p-theme='dark-default'] body,
   &[data-darkreader-scheme='dark'] body,
   body:has(#Wrapper.Night) {
     color-scheme: dark;

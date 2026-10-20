@@ -1,5 +1,7 @@
 body.v2p-theme-minimalist,
-.v2p-theme-minimalist {
+.v2p-theme-minimalist,
+:root[data-v2p-theme='minimalist'],
+:root[data-v2p-theme='minimalist'] body {
   /* ==== */
   --v2p-color-accent-50: oklch(97.9% 0.021 166.113deg);
   --v2p-color-accent-100: oklch(95% 0.052 163.051deg);

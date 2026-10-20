@@ -1,4 +1,6 @@
-body.v2p-mode-compact {
+body.v2p-mode-compact,
+:root[data-v2p-mode='compact'],
+:root[data-v2p-mode='compact'] body {
   --v2p-nav-height: 45px;
   --v2p-layout-column-gap: 16px;
   --v2p-tp-item-x: 12px;

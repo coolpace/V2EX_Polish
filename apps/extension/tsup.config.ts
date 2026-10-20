@@ -18,6 +18,7 @@ export default defineConfig({
   entry: {
     // === 内容脚本 (Content Scripts) ===
     // 注入到 V2EX 页面中的脚本，用于增强页面功能
+    'theme-boot': path.join(extensionSourceRoot, 'contents/theme-boot.ts'), // 首屏主题启动
     common: path.join(extensionSourceRoot, 'contents/common.ts'), // 通用功能模块
     'v2ex-home': path.join(extensionSourceRoot, 'contents/home/index.ts'), // 首页增强功能
     'v2ex-topic': path.join(extensionSourceRoot, 'contents/topic/index.ts'), // 话题页面增强

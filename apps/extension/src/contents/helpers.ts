@@ -25,6 +25,7 @@ import {
   READING_CONTENT_LIMIT,
   StorageKey,
 } from '../constants'
+import { setFontType, setThemeType } from '../theme-state'
 import type {
   FontType,
   Member,
@@ -36,7 +37,7 @@ import type {
 } from '../types'
 import { getStorage, isBrowserExtension, setStorage, sleep } from '../utils'
 import { findBase64Candidates } from './base64'
-import { $body, $commentCells, $wrapper, replyTextArea } from './globals'
+import { $commentCells, $wrapper, replyTextArea } from './globals'
 
 /** 表情图片低清→高清的 URL 映射（模块级常量，避免每次调用重复创建）。 */
 const emojiSrcMap = new Map<string, string>(
@@ -398,52 +399,12 @@ export function getTagsText(tags: Tag[]): string {
   return tags.join('，')
 }
 
-/**
- * 向页面 head 注入字体 CSS 链接（幂等，重复调用安全）。
- * 用于绕过 Chrome 扩展 content script CSS 中 @import 规则被静默忽略的限制。
- */
-function ensureFontStylesheet(id: string, href: string) {
-  if (!document.getElementById(id)) {
-    const link = document.createElement('link')
-    link.id = id
-    link.rel = 'stylesheet'
-    link.href = href
-    document.head.appendChild(link)
-  }
-}
-
 export function setFont(type: FontType) {
-  if (type === 'system') {
-    document.body.style.removeProperty('font-family')
-  }
-  else if (type === 'vivoSans') {
-    document.body.style.setProperty('font-family', 'vivoSans, system-ui, sans-serif')
-  }
-  else if (type === 'notoSans') {
-    ensureFontStylesheet(
-      'v2p-font-noto-sans',
-      'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400..900&display=swap',
-    )
-    document.body.style.setProperty('font-family', '\'Noto Sans SC\', system-ui, sans-serif')
-  }
-  else if (type === 'lxgwWenKai') {
-    ensureFontStylesheet(
-      'v2p-font-lxgw-wenkai',
-      'https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css',
-    )
-    document.body.style.setProperty('font-family', '\'LXGW WenKai\', system-ui, sans-serif')
-  }
+  setFontType(type)
 }
 
 export function setTheme(type: ThemeType) {
-  // 在切换主题时，先删除所有已有的主题类。
-  $body.get(0)?.classList.forEach((cls) => {
-    if (cls.startsWith('v2p-theme-')) {
-      $body.removeClass(cls)
-    }
-  })
-
-  $body.addClass(`v2p-theme-${type}`)
+  setThemeType(type)
 }
 
 /**

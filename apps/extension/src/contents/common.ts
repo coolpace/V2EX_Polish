@@ -4,6 +4,11 @@ import { createToast } from '../components/toast'
 import { Links, MessageFrom, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import { postTask } from '../post-task'
+import {
+  setMode,
+  syncViewportMode,
+  writeThemeBootSnapshotFromOptions,
+} from '../theme-state'
 import type { MessageData, Options, SettingsSyncInfo } from '../types'
 import {
   applyRemoteSettings,
@@ -12,16 +17,13 @@ import {
   getV2P_Settings,
   injectScript,
   isBrowserExtension,
-  isMobileView,
   setStorage,
   showRemoteSyncDialog,
 } from '../utils'
-import { $body, $infoCard, $wrapper } from './globals'
+import { $infoCard, $wrapper } from './globals'
 import { openV2PSettings, setFont, toggleTheme } from './helpers'
 
-if (isMobileView()) {
-  $body.addClass('v2p-mobile')
-}
+syncViewportMode()
 
 void (async () => {
   const isBrowserExt = isBrowserExtension()
@@ -29,9 +31,9 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  if (options.theme.mode === 'compact') {
-    $body.addClass('v2p-mode-compact')
-  }
+  // theme-boot 已在 document_start 应用首屏状态；这里用权威配置校准并刷新缓存。
+  writeThemeBootSnapshotFromOptions(options)
+  setMode(options.theme.mode ?? 'default')
 
   // 应用用户选择的界面字体。
   setFont(options.font?.type ?? 'system')
@@ -315,6 +317,8 @@ void (async () => {
         const newOptions = newValue
         const oldOptions = oldValue
 
+        writeThemeBootSnapshotFromOptions(newOptions)
+
         const newTheme = newOptions?.theme
         const oldTheme = oldOptions?.theme
 
@@ -353,12 +357,7 @@ void (async () => {
 
           // 处理空间间距模式。
           if (newTheme.mode !== oldTheme.mode) {
-            if (newTheme.mode === 'compact') {
-              $body.addClass('v2p-mode-compact')
-            }
-            else {
-              $body.removeClass('v2p-mode-compact')
-            }
+            setMode(newTheme.mode ?? 'default')
           }
         }
 

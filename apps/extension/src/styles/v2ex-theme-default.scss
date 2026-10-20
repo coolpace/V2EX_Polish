@@ -2,6 +2,7 @@
 
 :root {
   color-scheme: light;
+  background-color: var(--v2p-color-background);
 
   html,
   body {
@@ -10,11 +11,26 @@
   }
 }
 
+/**
+ * theme-boot 在 document_start 设置主题属性后立即显示页面。
+ * 属性未设置时由 body 上的动画在 800ms 后兜底显示，避免脚本异常导致白屏。
+ */
+:root[data-v2p-theme] body {
+  visibility: visible;
+}
+
+@keyframes v2p-boot-reveal {
+  to {
+    visibility: visible;
+  }
+}
+
 body {
   /** Firefox */
   scrollbar-gutter: stable;
   overflow: auto;
   visibility: hidden;
+  animation: v2p-boot-reveal 0s 800ms forwards;
 
   /* ------ 浏览器窗口滚动条 ------ */
   &::-webkit-scrollbar-track {

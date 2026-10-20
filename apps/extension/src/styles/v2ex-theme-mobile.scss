@@ -1,6 +1,8 @@
 @use './share';
 
-body.v2p-mobile {
+body.v2p-mobile,
+:root[data-v2p-mobile='true'],
+:root[data-v2p-mobile='true'] body {
   --v2p-spacing-cell: 10px;
 
   #site-header {

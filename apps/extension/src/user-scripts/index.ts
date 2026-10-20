@@ -3,7 +3,10 @@
 import { patternToRegex } from 'webext-patterns'
 
 import { V2EX_DOMAINS } from '../constants'
+import { initializeThemeBoot } from '../theme-state'
 import { style } from './style'
+
+void initializeThemeBoot()
 
 function runAfterLoaded(fn: () => void): void {
   if (document.readyState !== 'loading') {

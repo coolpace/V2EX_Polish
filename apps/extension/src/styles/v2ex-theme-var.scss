@@ -1,6 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400..900&display=swap');
-
-@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css');
+/*
+ * Noto Sans SC / 霞鹜文楷的样式表由 theme-state.ts 在用户选择字体时按需注入。
+ * 不要改回 @import：Chrome content script CSS 会忽略它，userscript 则会无条件加载。
+ */
 
 @font-face {
   font-family: vivoSans;
@@ -217,6 +218,8 @@
     --button-border-hover-color: var(--v2p-color-main-400);
   }
 
+  @include light-mode;
+
   body {
     @include light-mode;
 
@@ -245,6 +248,18 @@
     img::selection {
       background-color: var(--v2p-color-selection-background-img);
     }
+  }
+
+  &[data-v2p-font='vivoSans'] body {
+    font-family: vivoSans, system-ui, sans-serif;
+  }
+
+  &[data-v2p-font='notoSans'] body {
+    font-family: 'Noto Sans SC', system-ui, sans-serif;
+  }
+
+  &[data-v2p-font='lxgwWenKai'] body {
+    font-family: 'LXGW WenKai', system-ui, sans-serif;
   }
 
   code,

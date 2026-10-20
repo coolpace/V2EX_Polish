@@ -3,6 +3,13 @@
     "permissions": ["scripting", "contextMenus", "storage", "alarms", "sidePanel"],
     "contentScripts": [
       {
+        "css": [],
+        "js": ["scripts/theme-boot.min.js"],
+        "runAt": "document_start",
+        "allFrames": true,
+        "excludeMatches": []
+      },
+      {
         "css": [
           "css/v2ex-theme-var.css",
           "css/v2ex-theme-default.css",
@@ -108,6 +115,13 @@
   "firefox": {
     "permissions": ["scripting", "contextMenus", "storage", "alarms"],
     "contentScripts": [
+      {
+        "css": [],
+        "js": ["scripts/theme-boot.min.js"],
+        "runAt": "document_start",
+        "allFrames": true,
+        "excludeMatches": []
+      },
       {
         "css": [
           "css/v2ex-theme-var.css",
