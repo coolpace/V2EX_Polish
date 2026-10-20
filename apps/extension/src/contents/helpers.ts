@@ -35,6 +35,7 @@ import type {
   V2EX_RequestErrorResponce,
 } from '../types'
 import { getStorage, isBrowserExtension, setStorage, sleep } from '../utils'
+import { findBase64Candidates } from './base64'
 import { $body, $commentCells, $wrapper, replyTextArea } from './globals'
 
 /** 表情图片低清→高清的 URL 映射（模块级常量，避免每次调用重复创建）。 */
@@ -203,24 +204,6 @@ export async function addToReadingList(params: Pick<ReadingItem, 'url' | 'title'
 }
 
 /**
- * 将 `atob` 得到的 binary string（每个字符对应一个字节）按 UTF-8 解码为字符串。
- *
- * 相比早期 `decodeURIComponent(escape(atob(...)))` 的 hack 写法，使用 TextDecoder 可以：
- * - 正确处理 UTF-8 多字节序列（如中文）；
- * - 不会误伤原始 payload 中已存在的 `%` 字符；
- * - 通过 `fatal: true` 直接拒绝非法 UTF-8 字节，便于识别非文本的误匹配。
- */
-function decodeBinaryAsUtf8(binary: string): string {
-  const bytes = new Uint8Array(binary.length)
-
-  for (let i = 0; i < binary.length; i += 1) {
-    bytes[i] = binary.charCodeAt(i)
-  }
-
-  return new TextDecoder('utf-8', { fatal: true }).decode(bytes)
-}
-
-/**
  * 将 UTF-8 文本编码为 Base64。
  */
 export function encodeUtf8AsBase64(text: string): string {
@@ -235,39 +218,9 @@ export function encodeUtf8AsBase64(text: string): string {
 }
 
 /**
- * 旧版“文本转 Base64”会先执行 `encodeURIComponent`（或 `escape`）再 `btoa`，
- * 因此从 Base64 还原出的文本里，无论是 ASCII 段（如 `%40` → `@`）还是 UTF-8
- * 多字节段（如 `%E4%BD%A0` → `你`），都属于需要再做一次 URL 解码的历史数据。
- *
- * 对于确实包含字面量 `%` 但不构成合法编码的字符串，`decodeURIComponent` 会抛错，
- * 此时回退为原文，保证健壮性。
- */
-function decodeLegacyPercentEncodedText(text: string): string {
-  if (!/%[0-9A-Fa-f]{2}/.test(text)) {
-    return text
-  }
-
-  try {
-    return decodeURIComponent(text)
-  }
-  catch {
-    return text
-  }
-}
-
-/**
  * 解析主题内容页面内所有可能的 Base64 字符串。
  */
 export function decodeBase64TopicPage() {
-  /**
-   * 要检测一段字符是否为base64编码，可以使用以下方法：
-   * 1. 检查字符长度是否为4的倍数，如果不是则不是base64编码。
-   * 2. 检查字符是否只包含base64字符集中的字符，即A-Z、a-z、0-9、+、/和=（用于填充）。
-   * 3. 检查填充字符“=”的位置是否正确。在base64编码中，每个字符都代表6个位，但不足24位的数据需要填充。如果有1个字节的数据，填充字符“=”出现在编码的结尾；如果有2个字节的数据，填充字符“=”出现在编码的结尾；如果有3个字节的数据，没有填充字符。
-
-   * 如果以上三个条件都满足，则可以认为这段字符是base64编码。
-   */
-
   const dataTitle = '点击复制'
 
   if (window.__V2P_DecodeStatus === 'decodeed') {
@@ -280,61 +233,6 @@ export function decodeBase64TopicPage() {
     const $commentCells = $commentBox.find('.cell[id^="r_"]')
 
     let count = 0
-
-    // 已知以下高频字符串不能作为 base64 字符串识别，排除掉。
-    const excludeList = [
-      'boss',
-      'bilibili',
-      'Bilibili',
-      'Encrypto',
-      'encrypto',
-      'Window10',
-      'airpords',
-      'Windows7',
-    ]
-
-    /**
-     * 尝试将文本解码为 Base64。
-     * 返回解码后的字符串，如果不是有效的 Base64 则返回 null。
-     */
-    const tryDecodeBase64 = (text: string): string | null => {
-      // 检查长度是否为 4 的倍数，字符长度小的也排除掉。
-      if (text.length % 4 !== 0 || text.length <= 8) {
-        return null
-      }
-
-      // 从排除列表中排除掉非 base64 字符串。
-      if (excludeList.includes(text)) {
-        return null
-      }
-
-      // 检查填充字符 "=" 的位置是否正确。
-      if (text.includes('=')) {
-        const paddingIndex = text.indexOf('=')
-
-        if (paddingIndex !== text.length - 1 && paddingIndex !== text.length - 2) {
-          return null
-        }
-      }
-
-      try {
-        // 1) 先按 UTF-8 还原出原始文本（正确处理中文等多字节字符）。
-        const decoded = decodeBinaryAsUtf8(window.atob(text))
-
-        // 2) 兼容旧版先 URL 编码、再 Base64 的历史数据。
-        return decodeLegacyPercentEncodedText(decoded)
-      }
-      catch (err) {
-        if (err instanceof Error) {
-          console.error(`解析 Base64 出错：${err.message}`)
-        }
-
-        return null
-      }
-    }
-
-    // 修复正则：原 A-z 范围包含了 [\]^_ 等非 Base64 字符，改为 A-Za-z。
-    const base64regex = /[A-Za-z0-9+/=]+/g
 
     /**
      * 使用 TreeWalker 遍历文本节点进行 Base64 解码，
@@ -353,40 +251,38 @@ export function decodeBase64TopicPage() {
       }
 
       for (const textNode of textNodes) {
-        // 跳过 <a> 和 <img> 标签内的文本节点。
-        if (textNode.parentElement?.closest('a, img')) {
+        // 跳过链接、图片以及已经解析过的内容，避免重复处理。
+        if (textNode.parentElement?.closest('a, img, .v2p-decode-block')) {
           continue
         }
 
         const text = textNode.textContent ?? ''
-        const parts: (string | { original: string, decoded: string })[] = []
-        let lastIndex = 0
-        let match: RegExpExecArray | null
+        const candidates = findBase64Candidates(text)
 
-        base64regex.lastIndex = 0
-        match = base64regex.exec(text)
-
-        while (match !== null) {
-          const matched = match[0]
-          const decoded = tryDecodeBase64(matched)
-
-          if (decoded !== null) {
-            // 保留匹配前的普通文本。
-            if (match.index > lastIndex) {
-              parts.push(text.slice(lastIndex, match.index))
-            }
-
-            parts.push({ original: matched, decoded })
-            lastIndex = match.index + matched.length
-            count += 1
-          }
-
-          match = base64regex.exec(text)
+        if (candidates.length === 0) {
+          continue
         }
 
-        // 如果没有任何匹配，跳过此节点。
-        if (parts.length === 0) {
-          continue
+        const parts: (string | { original: string, decoded: string })[] = []
+        let lastIndex = 0
+
+        for (const candidate of candidates) {
+          if (candidate.index < lastIndex) {
+            continue
+          }
+
+          // 保留候选前的普通文本。
+          if (candidate.index > lastIndex) {
+            parts.push(text.slice(lastIndex, candidate.index))
+          }
+
+          parts.push({
+            original: candidate.original,
+            decoded: candidate.decoded,
+          })
+
+          lastIndex = candidate.index + candidate.original.length
+          count += 1
         }
 
         // 保留末尾的普通文本。
