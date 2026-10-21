@@ -5,10 +5,11 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "next build",
+    "content": "velite build",
     "deps": "pnpm up --interactive --latest",
     "dev": "next dev",
-    "lint": "run-p lint:ts lint:es lint:style",
-    "lint:check": "run-p lint:ts lint:es:check lint:style:check",
+    "lint": "pnpm run content && run-p lint:ts lint:es lint:style",
+    "lint:check": "pnpm run content && run-p lint:ts lint:es:check lint:style:check",
     "lint:css": "pnpm run lint:style",
     "lint:style": "stylelint \"src/**/*.{css,scss}\" --fix",
     "lint:style:check": "stylelint \"src/**/*.{css,scss}\"",
