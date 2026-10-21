@@ -15,7 +15,6 @@
   "include": [
     "next-env.d.ts",
     "next.config.ts",
-    "tailwind.config.ts",
     "velite.config.ts",
     "src/**/*.ts",
     "src/**/*.tsx",

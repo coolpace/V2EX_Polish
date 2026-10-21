@@ -15,14 +15,14 @@ export const metadata: Metadata = {
 export default function FeaturesPage() {
   return (
     <PageContainer className="flex flex-col gap-y-5">
-      <FeaturesBg className="!aspect-[1280_/_640]">
+      <FeaturesBg className="aspect-1280/640!">
         <div className="text-with-shadow flex items-center justify-center gap-7 pt-5">
           <div className="text-7xl font-black">
             V2EX
             <span className="text-polish ml-4">Polish</span>
           </div>
         </div>
-        <div className="px-8 pb-8 pt-6 text-center text-4xl font-bold">
+        <div className="px-8 pt-6 pb-8 text-center text-4xl font-bold">
           丰富的功能扩展，重塑你的浏览体验
         </div>
         <div className="px-20">
@@ -33,7 +33,7 @@ export default function FeaturesPage() {
       </FeaturesBg>
 
       <FeaturesBg>
-        <div className="px-8 pb-8 pt-9 text-center text-5xl font-bold">
+        <div className="px-8 pt-9 pb-8 text-center text-5xl font-bold">
           重新设计的界面，让 V2EX 焕然一新
         </div>
         <div className="px-20">
@@ -53,7 +53,7 @@ export default function FeaturesPage() {
 
         <div className="flex-1 shadow-xl shadow-main-100">
           <div className="overflow-hidden rounded-2xl bg-white px-4">
-            <div className="flex items-center px-2 pb-2 pt-3 text-sm text-main-600">
+            <div className="flex items-center px-2 pt-3 pb-2 text-sm text-main-600">
               <span className="flex items-center gap-x-2">
                 <span className="whitespace-nowrap">125 条回复</span>
                 <span className="text-xl font-bold">·</span>
@@ -62,7 +62,7 @@ export default function FeaturesPage() {
             </div>
             <ReplyItem
               avatar={
-                <div className="size-10 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
+                <div className="size-10 rounded bg-linear-to-br from-indigo-400 to-cyan-400" />
               }
               content="安装了一下，真的是现代化的体验！"
               floor="1"
@@ -92,7 +92,7 @@ export default function FeaturesPage() {
                   <ReplyItem
                     nested
                     avatar={
-                      <div className="size-6 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
+                      <div className="size-6 rounded bg-linear-to-br from-indigo-400 to-cyan-400" />
                     }
                     content={(
                       <>
@@ -114,7 +114,7 @@ export default function FeaturesPage() {
                     <ReplyItem
                       nested
                       avatar={
-                        <div className="size-6 rounded bg-gradient-to-br from-violet-200 to-pink-200" />
+                        <div className="size-6 rounded bg-linear-to-br from-violet-200 to-pink-200" />
                       }
                       content={(
                         <>
@@ -137,7 +137,7 @@ export default function FeaturesPage() {
             </div>
             <ReplyItem
               avatar={
-                <div className="size-10 rounded bg-gradient-to-br from-teal-400 to-yellow-200" />
+                <div className="size-10 rounded bg-linear-to-br from-teal-400 to-yellow-200" />
               }
               content="体验优秀，反馈响应也很及时，给开发者点赞👍"
               floor="4"
@@ -166,7 +166,7 @@ export default function FeaturesPage() {
                   <div className="px-3 py-2">最新</div>
                   <div className="px-3 py-2">消息</div>
                 </div>
-                <div className="ml-auto mr-4 flex items-center gap-4">
+                <div className="mr-4 ml-auto flex items-center gap-4">
                   <ShapesIcon size={18} />
                   <SettingsIcon size={18} />
                 </div>

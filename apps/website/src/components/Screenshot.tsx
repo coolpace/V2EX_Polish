@@ -75,7 +75,7 @@ export function Screenshot() {
           }}
         >
           <button
-            className="absolute left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 cursor-pointer select-none rounded-lg border-[3px] border-solid border-main-100 bg-main-800 px-4 py-3 text-main-100 opacity-0 shadow-xl transition-opacity hover:shadow-[0_0_0_3px_var(--v2p-color-main-800)] group-hover:opacity-100 motion-reduce:transition-none"
+            className="absolute top-1/2 left-1/2 z-50 -translate-1/2 cursor-pointer rounded-lg border-[3px] border-solid border-main-100 bg-main-800 px-4 py-3 text-main-100 opacity-0 shadow-xl transition-opacity select-none group-hover:opacity-100 hover:shadow-[0_0_0_3px_var(--v2p-color-main-800)] motion-reduce:transition-none"
             onClick={() => {
               setMode(isDarkTheme ? '' : 'theme-dark')
             }}
@@ -87,19 +87,19 @@ export function Screenshot() {
           </button>
 
           <div
-            className="group/page relative h-[610px] cursor-default select-none overflow-hidden"
+            className="group/page relative h-[610px] cursor-default overflow-hidden select-none"
             data-page={currentDisplay}
           >
             {screens.map(({ name, page }, idx) => (
               <div
                 key={`${idx}`}
-                className={`absolute left-0 top-0 size-full opacity-0 transition-opacity ${
+                className={`absolute top-0 left-0 size-full opacity-0 transition-opacity ${
                   name === 'home'
-                    ? 'group-[[data-page="home"]]/page:opacity-100'
+                    ? 'group-data-[page="home"]/page:opacity-100'
                     : name === 'topic'
-                      ? 'group-[[data-page="topic"]]/page:opacity-100'
+                      ? 'group-data-[page="topic"]/page:opacity-100'
                       : name === 'topic-write'
-                        ? 'group-[[data-page="topic-write"]]/page:opacity-100'
+                        ? 'group-data-[page="topic-write"]/page:opacity-100'
                         : ''
                 }`}
               >
@@ -114,7 +114,7 @@ export function Screenshot() {
         {screens.map(({ name }, idx) => (
           <button
             key={`${idx}`}
-            className={`h-2 w-6 rounded transition-colors ${
+            className={`h-2 w-6 cursor-pointer rounded transition-colors ${
               currentDisplay === name ? 'bg-main-800 shadow-lg' : 'bg-main-350'
             }`}
             onClick={() => {

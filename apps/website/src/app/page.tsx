@@ -45,11 +45,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          <h1 className="hero-sub-heading mb-8 mt-4 px-1 text-center text-base md:mb-16 md:mt-8 md:text-xl">
+          <h1 className="hero-sub-heading mt-4 mb-8 px-1 text-center text-base md:mt-8 md:mb-16 md:text-xl">
             专为 V2EX 用户设计的浏览器插件，集合了众多实用功能，让原生页面焕然一新！
           </h1>
 
-          <div className="flex select-none gap-x-6 gap-y-2">
+          <div className="flex gap-x-6 gap-y-2 select-none">
             <InstallButton />
           </div>
 

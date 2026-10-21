@@ -16,14 +16,14 @@ export function ScreenHome() {
 
       <Content>
         <Box className="flex-1 px-3">
-          <div className="flex items-center gap-x-5 whitespace-nowrap px-4 py-3 text-sm">
+          <div className="flex items-center gap-x-5 px-4 py-3 text-sm whitespace-nowrap">
             <span>技术</span>
             <span>创意</span>
             <span>好玩</span>
             <span>Apple</span>
             <span>酷工作</span>
             <span>交易</span>
-            <span className="relative z-10 text-main-50 after:absolute after:left-1/2 after:top-1/2 after:z-[-1] after:h-6 after:w-[140%] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded after:bg-main-700 after:content-['']">
+            <span className="relative z-10 text-main-50 after:absolute after:top-1/2 after:left-1/2 after:-z-1 after:h-6 after:w-[140%] after:-translate-1/2 after:rounded after:bg-main-700 after:content-['']">
               城市
             </span>
             <span>问与答</span>

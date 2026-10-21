@@ -34,7 +34,7 @@ export default function SharePage() {
   return (
     <div>
       <Flex gap="3" justify="center" wrap="wrap">
-        <div className="w-[300px]">
+        <div className="w-75">
           <TopicLinkInput
             value={searchValue}
             onChange={setSearchValue}

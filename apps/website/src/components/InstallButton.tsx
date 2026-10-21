@@ -13,7 +13,7 @@ export function InstallButton() {
       </span>
       安装至 Chrome
       <svg
-        className="ml-0 w-0 rotate-[-0.25turn] opacity-0 transition-all md:group-hover:ml-2 md:group-hover:w-6 md:group-hover:opacity-100"
+        className="ml-0 w-0 -rotate-90 opacity-0 transition-all md:group-hover:ml-2 md:group-hover:w-6 md:group-hover:opacity-100"
         viewBox="0 0 24 24"
       >
         <path

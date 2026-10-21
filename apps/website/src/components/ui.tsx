@@ -18,7 +18,7 @@ export function Wrapper(props: React.PropsWithChildren) {
 export function Content(props: React.PropsWithChildren) {
   return (
     <div className="px-4 py-6">
-      <div className="mx-auto flex w-full max-w-5xl items-start gap-x-6 @container/content">
+      <div className="@container/content mx-auto flex w-full max-w-5xl items-start gap-x-6">
         {props.children}
       </div>
     </div>
@@ -56,7 +56,7 @@ export function TopicItem(props: {
   return (
     <div className="flex items-center border-b border-solid border-main-200 px-4 py-6 text-sm last-of-type:border-none">
       <div
-        className={`mr-6 mt-[3px] size-12 shrink-0 self-start rounded bg-gradient-to-br ${props.avatar}`}
+        className={`mt-[3px] mr-6 size-12 shrink-0 self-start rounded bg-linear-to-br ${props.avatar}`}
       />
       <div className="mr-7">
         <div className="text-base font-semibold">{props.title}</div>
@@ -66,7 +66,7 @@ export function TopicItem(props: {
           <span>{props.time}</span>
         </div>
       </div>
-      <span className="ml-auto whitespace-nowrap rounded-md bg-main-200 px-2 py-[2px] text-sm text-main-500">
+      <span className="ml-auto rounded-md bg-main-200 px-2 py-[2px] text-sm whitespace-nowrap text-main-500">
         {props.num}
       </span>
     </div>
@@ -76,11 +76,11 @@ export function TopicItem(props: {
 export function TopicItemRight(props: { long?: boolean }) {
   return (
     <div className="flex items-center border-t border-solid border-main-200 p-2 text-sm">
-      <div className="mr-2 size-6 shrink-0 rounded bg-gradient-to-b from-main-200 to-main-100" />
+      <div className="mr-2 size-6 shrink-0 rounded bg-linear-to-b from-main-200 to-main-100" />
       <div className="flex-1">
-        <div className="h-3 flex-1 rounded-sm bg-gradient-to-b from-main-200 to-main-100" />
+        <div className="h-3 flex-1 rounded-xs bg-linear-to-b from-main-200 to-main-100" />
         {props.long && (
-          <div className="mt-[6px] h-3 w-2/3 rounded-sm bg-gradient-to-b from-main-200 to-main-100" />
+          <div className="mt-[6px] h-3 w-2/3 rounded-xs bg-linear-to-b from-main-200 to-main-100" />
         )}
       </div>
     </div>
@@ -90,7 +90,7 @@ export function TopicItemRight(props: { long?: boolean }) {
 export function Paragraph({ width }: { width?: 'full' | '4/5' | '3/4' | '1/2' }) {
   return (
     <div
-      className={`mt-[7px] h-[14px] rounded-sm bg-gradient-to-b from-main-200 to-main-100 ${
+      className={`mt-[7px] h-[14px] rounded-xs bg-linear-to-b from-main-200 to-main-100 ${
         width === 'full'
           ? 'w-full'
           : width === '4/5'
@@ -112,7 +112,7 @@ export function Header() {
           <SearchIcon className="text-main-400" height={16} width={16} />
         </div>
 
-        <ul className="ml-auto inline-flex gap-5 whitespace-nowrap text-sm text-main-500">
+        <ul className="ml-auto inline-flex gap-5 text-sm whitespace-nowrap text-main-500">
           <li>首页</li>
           <li>记事本</li>
           <li>时间轴</li>
@@ -126,7 +126,7 @@ export function Header() {
 
 export function Avatar(props: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={`bg-gradient-to-r from-amber-200 to-yellow-500 ${props.className ?? ''}`} />
+    <div className={`bg-linear-to-r from-amber-200 to-yellow-500 ${props.className ?? ''}`} />
   )
 }
 
@@ -149,12 +149,12 @@ export function UserPanel() {
         </div>
         <div className="relative ml-auto size-[22px] text-main-600">
           <SunIcon
-            className="absolute left-0 top-0 hidden group-[.theme-dark]:inline-block"
+            className="absolute top-0 left-0 hidden group-[.theme-dark]:inline-block"
             height={22}
             width={22}
           />
           <MoonStarIcon
-            className="absolute left-0 top-0 inline-block group-[.theme-dark]:hidden"
+            className="absolute top-0 left-0 inline-block group-[.theme-dark]:hidden"
             height={22}
             width={22}
           />
@@ -177,7 +177,7 @@ export function UserPanel() {
       </div>
 
       <div className="border-t border-solid border-main-200 p-3">
-        <div className="relative h-[3px] w-full bg-main-200 after:absolute after:inset-y-0 after:left-0 after:right-1/4 after:bg-green-400 after:content-['']" />
+        <div className="relative h-[3px] w-full bg-main-200 after:absolute after:inset-y-0 after:right-1/4 after:left-0 after:bg-green-400 after:content-['']" />
       </div>
 
       <div className="border-t border-solid border-main-200 px-3 py-2">创作主题</div>
@@ -185,19 +185,19 @@ export function UserPanel() {
         <span>0 条未读提醒</span>
         <div className="flex items-center rounded-full bg-main-100 px-3 py-[3px] text-xs font-semibold">
           4
-          <Coin className="bg-gradient-to-r from-amber-200 to-yellow-500" />
+          <Coin className="bg-linear-to-r from-amber-200 to-yellow-500" />
           32
-          <Coin className="bg-gradient-to-r from-zinc-300 to-zinc-400" />
+          <Coin className="bg-linear-to-r from-zinc-300 to-zinc-400" />
           11
-          <Coin className="bg-gradient-to-r from-amber-400 to-amber-600" />
+          <Coin className="bg-linear-to-r from-amber-400 to-amber-600" />
         </div>
       </div>
 
-      <div className="hidden border-t border-solid border-main-200 py-3 text-center text-green-500 group-[[data-page='home']]/page:block">
+      <div className="hidden border-t border-solid border-main-200 py-3 text-center text-green-500 group-data-[page='home']/page:block">
         今日已自动签到
       </div>
 
-      <div className="hidden grid-cols-3 gap-3 border-t border-solid border-main-200 px-2 py-3 text-xs text-main-600 group-[[data-page='topic']]/page:grid">
+      <div className="hidden grid-cols-3 gap-3 border-t border-solid border-main-200 px-2 py-3 text-xs text-main-600 group-data-[page='topic']/page:grid">
         <span className="flex items-center justify-center gap-x-1">
           <HeartIcon size={16} />
           热门回复
@@ -254,7 +254,7 @@ export function ReplyItem(props: {
         </span>
         <p className="mt-2 text-[15px] leading-5">{props.content}</p>
       </div>
-      <div className="ml-3 mr-1">
+      <div className="mr-1 ml-3">
         <span className="px-2 py-1 text-main-350">{props.floor}</span>
       </div>
     </div>

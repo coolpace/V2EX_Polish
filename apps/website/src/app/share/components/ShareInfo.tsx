@@ -120,6 +120,7 @@ export function ShareInfo() {
     const stored = window.localStorage.getItem(shareCardThemeStorageKey)
 
     if (stored) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only; reading it in an effect avoids hydration mismatch
       setThemeId(stored)
     }
   }, [])
@@ -367,7 +368,7 @@ export function ShareInfo() {
         </div>
       </div>
 
-      <div className="sticky top-[50px] min-w-[300px]">
+      <div className="sticky top-[50px] min-w-75">
         <Flex direction="column" gap="4">
           {(requestError || notFoundError) && (
             <Callout.Root color="red">

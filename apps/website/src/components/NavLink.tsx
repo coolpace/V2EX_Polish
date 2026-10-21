@@ -17,7 +17,7 @@ export function NavLink(props: React.PropsWithChildren<React.ComponentProps<type
     >
       {props.children}
       <span
-        className="absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-slate-800/0 via-slate-800/40 to-slate-800/0"
+        className="absolute inset-x-1 -bottom-px h-px bg-linear-to-r from-slate-800/0 via-slate-800/40 to-slate-800/0"
         style={{ display: isActive ? undefined : 'none' }}
       />
     </Link>

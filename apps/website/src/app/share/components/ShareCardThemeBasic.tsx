@@ -57,7 +57,7 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
           />
           <span className="mr-3 truncate">{topicInfo.member.username}</span>
 
-          <span className="ml-auto whitespace-nowrap text-xs">
+          <span className="ml-auto text-xs whitespace-nowrap">
             {topicInfo.time.year}-{topicInfo.time.month}-{topicInfo.time.day}
           </span>
         </div>
@@ -74,7 +74,7 @@ export function ShareCardThemeBasic(props: ShareCardProps) {
               prose-a:pointer-events-none prose-a:font-normal prose-a:text-accent-600 prose-a:no-underline
               prose-blockquote:-mx-2 prose-blockquote:border-l-accent-200
               prose-blockquote:bg-subtle prose-blockquote:p-2 prose-blockquote:text-[15px] prose-blockquote:font-normal
-              prose-blockquote:not-italic prose-blockquote:text-foreground prose-li:m-0
+              prose-blockquote:text-foreground prose-blockquote:not-italic prose-li:m-0
               prose-img:m-0
               `}
             >

@@ -24,7 +24,7 @@ export default function ChangelogPage() {
         <PageHeaderTitle>Changelog</PageHeaderTitle>
 
         <div
-          className="text-sm [&>*:last-child]:mb-0 [&>*]:mb-3 [&>h2]:text-2xl [&>h2]:font-bold [&>h3]:text-xl [&>h3]:font-medium"
+          className="text-sm *:mb-3 [&>*:last-child]:mb-0 [&>h2]:text-2xl [&>h2]:font-bold [&>h3]:text-xl [&>h3]:font-medium"
           dangerouslySetInnerHTML={{ __html: changelog.content }}
         />
       </Article>

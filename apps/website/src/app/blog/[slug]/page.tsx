@@ -48,7 +48,7 @@ export default async function BlogPage(props: { params: Promise<{ slug: string }
   return (
     <PageContainer>
       <div
-        className="pointer-events-none absolute right-0 top-0 hidden h-40 w-full max-w-[75%] blur-[140px] supports-[filter:blur(140px)]:block"
+        className="pointer-events-none absolute top-0 right-0 hidden h-40 w-full max-w-[75%] blur-[140px] supports-[filter:blur(140px)]:block"
         style={{
           background: 'linear-gradient(97.62deg, rgba(0 71 225 / 0.22) 2.27%, rgba(26 214 255 / 0.22) 50.88%, rgba(0 220 130 / 0.22) 98.48%)',
         }}
@@ -61,12 +61,12 @@ export default async function BlogPage(props: { params: Promise<{ slug: string }
 
             <div className="mt-4 flex items-center gap-x-3 text-sm md:mt-6">
               <Link
-                className="inline-flex items-center gap-x-2 !border-none"
+                className="inline-flex items-center gap-x-2 border-none!"
                 href={blog.author.link}
               >
                 <Image
                   alt="作者头像"
-                  className="!m-0 overflow-hidden rounded-full bg-main-200"
+                  className="m-0! overflow-hidden rounded-full bg-main-200"
                   height={24}
                   src={blog.author.avatar}
                   width={24}

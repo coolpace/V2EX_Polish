@@ -20,10 +20,29 @@ export default [
   sharedTypeScriptRuleRelaxations,
 
   {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+
     settings: {
       tailwindcss: {
-        whitelist: ['twitter-tweet', 'hero-sub-heading'],
+        cssConfigPath: './src/styles/globals.css',
       },
+    },
+
+    rules: {
+      'tailwindcss/no-custom-classname': [
+        'warn',
+        {
+          whitelist: [
+            'twitter-tweet',
+            'hero-sub-heading',
+            'text-with-shadow',
+            'text-polish',
+            'share-card',
+            'topic-content',
+            'not-prose',
+          ],
+        },
+      ],
     },
   },
 

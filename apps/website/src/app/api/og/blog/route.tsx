@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/error-boundaries -- JSX is rendered by Satori/ImageResponse, not React; the try/catch fallback is intentional */
 import { ImageResponse } from 'next/og'
 
 import { OG_HEIGHT, OG_WIDTH } from '~/utils'

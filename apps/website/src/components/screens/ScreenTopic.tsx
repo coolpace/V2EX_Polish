@@ -35,7 +35,7 @@ export function ScreenTopic() {
                   <ChevronRight size={12} strokeWidth={3} />
                   分享创造
                 </div>
-                <div className="mb-3 mt-2 text-[22px] font-bold">
+                <div className="mt-2 mb-3 text-[22px] font-bold">
                   ✨ V2EX 超强浏览器扩展：体验更先进的 V2EX！
                 </div>
                 <div className="flex items-center gap-2 text-xs text-main-600">
@@ -55,7 +55,7 @@ export function ScreenTopic() {
               <Avatar className="size-12 rounded" />
             </div>
 
-            <div className="border-y border-solid border-main-200 px-2 py-5 text-[15px] [&>p:last-of-type]:mb-0 [&>p]:mb-[15px]">
+            <div className="border-y border-solid border-main-200 px-2 py-5 text-[15px] [&>p]:mb-[15px] [&>p:last-of-type]:mb-0">
               <p>
                 V2EX Polish 是一款专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能，让你的 V2EX
                 页面焕然一新 ！如果你愿意，请为我们的项目点个 Star ⭐️
@@ -100,15 +100,15 @@ export function ScreenTopic() {
               </span>
 
               <span className="ml-auto flex items-center gap-x-2 text-xs">
-                <span className="inline-flex items-center gap-x-1 whitespace-nowrap rounded bg-main-200 px-2 py-1">
+                <span className="inline-flex items-center gap-x-1 rounded bg-main-200 px-2 py-1 whitespace-nowrap">
                   <TagIcon size={12} />
                   插件
                 </span>
-                <span className="inline-flex items-center gap-x-1 whitespace-nowrap rounded bg-main-200 px-2 py-1">
+                <span className="inline-flex items-center gap-x-1 rounded bg-main-200 px-2 py-1 whitespace-nowrap">
                   <TagIcon size={12} />
                   程序
                 </span>
-                <span className="inline-flex items-center gap-x-1 whitespace-nowrap rounded bg-main-200 px-2 py-1">
+                <span className="inline-flex items-center gap-x-1 rounded bg-main-200 px-2 py-1 whitespace-nowrap">
                   <TagIcon size={12} />
                   开发
                 </span>
@@ -118,7 +118,7 @@ export function ScreenTopic() {
             <div className="px-1 pb-3">
               <ReplyItem
                 avatar={
-                  <div className="size-10 rounded bg-gradient-to-br from-indigo-400 to-cyan-400" />
+                  <div className="size-10 rounded bg-linear-to-br from-indigo-400 to-cyan-400" />
                 }
                 content="安装了一下，真的是现代化的体验！"
                 floor="1"
