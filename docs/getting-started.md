@@ -45,7 +45,7 @@ V2EX_Polish_Pro/
 │  │  │  └─ packages/            # zip 包
 │  │  ├─ tsconfig.runtime.json
 │  │  ├─ tsconfig.tooling.json
-│  │  └─ tsup.config.ts
+│  │  └─ tsdown.config.ts
 │  ├─ website/
 │  └─ hot-topics/
 ├─ docs/
@@ -62,10 +62,10 @@ V2EX_Polish_Pro/
 
 - `apps/extension/public/` 提供静态资源
 - `sass` 将 `apps/extension/src/styles/` 编译到 `apps/extension/dist/<target>/css/`
-- `tsup` 将 `apps/extension/src/` 打包到 `apps/extension/dist/<target>/scripts/`
+- `tsdown` 将 `apps/extension/src/` 打包到 `apps/extension/dist/<target>/scripts/`
 - `apps/extension/scripts/build-manifest.ts` 生成 `apps/extension/dist/<target>/manifest.json`
 - `apps/extension/scripts/build-userscript-style.mjs` 生成 `apps/extension/src/user-scripts/style.ts`
-- `tsup.userscript.config.ts` 生成 `apps/extension/dist/userscript/index.min.js`
+- `tsdown.userscript.config.ts` 生成 `apps/extension/dist/userscript/index.min.js`
 - `pnpm build:dist` 负责生成可加载的未打包扩展目录
 - `pnpm package:zip` 会调用 `web-ext build`，将 Chrome / Firefox 产物打包到 `apps/extension/dist/packages/<target>/`
 

@@ -5,5 +5,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["scripts/**/*.ts", "tsup.config.ts", "tsup.userscript.config.ts", "shared/**/*"]
+  "include": ["scripts/**/*.ts", "tsdown.config.ts", "tsdown.userscript.config.ts", "shared/**/*"]
 }

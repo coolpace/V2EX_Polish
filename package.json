@@ -48,7 +48,7 @@
   "dependencies": {
     "@floating-ui/dom": "1.8.0",
     "lucide": "1.61.0",
-    "webext-patterns": "1.5.1"
+    "webext-patterns": "3.0.0"
   },
   "devDependencies": {
     "@codennnn/tsconfig": "^1.2.1",
@@ -69,7 +69,7 @@
     "stylelint-config-standard": "^40.0.0",
     "stylelint-config-tailwindcss": "^1.0.1",
     "stylelint-scss": "^7.3.0",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.23.1",
     "typescript": "^5.9.3",
     "web-ext": "^10.8.0"
   },

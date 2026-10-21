@@ -80,8 +80,8 @@ pnpm build:dist
 
 - 修改 `apps/extension/package.json` 中的版本号
 - 修改 `apps/extension/shared/v2ex-domains.ts`
-- 新增或删除 tsup 入口
-- 修改 `apps/extension/tsup.config.ts`
+- 新增或删除 tsdown 入口
+- 修改 `apps/extension/tsdown.config.ts`
 - 修改 `apps/extension/public/` 中的静态资源
 
 ## 单独构建命令
