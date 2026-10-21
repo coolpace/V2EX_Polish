@@ -345,7 +345,7 @@ export function ShareInfo() {
   return (
     <div className="flex items-start gap-x-8">
       <div className="overflow-hidden shadow-lg">
-        <div ref={eleRef} className="share-card w-[375px]">
+        <div ref={eleRef} className="share-card w-93.75">
           {topicInfo
             ? (
                 <ShareCardThemeBasic
@@ -368,7 +368,7 @@ export function ShareInfo() {
         </div>
       </div>
 
-      <div className="sticky top-[50px] min-w-75">
+      <div className="sticky top-12.5 min-w-75">
         <Flex direction="column" gap="4">
           {(requestError || notFoundError) && (
             <Callout.Root color="red">
