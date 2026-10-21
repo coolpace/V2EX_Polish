@@ -70,6 +70,12 @@ pnpm build:manifest:firefox
 
 ## 发布流程
 
+推送 `v*` 标签会触发 `.github/workflows/release.yml`：自动安装依赖、运行测试与校验、构建 Chrome/Firefox zip，并创建 GitHub Release。发布构建会设置 `EXTENSION_MINIFY=1`，本地需要压缩产物时可使用：
+
+```bash
+EXTENSION_MINIFY=1 pnpm build
+```
+
 ### Chrome Web Store
 
 - 上传 `apps/extension/dist/packages/chrome/` 下最新 zip
@@ -98,14 +104,14 @@ pnpm worker:deploy
 部署前确认：
 
 - `apps/hot-topics/wrangler.toml` 中 D1 配置正确
-- `apps/hot-topics/schema.sql` 已执行到目标数据库
+- `apps/hot-topics/migrations/` 中的迁移已应用（`pnpm --dir apps/hot-topics run db:migrate`）
 - 扩展中的 Worker 地址与部署地址一致
 
 ## 发布前检查
 
 - 已在 `apps/extension/package.json` 更新版本号
 - 已运行 `pnpm verify:all`
-- 已按 [monorepo-smoke-checklist.md](./monorepo-smoke-checklist.md) 完成 smoke test
+- 已按 [development.md](./development.md) 中「手动加载扩展」「热重载与监听」章节完成 smoke test
 - 已确认 Chrome / Firefox 可加载目录和 zip 都来自 `apps/extension/dist/`
 - 如本次改动涉及 Worker，已完成 `pnpm worker:check` 和接口验证
 - 如本次改动涉及文档或开发流程，已同步更新 README、CONTRIBUTING 和 `docs/`

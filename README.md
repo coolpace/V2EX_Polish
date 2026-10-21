@@ -142,6 +142,8 @@ V2EX Polish 的目标是提供一个更加完善的插件，并保证持续更�
 - `pnpm build`：完整构建，生成未打包 dist、扩展 zip 与 userscript
 - `pnpm build:dist`：只生成可加载的扩展目录与 userscript
 - `pnpm verify:all`：执行 extension、website、worker 和 manifest 快照的完整校验
+- `pnpm lint:check`：只读检查 ESLint、Stylelint 与 Prettier（CI 使用）
+- `pnpm test`：运行 Vitest 单元测试
 - `pnpm worker:dev`：启动 `apps/hot-topics/` Worker 本地开发
 - `pnpm website:dev`：启动 `apps/website/` 本地开发
 - `pnpm worker:deploy`：部署 `apps/hot-topics/` Worker

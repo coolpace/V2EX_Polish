@@ -9,7 +9,7 @@
 - `apps/hot-topics/src/index.ts`：Worker 入口，处理 HTTP 请求与定时任务
 - `apps/hot-topics/src/query.ts`：热议主题查询逻辑与参数校验
 - `apps/hot-topics/src/updater.ts`：定时抓取 V2EX 热门主题并写入 D1
-- `apps/hot-topics/schema.sql`：D1 建表脚本
+- `apps/hot-topics/migrations/`：D1 数据库迁移脚本
 - `apps/hot-topics/wrangler.toml`：Worker 名称、入口、Cron 与 D1 绑定配置
 
 ## Workspace 使用方式
@@ -44,7 +44,7 @@ pnpm --filter v2ex-hot-topics deploy
 
 1. 创建 D1 数据库。
 2. 将 `apps/hot-topics/wrangler.toml` 中的 `database_id` 替换为真实值。
-3. 将 `apps/hot-topics/schema.sql` 执行到目标 D1 数据库。
+3. 执行数据库迁移：`pnpm --dir apps/hot-topics run db:migrate`（本地开发使用 `db:migrate:local`）。
 4. 部署 Worker，并拿到实际可访问的域名。
 5. 将扩展侧热议主题接口地址改为真实 Worker 地址。
 

@@ -114,6 +114,6 @@ pnpm build:dist
 pnpm verify:all
 ```
 
-再按 [monorepo-smoke-checklist.md](./monorepo-smoke-checklist.md) 做 smoke test。
+再按 [development.md](./development.md) 中「手动加载扩展」「热重载与监听」章节做 smoke test。
 
 下一步：阅读 [development.md](./development.md)。

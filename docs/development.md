@@ -10,7 +10,7 @@
 - `apps/website/`：Next.js 官网
 - `apps/hot-topics/`：Cloudflare Workers 热议主题接口
 
-根 `package.json` 只做代理命令，所以日常开发统一在仓库根目录执行即可。
+根 `package.json` 提供代理命令和仓库级 lint / 格式化配置，所以日常开发统一在仓库根目录执行即可。
 
 ## 扩展开发模式
 
@@ -80,7 +80,7 @@ pnpm build:dist
 
 - 修改 `apps/extension/package.json` 中的版本号
 - 修改 `apps/extension/shared/v2ex-domains.ts`
-- 新增或删除 tsdown 入口
+- 新增或删除内容脚本 / 构建入口（`apps/extension/shared/features.ts`）
 - 修改 `apps/extension/tsdown.config.ts`
 - 修改 `apps/extension/public/` 中的静态资源
 
@@ -102,6 +102,18 @@ pnpm watch:style
 
 这些根命令都会代理到 `apps/extension/`。
 
+## 质量检查
+
+提交前建议依次执行：
+
+```bash
+pnpm lint:check
+pnpm typecheck
+pnpm test
+```
+
+`pnpm verify:all` 会在上述检查之外再构建扩展并校验 manifest 快照，耗时更长，适合发布前执行。
+
 ## 官网开发
 
 ```bash
@@ -118,6 +130,7 @@ pnpm website:start
 pnpm worker:dev
 pnpm worker:check
 pnpm worker:deploy
+pnpm --dir apps/hot-topics run db:migrate:local
 ```
 
 `apps/hot-topics/` 是独立子项目，当前扩展仍通过已部署的 Worker 地址访问热议主题接口，不会自动转发到本地 `wrangler dev`。

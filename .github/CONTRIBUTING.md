@@ -4,7 +4,7 @@
 
 ## 仓库结构
 
-本仓库已经完成 monorepo 重构，根目录只保留 workspace 配置和代理脚本，实际 app 都在 `apps/` 下：
+本仓库已经完成 monorepo 重构，根目录只保留 workspace 配置、仓库级工具配置和代理脚本，实际 app 都在 `apps/` 下：
 
 ```text
 apps/
@@ -47,9 +47,10 @@ pnpm worker:dev
 ## 扩展开发
 
 - 运行时代码放在 `apps/extension/src/`
-- 静态资源放在 `apps/extension/public/`
+- `apps/extension/public/`：静态资源
 - 构建脚本放在 `apps/extension/scripts/`
 - 域名白名单维护在 `apps/extension/shared/v2ex-domains.ts`
+- 内容脚本与构建入口清单维护在 `apps/extension/shared/features.ts`（tsdown 与 manifest 共用）
 - Chrome 可加载目录是 `apps/extension/dist/chrome/`
 - Firefox 可加载目录是 `apps/extension/dist/firefox/`
 - userscript 产物是 `apps/extension/dist/userscript/index.min.js`
@@ -82,7 +83,7 @@ pnpm worker:dev
 提交 PR 前，至少完成以下验证：
 
 1. 运行 `pnpm verify:all`
-2. 按 [docs/monorepo-smoke-checklist.md](../docs/monorepo-smoke-checklist.md) 做 smoke test
+2. 按 [docs/development.md](../docs/development.md) 中「手动加载扩展」「热重载与监听」章节做 smoke test
 3. 如改动影响扩展行为，在 Chrome 和 Firefox 都验证一次
 4. 如改动影响 Worker 或官网，同步验证对应 app
 5. 如改动影响开发流程、目录结构或发布方式，同步更新 README 与 `docs/`
