@@ -4,6 +4,7 @@ import typescript from 'prefer-code-style/eslint/typescript'
 
 import {
   disableTypeAwareLintForJavaScript,
+  disableTypeAwareLintForTests,
   sharedTypeScriptRuleRelaxations,
 } from './eslint.shared.js'
 
@@ -12,6 +13,7 @@ export default [
   ...browser,
   ...typescript,
   disableTypeAwareLintForJavaScript,
+  disableTypeAwareLintForTests,
   sharedTypeScriptRuleRelaxations,
 
   {

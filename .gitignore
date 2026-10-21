@@ -1,4 +1,5 @@
 node_modules
+.pnpm-store
 /apps/extension/dist/
 .DS_Store
 .pnpm-debug.log*

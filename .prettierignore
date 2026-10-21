@@ -1,4 +1,7 @@
 dist
-asset
-website
+assets
+apps/website
+.pnpm-store
+pnpm-lock.yaml
+/*-profile*/
 **/*.min.js

@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify tag matches extension version
+        run: |
+          node -e "
+            const version = require('./apps/extension/package.json').version;
+            if ('v' + version !== process.env.GITHUB_REF_NAME) {
+              console.error('Tag ' + process.env.GITHUB_REF_NAME + ' does not match extension version ' + version);
+              process.exit(1);
+            }
+          "
+
+      - name: Test
+        run: pnpm test
+
+      - name: Verify
+        run: pnpm verify:all
+
+      - name: Build packages
+        run: pnpm build
+        env:
+          EXTENSION_MINIFY: '1'
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: apps/extension/dist/packages/**/*.zip

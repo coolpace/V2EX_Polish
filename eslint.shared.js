@@ -10,6 +10,16 @@ export const disableTypeAwareLintForJavaScript = {
   },
 }
 
+export const disableTypeAwareLintForTests = {
+  ...tseslint.configs.disableTypeChecked,
+  files: ['tests/**/*.ts', 'vitest.config.ts'],
+  languageOptions: {
+    parserOptions: {
+      projectService: false,
+    },
+  },
+}
+
 export const sharedTypeScriptRuleRelaxations = {
   rules: {
     '@typescript-eslint/prefer-readonly-parameter-types': 0,
