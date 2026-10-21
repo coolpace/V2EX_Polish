@@ -24,5 +24,6 @@ export const sharedTypeScriptRuleRelaxations = {
   rules: {
     '@typescript-eslint/prefer-readonly-parameter-types': 0,
     '@typescript-eslint/no-unsafe-assignment': 0,
+    '@typescript-eslint/no-unused-vars': [2, { ignoreRestSiblings: true }],
   },
 }
