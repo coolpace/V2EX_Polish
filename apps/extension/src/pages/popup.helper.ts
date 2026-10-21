@@ -28,12 +28,12 @@ export const generateReadingItmes = (items: ReadingItem[]) => {
 
       return `
         <div class="topic-item">
-          <a href="${topic.url}" target="_blank">
+          <a href="${escapeHTML(topic.url)}" target="_blank">
             <span class="title">${escapeHTML(topic.title)}</span>
             <span class="content">${escapedText}</span>
 
             <div class="topic-item-actions">
-              <button class="topic-item-action-remove" data-url="${topic.url}">移除</button>
+              <button class="topic-item-action-remove" data-url="${escapeHTML(topic.url)}"> 移除</button>
             </div>
           </a>
         </div>
@@ -49,7 +49,7 @@ export const generateTopicItmes = (topics: Topic[]) => {
 
       return `
         <li class="topic-item">
-          <a href="${topic.url}" target="_blank">
+          <a href="${escapeHTML(topic.url)}" target="_blank">
             <span class="title">${escapeHTML(topic.title)}</span>
             <span class="content">${escapedText}</span>
           </a>

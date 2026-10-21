@@ -3,8 +3,7 @@ import { createImagePreview } from '../../components/image-preview'
 import { openTagInputModal } from '../../components/tag-input-modal'
 import { Links, MAX_CONTENT_HEIGHT, READABLE_CONTENT_HEIGHT, StorageKey } from '../../constants'
 import type { Member, Options, Tag } from '../../types'
-import { useTopicPreview } from '../../use-topic-preview'
-import { extractDays, getStorage, getStorageSync, parseDateTime } from '../../utils'
+import { escapeHTML, extractDays, getStorage, getStorageSync, parseDateTime } from '../../utils'
 import {
   $body,
   $commentCells,
@@ -14,6 +13,7 @@ import {
   topicOwnerName,
 } from '../globals'
 import { getTagsText, loadIcons, setMemberTags } from '../helpers'
+import { createTopicPreview } from './preview'
 
 /**
  * 对主题内容中过高的图片进行折叠处理。
@@ -258,7 +258,7 @@ export function updateMemberTag(
 
   if ($v2pTags.length > 0) {
     if (tagsText) {
-      $v2pTags.html(`<b>#</b>&nbsp;${tagsText}`)
+      $v2pTags.html(`<b>#</b>&nbsp;${escapeHTML(tagsText)}`)
     }
     else {
       $v2pTags.remove()
@@ -268,7 +268,7 @@ export function updateMemberTag(
   else {
     if (tagsText) {
       const $tags = $(
-        `<div class="v2p-reply-tags v2p-tags-${memberName}" title="${tagsText}"><b>#</b>&nbsp;${tagsText}</div>`,
+        `<div class="v2p-reply-tags v2p-tags-${escapeHTML(memberName)}" title="${escapeHTML(tagsText)}"><b>#</b>&nbsp;${escapeHTML(tagsText)}</div>`,
       )
 
       $tags.on('click', () => {
@@ -376,7 +376,7 @@ export function handleLinkPreview() {
     '.topic_content a[href*="v2ex.com/t/"], .reply_content a[href*="v2ex.com/t/"], .topic_content a[href*="v2ex.co/t/"], .reply_content a[href*="v2ex.co/t/"], .topic_content a[href^="/t/"], .reply_content a[href^="/t/"]',
   )
 
-  const { handlePreview } = useTopicPreview()
+  const { handlePreview } = createTopicPreview()
 
   const $previewBtn = $('<span class="v2p-link-preview-btn">预览</span>')
 

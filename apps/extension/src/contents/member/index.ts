@@ -1,7 +1,7 @@
 import { createButton } from '../../components/button'
 import { StorageKey } from '../../constants'
 import { fetchUserInfo } from '../../services'
-import { getStorage } from '../../utils'
+import { escapeHTML, getStorage } from '../../utils'
 import { loginName } from '../globals'
 import { getRegisterDays, getTagsText, replaceCommentEmojiWithHD } from '../helpers'
 import { type CallbackFunctions, openTagsSetter } from '../topic/content'
@@ -48,7 +48,7 @@ void (async () => {
 
       if (tagsText) {
         const $tags = $(
-          `<div class="v2p-reply-tags v2p-tags-${memberName}" style="margin-right: 5px;" title="${tagsText}"><b>#</b>&nbsp;${tagsText}</div>`,
+          `<div class="v2p-reply-tags v2p-tags-${escapeHTML(memberName)}" style="margin-right: 5px;" title="${escapeHTML(tagsText)}"><b>#</b>&nbsp;${escapeHTML(tagsText)}</div>`,
         )
         $tags.on('click', () => {
           openTagsSetter({ memberName, memberAvatar, ...callbacks })

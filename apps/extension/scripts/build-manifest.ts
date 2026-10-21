@@ -35,6 +35,7 @@ import path from 'node:path'
 
 import { consola } from 'consola'
 
+import { contentScriptGroups, type ContentScriptTarget } from '../shared/features'
 import { V2EX_DOMAINS } from '../shared/v2ex-domains'
 import {
   EXTENSION_TARGETS,
@@ -270,14 +271,50 @@ const generateManifest = (): Manifest => {
     }, [])
   }
 
-  // 为不同页面类型生成专用的匹配规则
   const matches = getMatches() // 全站匹配
-  const topicMatches = getMatches('t') // 主题页面
-  const writeMatches = getMatches('write', true) // 发帖页面
-  const memberMatches = getMatches('member') // 用户页面
-  const settingsMatches = getMatches('settings', true) // 设置页面
-  const notificationsMatches = getMatches('notifications', true) // 通知页面
-  const nodeMatches = getMatches('go') // 节点页面
+
+  const getMatchesForTarget = (target: ContentScriptTarget): string[] => {
+    switch (target) {
+      case 'topic':
+        return getMatches('t')
+
+      case 'write':
+        return getMatches('write', true)
+
+      case 'member':
+        return getMatches('member')
+
+      case 'settings':
+        return getMatches('settings', true)
+
+      case 'notifications':
+        return getMatches('notifications', true)
+
+      case 'go':
+        return getMatches('go')
+
+      default:
+        return matches
+    }
+  }
+
+  const buildContentScripts = (): ManifestContentScript[] =>
+    contentScriptGroups.map((group) => {
+      const js = [
+        ...group.vendor ?? [],
+        ...group.entry && group.name ? [`scripts/${group.name}.min.js`] : [],
+        ...group.staticScript ? [group.staticScript] : [],
+      ]
+
+      return {
+        matches: getMatchesForTarget(group.matches),
+        ...group.excludeMatches ? { exclude_matches: group.excludeMatches } : {},
+        ...group.css ? { css: group.css } : {},
+        ...js.length > 0 ? { js } : {},
+        ...group.runAt ? { run_at: group.runAt } : {},
+        all_frames: group.allFrames ?? true,
+      }
+    })
 
   return {
     manifest_version: 3,
@@ -302,100 +339,7 @@ const generateManifest = (): Manifest => {
       128: 'images/icon-128.png',
     },
 
-    content_scripts: [
-      // 1. 首屏主题启动（document_start，先于功能脚本）
-      {
-        matches,
-        js: ['scripts/theme-boot.min.js'],
-        run_at: 'document_start',
-        all_frames: true,
-      },
-
-      // 2. 主题样式注入（最高优先级，document_start 执行）
-      {
-        matches,
-        css: [
-          'css/v2ex-theme-var.css',
-          'css/v2ex-theme-default.css',
-          'css/v2ex-theme-dark.css',
-          'css/v2ex-theme-compact.css',
-          'css/v2ex-theme-dawn.css',
-          'css/v2ex-theme-minimalist.css',
-          'css/v2ex-theme-mobile.css',
-        ],
-        run_at: 'document_start',
-        all_frames: true, // 支持所有框架（包括 iframes）
-      },
-
-      // 3. Polyfill 脚本注入（兼容性处理）
-      {
-        matches,
-        js: ['scripts/polyfill.js'],
-        run_at: 'document_end',
-        all_frames: true,
-      },
-
-      // 4. 通用功能脚本（所有页面）
-      {
-        matches,
-        css: ['css/v2ex-effect.css'],
-        js: ['scripts/jquery.min.js', 'scripts/common.min.js'],
-        all_frames: true,
-      },
-
-      // 5. 首页专用功能（排除特定页面）
-      {
-        matches,
-        exclude_matches: [
-          '*://*/t/*', // 排除主题页
-          '*://*/notes/*', // 排除笔记页
-          '*://*/settings', // 排除设置页
-          '*://*/write', // 排除发帖页
-          '*://*/member/*', // 排除用户页
-        ],
-        js: ['scripts/jquery.min.js', 'scripts/v2ex-home.min.js'],
-        all_frames: true,
-      },
-
-      // 6-11. 各页面类型的专用功能脚本
-      {
-        matches: topicMatches,
-        js: ['scripts/jquery.min.js', 'scripts/v2ex-topic.min.js'],
-        all_frames: true,
-      },
-      {
-        matches: writeMatches,
-        js: ['scripts/jquery.min.js', 'scripts/v2ex-write.min.js'],
-        all_frames: true,
-      },
-      {
-        matches: memberMatches,
-        js: ['scripts/jquery.min.js', 'scripts/v2ex-member.min.js'],
-        all_frames: true,
-      },
-      {
-        matches: settingsMatches,
-        js: ['scripts/jquery.min.js', 'scripts/v2ex-settings.min.js'],
-        all_frames: true,
-      },
-      {
-        matches: notificationsMatches,
-        js: ['scripts/jquery.min.js', 'scripts/v2ex-notifications.min.js'],
-        all_frames: true,
-      },
-      {
-        matches: nodeMatches,
-        js: ['scripts/jquery.min.js', 'scripts/v2ex-go.min.js'],
-        all_frames: true,
-      },
-
-      // 12. 图标切换功能（全局）
-      {
-        matches,
-        js: ['scripts/toggle-icon.min.js'],
-        all_frames: true,
-      },
-    ],
+    content_scripts: buildContentScripts(),
 
     // 后台服务脚本配置
     background: {

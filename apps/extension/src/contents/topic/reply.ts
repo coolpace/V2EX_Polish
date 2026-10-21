@@ -1,6 +1,6 @@
 import { createButton } from '../../components/button'
+import { createPopup } from '../../components/floating-popup'
 import { bindImageUpload } from '../../components/image-upload'
-import { createPopup } from '../../components/popup'
 import { emojiLinks, emoticons, type PopularEmoji } from '../../constants'
 import { getCommentPreview } from '../../services'
 import { getOS } from '../../utils'

@@ -1,16 +1,16 @@
 import { BookOpenCheck, createElement } from 'lucide'
 
-import { createButton } from './components/button'
-import { createModal } from './components/modal'
-import { RequestMessage, StorageKey } from './constants'
-import { getCommentDataList, handleNestedComment } from './contents/dom'
-import { $body, loginName } from './contents/globals'
-import { addToReadingList, loadIcons, replaceCommentEmojiWithHD } from './contents/helpers'
-import { handleLinkPreview } from './contents/topic/content'
-import { iconLogo } from './icons'
-import { crawlTopicPage, fetchTopic } from './services'
-import type { Topic } from './types'
-import { formatTimestamp, getStorageSync } from './utils'
+import { createButton } from '../../components/button'
+import { createModal } from '../../components/modal'
+import { RequestMessage, StorageKey } from '../../constants'
+import { iconLogo } from '../../icons'
+import { crawlTopicPage, fetchTopic } from '../../services'
+import type { Topic } from '../../types'
+import { escapeHTML, formatTimestamp, getStorageSync } from '../../utils'
+import { getCommentDataList, handleNestedComment } from '../dom'
+import { $body, loginName } from '../globals'
+import { addToReadingList, loadIcons, replaceCommentEmojiWithHD } from '../helpers'
+import { handleLinkPreview } from './content'
 
 const invalidTemplate = (tip: string) => `
 <div class="v2p-no-pat">
@@ -41,7 +41,7 @@ interface TopicData {
 
 const topicDataCache = new Map<string, TopicData>()
 
-/** 单例实例，避免每次调用 useTopicPreview 都创建新的 modal。 */
+/** 单例实例，避免每次调用 createTopicPreview 都创建新的 modal。 */
 let singletonInstance: { handlePreview: (params: HandlePreviewParams) => void } | null = null
 
 interface HandlePreviewParams {
@@ -53,7 +53,7 @@ interface HandlePreviewParams {
   linkHref?: string
 }
 
-export function useTopicPreview() {
+export function createTopicPreview() {
   if (singletonInstance) {
     return singletonInstance
   }
@@ -97,6 +97,8 @@ export function useTopicPreview() {
 
   const handlePreview = (params: HandlePreviewParams) => {
     const { topicId, topicTitle = '', linkHref } = params
+    const safeTitle = escapeHTML(topicTitle)
+    const safeHref = escapeHTML(linkHref || '')
 
     if (topicId) {
       const modal = getModal()
@@ -106,8 +108,8 @@ export function useTopicPreview() {
       $detailBtn.prop('href', linkHref)
 
       const $titleLink = $(`
-        <a class="v2p-topic-preview-title-link" title="${topicTitle}" href="${linkHref || ''}">
-          ${topicTitle}
+        <a class="v2p-topic-preview-title-link" title="${safeTitle}" href="${safeHref}">
+          ${safeTitle}
         </a>
       `)
 
@@ -260,9 +262,9 @@ export function useTopicPreview() {
               const $infoBar = $(`
                 <div class="v2p-tp-info-bar">
                   <div class="v2p-tp-info">
-                    <a class="v2p-tp-member" href="${topic.member.url}">
-                      <img class="v2p-tp-avatar" src="${topic.member.avatar}">
-                      <span>${topic.member.username}</span>
+                    <a class="v2p-tp-member" href="${escapeHTML(topic.member.url)}">
+                      <img class="v2p-tp-avatar" src="${escapeHTML(topic.member.avatar)}">
+                      <span>${escapeHTML(topic.member.username)}</span>
                     </a>
   
                     <span>
@@ -376,7 +378,7 @@ export function useTopicPreview() {
                   $topicPreview.append(`
                     <div class="v2p-topic-reply-tip">
                       <a
-                        href="${linkHref || ''}"
+                        href="${safeHref}"
                         style="color: currentColor;"
                       >
                           在主题内查看完整评论...

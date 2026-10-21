@@ -1,4 +1,5 @@
 import { MessageKey, PendingOptionsMenuStorageKey } from '../constants'
+import { escapeHTML } from '../utils'
 import { createButton } from './button'
 import { createModal } from './modal'
 
@@ -27,6 +28,9 @@ export function openTagInputModal(props: OpenTagInputModalProps): Promise<string
     confirmText = '确认',
     rows = 4,
   } = props
+
+  const safeMemberName = escapeHTML(memberName)
+  const safeHint = escapeHTML(hint)
 
   return new Promise((resolve) => {
     let $input: JQuery
@@ -67,7 +71,7 @@ export function openTagInputModal(props: OpenTagInputModalProps): Promise<string
           gap: '15px',
         })
 
-        const $hint = $(`<div class="v2p-tag-hint">对 <b>@${memberName}</b> ${hint}</div>`).css({
+        const $hint = $(`<div class="v2p-tag-hint">对 <b>@${safeMemberName}</b> ${safeHint}</div>`).css({
           fontSize: '14px',
           color: 'var(--v2p-color-font-secondary)',
         })

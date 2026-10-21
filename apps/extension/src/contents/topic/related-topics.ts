@@ -1,7 +1,7 @@
 import { crawlTagPage } from '../../services'
-import { useTopicPreview } from '../../use-topic-preview'
-import { isBrowserExtension } from '../../utils'
+import { escapeHTML, isBrowserExtension } from '../../utils'
 import { pathTopicId } from '../globals'
+import { createTopicPreview } from './preview'
 
 interface RelatedTopic {
   id: string
@@ -18,14 +18,6 @@ const MAX_TAGS = 3
 
 /** V2EX 回复数样式类选择器 */
 const REPLY_COUNT_SELECTOR = '.count_livid, .count_orange'
-
-/** HTML 转义 */
-function escapeHtml(text: string): string {
-  const div = document.createElement('div')
-  div.textContent = text
-
-  return div.innerHTML
-}
 
 /**
  * 从当前主题页面提取标签关键词
@@ -114,18 +106,18 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
   }
 
   const shouldEnablePreview = isBrowserExtension()
-  const topicPreview = shouldEnablePreview ? useTopicPreview() : null
+  const topicPreview = shouldEnablePreview ? createTopicPreview() : null
 
   // 批量构建 HTML
   const itemsHtml = topics.map((topic) => {
     const previewBtnHtml = shouldEnablePreview && topicPreview
-      ? `<button class="v2p-topic-preview-btn" data-topic-id="${topic.id}" data-url="${topic.url}" data-title="${escapeHtml(topic.title)}">预览</button>`
+      ? `<button class="v2p-topic-preview-btn" data-topic-id="${topic.id}" data-url="${escapeHTML(topic.url)}" data-title="${escapeHTML(topic.title)}">预览</button>`
       : ''
 
     return `
       <div class="cell">
         <div class="item_hot_topic_title">
-          <a href="${topic.url}" target="_blank">${escapeHtml(topic.title)}</a>
+          <a href="${escapeHTML(topic.url)}" target="_blank">${escapeHTML(topic.title)}</a>
           ${previewBtnHtml}
         </div>
       </div>

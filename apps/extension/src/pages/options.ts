@@ -15,7 +15,7 @@ import { openTagInputModal } from '../components/tag-input-modal'
 import { PendingOptionsMenuStorageKey, StorageKey, V2EX } from '../constants'
 import { initTheme, setFont, setMemberTags } from '../contents/helpers'
 import type { FontType, Options, ThemeType } from '../types'
-import { getStorage, setStorage } from '../utils'
+import { escapeHTML, getStorage, setStorage } from '../utils'
 import { handleBackupForm, handleTokenForm } from './options.helper'
 import { initTopicFilterOptions, readTopicFilterOptions } from './options.topic-filter'
 
@@ -328,12 +328,16 @@ void (async function init() {
                 ${Object.entries(tagData)
     .map(([memberName, { tags, avatar }]) => {
       if (tags && tags.length > 0) {
+        const safeMemberName = escapeHTML(memberName)
+        const safeAvatar = avatar ? escapeHTML(avatar) : ''
+        const safeMemberUrl = escapeHTML(`${V2EX.Origin}/member/${encodeURIComponent(memberName)}`)
+
         return `
                         <li class="tag-item">
                           <div class="tag-member-name">
-                            <a href="${V2EX.Origin}/member/${memberName}" target="_blank">
-                              ${avatar ? `<img src="${avatar}">` : ''}
-                              <span>${memberName}：</span>
+                            <a href="${safeMemberUrl}" target="_blank">
+                              ${safeAvatar ? `<img src="${safeAvatar}">` : ''}
+                              <span>${safeMemberName}：</span>
                             </a>
                           </div>
 
@@ -341,14 +345,16 @@ void (async function init() {
                             ${
   tags
     .map((tag, idx) => {
+      const safeTag = escapeHTML(tag)
+
       return `
                                     <span
                                       class="tag-item-tag"
-                                      data-member-name="${memberName}"
+                                      data-member-name="${safeMemberName}"
                                       data-tag-idx="${idx}"
-                                      data-tag-name="${tag}"
+                                      data-tag-name="${safeTag}"
                                     >
-                                      ${tag}
+                                      ${safeTag}
 
                                       <span class="tag-remove">
                                         <span data-lucide="x"></span>
@@ -359,7 +365,7 @@ void (async function init() {
     .join('') || ''
   }
 
-                            <span class="tag-item-tag tag-item-tag-add" data-member-name="${memberName}">
+                            <span class="tag-item-tag tag-item-tag-add" data-member-name="${safeMemberName}">
                               <span class="tag-add"><span data-lucide="plus"></span></span>
                               <span>添加标签</span>
                             </span>

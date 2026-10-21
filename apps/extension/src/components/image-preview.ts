@@ -1,5 +1,4 @@
-import { $body } from '../contents/globals'
-import { isEmojiImage, markEmojiImages } from '../contents/helpers'
+import { isEmojiImage, markEmojiImages } from '../utils/emoji'
 import { createButton } from './button'
 import { createModal } from './modal'
 
@@ -281,7 +280,7 @@ export function createImagePreview(): ImagePreviewControl {
   const getModal = () => {
     if (!modal) {
       modal = createModal({
-        root: $body,
+        root: $('body'),
         onMount: ({ $main, $header, $content }) => {
           $main.css({
             width: '100%',

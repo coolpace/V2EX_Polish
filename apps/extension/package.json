@@ -4,6 +4,9 @@
   "type": "module",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
   "author": "LeoKu (https://github.com/Codennnn)",
   "scripts": {
     "dev": "run-s build:dist && run-p watch run:chrome",
@@ -38,9 +41,12 @@
     "watch:style:chrome": "pnpm run build:style:chrome --watch",
     "watch:style:firefox": "pnpm run build:style:firefox --watch",
     "lint": "run-p lint:ts lint:es lint:style",
+    "lint:check": "run-p lint:ts lint:es:check lint:style:check",
     "lint:ts": "pnpm run typecheck",
     "lint:es": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.{ts,mts,cts,mjs}\" \"shared/**/*.{ts,tsx}\" \"public/**/*.js\" \"tsdown.config.ts\" \"tsdown.userscript.config.ts\" --fix --no-warn-ignored",
+    "lint:es:check": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.{ts,mts,cts,mjs}\" \"shared/**/*.{ts,tsx}\" \"public/**/*.js\" \"tsdown.config.ts\" \"tsdown.userscript.config.ts\" --no-warn-ignored",
     "lint:style": "stylelint \"src/**/*.{css,scss}\" --fix",
+    "lint:style:check": "stylelint \"src/**/*.{css,scss}\"",
     "typecheck": "run-s typecheck:runtime typecheck:tooling",
     "typecheck:runtime": "tsc -p tsconfig.runtime.json --noEmit --skipLibCheck",
     "typecheck:tooling": "tsc -p tsconfig.tooling.json --noEmit --skipLibCheck"

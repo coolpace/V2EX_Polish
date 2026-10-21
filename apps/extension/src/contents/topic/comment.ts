@@ -1,7 +1,7 @@
 import { createElement, Heart } from 'lucide'
 
+import { createPopup } from '../../components/floating-popup'
 import { createModal } from '../../components/modal'
-import { createPopup } from '../../components/popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { postTask } from '../../post-task'

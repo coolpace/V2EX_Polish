@@ -163,7 +163,7 @@ void (async () => {
 
             // 显示同步成功提示
             const toast = createToast({
-              message: '远程配置已同步，<a class="v2p-toast-action" href="javascript:void(0)" style="text-decoration:underline;cursor:pointer;">刷新页面</a>以应用更改',
+              html: '远程配置已同步，<a class="v2p-toast-action" href="javascript:void(0)" style="text-decoration:underline;cursor:pointer;">刷新页面</a>以应用更改',
               duration: 0,
             })
 

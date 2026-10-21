@@ -1,13 +1,13 @@
 import { createButton } from '../../components/button'
-import { hoverDelay, type PopupControl } from '../../components/popup'
+import { hoverDelay, type PopupControl } from '../../components/floating-popup'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { blockUser, crawlUserPage, fetchUserInfo, parseUserTopics } from '../../services'
 import type { CommentData, Member, UserTopicItem } from '../../types'
-import { useTopicPreview } from '../../use-topic-preview'
-import { formatTimestamp, getStorageSync, isBrowserExtension } from '../../utils'
+import { escapeHTML, formatTimestamp, getStorageSync, isBrowserExtension } from '../../utils'
 import { getRegisterDays } from '../helpers'
 import { openTagsSetter } from './content'
+import { createTopicPreview } from './preview'
 
 const banned = Symbol()
 
@@ -53,8 +53,12 @@ export function processAvatar(params: ProcessAvatar) {
 
   const { memberName, memberAvatar, memberLink } = commentData
 
+  const safeMemberName = escapeHTML(memberName)
+  const safeMemberLink = escapeHTML(memberLink)
+  const safeMemberAvatar = escapeHTML(memberAvatar)
+
   // 只在浏览器扩展环境中启用主题预览功能，避免在非扩展环境中创建无效的模态框。
-  const topicPreview = isBrowserExtension() ? useTopicPreview() : null
+  const topicPreview = isBrowserExtension() ? createTopicPreview() : null
 
   let abortController: AbortController | null = null
 
@@ -66,14 +70,14 @@ export function processAvatar(params: ProcessAvatar) {
       <div class="v2p-member-card">
         <div class="v2p-info">
           <div class="v2p-info-left">
-            <a class="v2p-avatar-box" href="${memberLink}" target="${openInNewTab ? '_blank' : '_self'}">
-              <img class="v2p-avatar" src="${memberAvatar}">
+            <a class="v2p-avatar-box" href="${safeMemberLink}" target="${openInNewTab ? '_blank' : '_self'}">
+              <img class="v2p-avatar" src="${safeMemberAvatar}">
             </a>
           </div>
 
           <div class="v2p-info-right">
             <div class="v2p-username">
-              <a href="${memberLink}" target="${openInNewTab ? '_blank' : '_self'}">${memberName}</a>
+              <a href="${safeMemberLink}" target="${openInNewTab ? '_blank' : '_self'}">${safeMemberName}</a>
             </div>
             <div class="v2p-no v2p-loading"></div>
             <div class="v2p-created-date v2p-loading"></div>
@@ -147,13 +151,16 @@ export function processAvatar(params: ProcessAvatar) {
               linkTarget = '_blank'
             }
 
+            const safeTitle = escapeHTML(topic.title)
+            const safeUrl = escapeHTML(topic.url)
+
             const previewBtnHtml = topicPreview
-              ? `<button class="v2p-topic-preview-btn" data-topic-id="${topicId}" data-url="${topic.url}" data-title="${topic.title}">预览</button>`
+              ? `<button class="v2p-topic-preview-btn" data-topic-id="${topicId}" data-url="${safeUrl}" data-title="${safeTitle}">预览</button>`
               : ''
 
             return `
-              <div class="v2p-member-topic-item-row" data-topic-id="${topicId}" data-url="${topic.url}" data-title="${topic.title}">
-                <a class="v2p-member-topic-item" href="${topic.url}" target="${linkTarget}" title="${topic.title}">${topic.title}</a>
+              <div class="v2p-member-topic-item-row" data-topic-id="${topicId}" data-url="${safeUrl}" data-title="${safeTitle}">
+                <a class="v2p-member-topic-item" href="${safeUrl}" target="${linkTarget}" title="${safeTitle}">${safeTitle}</a>
                 ${previewBtnHtml}
               </div>
             `
@@ -228,7 +235,7 @@ export function processAvatar(params: ProcessAvatar) {
         }
         catch (err) {
           if (err instanceof Error) {
-            $content.html(`<span>${err.message}</span>`)
+            $content.empty().append($('<span>').text(err.message))
 
             if (err.cause === 404) {
               memberDataCache.set(memberName, banned)

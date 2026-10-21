@@ -1,9 +1,9 @@
 import { createToast } from '../../components/toast'
 import { StorageKey, V2EX } from '../../constants'
 import { crawlTopicPage } from '../../services'
-import { useTopicPreview } from '../../use-topic-preview'
 import { getStorageSync, isBrowserExtension } from '../../utils'
 import { $topicList } from '../globals'
+import { createTopicPreview } from '../topic/preview'
 
 export function handleTopicList() {
   if (!isBrowserExtension()) {
@@ -13,7 +13,7 @@ export function handleTopicList() {
   const options = getStorageSync()[StorageKey.Options]
   const isPreviewMode = options.topic?.openMode === 'preview'
 
-  const { handlePreview } = useTopicPreview()
+  const { handlePreview } = createTopicPreview()
 
   const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
   const $ignoreBtn = $('<span class="v2p-topic-ignore-btn">屏蔽</span>')

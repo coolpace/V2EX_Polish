@@ -1,4 +1,4 @@
-import type { MessageFrom, StorageKey } from './constants'
+import type { MessageFrom, StorageKey } from '../constants'
 
 declare global {
   interface Window {

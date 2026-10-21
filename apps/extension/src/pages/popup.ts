@@ -32,6 +32,7 @@ import {
 } from '../services'
 import type { Notification, Topic } from '../types'
 import {
+  escapeHTML,
   formatTimestamp,
   getStorage,
   getStorageSync,
@@ -415,7 +416,7 @@ function initTabs() {
                     <div class="notice">
                       ${notice.text}
                     </div>
-                    ${notice.payload ? `<div class="payload">${notice.payload}</div>` : ''}
+                    ${notice.payload ? `<div class="payload">${escapeHTML(notice.payload)}</div>` : ''}
                   </li>
                   `
                 })

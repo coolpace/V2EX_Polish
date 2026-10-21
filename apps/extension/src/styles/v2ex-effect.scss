@@ -519,6 +519,7 @@ a.v2p-topic-preview-title-link {
   margin: 0 auto;
   border-radius: var(--box-border-radius);
   background-color: var(--v2p-color-bg-content);
+  outline: none;
 
   @at-root {
     .v2p-modal-header {

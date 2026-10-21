@@ -48,7 +48,11 @@ export function createModal(props: CreateModalProps): ModalControl {
     className: 'v2p-modal-close-btn',
   })
 
-  const $title = $(`<div class="v2p-modal-title">${title ?? ''}</div>`)
+  const titleId = `v2p-modal-title-${Math.random().toString(36).slice(2)}`
+
+  const $title = $('<div class="v2p-modal-title">')
+    .attr('id', titleId)
+    .text(title ?? '')
 
   const $actions = $('<div class="v2p-modal-actions">').append($closeBtn)
 
@@ -56,7 +60,8 @@ export function createModal(props: CreateModalProps): ModalControl {
 
   const $footer = $('<div class="v2p-modal-footer">')
 
-  const $main = $('<div class="v2p-modal-main">')
+  const $main = $('<div class="v2p-modal-main" role="dialog" aria-modal="true" tabindex="-1">')
+    .attr('aria-labelledby', titleId)
     .append($header, $content, footer ? $footer : '<div></div>')
     .on('click', (ev) => {
       ev.stopPropagation()
@@ -78,6 +83,7 @@ export function createModal(props: CreateModalProps): ModalControl {
   // 用于判定是否已经绑定了事件, 避免重复绑定。
   let boundEvent = false
   let destroyed = false
+  let previouslyFocusedElement: HTMLElement | null = null
 
   let mouseDownTarget: HTMLElement
 
@@ -110,6 +116,9 @@ export function createModal(props: CreateModalProps): ModalControl {
     $container.fadeOut('fast')
     document.body.classList.remove('v2p-modal-open')
 
+    previouslyFocusedElement?.focus()
+    previouslyFocusedElement = null
+
     onClose?.(modalElements)
   }
 
@@ -126,6 +135,12 @@ export function createModal(props: CreateModalProps): ModalControl {
 
     $container.fadeIn('fast')
     document.body.classList.add('v2p-modal-open')
+
+    previouslyFocusedElement = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null
+
+    $main.get(0)?.focus({ preventScroll: true })
 
     onOpen?.(modalElements)
   }

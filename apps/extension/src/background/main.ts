@@ -1,3 +1,4 @@
+import { injectedScripts } from '../../shared/features'
 import {
   Menu,
   MessageKey,
@@ -171,7 +172,7 @@ chrome.contextMenus.removeAll(() => {
             case Menu.Decode: {
               void chrome.scripting.executeScript({
                 target: { tabId: tab.id },
-                files: ['scripts/decode-base64.min.js'],
+                files: [injectedScripts.decodeBase64],
               })
               break
             }
@@ -179,7 +180,7 @@ chrome.contextMenus.removeAll(() => {
             case Menu.Reading: {
               void chrome.scripting.executeScript({
                 target: { tabId: tab.id },
-                files: ['scripts/reading-list.min.js'],
+                files: [injectedScripts.readingList],
               })
               break
             }

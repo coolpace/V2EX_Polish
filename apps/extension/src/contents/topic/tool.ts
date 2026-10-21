@@ -1,4 +1,4 @@
-import { createPopup } from '../../components/popup'
+import { createPopup } from '../../components/floating-popup'
 import { createToast } from '../../components/toast'
 import { Links, StorageKey } from '../../constants'
 import { getStorageSync } from '../../utils'
