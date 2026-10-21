@@ -7,9 +7,13 @@
     "typecheck": "tsc -p tsconfig.typecheck.json --noEmit",
     "check": "pnpm run typecheck",
     "lint": "pnpm run lint:ts && pnpm run lint:es",
+    "lint:check": "run-s lint:ts lint:es:check",
     "lint:ts": "pnpm run typecheck",
     "lint:es": "eslint \"src/**/*.ts\" --fix --no-warn-ignored",
-    "deploy": "wrangler deploy"
+    "lint:es:check": "eslint \"src/**/*.ts\" --no-warn-ignored",
+    "deploy": "wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply v2ex-hot-topics --remote",
+    "db:migrate:local": "wrangler d1 migrations apply v2ex-hot-topics --local"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250327.0",

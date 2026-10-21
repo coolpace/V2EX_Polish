@@ -2,6 +2,9 @@ name = "v2ex-hot-topics"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 
+[observability]
+enabled = true
+
 # Cron Trigger：根据 V2EX 用户访问模式分时段调整抓取频率
 # 所有时间均为 UTC（北京时间 = UTC + 8）
 [triggers]
