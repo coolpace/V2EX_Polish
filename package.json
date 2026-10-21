@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "1.8.0",
-    "lucide": "0.445.0",
+    "lucide": "1.61.0",
     "webext-patterns": "1.5.1"
   },
   "devDependencies": {
@@ -71,7 +71,7 @@
     "stylelint-scss": "^7.3.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "web-ext": "^9.2.0"
+    "web-ext": "^10.8.0"
   },
   "pnpm": {
     "overrides": {

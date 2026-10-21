@@ -11,10 +11,10 @@ import {
   MessageSquarePlus,
   Moon,
   PackagePlus,
+  Share2,
   Smile,
   Star,
   Sun,
-  Twitter,
 } from 'lucide'
 
 import { createToast } from '../components/toast'
@@ -366,7 +366,7 @@ export function loadIcons() {
         Smile,
         PackagePlus,
         Star,
-        Twitter,
+        Share2,
         ChevronDown,
         ArrowUpRightSquare,
         House,
