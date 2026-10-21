@@ -11,8 +11,7 @@ if (!process.env.VELITE_STARTED && (isDev || isBuild)) {
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async redirects() {
+  redirects() {
     return [
       {
         source: '/github',
