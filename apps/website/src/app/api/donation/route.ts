@@ -4,7 +4,7 @@ import { get } from 'radash'
 
 export const dynamic = 'force-dynamic'
 
-interface DonationData {
+export interface DonationData {
   /** 捐赠者名称，不填则表示匿名 */
   from?: string
   /** 金额，单位：元 */
@@ -17,14 +17,14 @@ interface DonationData {
   channel: '微信赞赏' | '微信转账' | '支付宝转账'
 }
 
-const notion = new Client({
-  auth: process.env.NOTION_KEY,
-})
-
 export async function GET() {
   if (!process.env.NOTION_KEY || !process.env.NOTION_DATABASE_ID) {
     return Response.json({ error: 'Notion API 密钥或数据库 ID 未设置' }, { status: 500 })
   }
+
+  const notion = new Client({
+    auth: process.env.NOTION_KEY,
+  })
 
   try {
     const res = await notion.databases.query({

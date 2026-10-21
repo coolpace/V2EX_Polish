@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react'
 
 import { Skeleton, Table } from '@radix-ui/themes'
 
+import type { DonationData } from '~/app/api/donation/route'
+
+type LoadState = 'loading' | 'success' | 'error'
+
 // 获取数字的小数位数
 function decimalPlaces(num: number) {
   const str = num.toString()
@@ -19,19 +23,6 @@ function addDecimals(a: number, b: number) {
   const factor = Math.pow(10, Math.max(decimalPlaces(a), decimalPlaces(b)))
 
   return (a * factor + b * factor) / factor
-}
-
-interface DonationData {
-  /** 捐赠者名称，不填则表示匿名 */
-  from?: string
-  /** 金额，单位：元 */
-  money: string
-  /** 时间，格式：YYYY/MM/DD */
-  time: string
-  /** 留言，不填则表示没有留言 */
-  message?: string
-  /** 捐赠方式 */
-  channel: '微信赞赏' | '微信转账' | '支付宝转账'
 }
 
 // 骨架屏行组件
@@ -57,30 +48,64 @@ function SkeletonRow() {
   )
 }
 
+function PlaceholderRow({ children }: { children: React.ReactNode }) {
+  return (
+    <Table.Row>
+      <Table.Cell colSpan={5} justify="center">
+        <span className="text-main-500">{children}</span>
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+
 export function SupportTable() {
-  const [donationList, setDonationList] = useState<DonationData[]>()
-  const [isLoading, setIsLoading] = useState(true)
+  const [donationList, setDonationList] = useState<DonationData[]>([])
+  const [loadState, setLoadState] = useState<LoadState>('loading')
 
   useEffect(() => {
-    fetch('/api/donation')
-      .then((res) => res.json() as Promise<DonationData[]>)
-      .then((data) => {
-        setDonationList(data)
-        setIsLoading(false)
-      })
-      .catch(() => {
-        setIsLoading(false)
-      })
+    let cancelled = false
+
+    async function loadDonations() {
+      try {
+        const res = await fetch('/api/donation')
+
+        if (!res.ok) {
+          throw new Error(`请求失败: ${res.status}`)
+        }
+
+        const data: unknown = await res.json()
+
+        if (!Array.isArray(data)) {
+          throw new TypeError('赞赏数据格式错误')
+        }
+
+        if (!cancelled) {
+          setDonationList(data as DonationData[])
+          setLoadState('success')
+        }
+      }
+      catch {
+        if (!cancelled) {
+          setLoadState('error')
+        }
+      }
+    }
+
+    void loadDonations()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  const total = donationList?.reduce(
+  const total = donationList.reduce(
     (total, donation) => addDecimals(total, Number(donation.money)),
     0,
   )
 
   return (
     <div>
-      {isLoading
+      {loadState === 'loading'
         ? (
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2">
@@ -99,9 +124,8 @@ export function SupportTable() {
               />
             </div>
           )
-        : (
-            donationList
-            && donationList.length > 0 && (
+        : loadState === 'success' && donationList.length > 0
+          ? (
               <div className="flex items-center gap-2">
                 <p>
                   迄今为止，我们已收到
@@ -123,7 +147,7 @@ export function SupportTable() {
                 />
               </div>
             )
-          )}
+          : null}
 
       <Table.Root className="not-prose" variant="surface">
         <Table.Header>
@@ -139,25 +163,29 @@ export function SupportTable() {
         </Table.Header>
 
         <Table.Body>
-          {isLoading
+          {loadState === 'loading'
             ? Array.from({ length: 5 }).map((_, idx) => <SkeletonRow key={idx} />) // 显示骨架屏行
-            : donationList?.map((donation, idx) => (
-                <Table.Row key={idx}>
-                  <Table.RowHeaderCell>
-                    {donation.from ?? <span className="text-main-500">匿名</span>}
-                  </Table.RowHeaderCell>
-                  <Table.Cell className="font-bold" justify="center">
-                    {donation.money}
-                  </Table.Cell>
-                  <Table.Cell>{donation.message ?? '-'}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap text-main-500">
-                    {donation.time}
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap text-main-500">
-                    {donation.channel}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+            : loadState === 'error'
+              ? <PlaceholderRow>赞赏数据暂时无法加载，请稍后再试</PlaceholderRow>
+              : donationList.length === 0
+                ? <PlaceholderRow>暂无赞赏记录</PlaceholderRow>
+                : donationList.map((donation, idx) => (
+                    <Table.Row key={idx}>
+                      <Table.RowHeaderCell>
+                        {donation.from ?? <span className="text-main-500">匿名</span>}
+                      </Table.RowHeaderCell>
+                      <Table.Cell className="font-bold" justify="center">
+                        {donation.money}
+                      </Table.Cell>
+                      <Table.Cell>{donation.message ?? '-'}</Table.Cell>
+                      <Table.Cell className="whitespace-nowrap text-main-500">
+                        {donation.time}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap text-main-500">
+                        {donation.channel}
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
         </Table.Body>
       </Table.Root>
     </div>
