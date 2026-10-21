@@ -13,6 +13,9 @@ import { supports } from '#velite'
 
 export const metadata: Metadata = {
   title: getPageTitle('赞赏支持'),
+  alternates: {
+    canonical: '/support',
+  },
 }
 
 const mdxComponents: Record<string, React.ComponentType> = {

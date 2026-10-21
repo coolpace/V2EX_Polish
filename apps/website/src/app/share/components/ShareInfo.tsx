@@ -5,16 +5,11 @@ import { useEvent } from 'react-use-event-hook'
 
 import { useParams, useRouter } from 'next/navigation'
 import { Button, Callout, Checkbox, Flex, Link, SegmentedControl, Text } from '@radix-ui/themes'
-import { toBlob, toPng } from 'html-to-image'
 import { AlertCircleIcon, CopyIcon, DownloadIcon } from 'lucide-react'
 
-import type { RequestData as ImgRequestData } from '~/app/api/img-to-base64/route'
-import {
-  type RequestData as ShareRequestData,
-  ResponseCode,
-  type ResponseJson,
-  type TopicInfo,
-} from '~/app/api/share/route'
+import type { RequestData as ImgRequestData } from '~/app/api/img-to-base64/schema'
+import { ResponseCode } from '~/app/api/share/constants'
+import type { RequestData as ShareRequestData, ResponseJson, TopicInfo } from '~/app/api/share/schema'
 import { ShareCardThemeBasic } from '~/app/share/components/ShareCardThemeBasic'
 import {
   defaultShareCardThemeId,
@@ -23,6 +18,7 @@ import {
   shareCardThemeStorageKey,
 } from '~/app/share/themes'
 import { isNumeric, trackEvent } from '~/utils'
+import { mapWithConcurrency } from '~/utils/async'
 
 import { ShareLoading } from './ShareLoading'
 import { TopicLinkInput, type TopicLinkInputProps } from './TopicLinkInput'
@@ -38,6 +34,9 @@ const MAX_SHARE_IMAGE_PIXEL_RATIO = 2
 
 /** 贴边余量，避免刚好触及部分浏览器的 canvas 上限 */
 const CANVAS_SAFE_RATIO = 0.98
+
+/** 正文图片转换的并发上限，避免一次性向图片代理发出过多请求 */
+const CONTENT_IMAGE_CONCURRENCY = 4
 
 const fetchTopicInfo = async (topicId: ShareRequestData['topicId']): Promise<ResponseJson> => {
   const res = await window.fetch('/api/share', {
@@ -131,6 +130,8 @@ export function ShareInfo() {
   }
 
   const [downloading, setDownloading] = useState(false)
+  /** 正文图片部分转换失败时提示用户，避免导出结果无声缺图 */
+  const [exportWarning, setExportWarning] = useState(false)
 
   const canUseClipboardItem = typeof ClipboardItem !== 'undefined'
   const [doingCopy, setDoingCopy] = useState(false)
@@ -147,24 +148,29 @@ export function ShareInfo() {
     }
   }
 
+  /**
+   * 正文图片可能来自任意图床，单张转换失败不应影响整张卡片导出，
+   * 因此逐个容错，只统计失败数量。
+   */
   const replaceContentImageSrc = async () => {
-    if (eleRef.current) {
-      const promises: Promise<void>[] = []
+    const container = eleRef.current
 
-      eleRef.current.querySelectorAll('.topic-content img').forEach((ele) => {
-        const src = ele.getAttribute('src')
-
-        if (src?.startsWith('http')) {
-          promises.push(
-            convertImageToBase64(src).then((imgSrc) => {
-              ele.setAttribute('src', imgSrc)
-            }),
-          )
-        }
-      })
-
-      await Promise.all(promises)
+    if (!container) {
+      return { failed: 0 }
     }
+
+    const images = Array.from(container.querySelectorAll<HTMLImageElement>('.topic-content img'))
+      .filter((ele) => ele.getAttribute('src')?.startsWith('http'))
+
+    const results = await mapWithConcurrency(images, CONTENT_IMAGE_CONCURRENCY, async (ele) => {
+      const src = ele.getAttribute('src')
+
+      if (src) {
+        ele.setAttribute('src', await convertImageToBase64(src))
+      }
+    })
+
+    return { failed: results.filter((result) => result.status === 'rejected').length }
   }
 
   const handleSearchTopic: TopicLinkInputProps['onSearh'] = (val) => {
@@ -184,6 +190,11 @@ export function ShareInfo() {
     }
   }
 
+  /** 导出依赖体积较大的 html-to-image，悬停或聚焦时预加载，减少点击后的等待 */
+  const preloadExportLib = () => {
+    void import('html-to-image')
+  }
+
   const handleCopy = async () => {
     trackEvent('点击复制分享图片按钮')
 
@@ -196,6 +207,7 @@ export function ShareInfo() {
       && !copyFail
     ) {
       setDoingCopy(true)
+      setExportWarning(false)
 
       const triggerCopy = async () => {
         const item = new ClipboardItem({
@@ -205,6 +217,8 @@ export function ShareInfo() {
             }
 
             try {
+              const { toBlob } = await import('html-to-image')
+
               const blobData = await toBlob(
                 eleRef.current,
                 getShareImageExportOptions(eleRef.current),
@@ -241,7 +255,8 @@ export function ShareInfo() {
       }
       catch {
         try {
-          await replaceContentImageSrc()
+          const { failed } = await replaceContentImageSrc()
+          setExportWarning(failed > 0)
           await triggerCopy()
         }
         catch (err) {
@@ -267,9 +282,12 @@ export function ShareInfo() {
 
     if (eleRef.current && topicInfo && !downloading) {
       setDownloading(true)
+      setExportWarning(false)
 
       const triggerDownload = async () => {
         if (eleRef.current) {
+          const { toPng } = await import('html-to-image')
+
           const dataURL = await toPng(
             eleRef.current,
             getShareImageExportOptions(eleRef.current),
@@ -288,7 +306,8 @@ export function ShareInfo() {
       }
       catch {
         try {
-          await replaceContentImageSrc()
+          const { failed } = await replaceContentImageSrc()
+          setExportWarning(failed > 0)
           await triggerDownload()
         }
         catch (err) {
@@ -399,6 +418,17 @@ export function ShareInfo() {
             </Callout.Root>
           )}
 
+          {exportWarning && (
+            <Callout.Root color="amber">
+              <Callout.Icon>
+                <AlertCircleIcon size={16} />
+              </Callout.Icon>
+              <Callout.Text>
+                部分图片无法加载，导出的图片中可能缺少这些内容。
+              </Callout.Text>
+            </Callout.Root>
+          )}
+
           <TopicLinkInput value={topicUrl} onChange={setTopicUrl} onSearh={handleSearchTopic} />
 
           <Flex direction="column" gap="1">
@@ -460,6 +490,8 @@ export function ShareInfo() {
               onClick={() => {
                 void handleDownload()
               }}
+              onFocus={preloadExportLib}
+              onMouseEnter={preloadExportLib}
             >
               <DownloadIcon size={14} />
 
@@ -474,6 +506,8 @@ export function ShareInfo() {
               onClick={() => {
                 void handleCopy()
               }}
+              onFocus={preloadExportLib}
+              onMouseEnter={preloadExportLib}
             >
               <CopyIcon size={14} />
 

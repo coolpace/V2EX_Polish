@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Avatar } from '@radix-ui/themes'
 
 import type { ResponseJson } from '~/app/api/qrcode/route'
-import type { TopicInfo } from '~/app/api/share/route'
+import type { TopicInfo } from '~/app/api/share/schema'
 import type { ShareCardThemeConfig } from '~/app/share/themes'
 
 interface ShareCardProps {

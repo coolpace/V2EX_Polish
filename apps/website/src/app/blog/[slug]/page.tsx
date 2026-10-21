@@ -24,6 +24,9 @@ export const generateMetadata = async (props: {
   if (blog) {
     return {
       title: blog.title,
+      alternates: {
+        canonical: `/blog/${blog.slug}`,
+      },
       openGraph: {
         type: 'article',
         title: blog.title,

@@ -12,6 +12,9 @@ import { blogs as allBlogs } from '#velite'
 export const metadata: Metadata = {
   title: getPageTitle('Blog'),
   description: 'V2P 博客文章，在这里发现更多 V2P 的相关信息。',
+  alternates: {
+    canonical: '/blog',
+  },
 }
 
 export default function BlogIndexPage() {

@@ -1,15 +1,30 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import QRCode from 'qrcode'
-import { type InferInput, number, object, parse, string } from 'valibot'
+import {
+  type InferInput,
+  integer,
+  maxLength,
+  maxValue,
+  minLength,
+  minValue,
+  number,
+  object,
+  parse,
+  pipe,
+  regex,
+  string,
+} from 'valibot'
+
+const ColorSchema = pipe(string(), regex(/^(?:#[0-9a-fA-F]{3}|#[0-9a-fA-F]{4}|#[0-9a-fA-F]{6}|#[0-9a-fA-F]{8})$/))
 
 const RequestDataSchema = object({
-  text: string(),
+  text: pipe(string(), minLength(1), maxLength(2048)),
   options: object({
-    width: number(),
-    margin: number(),
+    width: pipe(number(), integer(), minValue(64), maxValue(1024)),
+    margin: pipe(number(), integer(), minValue(0), maxValue(16)),
     color: object({
-      dark: string(),
-      light: string(),
+      dark: ColorSchema,
+      light: ColorSchema,
     }),
   }),
 })
@@ -21,9 +36,23 @@ export interface ResponseJson {
 }
 
 export async function POST(request: NextRequest) {
-  const body = parse(RequestDataSchema, await request.json())
+  let body: RequestData
 
-  const url = await QRCode.toDataURL(body.text, body.options)
+  try {
+    body = parse(RequestDataSchema, await request.json())
+  }
+  catch {
+    return NextResponse.json({ data: '' }, { status: 400 })
+  }
 
-  return NextResponse.json({ data: url } satisfies ResponseJson, { status: 200 })
+  try {
+    const url = await QRCode.toDataURL(body.text, body.options)
+
+    return NextResponse.json({ data: url } satisfies ResponseJson, { status: 200 })
+  }
+  catch (error) {
+    console.error('Failed to generate QR code:', error)
+
+    return NextResponse.json({ data: '' }, { status: 500 })
+  }
 }

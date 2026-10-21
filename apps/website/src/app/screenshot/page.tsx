@@ -10,6 +10,9 @@ import { getPageTitle } from '~/utils'
 export const metadata: Metadata = {
   title: getPageTitle('Features'),
   description: 'V2P 功能介绍，发现更多实用功能。',
+  alternates: {
+    canonical: '/screenshot',
+  },
 }
 
 export default function FeaturesPage() {

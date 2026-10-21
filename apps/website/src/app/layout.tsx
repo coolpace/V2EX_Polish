@@ -6,15 +6,20 @@ import { Theme } from '@radix-ui/themes'
 import { HoverButton } from '~/components/HoverButton'
 import { Logo } from '~/components/Logo'
 import { Nav } from '~/components/Nav'
-import { getPageTitle } from '~/utils'
+import { getPageTitle, HOST, OG_HEIGHT, OG_WIDTH } from '~/utils'
 
 import '~/styles/globals.css'
+
+const SITE_DESCRIPTION = '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。'
+
+const SITE_TITLE = 'V2EX Polish - 浏览器插件'
 
 export const viewport: Viewport = {
   colorScheme: 'light',
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL(HOST),
   icons: [
     {
       url: '/favicon.svg',
@@ -32,13 +37,27 @@ export const metadata: Metadata = {
     },
   ],
   title: getPageTitle(),
-  description: '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。',
+  description: SITE_DESCRIPTION,
   openGraph: {
     type: 'website',
-    title: 'V2EX Polish - 浏览器插件',
-    description: '专为 V2EX 用户设计的浏览器插件，提供了丰富的扩展功能为你带来出色的体验。',
-    url: 'https://v2p.leoku.dev',
-    images: ' https://i.imgur.com/Vwyqs0V.png',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: HOST,
+    images: [
+      {
+        // 由站内 /api/og 生成，避免依赖第三方图床导致社交卡片缺图
+        url: '/api/og',
+        width: OG_WIDTH,
+        height: OG_HEIGHT,
+        alt: 'V2EX Polish',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: ['/api/og'],
   },
   authors: [{ name: '陈梓聪 LeoKu', url: 'https://github.com/Codennnn' }],
   manifest: '/manifest.webmanifest',

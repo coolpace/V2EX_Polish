@@ -1,51 +1,30 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { load } from 'cheerio'
-import { array, type InferInput, nullish, number, object, parse, string } from 'valibot'
+import { parse } from 'valibot'
 
 import { proxyShareRequest } from '~/utils/share-upstream'
 
-const RequestDataSchema = object({
-  topicId: string(),
-})
+import { ResponseCode } from './constants'
+import { type RequestData, RequestDataSchema, type ResponseJson, type TopicInfo, TopicInfoSchema } from './schema'
 
-export type RequestData = InferInput<typeof RequestDataSchema>
+/** 单次抓取超时，避免上游无响应时把函数拖到平台超时。 */
+const FETCH_TIMEOUT_MS = 8000
 
-const TopicInfoSchema = object({
-  title: string(),
-  content: nullish(string()),
-  supplements: nullish(array(object({ content: string() }))),
-  member: object({
-    username: string(),
-    avatar: string(),
-  }),
-  time: object({
-    year: number(),
-    month: number(),
-    day: number(),
-  }),
-  url: string(),
-})
-
-export type TopicInfo = InferInput<typeof TopicInfoSchema>
-
-export const enum ResponseCode {
-  Success,
-  /** 由于不存在主题或需要授权访问，无法爬取到主题内容。 */
-  NotFound,
-}
-
-export type ResponseJson
-  = | {
-    code: ResponseCode.Success
-    data: TopicInfo
-  }
-  | {
-    code: ResponseCode.NotFound
-    data: null
-  }
+/** 主题内容变化不频繁，缓存 5 分钟以减少对 V2EX 的重复抓取。 */
+const SHARE_CACHE_SECONDS = 300
 
 export async function POST(request: NextRequest) {
-  const body = parse(RequestDataSchema, await request.json())
+  let body: RequestData
+
+  try {
+    body = parse(RequestDataSchema, await request.json())
+  }
+  catch {
+    return NextResponse.json<ResponseJson>(
+      { code: ResponseCode.NotFound, data: null },
+      { status: 400 },
+    )
+  }
 
   try {
     const upstreamData = await proxyShareRequest<ResponseJson>('/api/share', body)
@@ -55,7 +34,19 @@ export async function POST(request: NextRequest) {
     }
 
     const url = `https://www.v2ex.com/t/${body.topicId}`
-    const res = await fetch(url, { method: 'GET' })
+    const res = await fetch(url, {
+      method: 'GET',
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      next: { revalidate: SHARE_CACHE_SECONDS },
+    })
+
+    if (!res.ok) {
+      return NextResponse.json<ResponseJson>(
+        { code: ResponseCode.NotFound, data: null },
+        { status: 200 },
+      )
+    }
+
     const htmlText = await res.text()
 
     const $ = load(htmlText)

@@ -30,6 +30,9 @@ import { getPageTitle } from '~/utils'
 
 export const metadata: Metadata = {
   title: getPageTitle(),
+  alternates: {
+    canonical: '/',
+  },
 }
 
 export default function HomePage() {

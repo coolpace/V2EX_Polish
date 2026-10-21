@@ -9,6 +9,9 @@ import { changelogs as allChangelogs } from '#velite'
 
 export const metadata: Metadata = {
   title: getPageTitle('Changelog'),
+  alternates: {
+    canonical: '/changelog',
+  },
 }
 
 export default function ChangelogPage() {
