@@ -2,23 +2,18 @@ import type { ReadingItem, Topic } from '../types'
 import { escapeHTML } from '../utils'
 import { TabId } from './popup.var'
 
-export function isTabId(tabId: unknown): tabId is TabId {
-  if (typeof tabId === 'string') {
-    if (
-      /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-      tabId === TabId.Reading
-      || tabId === TabId.Hot
-      || tabId === TabId.Latest
-      || tabId === TabId.Message
-      || tabId === TabId.Feature
-      || tabId === TabId.Setting
-      /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
-    ) {
-      return true
-    }
-  }
+/** 所有合法的 Tab ID，用于校验来自 DOM/存储的不可信字符串。 */
+const TAB_IDS: readonly string[] = [
+  TabId.Reading,
+  TabId.Hot,
+  TabId.Latest,
+  TabId.Message,
+  TabId.Feature,
+  TabId.Setting,
+]
 
-  return false
+export function isTabId(tabId: unknown): tabId is TabId {
+  return typeof tabId === 'string' && TAB_IDS.includes(tabId)
 }
 
 export const generateReadingItmes = (items: ReadingItem[]) => {

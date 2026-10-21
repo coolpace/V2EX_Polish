@@ -107,8 +107,9 @@ void (async () => {
     const neverChecked = !lastCheckTime
 
     // neverChecked 仅影响「是否发起检查」，不影响「是否执行同步」。
-    // eslint-disable-next-line @stylistic/no-mixed-operators
-    const shouldCheck = neverChecked || lastCheckTime && Date.now() - lastCheckTime >= tenMinutes
+    const elapsedTime = Date.now() - (lastCheckTime ?? 0)
+    const checkIntervalReached = lastCheckTime !== undefined && elapsedTime >= tenMinutes
+    const shouldCheck = neverChecked || checkIntervalReached
 
     if (shouldCheck && !isAuthPage) {
       // ✅ 乐观更新 lastCheckTime：在发起网络请求前先写入，

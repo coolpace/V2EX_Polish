@@ -44,9 +44,7 @@ function mergeReadingList(
  */
 export function prepareBackupData(storage: StorageSettings): StorageSettings {
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [StorageKey.API]: _api,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [StorageKey.Daily]: _daily,
     ...backupData
   } = storage
@@ -81,11 +79,8 @@ export async function applyRemoteSettings(
 
   // 2. 准备写入 sync storage 的数据（排除 MemberTag、API、Daily）
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [StorageKey.MemberTag]: _mt,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [StorageKey.API]: _api,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [StorageKey.Daily]: _daily,
     ...syncableRemoteSettings
   } = remoteSettings
@@ -103,7 +98,6 @@ export async function applyRemoteSettings(
   // 4. 与当前 sync storage 的数据合并后写入
   const currentSyncData = await chrome.storage.sync.get()
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [StorageKey.MemberTag]: _currentMt, // 排除 MemberTag 残留
     ...currentSyncOnly
   } = currentSyncData as StorageItems

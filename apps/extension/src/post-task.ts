@@ -14,8 +14,8 @@ import { isBrowserExtension } from './utils'
  */
 export function postTask(expression: string, callback?: (result: unknown) => void) {
   if (!isBrowserExtension()) {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
-    const result = Function(`"use strict"; ${expression}`)()
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const result = (Function(`"use strict"; ${expression}`) as () => unknown)()
     callback?.(result)
   }
   else {

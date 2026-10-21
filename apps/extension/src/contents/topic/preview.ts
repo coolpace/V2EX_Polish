@@ -12,6 +12,12 @@ import { $body, loginName } from '../globals'
 import { addToReadingList, loadIcons, replaceCommentEmojiWithHD } from '../helpers'
 import { handleLinkPreview } from './content'
 
+/** Token 失效时接口返回的错误信息。 */
+const tokenErrorMessages: readonly string[] = [
+  RequestMessage.InvalidToken,
+  RequestMessage.TokenExpired,
+]
+
 const invalidTemplate = (tip: string) => `
 <div class="v2p-no-pat">
   <div class="v2p-no-pat-title">${tip}</div>
@@ -222,12 +228,7 @@ export function createTopicPreview() {
                 const $errorTip = $('<div style="padding: 20px; text-align: center;">')
 
                 if (err instanceof Error) {
-                  if (
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-                    err.message === RequestMessage.InvalidToken
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-                    || err.message === RequestMessage.TokenExpired
-                  ) {
+                  if (tokenErrorMessages.includes(err.message)) {
                     $errorTip.html(
                       invalidTemplate(
                         '您的 Token 已失效，请<a class="v2p-topic-preview-retry" href="https://www.v2ex.com/settings/tokens" target="_blank">重新设置</a>。',

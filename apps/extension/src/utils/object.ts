@@ -5,17 +5,17 @@ export function isPlainObject(value: unknown): value is Record<string, unknown> 
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- 深度合并需兼容任意对象类型；unknown 会因接口缺少索引签名而拒绝合法调用
+type AnyRecord = Record<string, any>
+
 /**
  * 深度合并两个对象。
  */
 export function deepMerge<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends Record<string, any> = Record<string, any>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  U extends Record<string, any> = Record<string, any>,
+  T extends AnyRecord = AnyRecord,
+  U extends AnyRecord = AnyRecord,
 >(target: T, source: U): T & U {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = {} as Record<string, any>
+  const result: AnyRecord = {}
 
   for (const key in target) {
     const targetProp = target[key]
