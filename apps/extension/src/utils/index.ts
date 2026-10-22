@@ -5,7 +5,7 @@ export {
   isAbortError,
   wrapApiError,
 } from './api-error'
-export { sleep } from './async'
+export { createSerialQueue, sleep } from './async'
 export { extractDays, formatTimestamp, isSameDay, parseDateTime } from './date'
 export {
   isEmojiImage,
@@ -35,3 +35,11 @@ export {
   setV2P_Settings,
 } from './storage'
 export { showRemoteSyncDialog } from './sync-dialog'
+export {
+  extractOnceFromHtml,
+  normalizeOnce,
+  parseBlockUrl,
+  parseIgnoreReplyUrl,
+  parseIgnoreTopicUrl,
+  parseLikesCount,
+} from './v2ex'

@@ -1,6 +1,6 @@
 import { createToast } from '../../components/toast'
-import { StorageKey, V2EX } from '../../constants'
-import { crawlTopicPage } from '../../services'
+import { StorageKey } from '../../constants'
+import { ignoreTopic } from '../../services'
 import { getStorageSync, isBrowserExtension } from '../../utils'
 import { $topicList } from '../globals'
 import { createTopicPreview } from '../topic/preview'
@@ -49,28 +49,18 @@ export function handleTopicList() {
             void (async () => {
               const toast = createToast({ message: `正在屏蔽主题 ⌈${topicTitle}⌋`, duration: 0 })
 
-              const pageText = await crawlTopicPage(`/t/${topicId}`, '0')
-
-              const $ignoreBtn = $(pageText).find('.topic_buttons a:nth-of-type(3)')
-              const txt = $ignoreBtn.attr('onclick')
-
-              if (txt) {
-                const match = txt.match(/'\/.*'/)
-
-                if (match) {
-                  const result = match[0].slice(1, -1)
-
-                  if (result.startsWith('/ignore/topic')) {
-                    try {
-                      await fetch(`${V2EX.Origin}${result}`)
-                      createToast({ message: '✅ 已屏蔽' })
-                      $topicItem.remove() // 屏蔽成功后，在列表中移除该主题。
-                    }
-                    finally {
-                      toast.clear()
-                    }
-                  }
-                }
+              try {
+                await ignoreTopic(topicId)
+                createToast({ message: '✅ 已屏蔽' })
+                $topicItem.remove() // 屏蔽成功后，在列表中移除该主题。
+              }
+              catch (err) {
+                createToast({
+                  message: err instanceof Error ? `❌ ${err.message}` : '❌ 屏蔽失败，请稍后重试',
+                })
+              }
+              finally {
+                toast.clear()
               }
             })()
           }

@@ -5,9 +5,17 @@ import { createModal } from '../../components/modal'
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { postTask } from '../../post-task'
-import { crawlTopicPage, fetchUserInfo, thankReply } from '../../services'
+import { crawlTopicPage, fetchUserInfo, ignoreReply, thankReply } from '../../services'
 import type { CommentData, Member } from '../../types'
-import { escapeHTML, extractDays, getStorageSync, parseDateTime } from '../../utils'
+import {
+  escapeHTML,
+  extractDays,
+  extractOnceFromHtml,
+  getStorageSync,
+  parseDateTime,
+  parseIgnoreReplyUrl,
+  parseLikesCount,
+} from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
 import {
   $commentBox,
@@ -88,6 +96,197 @@ function scheduleInChunks<T>(
 }
 
 /**
+ * 为回复的「感谢」按钮绑定事件。
+ *
+ * 模态框中的回复是克隆出来的，不会继承原始 DOM 上的事件，需要重新绑定。
+ */
+function bindThankActions($scope: JQuery) {
+  $scope
+    .find('.v2p-control-thank')
+    .off('click.v2pThank keydown.v2pThank')
+    .on('click.v2pThank', (ev) => {
+      ev.stopPropagation()
+
+      const $thankIcon = $(ev.currentTarget)
+
+      if ($thankIcon.hasClass('v2p-thanked') || $thankIcon.hasClass('v2p-thank-pending')) {
+        return
+      }
+
+      const id = ev.currentTarget.dataset.id
+      const memberName = ev.currentTarget.dataset.memberName
+
+      if (typeof id !== 'string' || typeof memberName !== 'string') {
+        return
+      }
+
+      const replyId = id.split('_').at(1)
+
+      if (!replyId) {
+        return
+      }
+
+      const cost = ev.currentTarget.dataset.thankCost ?? '10'
+
+      if (!confirm(`确认花费 ${cost} 个铜币向 @${memberName} 的这条回复发送感谢？`)) {
+        return
+      }
+
+      // 防止重复点击：once 是全局单 token，并发请求会互相覆盖。
+      $thankIcon.addClass('v2p-thank-pending')
+
+      void (async () => {
+        const result = await thankReply({ replyId })
+
+        $thankIcon.removeClass('v2p-thank-pending')
+
+        if (!result.success) {
+          createToast({ message: result.message ?? '❌ 感谢回复失败' })
+
+          return
+        }
+
+        // 同一回复在主页面和模态框中可能各有一份，统一更新。
+        const $cell = $(`.cell[id="r_${replyId}"]`)
+        const $tableInCell = $cell.find('> table')
+        const $likesBox = $tableInCell.find('.v2p-likes-box')
+        const $firstLikesBox = $likesBox.eq(0)
+        const likes = parseLikesCount($firstLikesBox.text())
+        const $clonedIconHeart = $firstLikesBox.find('.v2p-icon-heart').clone()
+
+        if (likes > 0) {
+          $likesBox
+            .addClass('v2p-thanked')
+            .empty()
+            .append($clonedIconHeart, ` ${likes + 1}`)
+        }
+        else {
+          $(`
+              <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
+                &nbsp;&nbsp;<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>1
+              </span>
+              `).insertAfter($tableInCell.find('.ago'))
+          loadIcons()
+        }
+
+        const $thankAction = $tableInCell.find('.v2p-control-thank')
+
+        $thankAction
+          .removeClass('v2p-thank-pending')
+          .addClass('v2p-thanked')
+          .removeAttr('tabindex')
+          .attr({ 'aria-label': '已感谢', 'aria-disabled': 'true' })
+          .off('click.v2pThank keydown.v2pThank')
+      })()
+    })
+    .on('keydown.v2pThank', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault()
+        $(ev.currentTarget).trigger('click')
+      }
+    })
+}
+
+/**
+ * 将回复标记为已隐藏，并插入可展开的占位提示。
+ */
+function applyIgnoredReply($cellDom: JQuery) {
+  if ($cellDom.hasClass('v2p-ignored-reply')) {
+    return
+  }
+
+  $cellDom.addClass('v2p-ignored-reply')
+
+  const $placeholder = $(`
+    <div class="v2p-ignored-placeholder">
+      此回复已隐藏 ·
+      <a class="v2p-ignored-toggle" role="button" tabindex="0">显示</a>
+    </div>
+  `)
+
+  $placeholder
+    .find('.v2p-ignored-toggle')
+    .on('click', (ev) => {
+      ev.preventDefault()
+      ev.stopPropagation()
+
+      const $toggle = $(ev.currentTarget)
+      const reveal = $toggle.text() === '显示'
+
+      $cellDom.toggleClass('v2p-ignored-revealed', reveal)
+      $toggle.text(reveal ? '隐藏' : '显示')
+    })
+    .on('keydown', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault()
+        $(ev.currentTarget).trigger('click')
+      }
+    })
+
+  $cellDom.prepend($placeholder)
+}
+
+/**
+ * 为回复的「隐藏」按钮绑定事件。
+ *
+ * 与感谢按钮一样，模态框中的克隆节点需要重新绑定事件。
+ */
+function bindIgnoreActions($scope: JQuery) {
+  $scope
+    .find('.v2p-control-hide')
+    .closest('a')
+    .filter((_, element) => Boolean($(element).attr('data-ignore-url')))
+    .off('click.v2pIgnore keydown.v2pIgnore')
+    .on('click.v2pIgnore', (ev) => {
+      const $hide = $(ev.currentTarget)
+      const ignoreUrl = $hide.attr('data-ignore-url')
+
+      if (!ignoreUrl || $hide.hasClass('v2p-ignore-pending')) {
+        return
+      }
+
+      ev.preventDefault()
+      ev.stopPropagation()
+
+      if (!confirm('确定要隐藏这条回复吗？')) {
+        return
+      }
+
+      $hide.addClass('v2p-ignore-pending')
+
+      void (async () => {
+        const result = await ignoreReply(ignoreUrl)
+
+        $hide.removeClass('v2p-ignore-pending')
+
+        if (!result.success) {
+          createToast({ message: result.message })
+          // 回退到原生跳转，避免接口变化时功能完全不可用。
+          window.location.href = ignoreUrl
+
+          return
+        }
+
+        // 同一回复在主页面和模态框中可能各有一份，统一更新。
+        const cellId = $hide.closest('.cell[id^="r_"]').attr('id')
+        const $cells = cellId ? $(`.cell[id="${cellId}"]`) : $hide.closest('.cell[id^="r_"]')
+
+        $cells.each((_, cellDom) => {
+          applyIgnoredReply($(cellDom))
+        })
+
+        createToast({ message: result.message })
+      })()
+    })
+    .on('keydown.v2pIgnore', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault()
+        $(ev.currentTarget).trigger('click')
+      }
+    })
+}
+
+/**
  * 设置经过筛选后的回复。
  */
 function handleFilteredComments() {
@@ -107,6 +306,16 @@ function handleFilteredComments() {
     .sort((a, b) => b.likes - a.likes)
 
   const popularCount = popularCommentData.length
+
+  const cloneReplyCell = (index: number) => {
+    const $clonedCell = $commentCells.eq(index).clone()
+
+    // 禁用回复操作和楼层锚点；感谢、隐藏操作会在内容构建后重新绑定。
+    $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
+    $clonedCell.find('.no').css('pointer-events', 'none')
+
+    return $clonedCell
+  }
 
   let modal: ReturnType<typeof createModal> | null = null
   let contentBuilt = false
@@ -128,11 +337,7 @@ function handleFilteredComments() {
             {
               if (popularCount > 0) {
                 popularCommentData.forEach(({ index, refMemberNames }) => {
-                  const $clonedCell = $commentCells.eq(index).clone()
-
-                  // 禁用回复操作和楼层锚点。
-                  $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-                  $clonedCell.find('.no').css('pointer-events', 'none')
+                  const $clonedCell = cloneReplyCell(index)
 
                   const firstRefMember = refMemberNames?.at(0)
 
@@ -179,11 +384,7 @@ function handleFilteredComments() {
                 const recentCommentData = commentDataList.slice(-1 * displayNum).reverse()
 
                 recentCommentData.forEach(({ index, refMemberNames }) => {
-                  const $clonedCell = $commentCells.eq(index).clone()
-
-                  // 禁用回复操作和楼层锚点。
-                  $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-                  $clonedCell.find('.no').css('pointer-events', 'none')
+                  const $clonedCell = cloneReplyCell(index)
 
                   const firstRefMember = refMemberNames?.at(0)
 
@@ -216,11 +417,7 @@ function handleFilteredComments() {
 
               if (opCommentData.length > 0) {
                 opCommentData.forEach(({ index, refMemberNames }) => {
-                  const $clonedCell = $commentCells.eq(index).clone()
-
-                  // 禁用回复操作和楼层锚点。
-                  $clonedCell.find('.v2p-controls > a:has(.v2p-control-reply)').remove()
-                  $clonedCell.find('.no').css('pointer-events', 'none')
+                  const $clonedCell = cloneReplyCell(index)
 
                   const firstRefMember = refMemberNames?.at(0)
 
@@ -297,6 +494,10 @@ function handleFilteredComments() {
               })
             }
 
+            // 克隆 cell 不会继承主页面上的操作事件，需要为模态框重新绑定。
+            bindThankActions($content)
+            bindIgnoreActions($content)
+
             replaceCommentEmojiWithHD($content.find('.cell[id^="r_"]'))
 
             contentBuilt = true
@@ -356,40 +557,81 @@ function processActions($cellDom: JQuery, data: CommentData) {
 
   const $controls = $('<span class="v2p-controls">')
 
-  const $thankIcon = $(
-    `<span
-      class="v2p-control v2p-control-thank"
-      data-id="${data.id}"
-      data-member-name="${data.memberName}"
-     >
-        <i data-lucide="heart"></i>
-     </span>`,
-  )
-
   const thankArea = $actions.find('> .thank_area')
   const thanked = thankArea.hasClass('thanked')
 
-  if (thanked) {
-    $thankIcon.addClass('v2p-thanked')
-    $controls.append($('<a>').append($thankIcon))
-  }
-  else {
-    const thankEle = thankArea.find('> .thank')
-    const $hide = thankEle.eq(0).removeClass('thank')
-    const $thank = thankEle.eq(1).removeClass('thank')
+  const thankEle = thankArea.find('> .thank')
 
-    $hide.html(
-      '<span class="v2p-control v2p-hover-btn v2p-control-hide"><i data-lucide="eye-off"></i></span>',
+  // 「忽略回复」与「感谢」是相互独立的能力，已感谢的回复也应保留隐藏入口。
+  // 优先按链接地址识别忽略按钮，避免 thanked 状态下两个按钮的渲染顺序变化。
+  const $ignoreLink = $actions
+    .find('a[href*="/ignore/reply/"], a[onclick*="/ignore/reply/"]')
+    .first()
+  const $positionalHide = thankEle.length >= 2 ? thankEle.eq(0) : $()
+  const $hide = ($ignoreLink.length > 0 ? $ignoreLink : $positionalHide).removeClass('thank')
+  const $thank = thankEle.not($hide).first().removeClass('thank')
+
+  if ($hide.length > 0) {
+    const ignoreUrl = parseIgnoreReplyUrl($hide.attr('href'), $hide.attr('onclick'))
+
+    $hide
+      .attr('aria-label', '隐藏回复')
+      .html(
+        '<span class="v2p-control v2p-hover-btn v2p-control-hide"><i data-lucide="eye-off"></i></span>',
+      )
+
+    if (ignoreUrl) {
+      // 移除原生跳转，改由扩展执行 AJAX；解析失败时保留原生行为。
+      $hide
+        .attr('data-ignore-url', ignoreUrl)
+        .removeAttr('onclick')
+        .attr('href', 'javascript:void(0)')
+    }
+
+    $controls.append($hide)
+  }
+
+  if (thanked) {
+    const $thankedIcon = $(
+      `<span
+        class="v2p-control v2p-control-thank v2p-thanked"
+        data-id="${data.id}"
+        data-member-name="${data.memberName}"
+        aria-label="已感谢"
+        aria-disabled="true"
+      >
+        <i data-lucide="heart"></i>
+      </span>`,
     )
 
-    $thankIcon.addClass('v2p-hover-btn').replaceAll($thank)
+    $controls.append($('<a>').append($thankedIcon))
+  }
+  else if ($thank.length > 0) {
+    const thankActionSource = `${$thank.attr('href') ?? ''} ${$thank.attr('onclick') ?? ''}`
+    const thankCost = thankActionSource.match(/花费\s*(\d+)\s*个铜币/)?.[1] ?? '10'
 
-    $controls.append($hide).append($thankIcon)
+    const $thankIcon = $(
+      `<span
+        class="v2p-control v2p-control-thank v2p-hover-btn"
+        data-id="${data.id}"
+        data-member-name="${data.memberName}"
+        data-thank-cost="${thankCost}"
+        role="button"
+        tabindex="0"
+        aria-label="感谢回复"
+      >
+        <i data-lucide="heart"></i>
+      </span>`,
+    )
+
+    $thankIcon.replaceAll($thank)
+    $controls.append($thankIcon)
   }
 
   const $reply = $actions.find('a:last-of-type')
 
   $reply
+    .attr('aria-label', '回复')
     .find('> img[alt="Reply"]')
     .replaceWith(
       '<span class="v2p-control v2p-hover-btn v2p-control-reply"><i data-lucide="message-square"></i></span>',
@@ -505,11 +747,9 @@ export async function handleComments() {
             // 从最后一页的 HTML 中提取最新的 once 值，
             // 因为预加载请求会导致服务器生成新的 once 并使旧值失效。
             {
-              const lastPageHtml = pagesText[pagesText.length - 1]
-              const onceMatch = lastPageHtml.match(/once\s*=\s*"?(\d+)"?/)
+              const latestOnce = extractOnceFromHtml(pagesText.at(-1) ?? '')
 
-              if (onceMatch?.[1]) {
-                const latestOnce = onceMatch[1]
+              if (latestOnce) {
                 window.once = latestOnce
                 postTask(`window.once = "${latestOnce}"`)
               }
@@ -611,56 +851,8 @@ export async function handleComments() {
     handleFilteredComments()
 
     // 处理「点击感谢回复」的逻辑。
-    $('.v2p-control-thank').on('click', (ev) => {
-      ev.stopPropagation()
-
-      const id = ev.currentTarget.dataset.id
-      const memberName = ev.currentTarget.dataset.memberName
-
-      if (typeof id === 'string' && typeof memberName === 'string') {
-        if (confirm(`确认花费 10 个铜币向 @${memberName} 的这条回复发送感谢？`)) {
-          const replyId = id.split('_').at(1)
-
-          if (replyId) {
-            void thankReply({
-              replyId,
-
-              onSuccess: () => {
-                const $cell = $(`.cell[id="r_${replyId}"]`)
-                const $tableInCell = $cell.find('> table')
-                const $likesBox = $tableInCell.find('.v2p-likes-box')
-                const $firstLikesBox = $likesBox.eq(0)
-                const likes = Number($firstLikesBox.text())
-                const $clonedIconHeart = $firstLikesBox.find('.v2p-icon-heart').clone()
-
-                if (likes > 0) {
-                  $likesBox
-                    .addClass('v2p-thanked')
-                    .empty()
-                    .append($clonedIconHeart, ` ${likes + 1}`)
-                }
-                else {
-                  $(`
-                      <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
-                        &nbsp;&nbsp;<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>1
-                      </span>
-                      `).insertAfter($tableInCell.find('.ago'))
-                  loadIcons()
-                }
-
-                const $thankAction = $tableInCell.find('.v2p-control-thank')
-                $thankAction.addClass('v2p-thanked').off('click')
-                $thankAction.siblings().has('.v2p-control-hide').hide()
-              },
-
-              onFail: () => {
-                createToast({ message: '❌ 感谢回复失败' })
-              },
-            })
-          }
-        }
-      }
-    })
+    bindThankActions($commentCells)
+    bindIgnoreActions($commentCells)
   }
 
   // MARK: 处理嵌套回复

@@ -1,4 +1,5 @@
 import type { CommentData, Options } from '../types'
+import { parseLikesCount } from '../utils'
 
 export function getCommentDataList({
   options,
@@ -26,7 +27,7 @@ export function getCommentDataList({
       const $content = $td.find('> .reply_content')
       const content = $content.text()
 
-      const likes = Number($td.find('span.small').text())
+      const likes = parseLikesCount($td.find('.small.fade').text())
       const floor = $td.find('span.no').text()
 
       const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9]+)/g))

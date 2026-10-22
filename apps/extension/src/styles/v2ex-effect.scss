@@ -665,6 +665,55 @@ a.v2p-topic-preview-title-link {
   }
 }
 
+.v2p-blocked-reply:not(.v2p-blocked-revealed) > table,
+.v2p-blocked-reply-empty:not(.v2p-blocked-revealed),
+.v2p-ignored-reply:not(.v2p-ignored-revealed) > table {
+  display: none;
+}
+
+.v2p-ignored-reply.v2p-ignored-revealed > .v2p-ignored-placeholder {
+  display: none;
+}
+
+.v2p-ignored-placeholder {
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--v2p-color-font-tertiary);
+  text-align: center;
+
+  .v2p-ignored-toggle {
+    cursor: pointer;
+    color: var(--v2p-color-accent-500);
+
+    &:focus-visible {
+      outline: 2px solid var(--v2p-color-accent-500);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.v2p-blocked-notice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--v2p-color-font-tertiary);
+  background-color: var(--v2p-color-bg-subtle);
+
+  .v2p-blocked-toggle {
+    cursor: pointer;
+    color: var(--v2p-color-accent-500);
+
+    &:focus-visible {
+      outline: 2px solid var(--v2p-color-accent-500);
+      outline-offset: 2px;
+    }
+  }
+}
+
 .v2p-likes-box {
   user-select: none;
   position: relative;
@@ -750,6 +799,18 @@ a.v2p-topic-preview-title-link {
         color: var(--v2p-color-heart);
       }
 
+      &.v2p-thank-pending,
+      &.v2p-ignore-pending {
+        cursor: wait;
+        opacity: 0.6;
+      }
+
+      &:focus-visible {
+        border-radius: 2px;
+        outline: 2px solid var(--v2p-color-heart);
+        outline-offset: 2px;
+      }
+
       &:hover::after {
         opacity: 1;
       }
@@ -774,6 +835,13 @@ a.v2p-topic-preview-title-link {
         }
       }
     }
+  }
+}
+
+// 触屏设备没有 hover，操作按钮需要常显。
+@media (hover: none) {
+  .v2p-controls {
+    opacity: 1;
   }
 }
 

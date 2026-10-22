@@ -4,7 +4,14 @@ import {
   StorageKey,
   V2EX,
 } from './constants'
-import { postTask } from './post-task'
+import {
+  refreshOnceFromPage,
+  runOnceTask,
+  runSerialized,
+  syncOnce,
+  syncOnceFromHtml,
+  syncOnceFromResponse,
+} from './once'
 import type {
   API_Info,
   DataWrapper,
@@ -13,7 +20,6 @@ import type {
   ImgurResponse,
   Member,
   Notification,
-  Once,
   Topic,
   TopicReply,
   UserTopicItem,
@@ -24,6 +30,8 @@ import {
   createApiErrorFromResponse,
   getStorage,
   isAbortError,
+  parseBlockUrl,
+  parseIgnoreTopicUrl,
   setStorage,
   V2EX_ORIGIN,
   wrapApiError,
@@ -206,42 +214,66 @@ async function refreshMoney(): Promise<void> {
 
 export async function thankReply(params: {
   replyId: string
-  onSuccess?: () => void
-  onFail?: () => void
-}): Promise<void> {
+}): Promise<{ success: boolean, message?: string }> {
   try {
-    const res = await fetch(`/thank/reply/${params.replyId}?once=${window.once}`, {
-      method: 'POST',
+    return await runOnceTask(async (once) => {
+      const res = await fetchWithTimeout(
+        `/thank/reply/${encodeURIComponent(params.replyId)}?once=${once}`,
+        FETCH_TIMEOUT.DEFAULT,
+        { method: 'POST' },
+      )
+
+      if (!res.ok) {
+        return { success: false, message: `❌ 感谢回复失败（HTTP ${res.status}）` }
+      }
+
+      const data = await res.json() as Partial<V2EX_Response> & { once?: unknown }
+
+      // 接口会返回新的 once，校验后再同步回页面，避免污染页面上的 token。
+      if (!syncOnce(data.once)) {
+        await refreshOnceFromPage()
+      }
+
+      if (data.success !== true) {
+        return {
+          success: false,
+          message: `❌ ${data.message ?? '感谢回复失败'}`,
+        }
+      }
+
+      // 余额刷新失败不应影响感谢结果。
+      try {
+        await refreshMoney()
+      }
+      catch {
+        // 忽略余额刷新错误。
+      }
+
+      return { success: true }
     })
-    const data = await res.json() as V2EX_Response & { once: Once }
-
-    // 从接口获取到最新的 once 后需要更新回 Web 页。
-    postTask(`window.once = ${data.once}`)
-    window.once = data.once
-
-    if (data.success) {
-      $('#thank_area_' + params.replyId)
-        .addClass('thanked')
-        .html('感谢已发送')
-
-      params.onSuccess?.()
-
-      await refreshMoney()
-    }
-    else {
-      alert(data.message)
-    }
   }
-  catch {
-    params.onFail?.()
+  catch (error) {
+    if (error instanceof ApiError) {
+      return { success: false, message: `❌ ${error.message}` }
+    }
+
+    return { success: false, message: '❌ 感谢回复失败，请稍后重试' }
   }
 }
 
 /**
  * 爬取主题内容页，返回 HTML 纯文本。
  */
-export async function crawlTopicPage(path: string, page = '1'): Promise<string> {
-  const res = await fetchWithTimeout(`${V2EX_ORIGIN}${path}?p=${page}`, FETCH_TIMEOUT.CRAWL)
+export async function crawlTopicPage(
+  path: string,
+  page = '1',
+  options?: RequestInit,
+): Promise<string> {
+  const res = await fetchWithTimeout(
+    `${V2EX_ORIGIN}${path}?p=${page}`,
+    FETCH_TIMEOUT.CRAWL,
+    options,
+  )
   const htmlText = await res.text()
 
   return htmlText
@@ -250,8 +282,12 @@ export async function crawlTopicPage(path: string, page = '1'): Promise<string> 
 /**
  * 爬取用户内容页，返回 HTML 纯文本。
  */
-export async function crawlUserPage(username: string): Promise<string> {
-  const res = await fetchWithTimeout(`${V2EX_ORIGIN}/member/${username}`, FETCH_TIMEOUT.CRAWL)
+export async function crawlUserPage(username: string, options?: RequestInit): Promise<string> {
+  const res = await fetchWithTimeout(
+    `${V2EX_ORIGIN}/member/${username}`,
+    FETCH_TIMEOUT.CRAWL,
+    options,
+  )
   const htmlText = await res.text()
 
   return htmlText
@@ -382,47 +418,132 @@ export function parseUserTopics(htmlText: string, limit = 5): UserTopicItem[] {
  */
 export async function blockUser(username: string): Promise<{ success: boolean, message: string }> {
   try {
-    // 1. 先爬取用户页面
-    const htmlText = await crawlUserPage(username)
+    return await runSerialized(async () => {
+      // 1. 先爬取用户页面，确保拿到最新的 Block 按钮和 once token。
+      const htmlText = await crawlUserPage(username, { cache: 'no-store' })
 
-    // 2. 从页面中提取 Block URL
-    const $page = $(htmlText)
-    const $blockBtn = $page.find('input[type="button"][value="Block"]')
+      // 2. 从页面中提取 Block URL
+      const $page = $(htmlText)
+      const $blockBtn = $page.find('input[type="button"][value="Block"]')
 
-    if ($blockBtn.length === 0) {
-      return { success: false, message: '未找到 Block 按钮，该用户可能已被屏蔽' }
-    }
+      if ($blockBtn.length === 0) {
+        return { success: false, message: '未找到 Block 按钮，该用户可能已被屏蔽或登录状态已失效' }
+      }
 
-    const onclick = $blockBtn.attr('onclick')
+      // 从 onclick 属性中提取 URL
+      // 格式: location.href = '/block/622504?once=96942'
+      const blockUrl = parseBlockUrl($blockBtn.attr('onclick'))
 
-    if (!onclick) {
-      return { success: false, message: '无法获取屏蔽链接' }
-    }
+      if (!blockUrl) {
+        return { success: false, message: '无法解析屏蔽链接' }
+      }
 
-    // 从 onclick 属性中提取 URL
-    // 格式: location.href = '/block/622504?once=96942'
-    const match = onclick.match(/location\.href\s*=\s*['"]([^'"]+)['"]/)
+      // 3. 执行屏蔽操作
+      const res = await fetchWithTimeout(`${V2EX_ORIGIN}${blockUrl}`, FETCH_TIMEOUT.DEFAULT)
 
-    if (!match || !match[1]) {
-      return { success: false, message: '无法解析屏蔽链接' }
-    }
+      if (!res.ok) {
+        return { success: false, message: `屏蔽操作失败（HTTP ${res.status}），请稍后重试` }
+      }
 
-    const blockUrl = match[1]
+      // 未登录时 V2EX 会跳转到登录页，避免把这种情况误判为屏蔽成功。
+      const finalPath = new URL(res.url, V2EX_ORIGIN).pathname
 
-    // 3. 执行屏蔽操作
-    const res = await fetch(`${V2EX_ORIGIN}${blockUrl}`)
+      if (finalPath.startsWith('/signin') || finalPath.startsWith('/signup')) {
+        return { success: false, message: '登录状态已失效，请重新登录后再试' }
+      }
 
-    if (res.ok) {
-      return { success: true, message: '✅ 已屏蔽该用户' }
-    }
-    else {
-      return { success: false, message: '屏蔽操作失败，请稍后重试' }
-    }
+      // 屏蔽请求也会轮换 once，先同步响应中的最新值。
+      await syncOnceFromResponse(res)
+
+      // 屏蔽成功后用户页不再渲染 Block 按钮，再抓取一次页面确认结果。
+      let verified = true
+
+      try {
+        const verifiedHtml = await crawlUserPage(username, { cache: 'no-store' })
+        syncOnceFromHtml(verifiedHtml)
+        verified = $(verifiedHtml).find('input[type="button"][value="Block"]').length === 0
+      }
+      catch {
+        // 校验请求失败时不推翻已完成的屏蔽请求。
+      }
+
+      if (!verified) {
+        // 页面可能因缓存或渲染差异仍显示 Block 按钮，不据此推翻已成功的请求。
+        return { success: true, message: '⚠️ 屏蔽请求已发送，但未能确认结果，请刷新页面检查' }
+      }
+
+      return { success: true, message: '✅ 已屏蔽该用户，刷新页面后生效' }
+    })
   }
   catch (error) {
     console.error('屏蔽用户失败:', error)
 
     return { success: false, message: '屏蔽操作出错，请稍后重试' }
+  }
+}
+
+/**
+ * 忽略（屏蔽）主题。
+ */
+export function ignoreTopic(topicId: string): Promise<void> {
+  return runSerialized(async () => {
+    // 使用 no-store 确保拿到的忽略链接和 once 是最新的。
+    const pageText = await crawlTopicPage(`/t/${topicId}`, '0', { cache: 'no-store' })
+    const $ignoreBtn = $(pageText).find('.topic_buttons a:nth-of-type(3)')
+    const ignoreUrl = parseIgnoreTopicUrl($ignoreBtn.attr('onclick'))
+
+    if (!ignoreUrl) {
+      throw new ApiError({ message: '无法解析屏蔽链接' })
+    }
+
+    const res = await fetchWithTimeout(`${V2EX_ORIGIN}${ignoreUrl}`, FETCH_TIMEOUT.DEFAULT)
+
+    if (!res.ok) {
+      throw new ApiError({ message: `屏蔽失败（HTTP ${res.status}）` })
+    }
+
+    const finalPath = new URL(res.url, V2EX_ORIGIN).pathname
+
+    if (finalPath.startsWith('/signin') || finalPath.startsWith('/signup')) {
+      throw new ApiError({ message: '登录状态已失效，请重新登录后再试' })
+    }
+
+    await syncOnceFromResponse(res)
+  })
+}
+
+/**
+ * 忽略（隐藏）单条回复。
+ */
+export async function ignoreReply(url: string): Promise<{ success: boolean, message: string }> {
+  try {
+    return await runOnceTask(async (once) => {
+      const target = new URL(url, V2EX_ORIGIN)
+      target.searchParams.set('once', once)
+
+      const res = await fetchWithTimeout(target.toString(), FETCH_TIMEOUT.DEFAULT)
+
+      if (!res.ok) {
+        return { success: false, message: `❌ 隐藏回复失败（HTTP ${res.status}）` }
+      }
+
+      const finalPath = new URL(res.url, V2EX_ORIGIN).pathname
+
+      if (finalPath.startsWith('/signin') || finalPath.startsWith('/signup')) {
+        return { success: false, message: '❌ 登录状态已失效，请重新登录后再试' }
+      }
+
+      await syncOnceFromResponse(res)
+
+      return { success: true, message: '✅ 已隐藏该回复' }
+    })
+  }
+  catch (error) {
+    if (error instanceof ApiError) {
+      return { success: false, message: `❌ ${error.message}` }
+    }
+
+    return { success: false, message: '❌ 隐藏回复失败，请稍后重试' }
   }
 }
 

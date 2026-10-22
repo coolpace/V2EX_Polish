@@ -6,6 +6,7 @@ import { blockUser, crawlUserPage, fetchUserInfo, parseUserTopics } from '../../
 import type { CommentData, Member, UserTopicItem } from '../../types'
 import { escapeHTML, formatTimestamp, getStorageSync, isBrowserExtension } from '../../utils'
 import { getRegisterDays } from '../helpers'
+import { foldBlockedMemberReplies } from './blocked'
 import { openTagsSetter } from './content'
 import { createTopicPreview } from './preview'
 
@@ -118,12 +119,26 @@ export function processAvatar(params: ProcessAvatar) {
         $btn.addClass('v2p-btn-loading').text('屏蔽中...')
 
         void blockUser(memberName).then((result) => {
-          createToast({ message: result.message })
-
           if (result.success) {
+            let foldedCount = 0
+
+            try {
+              foldedCount = foldBlockedMemberReplies(memberName)
+            }
+            catch (error) {
+              console.error('折叠已屏蔽用户的回复失败:', error)
+            }
+
+            createToast({
+              message: foldedCount > 0
+                ? `✅ 已屏蔽该用户，当前页 ${foldedCount} 条回复已折叠`
+                : result.message,
+            })
+
             popupControl.close()
           }
           else {
+            createToast({ message: result.message })
             $btn.removeClass('v2p-btn-loading').text('屏蔽该用户')
           }
         })
