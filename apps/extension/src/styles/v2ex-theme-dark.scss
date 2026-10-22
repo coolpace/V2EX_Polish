@@ -95,6 +95,24 @@
     }
   }
 
+  /**
+   * viewport 滚动条颜色由根元素决定。暗色模式下需把 color-scheme 与
+   * scrollbar-color 同步到 :root，否则浏览器窗口滚动条会退回默认浅色。
+   */
+  &[data-v2p-theme='dark-default'],
+  &[data-darkreader-scheme='dark'],
+  &:has(#Wrapper.Night) {
+    scrollbar-color: var(--v2p-color-foreground) var(--v2p-scrollbar-background-color);
+    color-scheme: dark;
+  }
+
+  /** Dark Reader 与 V2EX 原生夜间模式的暗色变量只声明在 body 上，根元素需补齐。 */
+  &[data-darkreader-scheme='dark'],
+  &:has(#Wrapper.Night) {
+    --v2p-color-foreground: #adbac7;
+    --v2p-scrollbar-background-color: #22303f;
+  }
+
   body.v2p-theme-dark-default,
   .v2p-theme-dark-default,
   &[data-v2p-theme='dark-default'],
