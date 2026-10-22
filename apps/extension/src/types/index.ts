@@ -168,9 +168,45 @@ export interface API_Info {
   remaining?: number
 }
 
-export interface DailyInfo {
-  lastCheckInTime?: number
+/** 签到尝试结果。 */
+export type CheckInStatus = 'success' | 'already' | 'failed' | 'skipped'
+
+/** 签到失败原因分类，用于决定重试策略。 */
+export type CheckInErrorCode
+  = | 'timeout'
+    | 'network'
+    | 'http'
+    | 'unauthenticated'
+    | 'unexpected-page'
+    | 'redeem-failed'
+    | 'unknown'
+
+/** 签到尝试的返回结果。 */
+export interface CheckInResult {
+  status: CheckInStatus
+  /** 跳过或失败的原因，用于记录与展示。 */
+  reason?: string
+  /** 失败原因分类。 */
+  code?: CheckInErrorCode
+  /** 已连续登录天数。 */
   checkInDays?: number
+}
+
+export interface DailyInfo {
+  /** 最近一次确认已领取奖励的时间。 */
+  lastCheckInTime?: number
+  /** 最近一次已领取奖励的 UTC 日期键（例如 2026-10-22），用于奖励日判断。 */
+  lastCheckInDay?: string
+  /** 已连续登录天数。 */
+  checkInDays?: number
+  /** 最近一次签到尝试时间。 */
+  lastAttemptTime?: number
+  /** 最近一次签到尝试结果，不记录 skipped。 */
+  lastResult?: Exclude<CheckInStatus, 'skipped'>
+  /** 最近一次失败原因，用于诊断。 */
+  lastError?: string
+  /** 最近一次失败原因分类。 */
+  lastErrorCode?: CheckInErrorCode
 }
 
 /**

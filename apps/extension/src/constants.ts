@@ -495,6 +495,7 @@ export const enum MessageKey {
   action = 'action',
   colorScheme = 'colorSchemes',
   showOptions = 'showOptions',
+  checkIn = 'checkIn',
 }
 
 export const enum MessageFrom {

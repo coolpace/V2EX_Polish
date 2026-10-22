@@ -1,5 +1,5 @@
 import { StorageKey } from '../../constants'
-import { getStorage, isSameDay } from '../../utils'
+import { getStorage, isSameUtcDay } from '../../utils'
 import { $infoCard } from '../globals'
 import { loadIcons } from '../helpers'
 import { applyTopicListFilter } from '../topic-filter/apply-topic-list-filter'
@@ -29,7 +29,7 @@ void (async () => {
     const dailyInfo = storage[StorageKey.Daily]
 
     if (dailyInfo?.lastCheckInTime) {
-      if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
+      if (isSameUtcDay(dailyInfo.lastCheckInTime, Date.now())) {
         const $info = $(`
           <a class="cell v2p-info-row" href="/mission/daily">
             今日已自动签到

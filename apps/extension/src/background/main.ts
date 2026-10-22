@@ -5,8 +5,8 @@ import {
   StorageKey,
   V2EX_DOMAINS,
 } from '../constants'
-import type { LegacyTag, MemberTag, StorageItems } from '../types'
-import { getRunEnv } from '../utils'
+import type { CheckInResult, LegacyTag, MemberTag } from '../types'
+import { getRunEnv, getStorage } from '../utils'
 import { checkIn } from './daily-check-in'
 
 /**
@@ -77,6 +77,7 @@ interface Message {
   [MessageKey.action]?: 'openPopup'
   [MessageKey.colorScheme]?: 'dark' | 'light'
   [MessageKey.showOptions]?: true
+  [MessageKey.checkIn]?: { force?: boolean }
 }
 
 function generateUrlPatterns(path: string): string[] {
@@ -87,7 +88,26 @@ function generateOrigins(): string[] {
   return V2EX_DOMAINS.map((domain) => `https://${domain}`)
 }
 
-chrome.runtime.onMessage.addListener((message: Message) => {
+/** 判断 URL 是否属于 V2EX 站点。 */
+function isV2EXUrl(url: string): boolean {
+  try {
+    return V2EX_DOMAINS.includes(new URL(url).hostname)
+  }
+  catch {
+    return false
+  }
+}
+
+chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) => {
+  if (Object.hasOwn(message, MessageKey.checkIn)) {
+    void runAutoCheckIn({ force: message[MessageKey.checkIn]?.force === true })
+      .then((result) => {
+        sendResponse(result)
+      })
+
+    return true
+  }
+
   if (Object.hasOwn(message, MessageKey.colorScheme)) {
     void chrome.action.setIcon({
       path:
@@ -118,10 +138,10 @@ chrome.runtime.onMessage.addListener((message: Message) => {
 })
 
 chrome.contextMenus.removeAll(() => {
-  void chrome.storage.sync.get().then((items: StorageItems) => {
-    const options = items[StorageKey.Options]
+  void getStorage(false).then((storage) => {
+    const options = storage[StorageKey.Options]
 
-    if (options?.contextMenu?.enabled) {
+    if (options.contextMenu?.enabled) {
       const runEnv = getRunEnv()
 
       chrome.contextMenus.create({
@@ -192,9 +212,17 @@ chrome.contextMenus.removeAll(() => {
       void chrome.contextMenus.remove(Menu.Root)
     }
   })
+    .catch((error) => {
+      console.warn('[V2EX Polish] 创建右键菜单失败：', error)
+    })
 })
 
-chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  // 用户打开 V2EX 页面时补一次签到，降低对 alarm 触发时机的依赖。
+  if (changeInfo.status === 'complete' && tab.url && isV2EXUrl(tab.url)) {
+    void runAutoCheckIn()
+  }
+
   if (!('sidePanel' in chrome)) {
     return
   }
@@ -225,6 +253,34 @@ chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
 
 const checkInAlarmName = 'dailyCheckIn'
 
+/**
+ * 自动签到统一入口。
+ *
+ * background 是唯一的签到执行者，alarm、浏览器启动、V2EX 页面加载和 popup 消息
+ * 都通过这里触发；popup 不再直接执行签到，避免跨上下文并发与请求随页面关闭而中断。
+ */
+async function runAutoCheckIn(
+  options: { force?: boolean } = {},
+): Promise<CheckInResult | undefined> {
+  try {
+    // 手动触发不受「每日自动签到」开关限制；自动触发使用合并默认值后的配置。
+    if (!options.force) {
+      const storage = await getStorage(false)
+
+      if (!storage[StorageKey.Options].autoCheckIn.enabled) {
+        return undefined
+      }
+    }
+
+    return await checkIn({ bypassRetryCooldown: options.force })
+  }
+  catch (error) {
+    console.warn('[V2EX Polish] 自动签到出错：', error)
+
+    return undefined
+  }
+}
+
 chrome.alarms.get(checkInAlarmName, (alarm) => {
   if (typeof alarm === 'undefined') {
     // background 脚本无法持久运行，在 Chrome 中 5 分钟内会关闭连接，所以需要使用 alarm 来保持定时任务。
@@ -236,12 +292,10 @@ chrome.alarms.get(checkInAlarmName, (alarm) => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === checkInAlarmName) {
-    void chrome.storage.sync.get().then((items: StorageItems) => {
-      const options = items[StorageKey.Options]
-
-      if (options?.autoCheckIn.enabled) {
-        void checkIn()
-      }
-    })
+    void runAutoCheckIn()
   }
+})
+
+chrome.runtime.onStartup.addListener(() => {
+  void runAutoCheckIn()
 })

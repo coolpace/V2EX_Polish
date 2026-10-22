@@ -6,7 +6,7 @@ export {
   wrapApiError,
 } from './api-error'
 export { createSerialQueue, sleep } from './async'
-export { extractDays, formatTimestamp, isSameDay, parseDateTime } from './date'
+export { extractDays, formatTimestamp, isSameDay, isSameUtcDay, parseDateTime } from './date'
 export {
   isEmojiImage,
   markEmojiImages,

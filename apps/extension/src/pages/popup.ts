@@ -19,9 +19,8 @@ import {
   Sun,
 } from 'lucide'
 
-import { checkIn } from '../background/daily-check-in'
 import { createButton } from '../components/button'
-import { dataExpiryTime, Links, RequestMessage, StorageKey, V2EX } from '../constants'
+import { dataExpiryTime, Links, MessageKey, RequestMessage, StorageKey, V2EX } from '../constants'
 import { initTheme, replaceEmojiWithHD, setFont } from '../contents/helpers'
 import { iconLoading } from '../icons'
 import {
@@ -30,13 +29,13 @@ import {
   fetchNotifications,
   getUnreadMessagesCount,
 } from '../services'
-import type { Notification, Topic } from '../types'
+import type { CheckInResult, DailyInfo, Notification, Topic } from '../types'
 import {
   escapeHTML,
   formatTimestamp,
   getStorage,
   getStorageSync,
-  isSameDay,
+  isSameUtcDay,
   setStorage,
 } from '../utils'
 import { initBackupForm } from './backup-form'
@@ -107,6 +106,97 @@ const topicContentData: Record<TabId, RemoteDataStore> = {
 }
 
 const $tabMsg = $('.tabs > li[data-target="tab-message"]')
+
+/**
+ * 通过 background 执行签到，确保所有请求串行，且不随 popup 关闭而中断。
+ */
+async function requestCheckIn(
+  options: { force?: boolean } = {},
+): Promise<CheckInResult | undefined> {
+  return await chrome.runtime.sendMessage<
+    { [MessageKey.checkIn]: { force?: boolean } },
+    CheckInResult | undefined
+  >({
+    [MessageKey.checkIn]: { force: options.force },
+  })
+}
+
+/** popup 打开时只发起一次自动签到。 */
+let popupCheckInPromise: Promise<void> | null = null
+
+function ensurePopupCheckIn(): Promise<void> {
+  if (!popupCheckInPromise) {
+    popupCheckInPromise = requestCheckIn()
+      .then(() => {})
+      .catch((error: unknown) => {
+        console.warn('[V2EX Polish] 自动签到出错：', error)
+      })
+  }
+
+  return popupCheckInPromise
+}
+
+/**
+ * 渲染功能页的签到卡片。
+ */
+function renderCheckInFeature(dailyInfo: DailyInfo | undefined, refresh: () => void) {
+  const $checkIn = $('.feature-check-in')
+  const $title = $checkIn.find('.feature-title')
+  const $content = $checkIn.find('.feature-content')
+
+  $checkIn.off('click')
+  $title.text('每日签到')
+  $content.text('')
+
+  const lastCheckInTime = dailyInfo?.lastCheckInTime
+
+  if (lastCheckInTime && isSameUtcDay(lastCheckInTime, Date.now())) {
+    const date = formatTimestamp(lastCheckInTime, { format: 'YMDHMS' })
+
+    $title.text('✅ 今日已签到')
+    $content.html(
+      `于 ${date} 自动签到${
+        dailyInfo?.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
+      }`,
+    )
+    $checkIn.on('click', () => {
+      window.open(`${V2EX.Origin}/mission/daily`)
+    })
+
+    return
+  }
+
+  const lastAttemptTime = dailyInfo?.lastAttemptTime
+
+  if (dailyInfo?.lastResult === 'failed' && lastAttemptTime) {
+    const date = formatTimestamp(lastAttemptTime, { format: 'YMDHMS' })
+    const reason = dailyInfo.lastError ?? '尚未成功领取'
+
+    $content.html(`上次尝试 ${date}：${escapeHTML(reason)}，点击重试`)
+  }
+  else {
+    $content.text('自动领取每日的登录奖励')
+  }
+
+  $checkIn.on('click', () => {
+    void (async () => {
+      $content.text('签到中...')
+
+      try {
+        const result = await requestCheckIn({ force: true })
+
+        if (result?.status === 'success') {
+          window.open(`${V2EX.Origin}/mission/daily`)
+        }
+      }
+      catch (error) {
+        console.warn('[V2EX Polish] 手动签到出错：', error)
+      }
+
+      refresh()
+    })()
+  })
+}
 
 function loadSettings() {
   const storage = getStorageSync()
@@ -340,30 +430,22 @@ function initTabs() {
     }
 
     if (tabId === TabId.Feature) {
-      const $checkIn = $('.feature-check-in').on('click', () => {
-        window.open(`${V2EX.Origin}/mission/daily`)
-      })
+      const renderCheckIn = async () => {
+        const latestStorage = await getStorage(false)
 
-      const dailyInfo = storage[StorageKey.Daily]
-
-      if (dailyInfo?.lastCheckInTime) {
-        if (isSameDay(dailyInfo.lastCheckInTime, Date.now())) {
-          const date = formatTimestamp(dailyInfo.lastCheckInTime, { format: 'YMDHMS' })
-          $checkIn.find('.feature-title').text('✅ 今日已签到')
-          $checkIn
-            .find('.feature-content')
-            .html(
-              `于 ${date} 自动签到${
-                dailyInfo.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
-              }`,
-            )
-        }
-      }
-      else {
-        $checkIn.on('click', () => {
-          void checkIn()
+        renderCheckInFeature(latestStorage[StorageKey.Daily], () => {
+          void renderCheckIn()
         })
       }
+
+      await renderCheckIn()
+
+      // 首次渲染后补一次签到，完成后刷新当前卡片。
+      void ensurePopupCheckIn().then(() => {
+        if ($('#tab-feature').hasClass('active')) {
+          void renderCheckIn()
+        }
+      })
     }
 
     if (tabId === TabId.Message) {
@@ -571,6 +653,9 @@ window.addEventListener('load', () => {
     setFont(options.font?.type ?? 'system')
     initTabs()
   })
+
+  // 打开 popup 时补一次签到，覆盖当天浏览器启动较晚或 alarm 被推迟的场景。
+  void ensurePopupCheckIn()
 
   // 展示消息未读数量。
   {

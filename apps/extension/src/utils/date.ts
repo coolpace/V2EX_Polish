@@ -186,3 +186,20 @@ export function isSameDay(timestamp1: number, timestamp2: number): boolean {
     && date1.getDate() === date2.getDate()
   )
 }
+
+/**
+ * 比较两个时间戳是否处于同一个 UTC 日期。
+ *
+ * V2EX 的每日登录奖励按 UTC 日期计算，重置点为 UTC 00:00（北京时间 08:00），
+ * 因此与奖励日相关的判断必须使用 UTC 日期，避免本地时区造成的偏差。
+ */
+export function isSameUtcDay(timestamp1: number, timestamp2: number): boolean {
+  const date1 = new Date(timestamp1)
+  const date2 = new Date(timestamp2)
+
+  return (
+    date1.getUTCFullYear() === date2.getUTCFullYear()
+    && date1.getUTCMonth() === date2.getUTCMonth()
+    && date1.getUTCDate() === date2.getUTCDate()
+  )
+}
