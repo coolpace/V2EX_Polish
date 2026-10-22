@@ -42,7 +42,8 @@ V2EX_Polish_Pro/
 │  │  │  ├─ chrome/              # Chrome 可加载目录
 │  │  │  ├─ firefox/             # Firefox 可加载目录
 │  │  │  ├─ userscript/          # userscript 产物
-│  │  │  └─ packages/            # zip 包
+│  │  │  ├─ v2ex-polish-chrome.zip   # Chrome 发布包（Edge 同件复用）
+│  │  │  └─ v2ex-polish-firefox.zip  # Firefox 发布包
 │  │  ├─ tsconfig.runtime.json
 │  │  ├─ tsconfig.tooling.json
 │  │  └─ tsdown.config.ts
@@ -67,7 +68,7 @@ V2EX_Polish_Pro/
 - `apps/extension/scripts/build-userscript-style.mjs` 生成 `apps/extension/src/user-scripts/style.ts`
 - `tsdown.userscript.config.ts` 生成 `apps/extension/dist/userscript/index.min.js`
 - `pnpm build:dist` 负责生成可加载的未打包扩展目录
-- `pnpm package:zip` 会调用 `web-ext build`，将 Chrome / Firefox 产物打包到 `apps/extension/dist/packages/<target>/`
+- `pnpm package:zip` 会调用 `web-ext build`，将 Chrome / Firefox 产物打包为 zip 直接输出到 `apps/extension/dist/`
 
 运行时路径仍保持稳定：
 

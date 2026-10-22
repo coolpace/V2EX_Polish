@@ -38,11 +38,6 @@ export const extensionManifestPaths: Record<ExtensionTarget, string> = {
   chrome: path.join(extensionBuildRoots.chrome, 'manifest.json'),
   firefox: path.join(extensionBuildRoots.firefox, 'manifest.json'),
 }
-export const extensionPackagesRoots: Record<ExtensionTarget, string> = {
-  chrome: path.join(extensionDistRoot, 'packages', 'chrome'),
-  firefox: path.join(extensionDistRoot, 'packages', 'firefox'),
-}
-
 export const extensionPackageJsonPath = path.join(extensionAppRoot, 'package.json')
 export const extensionUserscriptDistRoot = path.join(extensionDistRoot, 'userscript')
 export const chromeProfileRoot = path.join(workspaceRoot, 'chrome-dist-profile')
@@ -90,8 +85,4 @@ export function getExtensionBuildScriptsRoot(target: ExtensionTarget): string {
 
 export function getExtensionManifestPath(target: ExtensionTarget): string {
   return extensionManifestPaths[target]
-}
-
-export function getExtensionPackagesRoot(target: ExtensionTarget): string {
-  return extensionPackagesRoots[target]
 }
