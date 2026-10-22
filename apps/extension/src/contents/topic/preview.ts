@@ -10,6 +10,7 @@ import { escapeHTML, formatTimestamp, getStorageSync } from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
 import { $body, loginName } from '../globals'
 import { addToReadingList, loadIcons, replaceCommentEmojiWithHD } from '../helpers'
+import { PREVIEW_QUERY } from '../preview-frame'
 import { handleLinkPreview } from './content'
 
 /** Token 失效时接口返回的错误信息。 */
@@ -133,7 +134,7 @@ export function createTopicPreview() {
             ? new URL(linkHref).pathname + new URL(linkHref).search
             : linkHref
           const url = new URL(urlPath, window.location.origin)
-          url.searchParams.append('v2p-preview', '1')
+          url.searchParams.append(PREVIEW_QUERY, '1')
           previewFrame.prop('src', url.toString())
         }
         catch (error) {

@@ -176,6 +176,34 @@ body {
     margin-right: var(--v2p-layout-column-gap);
   }
 
+  /**
+   * 预览弹窗内的主题页运行在较窄的 iframe 中，右侧栏始终以浮动形式收起。
+   * 标记由 preview-frame.ts 在 document_start 阶段设置，确保首帧即为最终布局，
+   * 避免打开预览时先渲染右侧栏、随后再折叠造成的布局跳动。
+   *
+   * 用 @at-root 脱离 body 作用域，否则会生成 `body :root[...]` 这种永不匹配的选择器。
+   */
+  @at-root :root[data-v2p-preview='1'] {
+    #Top,
+    #Bottom {
+      display: none;
+    }
+
+    #Wrapper {
+      .content {
+        gap: 0;
+      }
+
+      #Main {
+        margin: auto;
+      }
+    }
+
+    #Wrapper #Rightbar {
+      @include share.rightbar-float;
+    }
+  }
+
   #search-container {
     height: 30px;
     margin: 0 30px;

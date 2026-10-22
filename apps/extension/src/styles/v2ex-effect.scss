@@ -161,32 +161,7 @@ body {
 
   &.v2p-layout-rightbar {
     &.v2p-layout-rightbar-float {
-      position: fixed;
-      z-index: var(--zidx-rightbar);
-      top: var(--v2p-layout-column-gap);
-      right: 10px;
-      overflow-y: auto;
-      display: none;
-      max-height: calc(100vh - 2 * var(--v2p-layout-column-gap));
-      margin: 0;
-      padding: 10px;
-      border: 1px solid var(--v2p-color-border);
-      border-radius: var(--v2p-box-radius);
-      background-color: var(--v2p-color-bg-content);
-      box-shadow: var(--v2p-widget-shadow);
-
-      &.v2p-layout-rightbar-visible {
-        display: block;
-
-        .box {
-          background-color: var(--v2p-color-background);
-          box-shadow: none;
-        }
-      }
-
-      .v2p-tool-box {
-        border: 1px solid var(--v2p-color-border);
-      }
+      @include share.rightbar-float;
     }
   }
 

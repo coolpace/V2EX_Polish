@@ -8,6 +8,7 @@ import {
 } from '../../constants'
 import { getStorageSync } from '../../utils'
 import { $commentBox, $main, $replyBox, $topicContentBox, $wrapperContent } from '../globals'
+import { isPreviewFrame } from '../preview-frame'
 
 const $layoutToggle = $('<span class="v2p-layout-toggle v2p-hover-btn">')
 
@@ -98,6 +99,9 @@ export function handleLayout() {
   const $rightbar = $('#Rightbar')
   $rightbar.addClass('v2p-layout-rightbar')
 
+  // 预览弹窗中右侧栏始终收起，与首帧样式保持一致。
+  const previewFrame = isPreviewFrame()
+
   $toggleRightbarBtn.insertAfter($rightbar).hide()
   $('.v2p-toggle-rightbar-icon').html(iconChevronLeft)
 
@@ -139,7 +143,7 @@ export function handleLayout() {
       }
     }
 
-    if (window.innerWidth < MIN_RIGHTBAR_HIDE_WIDTH) {
+    if (previewFrame || window.innerWidth < MIN_RIGHTBAR_HIDE_WIDTH) {
       $toggleRightbarBtn.show()
       $('.v2p-layout-rightbar').addClass('v2p-layout-rightbar-float')
     }

@@ -14,14 +14,8 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  const searchParams = new URLSearchParams(window.location.search)
-
-  const isPreview = searchParams.get('v2p-preview') === '1'
-
-  if (isPreview) {
-    $('#Top').hide()
-    $('#Bottom').hide()
-  }
+  // 预览弹窗内的顶部导航与右侧栏由 `data-v2p-preview` 标记样式隐藏，
+  // 详见 preview-frame.ts 与 v2ex-theme-default.scss。
 
   // 非移动端时，减少内容区的最小宽度，适配小屏预览的情况。
   if (!isMobileView()) {
