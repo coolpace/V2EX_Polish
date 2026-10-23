@@ -8,7 +8,7 @@
   # 注意：ignore 的退出码语义与直觉相反——返回 0 表示「跳过构建」，非 0 才继续构建。
   # 这里直接借用 git diff 的退出码（有改动为 1、无改动为 0）驱动判断：
   # 仅当 apps/website 或会影响其构建结果的根级文件变动时才构建，
-  # extension / docs / tests 等提交不再消耗 Netlify 构建时长。
+  # extension / docs / tests 等提交不再触发生产部署，也就不会消耗 Netlify 构建额度。
   # CACHED_COMMIT_REF 与 COMMIT_REF 相同时（首次部署、清缓存重建）diff 恒为空会误跳过，故强制构建。
   ignore = 'if [ "$CACHED_COMMIT_REF" = "$COMMIT_REF" ]; then exit 1; fi; git diff --quiet "$CACHED_COMMIT_REF" "$COMMIT_REF" -- apps/website pnpm-lock.yaml pnpm-workspace.yaml package.json netlify.toml || exit 1'
 
