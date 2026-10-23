@@ -1,9 +1,7 @@
 @use './share';
 
 :root {
-  /** 页面滚动条：标准属性在 Chrome 121+ / Firefox 生效。 */
-  scrollbar-color: var(--v2p-color-foreground) var(--v2p-scrollbar-background-color);
-  scrollbar-width: thin;
+  /** 滚动条颜色与宽度完全交给浏览器原生渲染，这里只声明明暗模式。 */
   color-scheme: light;
   background-color: var(--v2p-color-background);
 }

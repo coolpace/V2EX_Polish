@@ -70,9 +70,6 @@
 
     /* ---- 阴影 ---- */
 
-    /* 滚动条 */
-    --v2p-scrollbar-background-color: #22303f;
-
     /* V2EX 原有的 CSS 变量： */
     --link-color: var(--v2p-color-foreground);
     --box-background-alt-color: var(--v2p-color-main-100);
@@ -96,13 +93,12 @@
   }
 
   /**
-   * viewport 滚动条颜色由根元素决定。暗色模式下需把 color-scheme 与
-   * scrollbar-color 同步到 :root，否则浏览器窗口滚动条会退回默认浅色。
+   * viewport 滚动条由浏览器按 color-scheme 原生渲染。暗色模式下需把
+   * color-scheme 同步到 :root，否则浏览器窗口滚动条会退回默认浅色。
    */
   &[data-v2p-theme='dark-default'],
   &[data-darkreader-scheme='dark'],
   &:has(#Wrapper.Night) {
-    scrollbar-color: var(--v2p-color-foreground) var(--v2p-scrollbar-background-color);
     color-scheme: dark;
   }
 
@@ -110,7 +106,6 @@
   &[data-darkreader-scheme='dark'],
   &:has(#Wrapper.Night) {
     --v2p-color-foreground: #adbac7;
-    --v2p-scrollbar-background-color: #22303f;
   }
 
   body.v2p-theme-dark-default,
