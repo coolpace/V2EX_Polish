@@ -14,10 +14,12 @@ void (async () => {
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
 
-  // 预览弹窗内的顶部导航与右侧栏由 `data-v2p-preview` 标记样式隐藏，
+  // 预览帧（`data-v2p-preview`）内的布局由标记样式在首帧确定：本扩展的预览弹窗
+  // （`'1'`）额外隐藏顶部导航，第三方 iframe 预览（`'embed'`）只收起右侧栏。
   // 详见 preview-frame.ts 与 v2ex-theme-default.scss。
 
-  // 非移动端时，减少内容区的最小宽度，适配小屏预览的情况。
+  // 非移动端时，减少内容区的最小宽度，适配小屏预览与窄窗口的情况。
+  // 预览帧内的同一规则已提前到样式表中，保证首帧即为最终布局。
   if (!isMobileView()) {
     $body.css('min-width', '450px')
     $('.content').css('min-width', '450px')

@@ -159,12 +159,6 @@ body {
     box-shadow: 0 0 0 3px var(--v2p-color-bg-content);
   }
 
-  &.v2p-layout-rightbar {
-    &.v2p-layout-rightbar-float {
-      @include share.rightbar-float;
-    }
-  }
-
   @at-root {
     .v2p-tool-box {
       position: sticky;
@@ -239,7 +233,9 @@ body {
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  display: flex;
+
+  /** 右侧栏收起时才显示，变量由 v2ex-theme-default.scss 在收起条件下设置。 */
+  display: var(--v2p-rightbar-toggle-display, none);
   align-items: center;
   justify-content: center;
   width: 24px;

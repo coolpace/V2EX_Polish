@@ -92,11 +92,6 @@ body {
       display: flex;
       gap: var(--v2p-layout-column-gap);
       max-width: var(--v2p-content-width);
-
-      /** 当右侧栏浮动时，取消设置间距。 */
-      &:has(.v2p-layout-rightbar-float) {
-        gap: 0;
-      }
     }
 
     @at-root {
@@ -141,13 +136,6 @@ body {
         box-shadow: var(--v2p-box-shadow);
       }
     }
-
-    /** 当右侧栏浮动时，主内容区域居中。 */
-    &:has(.v2p-layout-rightbar-float) {
-      #Main {
-        margin: auto;
-      }
-    }
   }
 
   #Leftbar {
@@ -170,30 +158,45 @@ body {
   }
 
   /**
-   * 预览弹窗内的主题页运行在较窄的 iframe 中，右侧栏始终以浮动形式收起。
-   * 标记由 preview-frame.ts 在 document_start 阶段设置，确保首帧即为最终布局，
-   * 避免打开预览时先渲染右侧栏、随后再折叠造成的布局跳动。
+   * 右侧栏收起的分屏状态在首帧就要确定，因此全部由样式判定，脚本不再切换类名：
+   * - `data-v2p-preview`：预览帧，`'1'` 为本扩展弹窗（额外隐藏顶部导航），
+   *   `'embed'` 为第三方 iframe 预览（保留顶部导航）；
+   * - `data-v2p-page='topic'` + 窄窗口。
+   * 标记由 boot-markers.ts 在 document_start 阶段设置，避免先渲染右侧栏、
+   * 再收起造成的布局跳动。收起时同时设置 `--v2p-rightbar-toggle-display`，
+   * 由样式决定右侧栏展开按钮的显隐（按钮样式见 v2ex-effect.scss）。
    *
    * 用 @at-root 脱离 body 作用域，否则会生成 `body :root[...]` 这种永不匹配的选择器。
    */
-  @at-root :root[data-v2p-preview='1'] {
-    #Top,
-    #Bottom {
-      display: none;
-    }
+  @at-root {
+    :root[data-v2p-preview] {
+      --v2p-rightbar-toggle-display: flex;
 
-    #Wrapper {
-      .content {
-        gap: 0;
+      /** 与 contents/topic/index.ts 中为非移动端主题页设置的 min-width 保持一致。 */
+      body {
+        min-width: 450px;
       }
 
-      #Main {
-        margin: auto;
+      #Wrapper {
+        @include share.rightbar-collapse(450px);
       }
     }
 
-    #Wrapper #Rightbar {
-      @include share.rightbar-float;
+    :root[data-v2p-preview='1'] {
+      #Top,
+      #Bottom {
+        display: none;
+      }
+    }
+
+    @media (width < 900px) {
+      :root[data-v2p-page='topic'] {
+        --v2p-rightbar-toggle-display: flex;
+
+        #Wrapper {
+          @include share.rightbar-collapse;
+        }
+      }
     }
   }
 

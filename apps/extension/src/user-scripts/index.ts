@@ -3,9 +3,11 @@
 import { patternToRegex } from 'webext-patterns'
 
 import { V2EX_DOMAINS } from '../constants'
+import { markBootState } from '../contents/boot-markers'
 import { initializeThemeBoot } from '../theme-state'
 import { style } from './style'
 
+markBootState()
 void initializeThemeBoot()
 
 function runAfterLoaded(fn: () => void): void {

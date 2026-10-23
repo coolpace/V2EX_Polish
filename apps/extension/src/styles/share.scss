@@ -264,6 +264,28 @@
   }
 }
 
+/**
+ * 右侧栏收起后的分屏布局：取消列间距、主内容居中、右侧栏浮动收起。
+ * 预览帧与窄窗口共用，避免两处规则各自维护。
+ */
+@mixin rightbar-collapse($content-min-width: null) {
+  .content {
+    gap: 0;
+
+    @if $content-min-width {
+      min-width: $content-min-width;
+    }
+  }
+
+  #Main {
+    margin: auto;
+  }
+
+  #Rightbar {
+    @include rightbar-float;
+  }
+}
+
 // ==============================
 // 备份与同步相关样式
 // ==============================

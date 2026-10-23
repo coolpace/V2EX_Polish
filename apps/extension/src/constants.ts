@@ -414,9 +414,6 @@ export const MAX_TOPIC_CONTENT_HEIGHT = 600
 /** 最小主题页面的适宜阅读宽度。 */
 export const MIN_TOPIC_PAGE_WIDTH = 1200
 
-/** 当窗口宽度小于此值时，右侧栏会隐藏。 */
-export const MIN_RIGHTBAR_HIDE_WIDTH = 900
-
 /** Popup 中缓存的主题列表数据的过期时间。 */
 export const dataExpiryTime = 60 * 60 * 1000
 

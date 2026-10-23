@@ -2,13 +2,11 @@ import { ChevronLeft, ChevronRight, createElement, PanelRight, PanelTop } from '
 
 import {
   MAX_TOPIC_CONTENT_HEIGHT,
-  MIN_RIGHTBAR_HIDE_WIDTH,
   MIN_TOPIC_PAGE_WIDTH,
   StorageKey,
 } from '../../constants'
 import { getStorageSync } from '../../utils'
 import { $commentBox, $main, $replyBox, $topicContentBox, $wrapperContent } from '../globals'
-import { isPreviewFrame } from '../preview-frame'
 
 const $layoutToggle = $('<span class="v2p-layout-toggle v2p-hover-btn">')
 
@@ -97,23 +95,21 @@ export function toggleTopicLayout() {
  */
 export function handleLayout() {
   const $rightbar = $('#Rightbar')
-  $rightbar.addClass('v2p-layout-rightbar')
 
-  // 预览弹窗中右侧栏始终收起，与首帧样式保持一致。
-  const previewFrame = isPreviewFrame()
-
-  $toggleRightbarBtn.insertAfter($rightbar).hide()
+  // 右侧栏的收起与展开按钮的显隐都由首帧样式决定，
+  // 详见 page-type.ts、preview-frame.ts 与 v2ex-theme-default.scss。
+  $toggleRightbarBtn.insertAfter($rightbar)
   $('.v2p-toggle-rightbar-icon').html(iconChevronLeft)
 
   $toggleRightbarBtn.on('click', () => {
     const isVisible = $rightbar.hasClass('v2p-layout-rightbar-visible')
 
     if (isVisible) {
-      $('#Rightbar').removeClass('v2p-layout-rightbar-visible')
+      $rightbar.removeClass('v2p-layout-rightbar-visible')
       $('.v2p-toggle-rightbar-icon').html(iconChevronLeft)
     }
     else {
-      $('#Rightbar').addClass('v2p-layout-rightbar-visible')
+      $rightbar.addClass('v2p-layout-rightbar-visible')
       $('.v2p-toggle-rightbar-icon').html(iconChevronRight)
     }
   })
@@ -141,15 +137,6 @@ export function handleLayout() {
       else if (options.reply.layout === 'horizontal') {
         switchToHorizontalLayout()
       }
-    }
-
-    if (previewFrame || window.innerWidth < MIN_RIGHTBAR_HIDE_WIDTH) {
-      $toggleRightbarBtn.show()
-      $('.v2p-layout-rightbar').addClass('v2p-layout-rightbar-float')
-    }
-    else {
-      $toggleRightbarBtn.hide()
-      $('.v2p-layout-rightbar').removeClass('v2p-layout-rightbar-float')
     }
   }
 
