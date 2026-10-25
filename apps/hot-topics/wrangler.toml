@@ -18,6 +18,8 @@ crons = [
 ]
 
 # D1 数据库绑定
+# 这里的 database_id 属于官方实例。fork 后请先创建自己的 D1（wrangler d1 create v2ex-hot-topics），
+# 再把新的 id 填到这里，否则部署会指向错误的数据库。
 [[d1_databases]]
 binding = "DB"
 database_name = "v2ex-hot-topics"

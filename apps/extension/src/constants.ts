@@ -20,7 +20,13 @@ export const enum V2EX {
   API = 'https://www.v2ex.com/api/v2',
 }
 
-/** 热议主题 Worker 接口地址。 */
+/**
+ * 热议主题 Worker 接口地址。
+ *
+ * 这里指向的是官方实例。如果你 fork 了本项目并部署了自己的 Worker，
+ * 只要把下面这个地址替换成你自己的即可（部署方式见 docs/hot-topics.md）。
+ * 若保留默认地址而不做修改，热议主题功能会直接消耗官方实例的额度。
+ */
 export const HOT_TOPICS_API_URL = 'https://v2ex-hot-topics.leokudev.workers.dev/hot-topics'
 
 export const enum Menu {
@@ -390,7 +396,7 @@ export const enum Links {
   /** 官网主页 */
   Home = 'https://v2p.leoku.dev',
   /** 问题反馈页 */
-  Feedback = 'https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new',
+  Feedback = 'https://github.com/coolpace/V2EX_Polish/issues',
   /** 主题图片分享页 */
   Share = 'https://v2p.leoku.dev/share',
   /** 赞赏支持页 */

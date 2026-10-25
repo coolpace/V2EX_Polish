@@ -30,7 +30,7 @@ pnpm worker:dev
 ## 仓库结构
 
 ```text
-V2EX_Polish_Pro/
+V2EX_Polish/
 ├─ apps/
 │  ├─ extension/
 │  │  ├─ package.json

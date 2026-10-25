@@ -58,6 +58,19 @@ pnpm --filter v2ex-hot-topics deploy
 
 这也是本仓库只采用“轻量 workspace”的原因：统一依赖管理和命令入口，但不强行把目录重构成复杂 monorepo。
 
+## 换成自己的 Worker 实例
+
+扩展端的接口地址声明在 `apps/extension/src/constants.ts` 的 `HOT_TOPICS_API_URL`，默认指向官方实例。
+
+如果你想用自己部署的实例：
+
+1. 按上文完成 Cloudflare 账号、D1 与 Cron 配置，执行 `pnpm worker:deploy`
+2. 把 `HOT_TOPICS_API_URL` 替换为你自己的 Worker 域名，形如 `https://<your-subdomain>.workers.dev/hot-topics`
+3. 如果你还改动了官网域名，记得同步 `apps/hot-topics/src/index.ts` 中的 `V2EX_ALLOWED_ORIGINS`，否则 CORS 会拦截来自新域名的请求
+
+> [!NOTE]
+> 保持默认值不改时，扩展会直接请求官方实例。发布版本中请避免继续使用官方实例，以免占用公共额度。
+
 ## 当前联调限制
 
 当前扩展不会自动连接本地 `wrangler dev` 地址，因此需要注意：

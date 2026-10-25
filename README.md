@@ -4,6 +4,9 @@
 
 一款专为 V2EX 用户设计的轻量浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！✨
 
+> [!NOTE]
+> 本仓库使用 `pnpm workspace` 管理三个子项目：浏览器扩展、[官网](https://v2p.leoku.dev)与热议主题 Worker。2026 年完成 monorepo 重构，重构前的单包结构与完整提交历史保留在 `legacy` 分支。
+
 [![Badge CWS Version]][Link CWS] ·
 [![Badge CWS Downloads]][Link CWS] ·
 [![Badge CWS Rating]][Link CWS Rating] ·
@@ -150,6 +153,8 @@ V2EX Polish 的目标是提供一个更加完善的插件，并保证持续更�
 
 更多开发说明见 [docs/README.md](./docs/README.md)。
 
+官网的赞赏列表通过 Notion 接口读取，需要在 `apps/website/` 下配置 `NOTION_KEY` 与 `NOTION_DATABASE_ID`，示例见 [apps/website/.env.example](./apps/website/.env.example)。未配置时 `/api/donation` 会返回 500，赞赏列表显示为空，其余页面不受影响。
+
 ## 常见问题
 
 <details>
@@ -188,7 +193,9 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 
 ## 问题反馈
 
-我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new)提出。你也可以加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)向我们快速反馈。
+我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都欢迎[提交 Issue](https://github.com/coolpace/V2EX_Polish/issues)，或加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)快速反馈。
+
+如果你发现了安全相关问题，请先阅读 [SECURITY.md](./SECURITY.md)，不要在公开 Issue 中披露漏洞细节。
 
 ## V2EX 相关主题
 
@@ -206,6 +213,12 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 如果这个插件帮助你节省了时间，让你的生活更加愉快，可以给开发者一点小小的赞赏，这会帮助插件更持续地发展。对于你们的大方支持，我们感慨万分！
 
 ![赞赏码](./assets/appreciation-code.png)
+
+## 开源协议
+
+本项目基于 [MIT License](./LICENSE) 开源，你可以自由使用、修改与分发，包括商业用途。
+
+V2EX Polish 脱胎于社区的持续贡献，代码中包含了多位贡献者的工作，他们的版权在 [LICENSE](./LICENSE) 中一并声明并受到保护。如果你基于本项目二次开发并公开发布，请保留该版权声明。
 
 <!--------[Badges]-------->
 

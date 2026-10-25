@@ -2,7 +2,7 @@
   "name": "v2ex-polish-website",
   "private": true,
   "description": "Official homepage of the V2EX Polish extension.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "next build",
     "content": "velite build",
