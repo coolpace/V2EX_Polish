@@ -21,6 +21,9 @@ export default [
       'apps/extension/dist/**/*',
       'apps/extension/public/vendor/**/*.js',
       'apps/extension/src/user-scripts/style.ts',
+      // style.ts 由构建生成且与同名类型桩共存时，TypeScript 会优先采用 style.ts，
+      // 导致 projectService 认为这个 .d.ts 不属于任何 project 而报错，故一并忽略。
+      'apps/extension/src/user-scripts/style.d.ts',
       'apps/website/**/*',
       '*-profile*/**/*',
     ],
