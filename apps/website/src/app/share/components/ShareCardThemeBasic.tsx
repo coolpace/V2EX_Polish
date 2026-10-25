@@ -1,0 +1,110 @@
+import { useEffect, useState } from 'react'
+
+import { Avatar } from '@radix-ui/themes'
+
+import type { ResponseJson } from '~/app/api/qrcode/route'
+import type { TopicInfo } from '~/app/api/share/schema'
+import type { ShareCardThemeConfig } from '~/app/share/themes'
+
+interface ShareCardProps {
+  avatarRef: React.RefObject<HTMLImageElement | null>
+  topicInfo: TopicInfo
+  theme: ShareCardThemeConfig
+  showSubtle?: boolean
+  showQRCode?: boolean
+}
+
+export function ShareCardThemeBasic(props: ShareCardProps) {
+  const { topicInfo, avatarRef, theme, showSubtle, showQRCode } = props
+
+  const [QRCodeURL, setQRCodeURL] = useState<string>()
+
+  useEffect(() => {
+    void (async () => {
+      const res = await window.fetch('/api/qrcode', {
+        method: 'POST',
+        body: JSON.stringify({
+          text: topicInfo.url,
+          options: {
+            width: 54,
+            margin: 0,
+            color: theme.qrCode,
+          },
+        }),
+      })
+
+      const { data } = await res.json() as ResponseJson
+
+      setQRCodeURL(data)
+    })()
+  }, [topicInfo.url, theme.id, theme.qrCode])
+
+  return (
+    <div className={`${theme.rootClassName} bg-background p-2`}>
+      <div className="overflow-hidden rounded-lg border border-solid border-main-400 bg-content p-3 text-foreground">
+        <div className="pb-2 text-2xl font-extrabold">V2EX</div>
+
+        <h2 className="line-clamp-3 text-xl font-semibold">{topicInfo.title}</h2>
+
+        <div className="mt-3 flex items-center px-1">
+          <Avatar
+            ref={avatarRef}
+            className="mr-2"
+            fallback={topicInfo.member.username.at(0)?.toUpperCase() ?? ''}
+            id="xxx"
+            size="1"
+            src={topicInfo.member.avatar}
+          />
+          <span className="mr-3 truncate">{topicInfo.member.username}</span>
+
+          <span className="ml-auto text-xs whitespace-nowrap">
+            {topicInfo.time.year}-{topicInfo.time.month}-{topicInfo.time.day}
+          </span>
+        </div>
+
+        {topicInfo.content && (
+          <>
+            <hr className="my-3 border-main-400" />
+
+            <div
+              className={`
+              topic-content
+              prose prose-slate ${theme.mode === 'dark' ? 'prose-invert' : ''} leading-6
+              prose-p:mt-0 prose-p:text-foreground
+              prose-a:pointer-events-none prose-a:font-normal prose-a:text-accent-600 prose-a:no-underline
+              prose-blockquote:-mx-2 prose-blockquote:border-l-accent-200
+              prose-blockquote:bg-subtle prose-blockquote:p-2 prose-blockquote:text-[15px] prose-blockquote:font-normal
+              prose-blockquote:text-foreground prose-blockquote:not-italic prose-li:m-0
+              prose-img:m-0
+              `}
+            >
+              <div dangerouslySetInnerHTML={{ __html: topicInfo.content }} />
+
+              {showSubtle
+                && topicInfo.supplements?.map((item, idx) => {
+                  return (
+                    <blockquote key={`${idx}`}>
+                      <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                    </blockquote>
+                  )
+                })}
+            </div>
+          </>
+        )}
+
+        {showQRCode && (
+          <div className="flex pt-6">
+            <div className="ml-auto flex items-center gap-x-3">
+              <div className="text-xs/5">
+                <p>长按扫码</p>
+                <p>查看详情</p>
+              </div>
+              { }
+              {!!QRCodeURL && <img alt="二维码" src={QRCodeURL} />}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

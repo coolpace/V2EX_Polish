@@ -1,0 +1,158 @@
+/* 解决 tailwindCSS 和 radixCSS 顺序冲突的问题： https://github.com/radix-ui/themes/issues/109 */
+@layer theme, base, radix, components, utilities;
+
+@import 'tailwindcss' source(none);
+@import '@radix-ui/themes/styles.css' layer(radix);
+@import './share.css' layer(components);
+
+@source '../app/**/*.{ts,tsx}';
+@source '../components/**/*.{ts,tsx}';
+
+@plugin '@tailwindcss/typography';
+
+/* theme-dark / theme-v2ex 可作用于嵌套容器，必须 inline，保证 CSS 变量在应用主题的元素上解析 */
+@theme inline {
+  --color-main-50: var(--v2p-color-main-50);
+  --color-main-100: var(--v2p-color-main-100);
+  --color-main-200: var(--v2p-color-main-200);
+  --color-main-300: var(--v2p-color-main-300);
+  --color-main-350: var(--v2p-color-main-350);
+  --color-main-400: var(--v2p-color-main-400);
+  --color-main-500: var(--v2p-color-main-500);
+  --color-main-600: var(--v2p-color-main-600);
+  --color-main-700: var(--v2p-color-main-700);
+  --color-main-800: var(--v2p-color-main-800);
+  --color-accent-50: var(--v2p-color-accent-50);
+  --color-accent-100: var(--v2p-color-accent-100);
+  --color-accent-200: var(--v2p-color-accent-200);
+  --color-accent-300: var(--v2p-color-accent-300);
+  --color-accent-400: var(--v2p-color-accent-400);
+  --color-accent-500: var(--v2p-color-accent-500);
+  --color-accent-600: var(--v2p-color-accent-600);
+  --color-foreground: var(--v2p-color-foreground);
+  --color-background: var(--v2p-color-background);
+  --color-content: var(--v2p-color-content);
+  --color-subtle: var(--v2p-color-bg-subtle);
+  --shadow-box: var(--v2p-box-shadow);
+}
+
+@theme {
+  --container-container: 1280px;
+}
+
+::selection {
+  color: currentcolor;
+  background-color: rgb(30 41 59 / 10%);
+}
+
+:root {
+  --v2p-color-main-50: #f7f9fb;
+  --v2p-color-main-100: #f1f5f9;
+  --v2p-color-main-200: #e2e8f0;
+  --v2p-color-main-300: #cbd5e1;
+  --v2p-color-main-350: #94a3b8cc;
+  --v2p-color-main-400: #94a3b8;
+  --v2p-color-main-500: #64748b;
+  --v2p-color-main-600: #475569;
+  --v2p-color-main-700: #334155;
+  --v2p-color-main-800: #1e293b;
+  --v2p-color-accent-50: #ecfdf5;
+  --v2p-color-accent-100: #d1fae5;
+  --v2p-color-accent-200: #a7f3d0;
+  --v2p-color-accent-300: #6ee7b7;
+  --v2p-color-accent-400: #34d399;
+  --v2p-color-accent-500: #10b981;
+  --v2p-color-accent-600: #059669;
+  --v2p-color-content: #fff;
+  --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
+  --v2p-color-border: var(--v2p-color-main-200);
+  --v2p-color-foreground: var(--v2p-color-main-800);
+  --v2p-color-background: #f2f3f5;
+  --v2p-color-bg-input: var(--v2p-color-main-50);
+  --v2p-color-bg-subtle: rgb(236 253 245 / 90%);
+
+  .radix-themes {
+    /* 规定 RadixUI 的按钮悬浮样式。 */
+    --cursor-button: pointer;
+
+    ::selection {
+      color: currentcolor;
+      background-color: rgb(30 41 59 / 10%);
+    }
+
+    .rt-Link {
+      cursor: pointer;
+    }
+  }
+}
+
+.theme-dark {
+  --v2p-color-main-50: #1c2127;
+  --v2p-color-main-100: #2d333b;
+  --v2p-color-main-200: #374151;
+  --v2p-color-main-300: #374151;
+  --v2p-color-main-350: #6b7280cc;
+  --v2p-color-main-400: #6b7280;
+  --v2p-color-main-500: #9ca3af;
+  --v2p-color-main-600: #9ca3af;
+  --v2p-color-main-700: #d1d5db;
+  --v2p-color-main-800: #e5e7eb;
+  --v2p-color-accent-50: #064e3b;
+  --v2p-color-accent-100: #065f46;
+  --v2p-color-accent-200: #047857;
+  --v2p-color-accent-300: #059669;
+  --v2p-color-accent-400: #10b981;
+  --v2p-color-accent-500: #34d399;
+  --v2p-color-accent-600: #6ee7b7;
+  --v2p-color-content: #22272e;
+  --v2p-color-border: #444c56;
+  --v2p-color-foreground: #adbac7;
+  --v2p-color-background: #1c2128;
+  --v2p-color-bg-input: var(--v2p-color-background);
+  --v2p-color-bg-subtle: rgb(6 78 59 / 30%);
+}
+
+/* V2EX 经典主题：还原 V2EX 网站本身的米黄底 + 橄榄灰绿强调色 */
+.theme-v2ex {
+  --v2p-color-main-50: #f5f5f5;
+  --v2p-color-main-100: #efefef;
+  --v2p-color-main-200: #e2e2e2;
+  --v2p-color-main-300: #d0d0d0;
+  --v2p-color-main-350: #999c;
+  --v2p-color-main-400: #999;
+  --v2p-color-main-500: #778087;
+  --v2p-color-main-600: #666;
+  --v2p-color-main-700: #555;
+  --v2p-color-main-800: #333;
+  --v2p-color-accent-50: #f0f3f3;
+  --v2p-color-accent-100: #e0e8e8;
+  --v2p-color-accent-200: #c8d4d4;
+  --v2p-color-accent-300: #a8b8b8;
+  --v2p-color-accent-400: #889898;
+  --v2p-color-accent-500: #778087;
+  --v2p-color-accent-600: #5f676d;
+  --v2p-color-content: #fff;
+  --v2p-color-border: #e2e2e2;
+  --v2p-color-foreground: #333;
+  --v2p-color-background: #e8e8e8;
+  --v2p-color-bg-input: var(--v2p-color-content);
+  --v2p-color-bg-subtle: #f5f5f5;
+}
+
+.text-with-shadow {
+  text-shadow: 2px 2px 0 var(--v2p-color-main-300);
+}
+
+@media (width >= 768px) {
+  .text-with-shadow {
+    text-shadow: 2px 4px 0 var(--v2p-color-main-300);
+  }
+}
+
+.text-polish {
+  -webkit-text-stroke-width: 4px;
+  -webkit-text-stroke-color: var(--v2p-color-main-800);
+  text-shadow: 2px 4px 0 var(--v2p-color-main-600);
+  paint-order: stroke fill;
+  -webkit-text-fill-color: #fff;
+}

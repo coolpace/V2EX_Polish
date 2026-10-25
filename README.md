@@ -4,6 +4,9 @@
 
 一款专为 V2EX 用户设计的轻量浏览器插件，提供了丰富的扩展功能，让原生页面焕然一新！✨
 
+> [!NOTE]
+> 本仓库使用 `pnpm workspace` 管理三个子项目：浏览器扩展、[官网](https://v2p.leoku.dev)与热议主题 Worker。2026 年完成 monorepo 重构，重构前的单包结构与完整提交历史保留在 `legacy` 分支。
+
 [![Badge CWS Version]][Link CWS] ·
 [![Badge CWS Downloads]][Link CWS] ·
 [![Badge CWS Rating]][Link CWS Rating] ·
@@ -13,7 +16,7 @@
 
 - Chrome、Edge、Arc 用户请在 [Chrome 商店中安装][Link CWS]
 - Firefox 用户[在此下载安装](https://addons.mozilla.org/zh-CN/firefox/addon/v2ex-polish/)
-- Safari 用户参见[安装教程](./website/src/content/docs/use-in-safari.md)
+- Safari 用户参见[安装教程](./apps/website/src/content/docs/use-in-safari.md)
 - [油猴脚本](https://greasyfork.org/zh-CN/scripts/459848-v2ex-polish-%E4%BD%93%E9%AA%8C%E6%9B%B4%E7%8E%B0%E4%BB%A3%E5%8C%96%E7%9A%84-v2ex)（仅支持部分功能，文档后面介绍了功能差异）
 
 > [!IMPORTANT]
@@ -120,6 +123,38 @@ V2EX Polish 的目标是提供一个更加完善的插件，并保证持续更�
 - 提供反馈，帮助我们改进。
 - 改善代码，请阅读我们的[代码贡献指南](./.github/CONTRIBUTING.md)。
 
+## 开发说明
+
+仓库当前使用 `pnpm workspace` 管理三个 app，根目录只保留代理命令：
+
+- `apps/extension/`：浏览器扩展与油猴脚本主项目
+- `apps/website/`：Next.js 官网
+- `apps/hot-topics/`：Cloudflare Workers 热议主题接口
+
+扩展构建后的最终产物位于：
+
+- `apps/extension/dist/chrome/`
+- `apps/extension/dist/firefox/`
+- `apps/extension/dist/userscript/`
+
+常用命令：
+
+- `pnpm install`：安装整个 workspace 的依赖
+- `pnpm dev`：启动扩展本地开发
+- `pnpm dev:firefox`：启动 Firefox 扩展本地开发
+- `pnpm build`：完整构建，生成未打包 dist、扩展 zip 与 userscript
+- `pnpm build:dist`：只生成可加载的扩展目录与 userscript
+- `pnpm verify:all`：执行 extension、website、worker 和 manifest 快照的完整校验
+- `pnpm lint:check`：只读检查 ESLint、Stylelint 与 Prettier（CI 使用）
+- `pnpm test`：运行 Vitest 单元测试
+- `pnpm worker:dev`：启动 `apps/hot-topics/` Worker 本地开发
+- `pnpm website:dev`：启动 `apps/website/` 本地开发
+- `pnpm worker:deploy`：部署 `apps/hot-topics/` Worker
+
+更多开发说明见 [docs/README.md](./docs/README.md)。
+
+官网的赞赏列表通过 Notion 接口读取，需要在 `apps/website/` 下配置 `NOTION_KEY` 与 `NOTION_DATABASE_ID`，示例见 [apps/website/.env.example](./apps/website/.env.example)。未配置时 `/api/donation` 会返回 500，赞赏列表显示为空，其余页面不受影响。
+
 ## 常见问题
 
 <details>
@@ -158,7 +193,9 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 
 ## 问题反馈
 
-我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都可以[在这里](https://github.com/coolpace/V2EX_Polish/discussions/1?sort=new)提出。你也可以加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)向我们快速反馈。
+我们需要你的建议和反馈，以持续完善 V2EX Polish。如果在使用中遇到任何问题，都欢迎[提交 Issue](https://github.com/coolpace/V2EX_Polish/issues)，或加入我们的 [Telegram 群组](https://t.me/+zH9GxA2DYLtjYjhl)快速反馈。
+
+如果你发现了安全相关问题，请先阅读 [SECURITY.md](./SECURITY.md)，不要在公开 Issue 中披露漏洞细节。
 
 ## V2EX 相关主题
 
@@ -177,6 +214,12 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 
 ![赞赏码](./assets/appreciation-code.png)
 
+## 开源协议
+
+本项目基于 [MIT License](./LICENSE) 开源，你可以自由使用、修改与分发，包括商业用途。
+
+V2EX Polish 脱胎于社区的持续贡献，代码中包含了多位贡献者的工作，他们的版权在 [LICENSE](./LICENSE) 中一并声明并受到保护。如果你基于本项目二次开发并公开发布，请保留该版权声明。
+
 <!--------[Badges]-------->
 
 [Badge CWS Version]: https://img.shields.io/chrome-web-store/v/onnepejgdiojhiflfoemillegpgpabdm.svg?style=flat&colorA=232323&colorB=232323&label=最新版本&logo=hackthebox&logoColor=eeeeee
@@ -189,4 +232,4 @@ PAT 并不是必需的，只有当你想要使用诸如：主题内容预览、�
 [Link CWS]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm
 [Link CWS Search V2EX]: https://chromewebstore.google.com/search/V2EX?hl=zh-CN
 [Link CWS Rating]: https://chromewebstore.google.com/detail/v2ex-polish/onnepejgdiojhiflfoemillegpgpabdm/reviews?hl=zh-CN
-[Link Donation]: https://www.v2p.app/support
+[Link Donation]: https://v2p.leoku.dev/support

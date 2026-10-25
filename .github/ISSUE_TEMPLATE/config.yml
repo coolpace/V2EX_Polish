@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 使用问题与讨论
+    url: https://github.com/coolpace/V2EX_Polish/discussions
+    about: 安装、配置、使用相关的问题请优先在 Discussions 中交流
+  - name: 安全漏洞上报
+    url: https://github.com/coolpace/V2EX_Polish/security/advisories/new
+    about: 安全相关问题请私下上报，不要在公开 Issue 中披露细节

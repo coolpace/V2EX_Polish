@@ -1,0 +1,268 @@
+/*
+ * Noto Sans SC / 霞鹜文楷的样式表由 theme-state.ts 在用户选择字体时按需注入。
+ * 不要改回 @import：Chrome content script CSS 会忽略它，userscript 则会无条件加载。
+ */
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/vivoSans-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/vivoSans-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/vivoSans-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: vivoSans;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/vivoSans-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/MapleMonoNormalNL-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/MapleMonoNormalNL-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/MapleMonoNormalNL-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: MapleMono;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://assets.leoku.dev/fonts/MapleMonoNormalNL-Bold.woff2') format('woff2');
+}
+
+:root {
+  --zidx-search: 100;
+  --zidx-tabs: 10;
+  --zidx-tools-card: 10;
+  --zidx-reply-box: 99;
+  --zidx-modal-header: 50;
+  --zidx-modal-mask: 888;
+  --zidx-toast: 999;
+  --zidx-tip: 999;
+  --zidx-popup: 99;
+  --zidx-expand-mask: 10;
+  --zidx-expand-btn: 20;
+  --zidx-rightbar: 99;
+  --v2p-spacing-box: 12px;
+  --v2p-spacing-cell: 10px;
+  --v2p-underline-offset: 0.5ex;
+  --v2p-layout-column-gap: 25px;
+  --v2p-layout-row-gap: 20px;
+  --v2p-nav-height: 55px;
+  --v2p-tp-item-x: 20px;
+  --v2p-tp-item-y: 10px;
+  --v2p-tp-tabs-pd: 10px;
+  --v2p-tp-nested-pd: 15px;
+  --v2p-tp-preview-pd: 20px;
+  --v2p-emoji-size: 21px;
+  --v2p-box-radius: 10px;
+  --v2p-input-radius: 6px;
+  --v2p-button-radius: 6px;
+  --v2p-popup-radius: 6px;
+  --v2p-content-width: 1120px;
+  --v2p-rightbar-width: 270px;
+
+  @mixin light-mode {
+    /* 基础色（参考自 TailwindCSS Slate）： */
+    --v2p-color-main-50: #f7f9fb;
+    --v2p-color-main-100: #f1f5f9;
+    --v2p-color-main-150: #eaeff5;
+    --v2p-color-main-200: #e2e8f0;
+    --v2p-color-main-300: #cbd5e1;
+    --v2p-color-main-350: #94a3b8cc;
+    --v2p-color-main-400: #94a3b8;
+    --v2p-color-main-500: #64748b;
+    --v2p-color-main-600: #475569;
+    --v2p-color-main-700: #334155;
+    --v2p-color-main-800: #1e293b;
+    --v2p-color-accent-50: oklch(97.9% 0.021 166.113deg);
+    --v2p-color-accent-100: oklch(95% 0.052 163.051deg);
+    --v2p-color-accent-200: oklch(90.5% 0.093 164.15deg);
+    --v2p-color-accent-300: oklch(84.5% 0.143 164.978deg);
+    --v2p-color-accent-400: oklch(76.5% 0.177 163.223deg);
+    --v2p-color-accent-500: oklch(69.6% 0.17 162.48deg);
+    --v2p-color-accent-600: oklch(59.6% 0.145 163.225deg);
+    --v2p-color-accent-700: oklch(50.8% 0.118 165.612deg);
+    --v2p-color-orange-50: #fff7ed;
+    --v2p-color-orange-100: #ffedd5;
+    --v2p-color-orange-400: #fb923c;
+
+    /* ==== */
+    --v2p-color-background: #f2f3f5;
+    --v2p-color-foreground: var(--v2p-color-main-800);
+    --v2p-color-selection-foreground: var(--v2p-color-main-100);
+    --v2p-color-selection-background: var(--v2p-color-main-700);
+    --v2p-color-selection-background-img: var(--v2p-color-main-500);
+    --v2p-color-font-secondary: var(--v2p-color-main-600);
+    --v2p-color-font-tertiary: var(--v2p-color-main-500);
+    --v2p-color-font-quaternary: var(--v2p-color-main-400);
+
+    /* ==== 按钮 ==== */
+    --v2p-color-button-background: var(--v2p-color-main-100);
+    --v2p-color-button-foreground: var(--v2p-color-main-500);
+    --v2p-color-button-background-hover: var(--v2p-color-main-200);
+    --v2p-color-button-foreground-hover: var(--v2p-color-main-600);
+    --v2p-color-button-border: var(--v2p-color-main-300);
+    --v2p-color-button-special-background: var(--v2p-color-accent-50);
+    --v2p-color-button-special-foreground: var(--v2p-color-accent-700);
+    --v2p-color-button-special-border: var(--v2p-color-accent-600);
+    --v2p-color-button-special-foreground-hover: var(--v2p-color-accent-700);
+
+    /* ---- 按钮 ---- */
+
+    /* ==== 背景 ==== */
+    --v2p-color-bg-content: #fff;
+    --v2p-color-bg-footer: var(--v2p-color-bg-content);
+    --v2p-color-bg-hover-btn: rgb(226 232 240 / 70%); /* --v2p-color-main-200/70 */
+    --v2p-color-bg-subtle: rgb(236 253 245 / 90%);
+    --v2p-color-bg-input: var(--v2p-color-main-50);
+    --v2p-color-bg-search: var(--v2p-color-main-100);
+    --v2p-color-bg-search-active: var(--v2p-color-main-150);
+    --v2p-color-bg-widget: rgb(255 255 255 / 70%);
+    --v2p-color-bg-reply: var(--v2p-color-main-100);
+    --v2p-color-bg-tooltip: var(--v2p-color-bg-content);
+    --v2p-color-bg-tabs: var(--v2p-color-main-100);
+    --v2p-color-bg-tpr: var(--v2p-color-main-100);
+    --v2p-color-bg-avatar: var(--v2p-color-main-300);
+    --v2p-color-bg-block: var(--v2p-color-main-100);
+    --v2p-color-bg-block-darker: var(--v2p-color-main-300);
+    --v2p-color-bg-link: var(--v2p-color-main-100);
+    --v2p-color-bg-link-hover: var(--v2p-color-main-200);
+    --v2p-color-bg-error: #fee2e2;
+
+    /* ---- 背景 ---- */
+
+    --v2p-color-tabs: var(--v2p-color-foreground);
+    --v2p-color-heart: #ef4444;
+    --v2p-color-heart-fill: #fee2e2;
+    --v2p-color-mask: rgb(0 0 0 / 25%);
+    --v2p-color-divider: var(--v2p-color-main-200);
+    --v2p-color-border: var(--v2p-color-main-200);
+    --v2p-color-input-border: var(--v2p-color-main-300);
+    --v2p-color-input-border-focus: var(--v2p-color-main-400);
+    --v2p-color-border-darker: var(--v2p-color-main-300);
+    --v2p-color-link-visited: var(--v2p-color-main-400);
+    --v2p-color-error: #ef4444;
+    --v2p-color-cell-num: var(--v2p-color-main-350);
+    --v2p-color-badge: var(--v2p-color-bg-content);
+
+    /* ==== 阴影 ==== */
+    --v2p-box-shadow: 0 3px 5px 0 rgb(0 0 0 / 4%);
+    --v2p-widget-shadow: 0 9px 24px -3px rgb(0 0 0 / 6%), 0 4px 8px -1px rgb(0 0 0 /12%);
+    --v2p-toast-shadow:
+      0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+
+    /* ---- 阴影 ---- */
+
+    /* V2EX 原有的 CSS 变量： */
+    --color-fade: var(--v2p-color-font-secondary);
+    --color-gray: var(--v2p-color-font-secondary);
+    --link-color: var(--v2p-color-foreground);
+    --link-darker-color: var(--v2p-color-main-600);
+    --link-hover-color: var(--v2p-color-foreground);
+    --link-caution-color: var(--v2p-color-orange-400);
+    --link-visited-color: currentColor;
+    --box-border-color: var(--v2p-color-border);
+    --box-foreground-color: var(--v2p-color-foreground);
+    --box-background-color: var(--v2p-color-bg-content);
+    --box-background-alt-color: var(--v2p-color-main-100);
+    --box-background-hover-color: var(--v2p-color-main-200);
+    --box-border-focus-color: var(--v2p-color-main-200);
+    --box-border-radius: var(--v2p-box-radius);
+    --button-background-color: var(--v2p-color-button-background);
+    --button-foreground-color: var(--v2p-color-button-foreground);
+    --button-hover-color: var(--v2p-color-button-background-hover);
+    --button-background-hover-color: var(--v2p-color-button-background-hover);
+    --button-foreground-hover-color: var(--v2p-color-button-foreground-hover);
+    --button-border-color: var(--v2p-color-main-300);
+    --button-border-hover-color: var(--v2p-color-main-400);
+  }
+
+  @include light-mode;
+
+  body {
+    @include light-mode;
+
+    --code-font:
+      MapleMono, 'Consolas', 'Panic Sans', 'Bitstream Vera Sans Mono', 'Menlo', 'Microsoft Yahei',
+      monospace;
+
+    font-family: system-ui, sans-serif;
+    color: var(--v2p-color-foreground);
+    text-autospace: normal;
+    background-color: var(--v2p-color-background);
+
+    &.v2p-theme-light-default,
+    .v2p-theme-light-default {
+      @include light-mode;
+    }
+
+    #Logo {
+      background-image: url('https://www.v2ex.com/static/img/v2ex@2x.png');
+    }
+
+    ::selection {
+      color: var(--v2p-color-selection-foreground);
+      background-color: var(--v2p-color-selection-background);
+    }
+
+    img::selection {
+      background-color: var(--v2p-color-selection-background-img);
+    }
+  }
+
+  &[data-v2p-font='vivoSans'] body {
+    font-family: vivoSans, system-ui, sans-serif;
+  }
+
+  &[data-v2p-font='notoSans'] body {
+    font-family: 'Noto Sans SC', system-ui, sans-serif;
+  }
+
+  &[data-v2p-font='lxgwWenKai'] body {
+    font-family: 'LXGW WenKai', system-ui, sans-serif;
+  }
+
+  code,
+  pre,
+  table {
+    text-autospace: no-autospace;
+  }
+}

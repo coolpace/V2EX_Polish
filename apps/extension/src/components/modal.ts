@@ -1,0 +1,179 @@
+import { createButton } from './button'
+
+export interface ModalElements {
+  $mask: JQuery
+  $main: JQuery
+  $header: JQuery
+  $footer: JQuery
+  $container: JQuery
+  $title: JQuery
+  $actions: JQuery
+  $content: JQuery
+}
+
+interface ModalControl extends ModalElements {
+  open: () => void
+  close: () => void
+  destroy: () => void
+}
+
+interface CreateModalProps {
+  root?: JQuery
+  title?: string
+  footer?: boolean
+  onMount?: (elements: ModalElements) => void
+  onOpen?: (elements: ModalElements) => void
+  onClose?: (elements: ModalElements) => void
+}
+
+/**
+ * 创建 modal 框。
+ */
+export function createModal(props: CreateModalProps): ModalControl {
+  const {
+    root,
+    title,
+    footer = false,
+    onMount,
+    onOpen,
+    onClose,
+  } = props
+
+  const $mask = $('<div class="v2p-modal-mask">')
+
+  const $content = $('<div class="v2p-modal-content">')
+
+  const $closeBtn = createButton({
+    children: '关闭<kbd>Esc</kbd>',
+    className: 'v2p-modal-close-btn',
+  })
+
+  const titleId = `v2p-modal-title-${Math.random().toString(36).slice(2)}`
+
+  const $title = $('<div class="v2p-modal-title">')
+    .attr('id', titleId)
+    .text(title ?? '')
+
+  const $actions = $('<div class="v2p-modal-actions">').append($closeBtn)
+
+  const $header = $('<div class="v2p-modal-header">').append($title, $actions)
+
+  const $footer = $('<div class="v2p-modal-footer">')
+
+  const $main = $('<div class="v2p-modal-main" role="dialog" aria-modal="true" tabindex="-1">')
+    .attr('aria-labelledby', titleId)
+    .append($header, $content, footer ? $footer : '<div></div>')
+    .on('click', (ev) => {
+      ev.stopPropagation()
+    })
+
+  const $container = $mask.append($main).hide()
+
+  const modalElements: ModalElements = {
+    $mask,
+    $main,
+    $header,
+    $footer,
+    $container,
+    $title,
+    $actions,
+    $content,
+  }
+
+  // 用于判定是否已经绑定了事件, 避免重复绑定。
+  let boundEvent = false
+  let destroyed = false
+  let previouslyFocusedElement: HTMLElement | null = null
+
+  let mouseDownTarget: HTMLElement
+
+  const mouseDownHandler = (ev: JQuery.MouseDownEvent) => {
+    mouseDownTarget = ev.target
+  }
+
+  const mouseUpHandler = (ev: JQuery.MouseUpEvent) => {
+    if (
+      mouseDownTarget === $mask.get(0)
+      && ev.target === $mask.get(0)
+      && ev.currentTarget === ev.target
+    ) {
+      handleModalClose()
+    }
+  }
+
+  const keyupHandler = (ev: JQuery.KeyDownEvent) => {
+    if (ev.key === 'Escape') {
+      handleModalClose()
+    }
+  }
+
+  const handleModalClose = () => {
+    $mask.off('mousedown', mouseDownHandler)
+    $mask.off('mouseup', mouseUpHandler)
+    $(document).off('keydown', keyupHandler)
+    boundEvent = false
+
+    $container.fadeOut('fast')
+    document.body.classList.remove('v2p-modal-open')
+
+    previouslyFocusedElement?.focus()
+    previouslyFocusedElement = null
+
+    onClose?.(modalElements)
+  }
+
+  const handleModalOpen = () => {
+    // Hack: 为了防止 open 点击事件提前冒泡到 document 上，需要延迟绑定事件。
+    setTimeout(() => {
+      if (!boundEvent) {
+        $mask.on('mousedown', mouseDownHandler)
+        $mask.on('mouseup', mouseUpHandler)
+        $(document).on('keydown', keyupHandler)
+        boundEvent = true
+      }
+    })
+
+    $container.fadeIn('fast')
+    document.body.classList.add('v2p-modal-open')
+
+    previouslyFocusedElement = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null
+
+    $main.get(0)?.focus({ preventScroll: true })
+
+    onOpen?.(modalElements)
+  }
+
+  $closeBtn.on('click', handleModalClose)
+
+  onMount?.(modalElements)
+
+  if (root) {
+    root.append($container)
+  }
+
+  const handleDestroy = () => {
+    if (destroyed) {
+      return
+    }
+
+    destroyed = true
+
+    // 清理事件绑定，但不触发 onClose 回调（避免递归调用）。
+    $mask.off('mousedown', mouseDownHandler)
+    $mask.off('mouseup', mouseUpHandler)
+    $(document).off('keydown', keyupHandler)
+    boundEvent = false
+
+    $container.remove()
+    document.body.classList.remove('v2p-modal-open')
+  }
+
+  return {
+    ...modalElements,
+    open: handleModalOpen,
+    close: handleModalClose,
+    destroy: handleDestroy,
+  }
+}

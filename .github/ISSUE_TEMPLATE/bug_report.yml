@@ -1,0 +1,88 @@
+name: Bug 报告
+description: 页面样式异常、功能不生效或出现报错
+title: '[Bug] '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。提交前请先确认：已关闭其他 V2EX 相关插件或脚本，并阅读过 [常见问题](https://github.com/coolpace/V2EX_Polish#常见问题)。
+
+        > 安全相关问题请不要在这里提交，请参考 [SECURITY.md](https://github.com/coolpace/V2EX_Polish/blob/main/SECURITY.md)。
+
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: 运行环境
+      description: 你使用的是哪种安装方式？
+      options:
+        - Chrome / Edge / Arc 扩展
+        - Firefox 扩展
+        - Safari 扩展
+        - 油猴脚本
+        - 本地构建版本
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本号
+      description: 在扩展详情页或 `apps/extension/package.json` 中可以找到
+      placeholder: 2.5.2
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: 浏览器与系统版本
+      placeholder: Chrome 140 / macOS 15.2
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 尽量给出可稳定复现的最短路径
+      placeholder: |
+        1. 打开 https://www.v2ex.com/t/xxxxx
+        2. 滚动到第 2 页回复
+        3. ……
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 如果有截图或录屏，请一并附上
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 控制台报错
+      description: 开发者工具 Console 面板中的相关报错信息
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认事项
+      options:
+        - label: 我已关闭其他 V2EX 相关插件或脚本
+          required: true
+        - label: 我已搜索过现有 Issue，确认这不是重复问题
+          required: true

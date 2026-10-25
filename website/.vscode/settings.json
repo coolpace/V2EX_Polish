@@ -1,4 +1,0 @@
-{
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "tailwindCSS.classAttributes": ["className", "tw"]
-}

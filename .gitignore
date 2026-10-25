@@ -1,21 +1,39 @@
 node_modules
-/dist
+.pnpm-store
+/apps/extension/dist/
 .DS_Store
 .pnpm-debug.log*
 *.tsbuildinfo
 *.zip
 
-/src/user-scripts/style.ts
+/apps/extension/src/user-scripts/style.ts
 
-# 由工具编译的产物
-/build*
-/extension/css/*
-/extension/scripts/*
-/extension/manifest.json
-/extension/manifest-firefox.json
-!/extension/scripts/jquery.min.js
-!/extension/scripts/polyfill.js
+# 本地 AI / agent 配置
+/.claude/
+
+# extension monorepo 重构前的 legacy 产物目录
+/extension/
+/build-chrome/
+/build-firefox/
 
 # web-ext 产生的浏览器配置
-/*-profile
+/*-profile*
 /.idea
+
+# hot-topics 本地产物与环境文件
+/apps/hot-topics/.wrangler/
+/apps/hot-topics/.dev.vars
+/apps/hot-topics/.env
+/apps/hot-topics/.env.*
+/apps/hot-topics/*.sqlite*
+/apps/hot-topics/*.db*
+
+# website (Next.js 官网) 本地产物
+/apps/website/.next/
+/apps/website/out/
+/apps/website/.env
+/apps/website/.env.*
+!/apps/website/.env.example
+!/apps/website/.env*.example
+/apps/website/.velite/
+/apps/website/.vercel/

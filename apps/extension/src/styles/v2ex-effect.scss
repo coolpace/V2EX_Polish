@@ -1,0 +1,1696 @@
+@use './share';
+
+body {
+  position: relative;
+
+  &.v2p-modal-open {
+    overflow: hidden;
+  }
+
+  &.v2p-img-preview-enabled {
+    .embedded_image {
+      cursor: zoom-in;
+
+      /** 表情图片不支持放大预览，不显示放大光标。 */
+      &.v2p-emoji-img {
+        cursor: default;
+      }
+    }
+  }
+
+  .button {
+    &.v2p-prev-btn,
+    &.v2p-next-btn {
+      padding: 0 15px;
+    }
+
+    &.v2p-btn-loading {
+      pointer-events: none;
+    }
+  }
+
+  #Top {
+    a:has(#Logo.v2p-logo) {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  #Logo.v2p-logo {
+    flex-shrink: 0;
+    width: unset;
+    height: 25px;
+    padding: 0 8px;
+    background-image: none !important;
+  }
+}
+
+.v2p-hover-btn {
+  @include share.hover-button;
+}
+
+.v2p-hover-btn-disabled {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.v2p-icon-heart {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  color: var(--v2p-color-heart);
+
+  svg {
+    fill: var(--v2p-color-heart-fill);
+  }
+}
+
+#Main {
+  .cell[id^='r'] {
+    .v2p-auto-hide {
+      overflow: hidden;
+      display: inline-flex;
+      width: 0;
+    }
+
+    &:has(.v2p-topic-reply-ref) {
+      .v2p-member-ref {
+        display: none; /* 在「筛选回复中」隐藏 @ 用户。 */
+      }
+    }
+  }
+
+  #reply-box .v2p-reply-preview {
+    @include share.text-content;
+  }
+
+  .box {
+    /* MARK: 主题屏蔽 */
+    .v2p-home-filter-hidden {
+      display: none;
+    }
+
+    .v2p-home-filter-revealed {
+      opacity: 0.35;
+      transition: opacity 0.15s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .v2p-filter-counter.cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      font-size: 13px;
+      color: var(--v2p-color-font-secondary);
+      background-color: var(--v2p-color-bg-subtle);
+
+      .v2p-filter-show {
+        cursor: pointer;
+        color: var(--v2p-color-accent-500);
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+#Main,
+#Rightbar {
+  .cell {
+    &:hover {
+      .v2p-topic-preview-btn,
+      .v2p-topic-ignore-btn {
+        visibility: visible;
+      }
+    }
+  }
+}
+
+#Rightbar {
+  .v2p-info-row {
+    display: block;
+    font-size: 12px;
+    color: var(--v2p-color-accent-500);
+    text-align: center;
+
+    &:hover {
+      text-decoration: none;
+      background-color: var(--v2p-color-accent-50);
+    }
+  }
+
+  .v2p-topic-preview-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    font-size: 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 0 3px var(--v2p-color-bg-content);
+  }
+
+  @at-root {
+    .v2p-tool-box {
+      position: sticky;
+      z-index: var(--zidx-tools-card);
+      top: var(--v2p-layout-row-gap);
+
+      .v2p-tools {
+        display: grid;
+        grid-auto-rows: auto;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px 15px;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: var(--v2p-color-font-secondary);
+      }
+    }
+
+    .v2p-tool {
+      display: inline-flex;
+      gap: 0 5px;
+      align-items: center;
+      padding: 3px 0;
+
+      &:hover {
+        color: var(--v2p-color-button-foreground-hover);
+      }
+
+      .v2p-tool-icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .v2p-hot-filter-hidden {
+    display: none;
+  }
+
+  .v2p-hot-filter-revealed {
+    opacity: 0.35;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .v2p-hot-filter-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--v2p-color-font-tertiary);
+
+    .v2p-filter-show {
+      cursor: pointer;
+      color: var(--v2p-color-accent-500);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.v2p-toggle-rightbar-btn {
+  cursor: pointer;
+  position: fixed;
+  z-index: 9999;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+
+  /** 右侧栏收起时才显示，变量由 v2ex-theme-default.scss 在收起条件下设置。 */
+  display: var(--v2p-rightbar-toggle-display, none);
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 40px;
+  border-radius: var(--v2p-button-radius) 0 0 var(--v2p-button-radius);
+  background: var(--v2p-color-bg-content);
+  box-shadow: var(--v2p-widget-shadow);
+}
+
+.v2p-toggle-rightbar-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.v2p-topic-actions {
+  display: inline-flex;
+  gap: 2px 10px;
+}
+
+.v2p-topic-preview-btn {
+  cursor: pointer;
+  border: 1px solid var(--v2p-color-border-darker);
+  border-radius: var(--v2p-button-radius);
+  font-size: 13px;
+  color: var(--v2p-color-button-foreground);
+  visibility: hidden;
+  background-color: var(--v2p-color-button-background);
+  outline: none;
+  transition: color 0.25s;
+
+  &:is(:hover, :focus) {
+    color: var(--v2p-color-button-foreground-hover);
+    background-color: var(--v2p-color-button-background-hover);
+  }
+
+  &:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 0 3px 1px var(--v2p-color-border-darker);
+    transition: all 0.25s;
+  }
+}
+
+.v2p-topic-ignore-btn {
+  cursor: pointer;
+  margin-left: 8px;
+  visibility: hidden;
+}
+
+.v2p-topic-preview {
+  @include share.text-content;
+
+  padding: var(--v2p-tp-preview-pd);
+
+  @at-root {
+    /* MARK: 预览骨架屏。 */
+    .v2p-tpr-loading {
+      --tpr-h: 30px;
+      --tpr-h-p: 22px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 25px;
+
+      .v2p-tpr {
+        border-radius: var(--v2p-button-radius);
+        background-color: var(--v2p-color-bg-tpr);
+      }
+
+      .v2p-tpr-info {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+
+        @at-root {
+          .v2p-tpr-info-avatar {
+            width: var(--tpr-h);
+            height: var(--tpr-h);
+          }
+
+          .v2p-tpr-info-text {
+            width: 50%;
+            height: var(--tpr-h);
+          }
+        }
+      }
+
+      .v2p-tpr-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px 0 20px;
+
+        .v2p-tpr-content-p {
+          height: var(--tpr-h-p);
+        }
+      }
+
+      .v2p-tpr-cmt {
+        display: flex;
+        gap: 15px;
+        padding-top: 15px;
+        border-top: 1px solid var(--v2p-color-border);
+
+        .v2p-tpr-cmt-avatar {
+          width: 50px;
+          height: 50px;
+        }
+
+        .v2p-tpr-cmt-right {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          gap: 10px;
+
+          .v2p-tpr-cmt-header {
+            width: 50%;
+            height: var(--tpr-h);
+          }
+
+          .v2p-tpr-cmt-p {
+            height: var(--tpr-h-p);
+          }
+        }
+      }
+    }
+
+    .v2p-tp-info-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .v2p-tp-info,
+    .v2p-tp-read {
+      overflow: hidden;
+      display: inline-flex;
+      gap: 20px;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: var(--v2p-button-radius);
+      font-size: 13px;
+      background-color: var(--v2p-color-button-background);
+    }
+
+    .v2p-tp-read {
+      cursor: pointer;
+      user-select: none;
+      gap: 4px;
+
+      &:hover {
+        background-color: var(--v2p-color-button-background-hover);
+      }
+    }
+
+    .v2p-tp-read-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .v2p-tp-member {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .v2p-tp-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: var(--v2p-box-radius);
+      background-color: var(--v2p-color-bg-avatar);
+    }
+
+    .v2p-topic-preview-addons {
+      margin-top: 30px;
+    }
+  }
+}
+
+#Main.v2p-topic-preview > .box {
+  border: 1px solid var(--v2p-color-border);
+}
+
+a.v2p-topic-preview-title-link {
+  &:hover {
+    @include share.link;
+  }
+}
+
+.v2p-dot {
+  margin: 0 8px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.v2p-paging {
+  background: none !important;
+
+  &.cell {
+    border-bottom: none;
+  }
+}
+
+.v2p-modal-mask {
+  position: fixed;
+  z-index: var(--zidx-modal-mask);
+  inset: 0;
+  overflow: hidden;
+  overflow-y: auto;
+  padding: min(2vh, 60px);
+  background-color: var(--v2p-color-mask);
+}
+
+.v2p-popup {
+  @include share.popup;
+
+  position: absolute;
+  z-index: var(--zidx-popup);
+  top: 0;
+  left: 0;
+}
+
+.v2p-popup-content {
+  overflow-y: auto;
+  width: max-content;
+}
+
+.v2p-toast {
+  position: fixed;
+  z-index: var(--zidx-toast);
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 15px;
+  border-radius: var(--v2p-popup-radius);
+  font-size: 14px;
+  color: var(--v2p-color-background);
+  background: var(--v2p-color-foreground);
+  box-shadow: var(--v2p-toast-shadow);
+}
+
+.v2p-modal-main {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: clamp(450px, 100%, 800px);
+  height: 100%;
+  margin: 0 auto;
+  border-radius: var(--box-border-radius);
+  background-color: var(--v2p-color-bg-content);
+  outline: none;
+
+  @at-root {
+    .v2p-modal-header {
+      display: flex;
+      gap: 5px 15px;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid var(--box-border-color);
+      background-color: var(--v2p-color-bg-content);
+    }
+
+    .v2p-modal-footer {
+      display: flex;
+      gap: 5px 15px;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px;
+      border-top: 1px solid var(--box-border-color);
+      background-color: var(--v2p-color-bg-content);
+    }
+
+    .v2p-modal-title {
+      overflow: hidden;
+      padding: 2px 0;
+      font-size: 16px;
+      font-weight: bold;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .v2p-modal-actions {
+      display: flex;
+      gap: 0 10px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .v2p-modal-content {
+      position: relative;
+      overflow-y: auto;
+      overscroll-behavior-y: contain; /* 防止滚动穿透。 */
+      flex: 1;
+      outline: none;
+
+      /* 调整预览下的评论样式。 */
+      #Main.v2p-topic-preview > .box {
+        border: none;
+        box-shadow: none;
+      }
+    }
+
+    .v2p-modal-comments {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding: 0 20px;
+      visibility: hidden;
+
+      &.v2p-tab-content-active {
+        z-index: 20;
+        visibility: visible;
+      }
+    }
+
+    .v2p-modal-comment-tabs {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px 5px;
+      border-radius: var(--v2p-button-radius);
+      font-size: 14px;
+      font-weight: normal;
+      background-color: var(--button-background-color);
+
+      > [data-tab-key] {
+        cursor: pointer;
+        padding: 4px 5px;
+        border-radius: var(--v2p-button-radius);
+
+        &:hover {
+          background-color: var(--v2p-color-button-background-hover);
+        }
+
+        &.v2p-tab-active {
+          color: var(--v2p-color-foreground);
+          background-color: var(--v2p-color-accent-100);
+        }
+      }
+    }
+  }
+}
+
+.v2p-no-pat {
+  padding: 30px 20px;
+  font-size: 15px;
+  text-align: center;
+
+  .v2p-no-pat-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .v2p-no-pat-desc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .v2p-no-pat-block {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 5px;
+    padding: 2px 10px;
+    border-radius: var(--v2p-box-radius);
+    background-color: var(--v2p-color-bg-block);
+  }
+
+  .v2p-no-pat-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 800px;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: var(--v2p-box-radius);
+    background-color: var(--v2p-color-bg-block);
+  }
+
+  .v2p-no-pat-step {
+    flex: 1;
+  }
+
+  .v2p-no-pat-img {
+    width: 100%;
+    border-radius: var(--v2p-box-radius);
+    box-shadow: var(--v2p-widget-shadow);
+  }
+
+  .v2p-icon-logo {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.v2p-blocked-reply:not(.v2p-blocked-revealed) > table,
+.v2p-blocked-reply-empty:not(.v2p-blocked-revealed),
+.v2p-ignored-reply:not(.v2p-ignored-revealed) > table {
+  display: none;
+}
+
+.v2p-ignored-reply.v2p-ignored-revealed > .v2p-ignored-placeholder {
+  display: none;
+}
+
+.v2p-ignored-placeholder {
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--v2p-color-font-tertiary);
+  text-align: center;
+
+  .v2p-ignored-toggle {
+    cursor: pointer;
+    color: var(--v2p-color-accent-500);
+
+    &:focus-visible {
+      outline: 2px solid var(--v2p-color-accent-500);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.v2p-blocked-notice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--v2p-color-font-tertiary);
+  background-color: var(--v2p-color-bg-subtle);
+
+  .v2p-blocked-toggle {
+    cursor: pointer;
+    color: var(--v2p-color-accent-500);
+
+    &:focus-visible {
+      outline: 2px solid var(--v2p-color-accent-500);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.v2p-likes-box {
+  user-select: none;
+  position: relative;
+  top: 3px;
+  display: inline-flex;
+  column-gap: 5px;
+  align-items: center;
+
+  &.v2p-thanked {
+    font-weight: bold;
+    color: var(--v2p-color-heart);
+    opacity: 0.8;
+
+    .v2p-icon-heart {
+      svg {
+        fill: var(--v2p-color-heart);
+      }
+    }
+  }
+}
+
+@supports not selector(:has(*)) {
+  #Main .cell[id^='r'] > table:hover {
+    .v2p-controls {
+      opacity: 1;
+    }
+  }
+}
+
+@supports selector(:has(*)) {
+  #Main .cell[id^='r']:not(:has(.cell:hover)) > table:hover {
+    .v2p-auto-hide {
+      width: auto;
+    }
+
+    .v2p-controls {
+      opacity: 1;
+    }
+  }
+}
+
+.v2p-controls {
+  display: inline-flex;
+  column-gap: 15px;
+  align-items: center;
+  margin-right: 15px;
+  font-size: 12px;
+  opacity: 0;
+
+  > a {
+    text-decoration: none;
+  }
+
+  @at-root {
+    .v2p-control {
+      position: relative;
+      z-index: var(--zidx-popup);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 4px 0;
+      color: var(--v2p-color-font-tertiary);
+
+      &::after {
+        @include share.tooltip;
+
+        position: absolute;
+        z-index: var(--zidx-tip);
+        top: -8px;
+        transform: translateY(-100%);
+        opacity: 0;
+        background-color: var(--v2p-color-bg-tooltip);
+      }
+
+      &:hover {
+        color: var(--v2p-color-font-secondary);
+      }
+
+      &.v2p-thanked {
+        cursor: default;
+        color: var(--v2p-color-heart);
+      }
+
+      &.v2p-thank-pending,
+      &.v2p-ignore-pending {
+        cursor: wait;
+        opacity: 0.6;
+      }
+
+      &:focus-visible {
+        border-radius: 2px;
+        outline: 2px solid var(--v2p-color-heart);
+        outline-offset: 2px;
+      }
+
+      &:hover::after {
+        opacity: 1;
+      }
+
+      @at-root {
+        &.v2p-control-hide::after {
+          content: '隐藏回复';
+        }
+
+        &.v2p-control-thank {
+          &::after {
+            content: '感谢回复';
+          }
+
+          &.v2p-thanked::after {
+            content: '已感谢';
+          }
+        }
+
+        &.v2p-control-reply::after {
+          content: '回复';
+        }
+      }
+    }
+  }
+}
+
+// 触屏设备没有 hover，操作按钮需要常显。
+@media (hover: none) {
+  .v2p-controls {
+    opacity: 1;
+  }
+}
+
+.topic_buttons .v2p-tb.v2p-hover-btn {
+  color: var(--v2p-color-font-secondary);
+
+  &::after {
+    display: none;
+  }
+
+  &:hover {
+    color: currentColor;
+  }
+}
+
+.v2p-tb-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.v2p-emoji-container {
+  overflow-y: auto;
+  max-height: 285px;
+  padding: 15px 18px;
+  color: var(--v2p-color-font-secondary);
+}
+
+.v2p-member-card {
+  --v2p-card-spacing: 10px;
+
+  max-width: 320px;
+  max-height: 420px;
+  padding: 12px;
+  font-size: 13px;
+  text-align: left;
+
+  .v2p-info {
+    display: flex;
+    gap: 15px;
+  }
+
+  .v2p-info-right {
+    padding: 2px 0;
+  }
+
+  .v2p-avatar-box {
+    overflow: hidden;
+    display: inline-block;
+    width: 73px;
+    height: 73px;
+    border-radius: var(--v2p-box-radius);
+    background-color: var(--button-background-hover-color);
+  }
+
+  .v2p-avatar {
+    width: 100%;
+    height: 100%;
+  }
+
+  .v2p-username {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .v2p-no {
+    margin: 5px 0;
+  }
+
+  .v2p-no,
+  .v2p-created-date {
+    width: 160px;
+    height: 16px;
+  }
+
+  .v2p-loading {
+    border-radius: var(--v2p-button-radius);
+    background-color: var(--button-background-hover-color);
+  }
+
+  .v2p-bio {
+    @include share.line-clamp(3);
+
+    padding-top: var(--v2p-card-spacing);
+  }
+}
+
+.v2p-member-card-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: var(--v2p-card-spacing) 0 0;
+}
+
+.v2p-member-topics {
+  margin-top: var(--v2p-card-spacing);
+  padding-top: var(--v2p-card-spacing);
+  border-top: 1px solid var(--box-border-color);
+}
+
+.v2p-member-topics-header {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--v2p-color-font-secondary);
+}
+
+.v2p-member-topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v2p-member-topic-item-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  .v2p-topic-preview-btn {
+    max-width: 0;
+    height: 19px;
+    max-height: 0;
+    padding: 0 4px;
+    font-size: 12px;
+    visibility: hidden;
+  }
+
+  &:hover .v2p-topic-preview-btn {
+    max-width: unset;
+    max-height: unset;
+    visibility: visible;
+  }
+}
+
+.v2p-member-topic-item {
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  padding-left: 2px;
+  border-radius: var(--v2p-button-radius);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--v2p-color-font-primary);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &::before {
+    content: '▸';
+    margin-right: 4px;
+    color: var(--v2p-color-font-tertiary);
+  }
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--v2p-color-bg-link-hover);
+  }
+}
+
+.v2p-reply-tags {
+  cursor: pointer;
+  display: inline-flex;
+  margin: 0 0 2px;
+  padding: 0 3px;
+  border-radius: var(--v2p-button-radius);
+  font-size: 12px;
+  background-color: var(--button-background-hover-color);
+}
+
+.v2p-reply-tags-inline {
+  overflow: hidden;
+  max-width: 300px;
+  margin: 0 5px 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2p-emoticons-box {
+  font-size: 15px;
+}
+
+.v2p-emoji-group {
+  & ~ & {
+    margin-top: 10px;
+  }
+}
+
+.v2p-emoji-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.v2p-emoji-list {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  font-size: 20px;
+}
+
+.v2p-emoji {
+  cursor: pointer;
+  height: 20px;
+  padding: 3px;
+  border-radius: var(--v2p-button-radius);
+  line-height: 20px;
+
+  &:hover {
+    background-color: var(--box-background-hover-color);
+  }
+
+  > img {
+    height: 100%;
+  }
+}
+
+.v2p-decode {
+  cursor: copy;
+  position: relative;
+  padding: 2px 4px;
+  font-size: 13px;
+  color: var(--v2p-color-orange-400);
+  text-decoration: none;
+  background-color: var(--v2p-color-orange-50);
+
+  &::after {
+    @include share.tooltip;
+
+    content: attr(data-title);
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    opacity: 0;
+    background-color: var(--v2p-color-bg-tooltip);
+  }
+
+  &:hover {
+    color: var(--v2p-color-orange-400);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.v2p-reply-content {
+  position: relative;
+
+  .v2p-expand-btn.normal.button {
+    position: absolute;
+    z-index: var(--zidx-expand-btn);
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  &.v2p-collapsed {
+    overflow: hidden;
+    max-height: 250px;
+    padding-bottom: 0;
+
+    &::before {
+      pointer-events: none;
+      content: '';
+      position: absolute;
+      z-index: var(--zidx-expand-mask);
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 130px;
+      background: linear-gradient(to top, var(--bg-reply) 10px, transparent);
+    }
+
+    .reply_content {
+      a,
+      .embedded_video {
+        pointer-events: none;
+      }
+    }
+
+    .v2p-expand-btn.normal.button {
+      bottom: 10px;
+      transform: translateX(-50%);
+    }
+  }
+
+  &:not(.v2p-collapsed) {
+    overflow: auto;
+    max-height: none;
+    padding-bottom: 40px;
+  }
+}
+
+.cell[id^='r'] .cell[id^='r'] {
+  /* 加深嵌套回复中「展开按钮」的背景色。 */
+  .v2p-reply-content {
+    .v2p-expand-btn.normal.button {
+      color: var(--v2p-color-button-foreground);
+      background: var(--v2p-color-button-background-hover);
+      box-shadow: var(--button-hover-shadow);
+    }
+  }
+}
+
+.v2p-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  font-size: 14px;
+  color: var(--v2p-color-font-secondary);
+
+  .v2p-text-emoji {
+    font-size: 20px;
+  }
+}
+
+.v2p-topic-reply-ref {
+  margin: 0 -10px 15px;
+  padding: 5px 10px;
+  border-radius: var(--v2p-box-radius);
+  font-size: 13px;
+  color: var(--v2p-color-font-tertiary);
+  background-color: var(--v2p-color-bg-block);
+}
+
+.v2p-topic-reply-box {
+  margin-top: 50px;
+  padding: 30px 0;
+  border-top: 1px solid var(--v2p-color-divider);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--v2p-color-font-secondary);
+
+  @at-root {
+    .v2p-topic-reply {
+      & ~ & {
+        margin-top: 15px;
+      }
+
+      @at-root {
+        .v2p-topic-reply-member {
+          display: inline;
+          font-weight: bold;
+          color: var(--v2p-color-main-700);
+        }
+
+        .v2p-topic-reply-avatar {
+          position: relative;
+          top: 2px;
+          overflow: hidden;
+          width: 15px;
+          height: 15px;
+          margin-right: 5px;
+          border-radius: var(--v2p-box-radius);
+          object-fit: cover;
+          background-color: var(--v2p-color-bg-avatar);
+        }
+
+        .v2p-topic-reply-content {
+          display: inline;
+        }
+
+        .v2p-topic-reply-tip {
+          margin-top: 20px;
+          font-size: 13px;
+          color: var(--v2p-color-font-quaternary);
+          text-align: center;
+        }
+      }
+    }
+
+    .v2p-reply-wrap {
+      @include share.input(140px);
+
+      #reply_content {
+        border: none;
+        background-color: transparent;
+
+        &::placeholder {
+          font-size: 14px;
+          color: var(--v2p-color-font-tertiary);
+        }
+
+        &:focus {
+          background-color: var(--v2p-color-bg-content);
+          outline: none;
+        }
+      }
+    }
+
+    .v2p-reply-upload-bar {
+      cursor: pointer;
+      padding: 6px 10px;
+      border-top: 1px dashed var(--v2p-color-border-darker);
+      font-size: 12px;
+      color: var(--v2p-color-font-tertiary);
+      background-color: var(--v2p-color-bg-input);
+    }
+
+    .v2p-reply-upload-bar-disabled {
+      pointer-events: none;
+    }
+  }
+}
+
+#Bottom {
+  @at-root {
+    .v2p-footer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 35px 10px 20px;
+      border-top: 1px solid var(--v2p-color-divider);
+      font-size: 12px;
+      color: var(--v2p-color-font-tertiary);
+
+      a {
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .v2p-footer-logo {
+      --logo-size: 16px;
+
+      position: absolute;
+      top: calc(-1 * (var(--logo-size) + 5px) / 2);
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex;
+      box-sizing: border-box;
+      padding: 3px 25px;
+      background-color: var(--v2p-color-bg-footer);
+
+      svg {
+        width: var(--logo-size);
+      }
+    }
+
+    .v2p-footer-text {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 240px;
+      color: var(--v2p-color-font-secondary);
+    }
+
+    .v2p-footer-links {
+      display: inline-flex;
+      gap: 0 8px;
+      align-items: center;
+    }
+
+    .v2p-footer-link {
+      padding: 4px 5px;
+      color: currentColor;
+    }
+
+    .v2p-footer-brand {
+      display: inline-flex;
+      gap: 0 15px;
+      align-items: center;
+      justify-content: flex-end;
+      width: 240px;
+
+      .v2p-github-ref {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        padding: 2px 0;
+      }
+    }
+  }
+}
+
+.v2p-color-mode-toggle {
+  width: 22px;
+  height: 22px;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.v2p-reply-tabs {
+  display: flex;
+  gap: 0 6px;
+  align-items: center;
+  font-size: 14px;
+
+  .v2p-reply-tab {
+    cursor: pointer;
+    padding: 2px 3px;
+
+    &.active {
+      text-decoration: underline;
+      text-decoration-color: var(--v2p-color-font-tertiary);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+  }
+}
+
+.v2p-select-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 5px;
+  border-radius: var(--v2p-popup-radius);
+  font-size: 12px;
+  text-align: left;
+
+  @at-root {
+    .v2p-select-item {
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: var(--v2p-button-radius);
+      white-space: nowrap;
+
+      &:hover {
+        background-color: var(--v2p-color-button-background-hover);
+      }
+
+      &.v2p-select-item-active {
+        background-color: var(--v2p-color-accent-50);
+      }
+    }
+
+    .v2p-select-divider {
+      pointer-events: none;
+      height: 1px;
+      margin: 5px 0;
+      background-color: var(--v2p-color-border);
+    }
+  }
+}
+
+.v2p-preview-retry,
+.v2p-topic-preview-retry,
+a.v2p-preview-retry,
+a.v2p-topic-preview-retry,
+a:link.v2p-preview-retry,
+a:link.v2p-topic-preview-retry {
+  @include share.underline-text;
+
+  cursor: pointer;
+}
+
+.v2p-indent {
+  .v2p-member-ref {
+    display: none; /* 只有在嵌套回复中才能隐藏 @ 用户。 */
+  }
+}
+
+.v2p-member-ref {
+  + br {
+    display: none;
+
+    + b {
+      display: none;
+    }
+  }
+
+  &.v2p-member-ref-show {
+    display: inline !important;
+  }
+}
+
+.v2p-layout-toggle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  padding: 4px 2px;
+  color: var(--v2p-color-font-tertiary);
+}
+
+.v2p-content-layout.v2p-content-layout.content {
+  --v2p-content-width: 2000px;
+
+  #Main.v2p-horizontal-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--v2p-layout-column-gap);
+    max-width: unset;
+
+    @at-root {
+      .v2p-left-side {
+        flex: 1;
+
+        > .v2p-left-group {
+          position: sticky;
+          z-index: var(--zidx-reply-box);
+          top: 0;
+          display: flex;
+          flex-direction: column;
+          max-height: calc(100vh - var(--v2p-nav-height) - var(--v2p-layout-row-gap));
+
+          .sep,
+          .sep20 {
+            flex-shrink: 0;
+          }
+
+          > .box:has(.topic_buttons) {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-height: 0;
+
+            > .header {
+              flex-shrink: 0;
+            }
+          }
+        }
+
+        .v2p-left-side-content {
+          overflow: auto;
+          flex: 1;
+          margin-right: calc(var(--v2p-spacing-box) * -1);
+          padding-right: var(--v2p-spacing-box);
+          border-bottom: 1px solid var(--box-border-color);
+        }
+      }
+
+      .v2p-right-side {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.v2p-register-days {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+  padding: 0 2px;
+  border-radius: var(--v2p-button-radius);
+  color: var(--v2p-color-orange-400);
+  background-color: var(--v2p-color-orange-100);
+
+  &.v2p-register-days-large {
+    display: inline-flex;
+    margin-left: 10px;
+    padding: 2px 5px;
+    border-radius: var(--v2p-button-radius);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+.v2p-topics-hot-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+  color: currentColor;
+
+  .v2p-icon-loading {
+    width: 40px;
+  }
+}
+
+.v2p-topics-hot-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 84px;
+  margin: 12px 10px 10px;
+  padding: 18px 16px;
+  border: 1px dashed var(--v2p-color-divider);
+  border-radius: var(--v2p-input-radius);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--v2p-color-font-tertiary);
+  text-align: center;
+  background-color: var(--v2p-color-bg-subtle);
+}
+
+.v2p-topics-hot-header {
+  display: flex;
+  align-items: center;
+}
+
+.v2p-topics-hot-picker {
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+  padding: 1px 6px;
+  border-radius: var(--v2p-button-radius);
+  font-size: 13px;
+  background-color: var(--v2p-color-button-background);
+
+  &:hover {
+    background-color: var(--v2p-color-button-background-hover);
+  }
+
+  @at-root {
+    .v2p-topics-hot-icon {
+      position: relative;
+      top: -2px;
+      width: 1em;
+      height: 1em;
+    }
+  }
+}
+
+/* MARK: 用户标签。 */
+.v2p-tag-block {
+  margin-bottom: 10px;
+}
+
+/* MARK: 隐藏用户信息。 */
+.v2p-hide-account {
+  @supports (filter: blur(6px)) {
+    opacity: 0.5;
+    filter: blur(6px);
+  }
+
+  @supports not (filter: blur(6px)) {
+    opacity: 0;
+  }
+}
+
+.v2p-hide-balance {
+  @supports (filter: blur(6px)) {
+    opacity: 0.5;
+    filter: blur(6px);
+
+    &:hover {
+      opacity: 1;
+      filter: none;
+    }
+  }
+
+  @supports not (filter: blur(6px)) {
+    opacity: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* MARK: 设置页的样式。 */
+.v2p-member-name {
+  display: flex;
+  align-items: center;
+}
+
+.v2p-settings-header.page-content-header {
+  gap: 10px;
+
+  .v2p-settings-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  .v2p-settings-title {
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  .v2p-settings-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+/* =========================== */
+
+.v2p-link-preview-btn {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  height: 100%;
+  margin-left: 5px;
+  padding: 0 5px;
+  border-radius: var(--v2p-button-radius);
+  font-size: 12px;
+  color: var(--v2p-color-bg-content);
+  background-color: var(--v2p-color-accent-500);
+
+  &:hover {
+    background-color: var(--v2p-color-accent-600);
+  }
+}
+
+/* 水深火热节点的侧栏公告栏样式。 */
+#node_sidebar.v2p-node-sidebar-flamewar {
+  border: 1px solid var(--v2p-color-orange-400);
+  border-radius: var(--v2p-box-radius);
+  background-color: var(--v2p-color-orange-50);
+}
+
+.v2p-topic-preview-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.v2p-topic-preview-wrapper {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.v2p-sync-dialog-main.v2p-modal-main {
+  height: auto;
+
+  .v2p-modal-content {
+    padding: var(--v2p-spacing-box);
+  }
+
+  @at-root {
+    .v2p-sync-dialog-message {
+      margin: 0 0 var(--v2p-spacing-cell);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--v2p-color-foreground);
+    }
+
+    .v2p-sync-dialog-message-sub {
+      margin: 0 0 calc(var(--v2p-spacing-cell) * 0.75);
+      padding: calc(var(--v2p-spacing-cell) * 0.75) var(--v2p-spacing-cell);
+      border-radius: var(--v2p-input-radius);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--v2p-color-font-secondary);
+      background-color: var(--v2p-color-bg-input);
+
+      strong {
+        font-weight: 600;
+        color: var(--v2p-color-foreground);
+      }
+    }
+
+    .v2p-sync-dialog-message-question {
+      margin: calc(var(--v2p-spacing-cell) * 1.25) 0 var(--v2p-spacing-cell);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--v2p-color-foreground);
+    }
+
+    .v2p-sync-dialog-message-tip {
+      margin: calc(var(--v2p-spacing-cell) * 0.5) 0 0;
+      padding: calc(var(--v2p-spacing-cell) * 0.5) var(--v2p-spacing-cell);
+      border-radius: var(--v2p-input-radius);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--v2p-color-font-tertiary);
+      background-color: var(--v2p-color-bg-subtle);
+    }
+
+    .v2p-modal-footer {
+      .v2p-sync-skip-btn,
+      .v2p-sync-confirm-btn {
+        height: 32px;
+        padding: 0 16px;
+        font-size: 14px;
+      }
+
+      .v2p-sync-confirm-btn {
+        font-weight: 600;
+      }
+    }
+  }
+}

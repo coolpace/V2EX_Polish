@@ -1,0 +1,64 @@
+@use './share';
+
+body.v2p-mobile,
+:root[data-v2p-mobile='true'],
+:root[data-v2p-mobile='true'] body {
+  --v2p-spacing-cell: 10px;
+
+  #site-header {
+    border-color: var(--v2p-color-border);
+
+    #site-header-menu {
+      #menu-body {
+        right: 5px;
+        border: 1px solid var(--v2p-color-border);
+        border-radius: 8px;
+      }
+    }
+  }
+
+  #Wrapper {
+    .content {
+      display: block;
+      padding: 0;
+
+      .flex-one-row:first-of-type {
+        padding: 8px var(--v2p-spacing-cell) !important;
+      }
+
+      .header {
+        padding: 10px var(--v2p-spacing-cell);
+      }
+    }
+  }
+
+  .box {
+    border-radius: 0;
+
+    .cell {
+      padding: var(--v2p-spacing-cell);
+
+      .item {
+        padding-right: 8px;
+
+        .item_title {
+          padding-top: 4px;
+
+          .topic-link {
+            &:hover {
+              text-decoration: none;
+            }
+          }
+        }
+
+        .count_livid {
+          @include share.count;
+
+          margin-right: 0;
+          color: var(--v2p-color-button-foreground);
+          background-color: var(--v2p-color-bg-block);
+        }
+      }
+    }
+  }
+}

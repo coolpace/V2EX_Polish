@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "types": ["chrome", "firefox-webext-browser", "jquery"]
+  },
+  "include": ["src/**/*", "shared/**/*"]
+}

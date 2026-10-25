@@ -1,19 +1,13 @@
 {
   "search.exclude": {
     "asset": true,
-    "extension/**/{*.min.js}": true,
-    "extension/**/{*.min.css}": true,
-    "extension/css/**/*.css": true,
-    "/website": true
+    "apps/extension/dist/**": true,
+    "apps/website/.next/**": true,
+    "apps/website/.velite/**": true
   },
   "files.readonlyInclude": {
-    "dist/**/*": true,
-    "extension/css/*": true,
-    "extension/scripts/*": true,
-    "extension/manifest*.json": true
-  },
-  "files.readonlyExclude": {
-    "extension/scripts/polyfill.js": true
+    "apps/extension/dist/**/*": true,
+    "apps/extension/src/user-scripts/style.ts": true
   },
   "workbench.editor.customLabels.patterns": {
     "**/src/**/{index}.ts": "${dirname} - ${filename}"

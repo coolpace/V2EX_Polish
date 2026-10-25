@@ -1,10 +1,8 @@
 {
-  "extends": "@codennnn/tsconfig/esm.json",
-  "compilerOptions": {
-    "baseUrl": "./",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "verbatimModuleSyntax": false
-  },
-  "include": ["./tsup.config.ts", "src/**/*", "scripts/**/*.ts"]
+  "files": [],
+  "references": [
+    { "path": "./apps/extension/tsconfig.json" },
+    { "path": "./apps/website/tsconfig.typecheck.json" },
+    { "path": "./apps/hot-topics/tsconfig.typecheck.json" }
+  ]
 }

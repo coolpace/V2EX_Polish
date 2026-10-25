@@ -1,84 +1,112 @@
 # 贡献指南
 
-感谢您考虑为这个项目做出贡献！请先阅读以下内容，以确保贡献过程顺利。
+感谢你为 V2EX Polish 贡献代码。
 
-## 项目结构
+## 仓库结构
 
-```bash
-├── extension # 运行时的代码
-├── src # 开发时的代码
-│   ├── background # 插件后台脚本
-│   ├── contents # 网页内容脚本
-│   ├── pages # 浏览器扩展页面相关的页面文件
-│   ├── styles # 浏览器扩展相关的样式文件
-│   ├── user-scripts # 油猴脚本相关
-│   ├── constants.ts # 常量
-│   ├── icons.ts # SVG 图标
-│   ├── services # API 服务
-│   ├── types.ts # TS 类型定义
-│   └── utils.ts # 工具函数
-├── website # 产品官网（基于 Next.js）
-├── scripts # 与项目构建相关的脚本
-└── tsup.config.ts # tsup 配置
+本仓库已经完成 monorepo 重构，根目录只保留 workspace 配置、仓库级工具配置和代理脚本，实际 app 都在 `apps/` 下：
+
+```text
+apps/
+├─ extension/     # 浏览器扩展与 userscript
+│  ├─ src/        # runtime 源码
+│  ├─ public/     # 静态资源
+│  ├─ scripts/    # tooling 脚本
+│  └─ dist/       # Chrome / Firefox / userscript 产物
+├─ website/       # Next.js 官网
+└─ hot-topics/    # Cloudflare Workers 热议主题接口
 ```
 
-## 开发运行
+关键约定：
 
-### 本地开发
+- 扩展版本唯一来源是 `apps/extension/package.json`
+- 扩展 TypeScript 已拆成 `tsconfig.runtime.json` 和 `tsconfig.tooling.json`
+- 不要直接修改 `apps/extension/dist/**`
+- 不要直接修改 `apps/extension/src/user-scripts/style.ts`，它由构建脚本生成
 
-本项目使用 [web-ext](https://github.com/mozilla/web-ext) 帮助开发，会在代码改动后自动重新加载扩展，所以不需要每次都在扩展程序页面中手动刷新扩展。
-
-#### 如果使用 web-ext，在运行 `pnpm dev` 后，会自动打开 Chrome 浏览器，并自动加载扩展。
-
-#### 如果不使用 web-ext，则可以遵循以下的开发流程：
-
-1. `pnpm install` 安装依赖。
-1. `pnpm dev` 启动本地开发服务器。
-1. 打开 Chrome 浏览器，输入 `chrome://extensions/` 进入扩展程序页面。
-1. 点击右上角的开发者模式，然后点击 `加载已解压的扩展程序`，选择 `extension` 文件夹。
-1. 编辑 `src` 目录中的代码，保存文件后会自动编译。
-1. 在扩展程序页面中，点击刷新按钮，接着再刷新目标页面查看效果。
-
-### 生产构建
-
-在发布前，进入 `/scripts/build-manifest.ts`，修改其中的 `version`，然后执行 `pnpm build`，这可以分别构建出浏览器（Chrome/Firefox）扩展和油猴脚本。
-
-`pnpm build` 其实包含了多条命令的执行，包括编译输出 JS 脚本、样式、打包产物。执行完这条命令之后，会在根目录下生成 `build-chrome` 和 `build-firefox` 目录，这两个目录下的 `v2ex_polish-[版本号].zip` 就是可以上传到扩展平台的最终产物。
-
-此外，还会生成 `dist` 目录，其中包含了油猴脚本的 JS 脚本，可以直接粘贴到油猴脚本编辑器中，然后发布。
-
-<details>
-  <summary>项目脚本解释：</summary>
-
-| 脚本名称            | 描述                     |
-| ------------------- | ------------------------ |
-| `build:manifest`    | 构建 manifest.json       |
-| `build:style`       | 构建浏览器扩展用到的样式 |
-| `build:ext`         | 构建浏览器扩展           |
-| `build:userscript`  | 构建油猴脚本             |
-| `pack:chrome`       | 打包最终产物             |
-| `output:userscript` | 生成油猴脚本             |
-| `output:css`        | 生成油猴脚本样式         |
-
-</details>
-
-### 运行官网
+## 快速开始
 
 ```bash
-cd website/ # 进入官网项目目录
-pnpm install && pnpm dev # 安装依赖、启动本地开发服务器
+pnpm install
+
+# Chrome 开发
+pnpm dev
+
+# Firefox 开发
+pnpm dev:firefox
+
+# 官网开发
+pnpm website:dev
+
+# Worker 开发
+pnpm worker:dev
 ```
 
-## 提交问题和请求功能
+如果只想在某个 app 内工作，也可以直接进入对应目录执行同名脚本；根脚本只是代理。
 
-如果您在使用该项目时遇到了问题或需要某个功能，请先查看项目是否已有相应的记录。如果没有记录，请提交新的 [issue](https://github.com/coolpace/V2EX_Polish/issues)。
+## 扩展开发
 
-## 贡献代码
+- 运行时代码放在 `apps/extension/src/`
+- `apps/extension/public/`：静态资源
+- 构建脚本放在 `apps/extension/scripts/`
+- 域名白名单维护在 `apps/extension/shared/v2ex-domains.ts`
+- 内容脚本与构建入口清单维护在 `apps/extension/shared/features.ts`（tsdown 与 manifest 共用）
+- Chrome 可加载目录是 `apps/extension/dist/chrome/`
+- Firefox 可加载目录是 `apps/extension/dist/firefox/`
+- userscript 产物是 `apps/extension/dist/userscript/index.min.js`
 
-直接向本仓库提交 **pull request** 即可。本项目的维护者将根据 CONTRIBUTING.md 文件和提交的代码进行评估和审查。如果您的代码被接受，您将成为该项目的贡献者之一。如果您的代码被拒绝，我们将向您提供反馈意见。
+手动加载扩展时：
 
-以下是一些有助于您的代码被接受的建议：
+- Chrome / Edge / Arc：加载 `apps/extension/dist/chrome/`
+- Firefox：加载 `apps/extension/dist/firefox/manifest.json`
 
-1. 请确保您的代码符合项目的风格和规范。
-2. 请确保您的代码已经经过充分的测试，并且可以成功编译。
-3. 请将您的代码提交到新的分支上，并且使用清晰的 commit 信息。
+本地开发 profile 目录为：
+
+- `chrome-dist-profile/`
+- `firefox-dist-profile/`
+
+## 常用命令
+
+- `pnpm verify:all`：完整验收入口，包含 extension typecheck、website typecheck、worker check、manifest 快照、userscript 构建和扩展构建
+- `pnpm build`：生成 Chrome / Firefox zip 与 userscript
+- `pnpm build:dist`：生成未打包的 extension dist 与 userscript
+- `pnpm package:zip`：基于 `dist/chrome` 与 `dist/firefox` 生成 zip 包
+- `pnpm build:manifest`：生成 Chrome 与 Firefox manifest
+- `pnpm build:userscript`：只构建 userscript
+- `pnpm clean`：清理 `apps/extension/dist` 与生成的 userscript 样式文件
+- `pnpm website:build`：构建官网
+- `pnpm worker:check`：检查 Worker
+- `pnpm worker:deploy`：部署 Worker
+
+## 提交前检查
+
+提交 PR 前，至少完成以下验证：
+
+1. 运行 `pnpm verify:all`
+2. 按 [docs/development.md](../docs/development.md) 中「手动加载扩展」「热重载与监听」章节做 smoke test
+3. 如改动影响扩展行为，在 Chrome 和 Firefox 都验证一次
+4. 如改动影响 Worker 或官网，同步验证对应 app
+5. 如改动影响开发流程、目录结构或发布方式，同步更新 README 与 `docs/`
+
+## 改动边界建议
+
+- 扩展功能改动优先落在 `apps/extension/src/contents/`、`apps/extension/src/pages/`、`apps/extension/src/background/`
+- 通用 UI 组件放在 `apps/extension/src/components/`
+- 样式改动集中在 `apps/extension/src/styles/`
+- Worker 改动只放在 `apps/hot-topics/`
+- 官网改动只放在 `apps/website/`
+
+## 常见问题
+
+- `pnpm dev` 无法启动浏览器：检查本机 Chrome / Chromium 是否可用，必要时删除 `chrome-dist-profile/` 后重试
+- `pnpm dev:firefox` 无法启动：检查本机 Firefox 是否可用，必要时删除 `firefox-dist-profile/` 后重试
+- manifest 变更未生效：重新执行 `pnpm build:manifest`
+- Worker 本地可用但扩展拿不到热议主题：确认扩展配置的是已部署的 Worker 地址，而不是本地 `wrangler dev` 地址
+
+## 提交规范
+
+- 推荐使用 Conventional Commits
+- 一个 commit 只做一件事
+- 不要在 PR 中混入与任务无关的格式化或目录清理
+
+如有疑问，优先查看 [docs/README.md](../docs/README.md)。

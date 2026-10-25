@@ -1,0 +1,503 @@
+@mixin line-clamp($lines: 1, $line-height: 1.4) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  line-height: $line-height;
+}
+
+@mixin common-button() {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--v2p-color-button-border);
+  border-radius: var(--v2p-button-radius);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--v2p-color-button-foreground);
+  text-shadow: none;
+  white-space: nowrap;
+  background: var(--v2p-color-button-background);
+  outline: none;
+  box-shadow:
+    0 1.8px 0 var(--box-background-hover-color),
+    0 1.8px 0 var(--button-background-color);
+  transition:
+    color 0.25s,
+    background-color 0.25s,
+    box-shadow 0.25s;
+
+  &.special {
+    border-color: var(--v2p-color-button-special-border);
+    color: var(--v2p-color-button-special-foreground);
+    background: var(--v2p-color-button-special-background);
+  }
+
+  &.v2p-btn-small {
+    height: 24px;
+    padding: 0 10px;
+    border-radius: var(--v2p-button-radius);
+    font-size: 12px;
+  }
+
+  &.v2p-btn-large {
+    height: 32px;
+    padding: 0 14px;
+    border-radius: var(--v2p-box-radius);
+    font-size: 16px;
+  }
+
+  &:is(:hover:enabled, :active:enabled) {
+    border: 1px solid var(--v2p-color-button-border);
+    font-weight: 500;
+    color: var(--v2p-color-button-foreground-hover);
+    text-shadow: none;
+    background: var(--v2p-color-button-background-hover);
+    box-shadow: var(--button-hover-shadow);
+
+    &.special {
+      border-color: var(--v2p-color-button-special-border);
+      color: var(--v2p-color-button-special-foreground-hover);
+      background: var(--v2p-color-button-special-background);
+    }
+  }
+
+  &:is(.hover_now, .disable_now) {
+    border: 1px solid var(--v2p-color-button-border);
+    color: var(--v2p-color-button-foreground) !important;
+    text-shadow: none !important;
+    background: var(--button-background-color) !important;
+    box-shadow:
+      0 1.8px 0 var(--box-background-hover-color) !important,
+      0 1.8px 0 var(--button-background-color) !important;
+
+    &.special {
+      border-color: var(--v2p-color-button-special-border);
+    }
+  }
+
+  &:is(.disable_now, :disabled) {
+    pointer-events: none;
+    cursor: default;
+    font-weight: 500;
+    color: var(--v2p-color-button-foreground);
+    text-shadow: none;
+    opacity: 0.8;
+    background: var(--button-background-color);
+    box-shadow:
+      0 1.8px 0 var(--box-background-hover-color),
+      0 1.8px 0 var(--button-background-color);
+  }
+
+  kbd {
+    position: relative;
+    right: -4px;
+    padding: 0 3px;
+    border: 1px solid var(--button-border-color);
+    border-radius: var(--v2p-button-radius);
+    font-family: inherit;
+    font-size: 90%;
+    line-height: initial;
+  }
+}
+
+@mixin hover-button {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  background: none;
+  background-color: transparent;
+  transition: color 0.2s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0 -5px;
+    transform: scale(0.65);
+    border-radius: var(--v2p-button-radius);
+    opacity: 0;
+    background-color: var(--v2p-color-bg-hover-btn);
+    transition:
+      background-color 0.15s,
+      color 0.15s,
+      transform 0.15s,
+      opacity 0.15s;
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    &::before {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @content;
+}
+
+@mixin input($minHeight: unset, $maxHeight: 800px) {
+  resize: none;
+  overflow: hidden;
+  height: unset;
+  min-height: $minHeight !important;
+  max-height: $maxHeight !important;
+  border: 1px solid var(--button-border-color);
+  border-radius: var(--v2p-input-radius);
+  font-size: 15px;
+  color: currentColor;
+  background-color: var(--v2p-color-bg-input);
+  transition: opacity 0.25s;
+
+  @content;
+
+  &::placeholder {
+    font-size: 15px;
+    color: var(--v2p-color-font-tertiary);
+  }
+
+  &:is(:focus, :focus-within) {
+    border-color: var(--button-border-hover-color);
+    background-color: transparent;
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+@mixin tooltip {
+  pointer-events: none;
+  z-index: var(--zidx-tip);
+  overflow: hidden;
+  width: max-content;
+  min-width: 30px;
+  padding: 2px 5px;
+  border-radius: var(--v2p-popup-radius);
+  font-size: 12px;
+  color: var(--v2p-color-foreground);
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--v2p-color-bg-tooltip);
+  box-shadow: var(--v2p-widget-shadow);
+}
+
+@mixin link {
+  text-decoration: underline 1.5px;
+  text-underline-offset: 0.46ex;
+}
+
+@mixin popup {
+  border: 1px solid var(--box-border-color);
+  border-radius: var(--v2p-popup-radius);
+  font-size: 14px;
+  background: var(--v2p-color-bg-widget);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--v2p-widget-shadow);
+}
+
+@mixin underline-text {
+  text-decoration: underline 1px;
+  text-underline-offset: var(--v2p-underline-offset);
+}
+
+@mixin select-box {
+  padding: 6px 8px;
+  border: 1px solid var(--v2p-color-border);
+  border-radius: var(--v2p-input-radius);
+  color: var(--v2p-color-foreground);
+  background-color: var(--v2p-color-background);
+}
+
+@mixin text-content {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+@mixin count {
+  user-select: none;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: var(--v2p-button-radius);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/** 右侧栏以浮动形式收起。默认隐藏，由 `-visible` 类控制展开。 */
+@mixin rightbar-float {
+  position: fixed;
+  z-index: var(--zidx-rightbar);
+  top: var(--v2p-layout-column-gap);
+  right: 10px;
+  overflow-y: auto;
+  display: none;
+  max-height: calc(100vh - 2 * var(--v2p-layout-column-gap));
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--v2p-color-border);
+  border-radius: var(--v2p-box-radius);
+  background-color: var(--v2p-color-bg-content);
+  box-shadow: var(--v2p-widget-shadow);
+
+  &.v2p-layout-rightbar-visible {
+    display: block;
+
+    .box {
+      background-color: var(--v2p-color-background);
+      box-shadow: none;
+    }
+  }
+
+  .v2p-tool-box {
+    border: 1px solid var(--v2p-color-border);
+  }
+}
+
+/**
+ * 右侧栏收起后的分屏布局：取消列间距、主内容居中、右侧栏浮动收起。
+ * 预览帧与窄窗口共用，避免两处规则各自维护。
+ */
+@mixin rightbar-collapse($content-min-width: null) {
+  .content {
+    gap: 0;
+
+    @if $content-min-width {
+      min-width: $content-min-width;
+    }
+  }
+
+  #Main {
+    margin: auto;
+  }
+
+  #Rightbar {
+    @include rightbar-float;
+  }
+}
+
+// ==============================
+// 备份与同步相关样式
+// ==============================
+
+// 备份表单容器
+@mixin backup-form {
+  font-size: 13px;
+
+  .backup-form-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: bold;
+
+    sup {
+      margin-left: 5px;
+      padding: 2px 4px;
+      border: 1px solid currentColor;
+      border-radius: var(--v2p-button-radius);
+      font-weight: normal;
+      line-height: 1;
+      color: var(--v2p-color-orange-400);
+      background-color: var(--v2p-color-orange-100);
+    }
+  }
+
+  .storage-data-bar {
+    display: inline-flex;
+    gap: 0 20px;
+    align-items: center;
+    margin-top: 10px;
+    padding: 5px 8px;
+    border-radius: var(--v2p-input-radius);
+    color: var(--v2p-color-foreground);
+    background-color: var(--v2p-color-bg-block);
+  }
+
+  // 表单项样式
+  .form-item {
+    display: flex;
+    gap: 0 20px;
+    align-items: center;
+    font-size: 13px;
+
+    & ~ .form-item {
+      margin-top: 5px;
+    }
+
+    > label {
+      min-width: 95px;
+      font-size: inherit;
+      font-weight: normal;
+      color: var(--v2p-color-font-secondary);
+    }
+
+    > input {
+      background-color: transparent;
+    }
+  }
+
+  @at-root {
+    // 清除存储和同步设置按钮
+    #clear-storage,
+    #sync-settings {
+      padding: 0 5px;
+      border-radius: var(--v2p-button-radius);
+      background-color: var(--v2p-color-button-background-hover);
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+    }
+
+    #clear-storage {
+      &:hover {
+        color: var(--v2p-color-error);
+        background-color: var(--v2p-color-bg-error);
+      }
+    }
+
+    #sync-settings {
+      &:hover {
+        color: var(--v2p-color-accent-600);
+        background-color: var(--v2p-color-accent-100);
+      }
+    }
+
+    #export-file,
+    #import-file {
+      padding: 0 5px;
+      border-radius: var(--v2p-button-radius);
+      color: var(--v2p-color-font-secondary);
+      background-color: transparent;
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+
+      &:hover {
+        color: var(--v2p-color-accent-600);
+        background-color: var(--v2p-color-accent-100);
+      }
+    }
+  }
+}
+
+// 设置页面标题的上标样式（通用）
+@mixin settings-title-sup {
+  sup {
+    cursor: help;
+    margin-left: 5px;
+    padding: 3px 4px;
+    border: 1px solid currentColor;
+    border-radius: var(--v2p-button-radius);
+    font-weight: normal;
+    line-height: 1;
+    color: var(--v2p-color-orange-400);
+    background-color: var(--v2p-color-orange-100);
+  }
+}
+
+// PAT 输入框样式
+@mixin pat-input {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  gap: 0 10px;
+  align-items: center;
+  padding: 0 5px 0 0;
+  border: 1px solid var(--v2p-color-border);
+  border-radius: var(--v2p-input-radius);
+  font-size: 13px;
+  background-color: var(--v2p-color-bg-block);
+
+  &:has(.has-value) {
+    border: 1px solid var(--v2p-color-font-tertiary);
+    background-color: transparent;
+  }
+
+  #pat {
+    flex: 1;
+    padding: 9px 8px;
+    border: none;
+    background-color: transparent;
+    outline: none;
+
+    &::placeholder {
+      color: var(--v2p-color-font-secondary);
+    }
+
+    &.has-value {
+      opacity: 0.6;
+      filter: blur(6px);
+
+      &:focus {
+        opacity: 1;
+        filter: none;
+      }
+    }
+  }
+
+  .submit-btn {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--v2p-button-radius);
+    font-size: 12px;
+    color: var(--v2p-color-background);
+    white-space: nowrap;
+    background-color: var(--v2p-color-foreground);
+  }
+}
+
+// 详情折叠样式
+@mixin details-collapse {
+  padding: 5px 0;
+
+  summary:hover {
+    .summary-text {
+      text-decoration: underline dashed;
+      text-underline-offset: var(--v2p-underline-offset);
+    }
+  }
+
+  @at-root {
+    .details-content {
+      padding: 8px 0 0;
+      color: var(--v2p-color-font-secondary);
+    }
+  }
+}
+
+// Token/设置描述样式
+@mixin token-description {
+  padding-top: 20px;
+  font-size: 13px;
+
+  .token-desc-title {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .token-desc-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 10px 0 3px;
+  }
+
+  .learn-more {
+    padding: 10px 0;
+    font-size: 14px;
+  }
+}

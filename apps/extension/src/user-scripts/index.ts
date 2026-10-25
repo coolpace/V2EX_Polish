@@ -1,0 +1,57 @@
+// 如果要在 GreaseMonkey 中运行本地文件，需设置「@require file:///[file path]」。
+
+import { patternToRegex } from 'webext-patterns'
+
+import { V2EX_DOMAINS } from '../constants'
+import { markBootState } from '../contents/boot-markers'
+import { initializeThemeBoot } from '../theme-state'
+import { style } from './style'
+
+markBootState()
+void initializeThemeBoot()
+
+function runAfterLoaded(fn: () => void): void {
+  if (document.readyState !== 'loading') {
+    fn()
+  }
+  else {
+    document.addEventListener('DOMContentLoaded', () => {
+      fn()
+    })
+  }
+}
+
+if (typeof window.GM_addStyle !== 'undefined') {
+  // 使用「GM_addStyle」配合「@run-at document-start」，可以解决样式切换导致的页面闪烁问题。
+  window.GM_addStyle(style)
+}
+else {
+  runAfterLoaded(() => {
+    $(`<style type='text/css'>${style}</style>`).appendTo('head')
+  })
+}
+
+const allowedHosts = V2EX_DOMAINS.map((domain) => `https://${domain}`)
+
+const commonRegex = patternToRegex(...allowedHosts.map((host) => `${host}/*`))
+const topicRegex = patternToRegex(...allowedHosts.map((host) => `${host}/t/*`))
+const writeRegex = patternToRegex(...allowedHosts.map((host) => `${host}/write/*`))
+
+runAfterLoaded(() => {
+  const url = window.location.href
+
+  void (async () => {
+    if (commonRegex.test(url)) {
+      await import('../contents/common')
+      await import('../contents/home/index')
+    }
+
+    if (topicRegex.test(url)) {
+      await import('../contents/topic/index')
+    }
+
+    if (writeRegex.test(url)) {
+      await import('../contents/write/index')
+    }
+  })()
+})
