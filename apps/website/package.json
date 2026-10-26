@@ -20,7 +20,6 @@
     "typecheck": "tsc -p tsconfig.typecheck.json --noEmit --skipLibCheck"
   },
   "dependencies": {
-    "@notionhq/client": "^4.0.2",
     "@radix-ui/themes": "^3.2.1",
     "cheerio": "1.2.0",
     "date-fns": "^4.4.0",

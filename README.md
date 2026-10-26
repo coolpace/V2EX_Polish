@@ -153,8 +153,6 @@ V2EX Polish 的目标是提供一个更加完善的插件，并保证持续更�
 
 更多开发说明见 [docs/README.md](./docs/README.md)。
 
-官网的赞赏列表通过 Notion 接口读取，需要在 `apps/website/` 下配置 `NOTION_KEY` 与 `NOTION_DATABASE_ID`，示例见 [apps/website/.env.example](./apps/website/.env.example)。未配置时 `/api/donation` 会返回 500，赞赏列表显示为空，其余页面不受影响。
-
 ## 常见问题
 
 <details>
