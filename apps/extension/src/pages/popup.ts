@@ -12,7 +12,6 @@ import {
   Check,
   ChevronRight,
   createElement,
-  createIcons,
   MoonStar,
   Settings,
   Shapes,
@@ -21,7 +20,8 @@ import {
 
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, MessageKey, RequestMessage, StorageKey, V2EX } from '../constants'
-import { initTheme, replaceEmojiWithHD, setFont } from '../contents/helpers'
+import type { IconRoot } from '../contents/helpers'
+import { initTheme, renderIcons, replaceEmojiWithHD, setFont } from '../contents/helpers'
 import { iconLoading } from '../icons'
 import {
   fetchHotTopics,
@@ -57,10 +57,9 @@ interface LastFetchUnreadMsgInfoInfo {
   count: number
 }
 
-function loadIcons() {
-  createIcons({
-    attrs: { width: '100%', height: '100%' },
-    icons: {
+function loadIcons(root?: IconRoot) {
+  renderIcons(
+    {
       Check,
       ChevronRight,
       Shapes,
@@ -68,7 +67,8 @@ function loadIcons() {
       Sun,
       MoonStar,
     },
-  })
+    root,
+  )
 }
 
 const loading = `
@@ -300,7 +300,7 @@ function initTabs() {
       const displayEmpty = () => {
         const $emptyTemp = $('#reading-empty')
         $tabContent.empty().append($emptyTemp.html())
-        loadIcons()
+        loadIcons($tabContent[0])
       }
 
       if (readingData && readingData.length > 0) {

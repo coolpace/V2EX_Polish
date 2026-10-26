@@ -163,10 +163,12 @@ function bindThankActions($scope: JQuery) {
         else {
           $(`
               <span class="small v2p-likes-box v2p-thanked" style="position:relative;top:-1px;">
-                &nbsp;&nbsp;<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>1
+                &nbsp;&nbsp;<span class="v2p-icon-heart"><i data-v2p-icon="heart"></i></span>1
               </span>
               `).insertAfter($tableInCell.find('.ago'))
-          loadIcons()
+          $cell.each((_, cell) => {
+            loadIcons(cell)
+          })
         }
 
         const $thankAction = $tableInCell.find('.v2p-control-thank')
@@ -577,7 +579,7 @@ function processActions($cellDom: JQuery, data: CommentData) {
     $hide
       .attr('aria-label', '隐藏回复')
       .html(
-        '<span class="v2p-control v2p-hover-btn v2p-control-hide"><i data-lucide="eye-off"></i></span>',
+        '<span class="v2p-control v2p-hover-btn v2p-control-hide"><i data-v2p-icon="eye-off"></i></span>',
       )
 
     if (ignoreUrl) {
@@ -600,7 +602,7 @@ function processActions($cellDom: JQuery, data: CommentData) {
         aria-label="已感谢"
         aria-disabled="true"
       >
-        <i data-lucide="heart"></i>
+        <i data-v2p-icon="heart"></i>
       </span>`,
     )
 
@@ -620,7 +622,7 @@ function processActions($cellDom: JQuery, data: CommentData) {
         tabindex="0"
         aria-label="感谢回复"
       >
-        <i data-lucide="heart"></i>
+        <i data-v2p-icon="heart"></i>
       </span>`,
     )
 
@@ -634,7 +636,7 @@ function processActions($cellDom: JQuery, data: CommentData) {
     .attr('aria-label', '回复')
     .find('> img[alt="Reply"]')
     .replaceWith(
-      '<span class="v2p-control v2p-hover-btn v2p-control-reply"><i data-lucide="message-square"></i></span>',
+      '<span class="v2p-control v2p-hover-btn v2p-control-reply"><i data-v2p-icon="message-square"></i></span>',
     )
 
   $controls.append($reply)
@@ -824,7 +826,7 @@ export async function handleComments() {
 
       $likesBox
         .find('img[alt="❤️"]')
-        .replaceWith('<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>')
+        .replaceWith('<span class="v2p-icon-heart"><i data-v2p-icon="heart"></i></span>')
 
       if (thanked) {
         $likesBox.addClass('v2p-thanked')

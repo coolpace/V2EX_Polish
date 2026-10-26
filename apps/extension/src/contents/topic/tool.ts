@@ -23,16 +23,16 @@ export function handleTools() {
   const $tools = $(`
     <div class="cell v2p-tools">
       <span class="v2p-tool v2p-hover-btn v2p-tool-reply">
-        <span class="v2p-tool-icon"><i data-lucide="message-square-plus"></i></span>回复主题
+        <span class="v2p-tool-icon"><i data-v2p-icon="message-square-plus"></i></span>回复主题
       </span>
       <span class="v2p-tool v2p-hover-btn v2p-tool-reading">
-        <span class="v2p-tool-icon"><i data-lucide="book-open-check"></i></span>稍后阅读
+        <span class="v2p-tool-icon"><i data-v2p-icon="book-open-check"></i></span>稍后阅读
       </span>
       <span class="v2p-tool v2p-hover-btn v2p-tool-scroll-top">
-        <span class="v2p-tool-icon"><i data-lucide="chevrons-up"></i></span>回到顶部
+        <span class="v2p-tool-icon"><i data-v2p-icon="chevrons-up"></i></span>回到顶部
       </span>
       <span class="v2p-tool v2p-hover-btn v2p-tool-more">
-        <span class="v2p-tool-icon"><i data-lucide="package-plus"></i></span>更多功能
+        <span class="v2p-tool-icon"><i data-v2p-icon="package-plus"></i></span>更多功能
       </span>
     </div>
   `)
@@ -154,5 +154,5 @@ export function handleTools() {
 
   $infoCard.addClass('v2p-tool-box').append($tools)
 
-  loadIcons()
+  loadIcons($tools[0])
 }

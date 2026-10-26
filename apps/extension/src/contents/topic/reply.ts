@@ -83,7 +83,7 @@ function handleReplyActions() {
     const emoticonsBox = $('<div class="v2p-emoticons-box">').append(groups)
 
     const $emojiBtn = createButton({
-      children: '<span style="width:18px; height:18px;"><i data-lucide="smile"></i></span>',
+      children: '<span style="width:18px; height:18px;"><i data-v2p-icon="smile"></i></span>',
     }).insertAfter($replyBtn)
 
     const $emojiContent = $('<div class="v2p-emoji-container">')

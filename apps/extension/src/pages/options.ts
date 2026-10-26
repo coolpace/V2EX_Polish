@@ -1,8 +1,8 @@
 import {
   ArchiveRestore,
   Check,
+  ChevronRight,
   CircleHelp,
-  createIcons,
   Filter,
   Key,
   Plus,
@@ -13,16 +13,16 @@ import {
 
 import { openTagInputModal } from '../components/tag-input-modal'
 import { PendingOptionsMenuStorageKey, StorageKey, V2EX } from '../constants'
-import { initTheme, setFont, setMemberTags } from '../contents/helpers'
+import type { IconRoot } from '../contents/helpers'
+import { initTheme, renderIcons, setFont, setMemberTags } from '../contents/helpers'
 import type { FontType, Options, ThemeType } from '../types'
 import { escapeHTML, getStorage, setStorage } from '../utils'
 import { handleBackupForm, handleTokenForm } from './options.helper'
 import { initTopicFilterOptions, readTopicFilterOptions } from './options.topic-filter'
 
-function loadIcons() {
-  createIcons({
-    attrs: { width: '100%', height: '100%' },
-    icons: {
+function loadIcons(root?: IconRoot) {
+  renderIcons(
+    {
       Settings,
       Tags,
       Key,
@@ -32,8 +32,10 @@ function loadIcons() {
       X,
       CircleHelp,
       Check,
+      ChevronRight,
     },
-  })
+    root,
+  )
 }
 
 async function saveOptions() {
@@ -308,7 +310,7 @@ void (async function init() {
                   <div class="usage">
                     用量：${(bytesUsed / 1024).toFixed(2)}KB / 5120KB
                     <div class="usage-help">
-                      <span data-lucide="circle-help"></span>
+                      <span data-v2p-icon="circle-help"></span>
                       <div class="usage-popover">
                         <div class="usage-popover-title">用量限制</div>
                         <div class="usage-popover-content">
@@ -357,7 +359,7 @@ void (async function init() {
                                       ${safeTag}
 
                                       <span class="tag-remove">
-                                        <span data-lucide="x"></span>
+                                        <span data-v2p-icon="x"></span>
                                       </span>
                                     </span>
                                   `
@@ -366,7 +368,7 @@ void (async function init() {
   }
 
                             <span class="tag-item-tag tag-item-tag-add" data-member-name="${safeMemberName}">
-                              <span class="tag-add"><span data-lucide="plus"></span></span>
+                              <span class="tag-add"><span data-v2p-icon="plus"></span></span>
                               <span>添加标签</span>
                             </span>
                           </div>
@@ -481,7 +483,7 @@ void (async function init() {
 
           $contentTags.append($tagList)
 
-          loadIcons()
+          loadIcons($contentTags[0])
         }
         else {
           renderEmptyTagsContent()

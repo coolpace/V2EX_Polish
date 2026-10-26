@@ -6,7 +6,8 @@ export {
   replaceEmojiWithHD,
   transformEmoji,
 } from './emoji'
-export { loadIcons } from './icons'
+export type { IconRoot } from './icons'
+export { loadIcons, renderIcons } from './icons'
 export { getRegisterDays, getTagsText, setMemberTags } from './member'
 export { addToReadingList } from './reading-list'
 export { focusReplyInput, insertTextToReplyInput } from './reply'

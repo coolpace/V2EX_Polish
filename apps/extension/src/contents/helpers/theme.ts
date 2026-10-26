@@ -85,11 +85,11 @@ export function toggleTheme({
     // 同时修改切换按钮。
     if (prefersDark) {
       $toggle.prop('title', '使用浅色主题')
-      $toggle.html('<i data-lucide="sun"></i>')
+      $toggle.html('<i data-v2p-icon="sun"></i>')
     }
     else {
       $toggle.prop('title', '使用深色主题')
-      $toggle.html('<i data-lucide="moon"></i>')
+      $toggle.html('<i data-v2p-icon="moon"></i>')
     }
   }
 
@@ -102,5 +102,5 @@ export function toggleTheme({
     $wrapper.removeClass('Night')
   }
 
-  loadIcons()
+  loadIcons($toggle[0])
 }

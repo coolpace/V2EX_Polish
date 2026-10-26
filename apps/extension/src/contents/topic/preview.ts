@@ -354,7 +354,7 @@ export function createTopicPreview() {
 
                   $likesBox
                     .find('img[alt="❤️"]')
-                    .replaceWith('<span class="v2p-icon-heart"><i data-lucide="heart"></i></span>')
+                    .replaceWith('<span class="v2p-icon-heart"><i data-v2p-icon="heart"></i></span>')
 
                   if (thanked) {
                     $likesBox.addClass('v2p-thanked')
@@ -405,7 +405,7 @@ export function createTopicPreview() {
 
               modal.$content.trigger('focus')
 
-              loadIcons()
+              loadIcons(modal.$content[0])
             }
           }
 

@@ -100,7 +100,7 @@ export function handleHotTopics() {
 
   const $text = $('<span class="v2p-topics-hot-picker-text">今日</span>')
   const $trigger = $(
-    '<div class="v2p-topics-hot-picker"><span class="v2p-topics-hot-icon"><i data-lucide="chevron-down"></i></span></div>',
+    '<div class="v2p-topics-hot-picker"><span class="v2p-topics-hot-icon"><i data-v2p-icon="chevron-down"></i></span></div>',
   )
     .prepend($text)
     .appendTo($hotHeader)
