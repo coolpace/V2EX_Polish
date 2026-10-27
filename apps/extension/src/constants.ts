@@ -397,6 +397,8 @@ export const enum Links {
   Home = 'https://v2p.leoku.dev',
   /** 问题反馈页 */
   Feedback = 'https://github.com/coolpace/V2EX_Polish/issues',
+  /** 新建问题页（预选 Bug 模板） */
+  NewIssue = 'https://github.com/coolpace/V2EX_Polish/issues/new?template=bug_report.yml',
   /** 主题图片分享页 */
   Share = 'https://v2p.leoku.dev/share',
   /** 赞赏支持页 */

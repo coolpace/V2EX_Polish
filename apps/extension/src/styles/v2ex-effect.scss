@@ -143,6 +143,14 @@ body {
       text-decoration: none;
       background-color: var(--v2p-color-accent-50);
     }
+
+    &.v2p-info-row-muted {
+      color: var(--v2p-color-font-secondary);
+
+      &:hover {
+        background-color: var(--v2p-color-bg-block);
+      }
+    }
   }
 
   .v2p-topic-preview-btn {

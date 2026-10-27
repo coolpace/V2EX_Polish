@@ -465,6 +465,43 @@ a {
   }
 }
 
+.feature-diagnostic {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 4px;
+  padding: 0 10px;
+
+  > button {
+    padding: 4px 8px;
+    border: none;
+    border-radius: var(--v2p-button-radius);
+    font-size: 12px;
+    color: var(--v2p-color-font-secondary);
+    background-color: transparent;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    &:hover {
+      color: var(--v2p-color-foreground);
+      background-color: var(--v2p-color-bg-block);
+    }
+  }
+
+  #report-check-in-issue {
+    display: none;
+  }
+
+  &.is-highlighted {
+    > #report-check-in-issue {
+      display: inline-block;
+      color: var(--v2p-color-accent-600);
+      background-color: var(--v2p-color-accent-100);
+    }
+  }
+}
+
 .empty-block {
   padding: 40px 20px;
   font-size: 14px;

@@ -71,8 +71,10 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: 控制台报错
-      description: 开发者工具 Console 面板中的相关报错信息
+      label: 控制台报错或签到诊断信息
+      description: |
+        开发者工具 Console 面板中的相关报错信息。
+        自动签到失败请粘贴扩展弹窗中「复制签到诊断信息」得到的内容。
       render: shell
     validations:
       required: false

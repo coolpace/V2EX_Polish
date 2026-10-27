@@ -177,9 +177,25 @@ export type CheckInErrorCode
     | 'network'
     | 'http'
     | 'unauthenticated'
+    | 'challenge'
     | 'unexpected-page'
     | 'redeem-failed'
     | 'unknown'
+
+/** 签到失败发生的阶段，用于定位问题环节。 */
+export type CheckInStage
+  = | 'request-page'
+    | 'parse-page'
+    | 'redeem'
+    | 'parse-redeem'
+
+/** 签到触发来源，用于判断是定时任务还是用户操作导致。 */
+export type CheckInTrigger
+  = | 'alarm'
+    | 'startup'
+    | 'tab'
+    | 'popup'
+    | 'manual'
 
 /** 签到尝试的返回结果。 */
 export interface CheckInResult {
@@ -188,6 +204,14 @@ export interface CheckInResult {
   reason?: string
   /** 失败原因分类。 */
   code?: CheckInErrorCode
+  /** 失败发生的阶段。 */
+  stage?: CheckInStage
+  /** 失败时收到的 HTTP 状态码。 */
+  httpStatus?: number
+  /** 响应最终地址的路径（不含查询串，避免记录 once 等一次性凭证）。 */
+  finalUrlPath?: string
+  /** 本次请求耗时（毫秒）。 */
+  durationMs?: number
   /** 已连续登录天数。 */
   checkInDays?: number
 }
@@ -207,6 +231,18 @@ export interface DailyInfo {
   lastError?: string
   /** 最近一次失败原因分类。 */
   lastErrorCode?: CheckInErrorCode
+  /** 最近一次失败发生的阶段。 */
+  lastErrorStage?: CheckInStage
+  /** 最近一次请求的 HTTP 状态码。 */
+  lastHttpStatus?: number
+  /** 最近一次请求最终地址的路径。 */
+  lastFinalUrlPath?: string
+  /** 最近一次请求耗时（毫秒）。 */
+  lastDurationMs?: number
+  /** 最近一次实际请求的触发来源。 */
+  lastTrigger?: CheckInTrigger
+  /** 当前 UTC 奖励日内的连续失败次数，用于判断是否需要提醒用户。 */
+  failureCount?: number
 }
 
 /**

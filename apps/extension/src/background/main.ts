@@ -5,7 +5,7 @@ import {
   StorageKey,
   V2EX_DOMAINS,
 } from '../constants'
-import type { CheckInResult, LegacyTag, MemberTag } from '../types'
+import type { CheckInResult, CheckInTrigger, LegacyTag, MemberTag } from '../types'
 import { getRunEnv, getStorage } from '../utils'
 import { checkIn } from './daily-check-in'
 
@@ -100,7 +100,9 @@ function isV2EXUrl(url: string): boolean {
 
 chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) => {
   if (Object.hasOwn(message, MessageKey.checkIn)) {
-    void runAutoCheckIn({ force: message[MessageKey.checkIn]?.force === true })
+    const force = message[MessageKey.checkIn]?.force === true
+
+    void runAutoCheckIn({ force, trigger: force ? 'manual' : 'popup' })
       .then((result) => {
         sendResponse(result)
       })
@@ -220,7 +222,7 @@ chrome.contextMenus.removeAll(() => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // 用户打开 V2EX 页面时补一次签到，降低对 alarm 触发时机的依赖。
   if (changeInfo.status === 'complete' && tab.url && isV2EXUrl(tab.url)) {
-    void runAutoCheckIn()
+    void runAutoCheckIn({ trigger: 'tab' })
   }
 
   if (!('sidePanel' in chrome)) {
@@ -260,7 +262,7 @@ const checkInAlarmName = 'dailyCheckIn'
  * 都通过这里触发；popup 不再直接执行签到，避免跨上下文并发与请求随页面关闭而中断。
  */
 async function runAutoCheckIn(
-  options: { force?: boolean } = {},
+  options: { force?: boolean, trigger?: CheckInTrigger } = {},
 ): Promise<CheckInResult | undefined> {
   try {
     // 手动触发不受「每日自动签到」开关限制；自动触发使用合并默认值后的配置。
@@ -272,7 +274,7 @@ async function runAutoCheckIn(
       }
     }
 
-    return await checkIn({ bypassRetryCooldown: options.force })
+    return await checkIn({ bypassRetryCooldown: options.force, trigger: options.trigger })
   }
   catch (error) {
     console.warn('[V2EX Polish] 自动签到出错：', error)
@@ -292,10 +294,10 @@ chrome.alarms.get(checkInAlarmName, (alarm) => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === checkInAlarmName) {
-    void runAutoCheckIn()
+    void runAutoCheckIn({ trigger: 'alarm' })
   }
 })
 
 chrome.runtime.onStartup.addListener(() => {
-  void runAutoCheckIn()
+  void runAutoCheckIn({ trigger: 'startup' })
 })

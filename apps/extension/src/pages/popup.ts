@@ -18,6 +18,11 @@ import {
   Sun,
 } from 'lucide'
 
+import {
+  buildCheckInDiagnostic,
+  describeCheckInErrorCode,
+  resolveCheckInDisplayState,
+} from '../background/check-in-utils'
 import { createButton } from '../components/button'
 import { dataExpiryTime, Links, MessageKey, RequestMessage, StorageKey, V2EX } from '../constants'
 import type { IconRoot } from '../contents/helpers'
@@ -35,7 +40,6 @@ import {
   formatTimestamp,
   getStorage,
   getStorageSync,
-  isSameUtcDay,
   setStorage,
 } from '../utils'
 import { initBackupForm } from './backup-form'
@@ -137,9 +141,32 @@ function ensurePopupCheckIn(): Promise<void> {
 }
 
 /**
+ * 将未签到的原因转换成卡片提示。
+ */
+function describeNotAttempted(skipReason?: string): string {
+  if (skipReason === '等待 V2EX 奖励日重置') {
+    return '奖励日刚重置，稍后会自动签到'
+  }
+
+  if (skipReason === '上次签到失败，重试冷却中') {
+    return '上次签到失败，冷却结束后自动重试'
+  }
+
+  if (skipReason === '已有签到任务进行中') {
+    return '正在签到，请稍候'
+  }
+
+  return '点击立即签到'
+}
+
+/**
  * 渲染功能页的签到卡片。
  */
-function renderCheckInFeature(dailyInfo: DailyInfo | undefined, refresh: () => void) {
+function renderCheckInFeature(
+  dailyInfo: DailyInfo | undefined,
+  autoCheckInEnabled: boolean,
+  refresh: () => void,
+) {
   const $checkIn = $('.feature-check-in')
   const $title = $checkIn.find('.feature-title')
   const $content = $checkIn.find('.feature-content')
@@ -147,35 +174,62 @@ function renderCheckInFeature(dailyInfo: DailyInfo | undefined, refresh: () => v
   $checkIn.off('click')
   $title.text('每日签到')
   $content.text('')
+  $('.feature-diagnostic').removeClass('is-highlighted')
 
-  const lastCheckInTime = dailyInfo?.lastCheckInTime
+  const state = resolveCheckInDisplayState({
+    now: Date.now(),
+    dailyInfo,
+    autoCheckInEnabled,
+  })
 
-  if (lastCheckInTime && isSameUtcDay(lastCheckInTime, Date.now())) {
-    const date = formatTimestamp(lastCheckInTime, { format: 'YMDHMS' })
+  const openMissionPage = () => window.open(`${V2EX.Origin}/mission/daily`)
+
+  if (state.type === 'checked-in') {
+    const date = formatTimestamp(state.checkInTime, { format: 'YMDHMS' })
+    const days = state.checkInDays ? `，已连续登录 ${state.checkInDays} 天` : ''
 
     $title.text('✅ 今日已签到')
-    $content.html(
-      `于 ${date} 自动签到${
-        dailyInfo?.checkInDays ? `，已连续登录 ${dailyInfo.checkInDays} 天` : ''
-      }`,
-    )
-    $checkIn.on('click', () => {
-      window.open(`${V2EX.Origin}/mission/daily`)
-    })
+    $content.html(`于 ${date} 自动签到${days}`)
+    $checkIn.on('click', openMissionPage)
 
     return
   }
 
-  const lastAttemptTime = dailyInfo?.lastAttemptTime
+  // 只有当天真正请求过才会展示失败，避免把前一天的失败当成当天状态。
+  if (state.type === 'failed') {
+    const { title, hint } = describeCheckInErrorCode(state.code)
+    const date = formatTimestamp(state.attemptTime, { format: 'YMDHMS' })
+    const status = state.httpStatus ? `（HTTP ${state.httpStatus}）` : ''
+    const selfResolvable = state.code === 'unauthenticated' || state.code === 'challenge'
 
-  if (dailyInfo?.lastResult === 'failed' && lastAttemptTime) {
-    const date = formatTimestamp(lastAttemptTime, { format: 'YMDHMS' })
-    const reason = dailyInfo.lastError ?? '尚未成功领取'
+    $title.text(`⚠️ ${title}`)
+    $content.html(
+      `${escapeHTML(date)} 尝试${status}：${escapeHTML(hint)}`
+      + (selfResolvable ? '' : '<br>点击下方「反馈问题」会带上诊断信息'),
+    )
 
-    $content.html(`上次尝试 ${date}：${escapeHTML(reason)}，点击重试`)
+    // 登录失效或需要人机验证时重试没有意义，引导用户去对应页面处理。
+    if (selfResolvable) {
+      const target = state.code === 'unauthenticated'
+        ? `${V2EX.Origin}/signin?next=/mission/daily`
+        : `${V2EX.Origin}/mission/daily`
+
+      $checkIn.on('click', () => {
+        window.open(target)
+      })
+
+      return
+    }
+
+    $('.feature-diagnostic').addClass('is-highlighted')
+  }
+  else if (state.type === 'auto-disabled') {
+    $title.text('自动签到已关闭')
+    $content.text('点击手动签到，或在设置中开启自动签到')
   }
   else {
-    $content.text('自动领取每日的登录奖励')
+    $title.text('今日尚未签到')
+    $content.text(describeNotAttempted(state.skipReason))
   }
 
   $checkIn.on('click', () => {
@@ -184,9 +238,12 @@ function renderCheckInFeature(dailyInfo: DailyInfo | undefined, refresh: () => v
 
       try {
         const result = await requestCheckIn({ force: true })
+        const unclear = state.type === 'failed'
+          && (state.code === 'unexpected-page' || state.code === 'redeem-failed')
 
-        if (result?.status === 'success') {
-          window.open(`${V2EX.Origin}/mission/daily`)
+        // 结果不明时直接打开签到页，便于用户核对是否已领取奖励。
+        if (result?.status === 'success' || result?.status === 'already' || unclear) {
+          openMissionPage()
         }
       }
       catch (error) {
@@ -194,6 +251,91 @@ function renderCheckInFeature(dailyInfo: DailyInfo | undefined, refresh: () => v
       }
 
       refresh()
+    })()
+  })
+}
+
+/** 复制文本，剪贴板 API 不可用时退回隐藏的 textarea。 */
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text)
+
+    return true
+  }
+  catch {
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.style.position = 'fixed'
+    textarea.style.opacity = '0'
+    document.body.append(textarea)
+    textarea.select()
+
+    try {
+      return document.execCommand('copy')
+    }
+    catch {
+      return false
+    }
+    finally {
+      textarea.remove()
+    }
+  }
+}
+
+/** 生成当前签到诊断文本。 */
+async function createCheckInDiagnostic(): Promise<string> {
+  const storage = await getStorage(false)
+  const browser = navigator.userAgent.includes('Firefox/') ? 'Firefox' : 'Chromium'
+
+  return buildCheckInDiagnostic({
+    now: Date.now(),
+    dailyInfo: storage[StorageKey.Daily],
+    autoCheckInEnabled: storage[StorageKey.Options].autoCheckIn.enabled,
+    extensionVersion: chrome.runtime.getManifest().version,
+    browser: `${browser}（${navigator.userAgent}）`,
+    timezoneOffsetMinutes: new Date().getTimezoneOffset(),
+  })
+}
+
+/** 复制诊断文本，并在按钮上给出短暂反馈。 */
+async function copyCheckInDiagnostic($button: JQuery, idleText: string): Promise<boolean> {
+  let copied = false
+
+  try {
+    copied = await copyText(await createCheckInDiagnostic())
+  }
+  catch (error) {
+    console.warn('[V2EX Polish] 生成签到诊断信息失败：', error)
+  }
+
+  $button.text(copied ? '✅ 已复制诊断信息' : '复制失败，请手动选择')
+  setTimeout(() => {
+    $button.text(idleText)
+  }, 2000)
+
+  return copied
+}
+
+/** 绑定「复制签到诊断信息」按钮。 */
+function initCheckInDiagnostic() {
+  const $button = $('#copy-check-in-diagnostic')
+
+  $button.on('click', () => {
+    void copyCheckInDiagnostic($button, '复制签到诊断信息')
+  })
+}
+
+/** 一键反馈：先复制诊断信息，再打开新建 Issue 页。 */
+function initCheckInFeedback() {
+  const $button = $('#report-check-in-issue')
+
+  $button.on('click', () => {
+    void (async () => {
+      const copied = await copyCheckInDiagnostic($button, '反馈问题')
+
+      if (copied) {
+        window.open(Links.NewIssue)
+      }
     })()
   })
 }
@@ -433,9 +575,13 @@ function initTabs() {
       const renderCheckIn = async () => {
         const latestStorage = await getStorage(false)
 
-        renderCheckInFeature(latestStorage[StorageKey.Daily], () => {
-          void renderCheckIn()
-        })
+        renderCheckInFeature(
+          latestStorage[StorageKey.Daily],
+          latestStorage[StorageKey.Options].autoCheckIn.enabled,
+          () => {
+            void renderCheckIn()
+          },
+        )
       }
 
       await renderCheckIn()
@@ -653,6 +799,9 @@ window.addEventListener('load', () => {
     setFont(options.font?.type ?? 'system')
     initTabs()
   })
+
+  initCheckInDiagnostic()
+  initCheckInFeedback()
 
   // 打开 popup 时补一次签到，覆盖当天浏览器启动较晚或 alarm 被推迟的场景。
   void ensurePopupCheckIn()

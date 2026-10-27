@@ -2,11 +2,14 @@ import { StorageKey, V2EX } from '../constants'
 import type {
   CheckInErrorCode,
   CheckInResult,
+  CheckInStage,
+  CheckInTrigger,
   DailyInfo,
 } from '../types'
 import { getStorage, setStorage } from '../utils'
 import {
   getCheckInSkipReason,
+  getNextFailureCount,
   getUtcDayKey,
   parseCheckInDays,
   parseCheckInPage,
@@ -47,14 +50,50 @@ function getErrorInfo(error: unknown): { code: CheckInErrorCode, message: string
   return { code: 'unknown', message: '未知错误' }
 }
 
-function toErrorMessage(error: unknown): string {
-  return getErrorInfo(error).message
+/** 提取响应最终地址的路径，避免把查询串（可能含 once 凭证）写入存储。 */
+function getUrlPath(url: string): string | undefined {
+  try {
+    return new URL(url).pathname
+  }
+  catch {
+    return undefined
+  }
+}
+
+/** 根据 HTTP 状态码补充失败说明。 */
+function describeHttpFailure(status: number): string {
+  if (status === 429) {
+    return '请求过于频繁，已被 V2EX 限流'
+  }
+
+  if (status === 403) {
+    return '请求被拒绝，可能触发了风控'
+  }
+
+  if (status >= 500) {
+    return 'V2EX 服务器异常'
+  }
+
+  return '请求失败'
+}
+
+/** 失败结果附带的响应元数据。 */
+type CheckInResponseMeta = Pick<CheckInResult, 'httpStatus' | 'finalUrlPath'>
+
+/** 构造结构一致的失败结果，避免各分支重复拼装字段。 */
+function fail(
+  code: CheckInErrorCode,
+  stage: CheckInStage,
+  reason: string,
+  meta?: CheckInResponseMeta,
+): CheckInResult {
+  return { status: 'failed', code, stage, reason, ...meta }
 }
 
 /**
  * 请求签到页面并完成领取。
  */
-async function requestCheckIn(): Promise<CheckInResult> {
+async function requestCheckInInner(): Promise<CheckInResult> {
   let res: Response
 
   try {
@@ -63,11 +102,26 @@ async function requestCheckIn(): Promise<CheckInResult> {
   catch (error) {
     const { code, message } = getErrorInfo(error)
 
-    return { status: 'failed', code, reason: `无法访问 V2EX：${message}` }
+    return fail(code, 'request-page', `无法访问 V2EX：${message}`)
+  }
+
+  const pageMeta: CheckInResponseMeta = {
+    httpStatus: res.status,
+    finalUrlPath: getUrlPath(res.url),
+  }
+
+  // Cloudflare 人机验证会在响应头标记，需要先于状态码判断。
+  if (res.headers.get('cf-mitigated')?.toLowerCase() === 'challenge') {
+    return fail('challenge', 'request-page', 'V2EX 触发了人机验证，无法自动签到', pageMeta)
   }
 
   if (!res.ok) {
-    return { status: 'failed', code: 'http', reason: `获取签到页面失败（HTTP ${res.status}）` }
+    return fail(
+      'http',
+      'request-page',
+      `获取签到页面失败：${describeHttpFailure(res.status)}（HTTP ${res.status}）`,
+      pageMeta,
+    )
   }
 
   let htmlText: string
@@ -78,21 +132,25 @@ async function requestCheckIn(): Promise<CheckInResult> {
   catch (error) {
     const { code, message } = getErrorInfo(error)
 
-    return { status: 'failed', code, reason: `读取签到页面失败：${message}` }
+    return fail(code, 'request-page', `读取签到页面失败：${message}`, pageMeta)
   }
 
-  const page = parseCheckInPage(htmlText)
+  const page = parseCheckInPage(htmlText, pageMeta.finalUrlPath)
 
   if (page.type === 'already') {
-    return { status: 'already', checkInDays: page.checkInDays }
+    return { status: 'already', checkInDays: page.checkInDays, ...pageMeta }
   }
 
   if (page.type === 'unauthenticated') {
-    return { status: 'failed', code: 'unauthenticated', reason: '未登录或登录状态已失效' }
+    return fail('unauthenticated', 'parse-page', '未登录或登录状态已失效', pageMeta)
+  }
+
+  if (page.type === 'challenge') {
+    return fail('challenge', 'parse-page', 'V2EX 触发了人机验证，无法自动签到', pageMeta)
   }
 
   if (page.type === 'unknown') {
-    return { status: 'failed', code: 'unexpected-page', reason: '签到页面无法识别，V2EX 可能已改版' }
+    return fail('unexpected-page', 'parse-page', '签到页面无法识别，V2EX 可能已改版', pageMeta)
   }
 
   let checkInRes: Response
@@ -103,11 +161,21 @@ async function requestCheckIn(): Promise<CheckInResult> {
   catch (error) {
     const { code, message } = getErrorInfo(error)
 
-    return { status: 'failed', code, reason: `领取请求失败：${message}` }
+    return fail(code, 'redeem', `领取请求失败：${message}`)
+  }
+
+  const redeemMeta: CheckInResponseMeta = {
+    httpStatus: checkInRes.status,
+    finalUrlPath: getUrlPath(checkInRes.url),
   }
 
   if (!checkInRes.ok) {
-    return { status: 'failed', code: 'http', reason: `领取请求失败（HTTP ${checkInRes.status}）` }
+    return fail(
+      'http',
+      'redeem',
+      `领取请求失败：${describeHttpFailure(checkInRes.status)}（HTTP ${checkInRes.status}）`,
+      redeemMeta,
+    )
   }
 
   let text: string
@@ -118,20 +186,33 @@ async function requestCheckIn(): Promise<CheckInResult> {
   catch (error) {
     const { code, message } = getErrorInfo(error)
 
-    return { status: 'failed', code, reason: `读取领取结果失败：${message}` }
+    return fail(code, 'redeem', `读取领取结果失败：${message}`, redeemMeta)
   }
 
   if (text.includes(SUCCESS_TEXT)) {
-    return { status: 'success', checkInDays: parseCheckInDays(text) }
+    return { status: 'success', checkInDays: parseCheckInDays(text), ...redeemMeta }
   }
 
-  return { status: 'failed', code: 'redeem-failed', reason: '领取接口未返回成功提示' }
+  return fail('redeem-failed', 'parse-redeem', '领取接口未返回成功提示', redeemMeta)
+}
+
+/** 在失败结果上补充本次请求耗时，便于区分超时与快速失败。 */
+async function requestCheckIn(): Promise<CheckInResult> {
+  const startedAt = Date.now()
+  const result = await requestCheckInInner()
+
+  return { ...result, durationMs: Date.now() - startedAt }
 }
 
 /**
  * 持久化签到状态，供 popup 展示与失败退避使用。
  */
-async function saveDailyInfo(attemptTime: number, result: CheckInResult, previous?: DailyInfo) {
+async function saveDailyInfo(
+  attemptTime: number,
+  result: CheckInResult,
+  trigger: CheckInTrigger | undefined,
+  previous?: DailyInfo,
+) {
   // 保存前重新读取，避免覆盖并发写入的签到结果（例如多设备同步）。
   let latest = previous
 
@@ -153,10 +234,28 @@ async function saveDailyInfo(attemptTime: number, result: CheckInResult, previou
     dailyInfo.checkInDays = result.checkInDays ?? latest?.checkInDays ?? previous?.checkInDays
   }
 
+  const failed = result.status === 'failed'
+
+  if (failed) {
+    dailyInfo.failureCount = getNextFailureCount({
+      previousCount: latest?.failureCount,
+      lastAttemptTime: latest?.lastAttemptTime,
+      attemptTime,
+    })
+  }
+  else {
+    dailyInfo.failureCount = 0
+  }
+
   dailyInfo.lastAttemptTime = attemptTime
   dailyInfo.lastResult = result.status === 'skipped' ? latest?.lastResult : result.status
-  dailyInfo.lastError = result.status === 'failed' ? result.reason : undefined
-  dailyInfo.lastErrorCode = result.status === 'failed' ? result.code : undefined
+  dailyInfo.lastError = failed ? result.reason : undefined
+  dailyInfo.lastErrorCode = failed ? result.code : undefined
+  dailyInfo.lastErrorStage = failed ? result.stage : undefined
+  dailyInfo.lastHttpStatus = result.httpStatus
+  dailyInfo.lastFinalUrlPath = result.finalUrlPath
+  dailyInfo.lastDurationMs = result.durationMs
+  dailyInfo.lastTrigger = trigger
 
   await setStorage(StorageKey.Daily, dailyInfo)
 }
@@ -165,6 +264,8 @@ async function saveDailyInfo(attemptTime: number, result: CheckInResult, previou
 export interface CheckInOptions {
   /** 手动触发时忽略失败冷却。 */
   bypassRetryCooldown?: boolean
+  /** 触发来源，仅用于诊断记录。 */
+  trigger?: CheckInTrigger
 }
 
 /**
@@ -192,7 +293,7 @@ async function runCheckIn(options: CheckInOptions): Promise<CheckInResult> {
   const result = await requestCheckIn()
 
   try {
-    await saveDailyInfo(attemptTime, result, dailyInfo)
+    await saveDailyInfo(attemptTime, result, options.trigger, dailyInfo)
   }
   catch (error) {
     // 状态写入失败不应影响已完成的领取。
@@ -220,7 +321,9 @@ export async function checkIn(options: CheckInOptions = {}): Promise<CheckInResu
       return await runCheckIn(options)
     }
     catch (error) {
-      return { status: 'failed', code: 'unknown', reason: `签到失败：${toErrorMessage(error)}` }
+      const { message } = getErrorInfo(error)
+
+      return { status: 'failed', code: 'unknown', reason: `签到失败：${message}` }
     }
   }
   finally {
