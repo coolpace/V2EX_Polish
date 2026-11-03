@@ -17,9 +17,9 @@ export function getCommentDataList({
       const $tr = $(tr)
       const $td = $tr.find('> td:nth-child(3)')
 
-      const thanked = $tr.find('> td:last-of-type > .fr').find('> .thank_area').hasClass('thanked')
+      const thanked = $tr.find('.thank_area').hasClass('thanked')
 
-      const $member = $td.find('> strong > a')
+      const $member = $td.find('strong > a')
       const memberName = $member.text()
       const memberLink = $member.prop('href')
       const memberAvatar = $tr.find('.avatar').prop('src')
@@ -30,7 +30,7 @@ export function getCommentDataList({
       const likes = parseLikesCount($td.find('.small.fade').text())
       const floor = $td.find('span.no').text()
 
-      const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9]+)/g))
+      const memberNameMatches = Array.from(content.matchAll(/@([a-zA-Z0-9_]+)/g))
       const refMemberNames
         = memberNameMatches.length > 0
           ? memberNameMatches.map(([, name]) => {

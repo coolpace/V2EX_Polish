@@ -31,7 +31,7 @@ void (async () => {
     $topicHeader.find('a[href^="/member/"]').prop('target', '_blank')
 
     // 支持新页签打开用户主页链接。
-    $commentTableRows.find('> td:nth-child(3) > strong > a').prop('target', '_blank')
+    $commentTableRows.find('td:nth-child(3) strong > a').prop('target', '_blank')
   }
 
   handleTools()

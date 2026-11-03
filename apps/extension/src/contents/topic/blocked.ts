@@ -3,7 +3,7 @@ import { $commentBox } from '../globals'
 /** 从回复 cell 中读取回复者昵称。 */
 function getReplyMemberName(cellDom: Element): string {
   return $(cellDom)
-    .find('> table > tbody > tr > td:nth-child(3) > strong > a')
+    .find('td:nth-child(3) strong > a')
     .first()
     .text()
     .trim()
