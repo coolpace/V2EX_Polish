@@ -59,6 +59,13 @@ export function readExtensionPackageJson(): {
   }
 }
 
+export function getExtensionArchiveFilename(
+  target: ExtensionTarget,
+  version: string = readExtensionPackageJson().version,
+): string {
+  return `v2ex-polish-${target}-${version}.zip`
+}
+
 export function isExtensionTarget(value: string | undefined): value is ExtensionTarget {
   return EXTENSION_TARGETS.includes(value as ExtensionTarget)
 }

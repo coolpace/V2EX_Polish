@@ -15,7 +15,7 @@ pnpm build
 3. 打包 TS 到 `apps/extension/dist/<target>/scripts/`
 4. 生成 Chrome / Firefox manifest
 5. 生成 userscript：`apps/extension/dist/userscript/index.min.js`
-6. 打包 zip 到 `apps/extension/dist/`（`v2ex-polish-chrome.zip` 与 `v2ex-polish-firefox.zip`）
+6. 打包带版本号的 zip 到 `apps/extension/dist/`（`v2ex-polish-chrome-<version>.zip` 与 `v2ex-polish-firefox-<version>.zip`）
 
 如果只需要本地调试或手动加载扩展，可使用：
 
@@ -35,11 +35,11 @@ pnpm package:zip
 
 - Chrome 可加载目录：`apps/extension/dist/chrome/`
 - Firefox 可加载目录：`apps/extension/dist/firefox/`
-- Chrome zip：`apps/extension/dist/v2ex-polish-chrome.zip`
-- Firefox zip：`apps/extension/dist/v2ex-polish-firefox.zip`
+- Chrome zip：`apps/extension/dist/v2ex-polish-chrome-<version>.zip`
+- Firefox zip：`apps/extension/dist/v2ex-polish-firefox-<version>.zip`
 - userscript：`apps/extension/dist/userscript/index.min.js`
 
-> zip 文件名不携带版本号（web-ext `-n` 固定命名，避免 Chrome/Firefox manifest `name` 同名互盖），实际版本以 zip 内 `manifest.json` 与 GitHub Release tag 为准。
+> `<version>` 会自动读取 `apps/extension/package.json` 中的 `version`。例如当前版本为 `2.5.4` 时，Chrome 包名为 `v2ex-polish-chrome-2.5.4.zip`。
 
 清理命令：
 
@@ -80,18 +80,18 @@ EXTENSION_MINIFY=1 pnpm build
 
 ### Chrome Web Store
 
-- 上传 `apps/extension/dist/v2ex-polish-chrome.zip`
+- 上传 `apps/extension/dist/v2ex-polish-chrome-<version>.zip`
 - 确认版本号高于当前商店版本
 - 如果权限有变化，同步更新商店说明
 
 ### Firefox Add-ons (AMO)
 
-- 上传 `apps/extension/dist/v2ex-polish-firefox.zip`
+- 上传 `apps/extension/dist/v2ex-polish-firefox-<version>.zip`
 - Firefox 版 manifest 已在生成阶段自动处理差异
 
 ### Microsoft Edge Add-ons
 
-- 直接复用 `apps/extension/dist/v2ex-polish-chrome.zip`
+- 直接复用 `apps/extension/dist/v2ex-polish-chrome-<version>.zip`
 
 ### GreasyFork
 
