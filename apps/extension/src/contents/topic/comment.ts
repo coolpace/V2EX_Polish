@@ -555,11 +555,12 @@ function handleFilteredComments() {
  * 设置回复的操作。
  */
 function processActions($cellDom: JQuery, data: CommentData) {
-  const $actions = $cellDom.find('> table > tbody > tr > td:last-of-type > .fr')
+  const $td = $cellDom.find('> table > tbody > tr > td:last-of-type')
+  const $actions = $td.find('> .fr, .flex-one-row:has(> .no)').last()
 
   const $controls = $('<span class="v2p-controls">')
 
-  const thankArea = $actions.find('> .thank_area')
+  const thankArea = $actions.find('.thank_area')
   const thanked = thankArea.hasClass('thanked')
 
   const thankEle = thankArea.find('> .thank')
