@@ -11,6 +11,7 @@ import { getCommentDataList, handleNestedComment } from '../dom'
 import { $body, loginName } from '../globals'
 import { addToReadingList, loadIcons, replaceCommentEmojiWithHD } from '../helpers'
 import { PREVIEW_QUERY } from '../preview-frame'
+import { removeReplyActionsFromCell } from '../reply-dom'
 import { handleLinkPreview } from './content'
 
 /** Token 失效时接口返回的错误信息。 */
@@ -367,10 +368,9 @@ export function createTopicPreview() {
                 }, 0)
 
                 // 移除主题页中「回复」、「点赞」等操作。
-                const $rightArea = $topicReplyBox
-                  .find('.cell[id^="r_"] > table > tbody > tr > td:last-of-type > .fr')
-                  .children(':not(.no)')
-                $rightArea.remove()
+                $commentCells.each((_, cellDom) => {
+                  removeReplyActionsFromCell(cellDom)
+                })
 
                 $topicPreview.append($topicReplyBox)
 

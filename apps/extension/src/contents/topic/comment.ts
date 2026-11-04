@@ -35,6 +35,7 @@ import {
   loadIcons,
   replaceCommentEmojiWithHD,
 } from '../helpers'
+import { getReplyActionsFromCell, getReplyLinkFromActions } from '../reply-dom'
 import { memberDataCache, processAvatar } from './avatar'
 import { handleLinkPreview, processReplyContent, updateMemberTag } from './content'
 
@@ -555,8 +556,14 @@ function handleFilteredComments() {
  * 设置回复的操作。
  */
 function processActions($cellDom: JQuery, data: CommentData) {
-  const $td = $cellDom.find('> table > tbody > tr > td:last-of-type')
-  const $actions = $td.find('> .fr, .flex-one-row:has(> .no)').last()
+  const cellDom = $cellDom.get(0)
+  const actionContainer = cellDom ? getReplyActionsFromCell(cellDom) : null
+
+  if (!actionContainer) {
+    return
+  }
+
+  const $actions = $(actionContainer)
 
   const $controls = $('<span class="v2p-controls">')
 
@@ -631,7 +638,8 @@ function processActions($cellDom: JQuery, data: CommentData) {
     $controls.append($thankIcon)
   }
 
-  const $reply = $actions.find('a:last-of-type')
+  const replyLink = getReplyLinkFromActions(actionContainer)
+  const $reply = replyLink ? $(replyLink) : $()
 
   $reply
     .attr('aria-label', '回复')

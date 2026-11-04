@@ -2,6 +2,7 @@ import { StorageKey } from '../../constants'
 import { getStorage, isMobileView } from '../../utils'
 import { $body, $commentTableRows, $replyBox, $topicHeader } from '../globals'
 import { loadIcons } from '../helpers'
+import { getReplyAuthorLinkFromRow } from '../reply-dom'
 import { handleComments } from './comment'
 import { handleContent } from './content'
 import { handleLayout } from './layout'
@@ -31,7 +32,13 @@ void (async () => {
     $topicHeader.find('a[href^="/member/"]').prop('target', '_blank')
 
     // 支持新页签打开用户主页链接。
-    $commentTableRows.find('td:nth-child(3) strong > a').prop('target', '_blank')
+    $commentTableRows.each((_, row) => {
+      const authorLink = getReplyAuthorLinkFromRow(row)
+
+      if (authorLink) {
+        $(authorLink).prop('target', '_blank')
+      }
+    })
   }
 
   handleTools()

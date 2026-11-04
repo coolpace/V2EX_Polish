@@ -1,12 +1,9 @@
 import { $commentBox } from '../globals'
+import { getReplyAuthorLinkFromCell } from '../reply-dom'
 
 /** 从回复 cell 中读取回复者昵称。 */
 function getReplyMemberName(cellDom: Element): string {
-  return $(cellDom)
-    .find('td:nth-child(3) strong > a')
-    .first()
-    .text()
-    .trim()
+  return getReplyAuthorLinkFromCell(cellDom)?.textContent?.trim() ?? ''
 }
 
 /**

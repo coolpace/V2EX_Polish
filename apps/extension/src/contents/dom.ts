@@ -1,5 +1,6 @@
 import type { CommentData, Options } from '../types'
 import { parseLikesCount } from '../utils'
+import { getReplyAuthorLinkFromRow } from './reply-dom'
 
 export function getCommentDataList({
   options,
@@ -19,9 +20,9 @@ export function getCommentDataList({
 
       const thanked = $tr.find('.thank_area').hasClass('thanked')
 
-      const $member = $td.find('strong > a')
-      const memberName = $member.text()
-      const memberLink = $member.prop('href')
+      const memberLinkElement = getReplyAuthorLinkFromRow(tr)
+      const memberName = memberLinkElement?.textContent?.trim() ?? ''
+      const memberLink = memberLinkElement?.getAttribute('href') ?? ''
       const memberAvatar = $tr.find('.avatar').prop('src')
 
       const $content = $td.find('> .reply_content')

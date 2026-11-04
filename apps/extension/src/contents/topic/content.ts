@@ -13,6 +13,7 @@ import {
   topicOwnerName,
 } from '../globals'
 import { getTagsText, loadIcons, setMemberTags } from '../helpers'
+import { getReplyAuthorLinkFromCell } from '../reply-dom'
 import { createTopicPreview } from './preview'
 
 /**
@@ -279,6 +280,11 @@ export function updateMemberTag(
         callbacks.onInsertNewTagBlock({ $tags })
       }
       else {
+        const $memberCells = $commentCells.filter((_, cellDom) => {
+          return getReplyAuthorLinkFromCell(cellDom)?.getAttribute('href')
+            === `/member/${memberName}`
+        })
+
         if (memberName === topicOwnerName) {
           // 如果为当前题主设置标签，也需要在主题头部区域同步展示标签。
           $topicHeader.append($tags.clone(true))
@@ -287,18 +293,10 @@ export function updateMemberTag(
         if (options.userTag.display === 'inline') {
           $tags
             .addClass('v2p-reply-tags-inline')
-            .insertBefore(
-              $commentCells
-                .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
-                .find('> table .badges'),
-            )
+            .insertBefore($memberCells.find('> table .badges'))
         }
         else {
-          $tags.insertBefore(
-            $commentCells
-              .filter(`:has(> table strong > a[href="/member/${memberName}"])`)
-              .find('> table .reply_content'),
-          )
+          $tags.insertBefore($memberCells.find('> table .reply_content'))
         }
       }
     }
