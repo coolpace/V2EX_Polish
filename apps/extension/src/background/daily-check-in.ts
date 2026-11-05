@@ -4,13 +4,14 @@ import type {
   CheckInResult,
   CheckInStage,
   CheckInTrigger,
-  DailyInfo,
 } from '../types'
 import { getStorage, setStorage } from '../utils'
 import {
-  getCheckInSkipReason,
-  getNextFailureCount,
-  getUtcDayKey,
+  buildDailyInfoAfterAttempt,
+  getCheckInScheduleDecision,
+  normalizeCheckInState,
+} from './check-in-scheduler'
+import {
   parseCheckInDays,
   parseCheckInPage,
   SUCCESS_TEXT,
@@ -78,7 +79,10 @@ function describeHttpFailure(status: number): string {
 }
 
 /** 失败结果附带的响应元数据。 */
-type CheckInResponseMeta = Pick<CheckInResult, 'httpStatus' | 'finalUrlPath'>
+type CheckInResponseMeta = Pick<
+  CheckInResult,
+  'httpStatus' | 'finalUrlPath' | 'retryAfterMs'
+>
 
 /** 构造结构一致的失败结果，避免各分支重复拼装字段。 */
 function fail(
@@ -88,6 +92,26 @@ function fail(
   meta?: CheckInResponseMeta,
 ): CheckInResult {
   return { status: 'failed', code, stage, reason, ...meta }
+}
+
+/**
+ * 解析 Retry-After，并将不可用或过大的值交给后续策略回退到默认等待时间。
+ */
+export function parseRetryAfter(value: string | null, now = Date.now()): number | undefined {
+  if (!value) {
+    return undefined
+  }
+
+  const seconds = Number(value)
+  const delayMs = Number.isFinite(seconds)
+    ? seconds * 1000
+    : Date.parse(value) - now
+
+  if (!Number.isFinite(delayMs) || delayMs < 60 * 1000 || delayMs > 24 * 60 * 60 * 1000) {
+    return undefined
+  }
+
+  return delayMs
 }
 
 /**
@@ -108,6 +132,9 @@ async function requestCheckInInner(): Promise<CheckInResult> {
   const pageMeta: CheckInResponseMeta = {
     httpStatus: res.status,
     finalUrlPath: getUrlPath(res.url),
+    retryAfterMs: res.status === 429
+      ? parseRetryAfter(res.headers.get('retry-after'))
+      : undefined,
   }
 
   // Cloudflare 人机验证会在响应头标记，需要先于状态码判断。
@@ -167,6 +194,9 @@ async function requestCheckInInner(): Promise<CheckInResult> {
   const redeemMeta: CheckInResponseMeta = {
     httpStatus: checkInRes.status,
     finalUrlPath: getUrlPath(checkInRes.url),
+    retryAfterMs: checkInRes.status === 429
+      ? parseRetryAfter(checkInRes.headers.get('retry-after'))
+      : undefined,
   }
 
   if (!checkInRes.ok) {
@@ -204,66 +234,10 @@ async function requestCheckIn(): Promise<CheckInResult> {
   return { ...result, durationMs: Date.now() - startedAt }
 }
 
-/**
- * 持久化签到状态，供 popup 展示与失败退避使用。
- */
-async function saveDailyInfo(
-  attemptTime: number,
-  result: CheckInResult,
-  trigger: CheckInTrigger | undefined,
-  previous?: DailyInfo,
-) {
-  // 保存前重新读取，避免覆盖并发写入的签到结果（例如多设备同步）。
-  let latest = previous
-
-  try {
-    latest = (await getStorage(false))[StorageKey.Daily] ?? previous
-  }
-  catch {
-    // 读取失败时退回请求前的快照。
-  }
-
-  const dailyInfo: DailyInfo = { ...latest }
-
-  if (result.status === 'success' || result.status === 'already') {
-    // 使用请求发起时间并保留更晚的确认时间，避免跨 UTC 零点或并发时记错奖励日。
-    const checkInTime = Math.max(latest?.lastCheckInTime ?? 0, attemptTime)
-
-    dailyInfo.lastCheckInTime = checkInTime
-    dailyInfo.lastCheckInDay = getUtcDayKey(checkInTime)
-    dailyInfo.checkInDays = result.checkInDays ?? latest?.checkInDays ?? previous?.checkInDays
-  }
-
-  const failed = result.status === 'failed'
-
-  if (failed) {
-    dailyInfo.failureCount = getNextFailureCount({
-      previousCount: latest?.failureCount,
-      lastAttemptTime: latest?.lastAttemptTime,
-      attemptTime,
-    })
-  }
-  else {
-    dailyInfo.failureCount = 0
-  }
-
-  dailyInfo.lastAttemptTime = attemptTime
-  dailyInfo.lastResult = result.status === 'skipped' ? latest?.lastResult : result.status
-  dailyInfo.lastError = failed ? result.reason : undefined
-  dailyInfo.lastErrorCode = failed ? result.code : undefined
-  dailyInfo.lastErrorStage = failed ? result.stage : undefined
-  dailyInfo.lastHttpStatus = result.httpStatus
-  dailyInfo.lastFinalUrlPath = result.finalUrlPath
-  dailyInfo.lastDurationMs = result.durationMs
-  dailyInfo.lastTrigger = trigger
-
-  await setStorage(StorageKey.Daily, dailyInfo)
-}
-
 /** 签到调用选项。 */
 export interface CheckInOptions {
-  /** 手动触发时忽略失败冷却。 */
-  bypassRetryCooldown?: boolean
+  /** 手动触发时忽略等待时间。 */
+  force?: boolean
   /** 触发来源，仅用于诊断记录。 */
   trigger?: CheckInTrigger
 }
@@ -272,28 +246,48 @@ export interface CheckInOptions {
  * 读取配置后执行签到，并将任何未预期的异常统一转换为失败结果。
  */
 async function runCheckIn(options: CheckInOptions): Promise<CheckInResult> {
+  const startedAt = Date.now()
   const storage = await getStorage(false)
-  const dailyInfo = storage[StorageKey.Daily]
+  const normalizedState = normalizeCheckInState(storage[StorageKey.Daily], startedAt)
 
-  const skipReason = getCheckInSkipReason({
-    now: Date.now(),
-    lastCheckInTime: dailyInfo?.lastCheckInTime,
-    lastCheckInDay: dailyInfo?.lastCheckInDay,
-    lastAttemptTime: dailyInfo?.lastAttemptTime,
-    lastResult: dailyInfo?.lastResult,
-    lastErrorCode: dailyInfo?.lastErrorCode,
-    bypassRetryCooldown: options.bypassRetryCooldown,
+  // 先持久化当日目标和抖动，确保 Service Worker 重启后不会重新生成时间。
+  if (normalizedState !== storage[StorageKey.Daily]) {
+    await setStorage(StorageKey.Daily, normalizedState)
+  }
+
+  const decision = getCheckInScheduleDecision({
+    now: startedAt,
+    state: normalizedState,
+    autoCheckInEnabled: storage[StorageKey.Options].autoCheckIn.enabled,
+    trigger: options.trigger ?? 'manual',
+    force: options.force,
   })
 
-  if (skipReason) {
-    return { status: 'skipped', reason: skipReason }
+  if (decision.action === 'skip') {
+    return { status: 'skipped', reason: decision.reason }
   }
 
   const attemptTime = Date.now()
-  const result = await requestCheckIn()
+  let result: CheckInResult
 
   try {
-    await saveDailyInfo(attemptTime, result, options.trigger, dailyInfo)
+    result = await requestCheckIn()
+  }
+  catch (error) {
+    const { code, message } = getErrorInfo(error)
+    result = fail(code, 'request-page', `签到失败：${message}`)
+  }
+
+  const nextState = buildDailyInfoAfterAttempt({
+    previous: normalizedState,
+    result,
+    attemptTime,
+    finishedAt: Date.now(),
+    trigger: options.trigger ?? 'manual',
+  })
+
+  try {
+    await setStorage(StorageKey.Daily, nextState)
   }
   catch (error) {
     // 状态写入失败不应影响已完成的领取。

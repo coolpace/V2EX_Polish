@@ -1,7 +1,7 @@
 import './polyfill'
 
 import { createToast } from '../components/toast'
-import { Links, MessageFrom, StorageKey } from '../constants'
+import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import { postTask } from '../post-task'
 import {
@@ -99,6 +99,13 @@ void (async () => {
   // Warning: 不能在登录/注册等认证页面请求 getV2P_Settings 接口，否则会导致无法成功跳转页面。
   const authPaths = ['/signin', '/signup', '/forgot', '/2fa']
   const isAuthPage = authPaths.some((path) => window.location.pathname.startsWith(path))
+
+  // 页面刷新只发出轻量 nudge，是否真正请求签到由 background 的持久化状态决定。
+  if (isBrowserExt && window.top === window && !isAuthPage) {
+    void chrome.runtime.sendMessage({ [MessageKey.checkInNudge]: true }).catch(() => {
+      // background 重启或扩展更新期间可能暂时不可用，下一次页面事件会再次触发。
+    })
+  }
 
   // 当发现远程的配置有更新时，自动同步到本地。
   if (syncInfo) {

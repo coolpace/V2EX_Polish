@@ -12,15 +12,6 @@ export const SUCCESS_TEXT = '每日登录奖励已领取'
 /** V2EX 每日登录奖励重置点（UTC 00:00）后，等待一段时间再尝试，避免拿到重置前的页面状态。 */
 export const REWARD_RESET_GRACE_MS = 5 * 60 * 1000
 
-/** 一般失败后的重试冷却时间，避免高频请求触发 V2EX 限流。 */
-export const FAILURE_RETRY_INTERVAL_MS = 30 * 60 * 1000
-
-/** 未登录状态下的重试冷却时间，用户登录后可以较快恢复。 */
-export const UNAUTHENTICATED_RETRY_INTERVAL_MS = 10 * 60 * 1000
-
-/** 被人机验证拦截后的重试冷却时间，避免短时间内反复触发风控。 */
-export const CHALLENGE_RETRY_INTERVAL_MS = 60 * 60 * 1000
-
 /** 主页开始提醒签到异常前，同一天需要连续失败的次数。 */
 export const CHECK_IN_FAILURE_PROMPT_THRESHOLD = 2
 
@@ -56,20 +47,6 @@ export function getUtcDayKey(timestamp: number): string {
   const date = new Date(timestamp)
 
   return `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`
-}
-
-/** 计算本次失败后的连续失败次数，跨 UTC 奖励日时重新计数。 */
-export function getNextFailureCount(params: {
-  previousCount?: number
-  lastAttemptTime?: number
-  attemptTime: number
-}): number {
-  const { previousCount, lastAttemptTime, attemptTime } = params
-  const sameDayAsLastAttempt = lastAttemptTime
-    ? getUtcDayKey(lastAttemptTime) === getUtcDayKey(attemptTime)
-    : false
-
-  return sameDayAsLastAttempt ? (previousCount ?? 0) + 1 : 1
 }
 
 /** 获取时间戳所在 UTC 日期的起点（UTC 00:00）。 */
@@ -155,11 +132,7 @@ interface SkipCheckParams {
   now: number
   lastCheckInTime?: number
   lastCheckInDay?: string
-  lastAttemptTime?: number
-  lastResult?: DailyInfo['lastResult']
-  lastErrorCode?: DailyInfo['lastErrorCode']
-  /** 手动触发时忽略失败冷却。 */
-  bypassRetryCooldown?: boolean
+  nextActionAt?: number
 }
 
 /**
@@ -170,10 +143,7 @@ export function getCheckInSkipReason(params: SkipCheckParams): string | undefine
     now,
     lastCheckInTime,
     lastCheckInDay,
-    lastAttemptTime,
-    lastResult,
-    lastErrorCode,
-    bypassRetryCooldown,
+    nextActionAt,
   } = params
 
   // 新数据直接使用奖励日字段；旧数据回退到时间戳的 UTC 日期。
@@ -188,26 +158,11 @@ export function getCheckInSkipReason(params: SkipCheckParams): string | undefine
     return '等待 V2EX 奖励日重置'
   }
 
-  if (!bypassRetryCooldown && lastResult === 'failed' && lastAttemptTime) {
-    if (now - lastAttemptTime < getRetryInterval(lastErrorCode)) {
-      return '上次签到失败，重试冷却中'
-    }
+  if (nextActionAt !== undefined && now < nextActionAt) {
+    return '尚未到下次签到时间'
   }
 
   return undefined
-}
-
-/** 按失败分类选择重试冷却时长。 */
-function getRetryInterval(code?: CheckInErrorCode): number {
-  if (code === 'unauthenticated') {
-    return UNAUTHENTICATED_RETRY_INTERVAL_MS
-  }
-
-  if (code === 'challenge') {
-    return CHALLENGE_RETRY_INTERVAL_MS
-  }
-
-  return FAILURE_RETRY_INTERVAL_MS
 }
 
 const errorCodeTextMap: Record<CheckInErrorCode, { title: string, hint: string }> = {
@@ -232,6 +187,8 @@ const triggerTextMap: Record<CheckInTrigger, string> = {
   alarm: '定时任务',
   startup: '浏览器启动',
   tab: '打开 V2EX 页面',
+  refresh: '刷新 V2EX 页面',
+  online: '网络恢复',
   popup: '打开扩展弹窗',
   manual: '手动点击',
 }
@@ -260,8 +217,11 @@ export type CheckInDisplayState
       code?: CheckInErrorCode
       reason?: string
       httpStatus?: number
+      retryAt?: number
+      userMessage?: string
+      needsAction?: boolean
     }
-    | { type: 'not-attempted', skipReason?: string }
+    | { type: 'not-attempted', skipReason?: string, nextActionAt?: number }
     | { type: 'auto-disabled' }
 
 /**
@@ -305,18 +265,20 @@ export function resolveCheckInDisplayState(params: {
       code: dailyInfo.lastErrorCode,
       reason: dailyInfo.lastError,
       httpStatus: dailyInfo.lastHttpStatus,
+      retryAt: dailyInfo.nextActionAt,
+      userMessage: dailyInfo.userMessage,
+      needsAction: dailyInfo.phase === 'needs-action',
     }
   }
 
   return {
     type: 'not-attempted',
+    nextActionAt: dailyInfo?.nextActionAt,
     skipReason: getCheckInSkipReason({
       now,
       lastCheckInTime: dailyInfo?.lastCheckInTime,
       lastCheckInDay: dailyInfo?.lastCheckInDay,
-      lastAttemptTime,
-      lastResult: dailyInfo?.lastResult,
-      lastErrorCode: dailyInfo?.lastErrorCode,
+      nextActionAt: dailyInfo?.nextActionAt,
     }),
   }
 }
@@ -326,7 +288,8 @@ export function shouldPromptCheckInFailure(
   state: CheckInDisplayState,
   failureCount?: number,
 ): boolean {
-  return state.type === 'failed' && (failureCount ?? 0) >= CHECK_IN_FAILURE_PROMPT_THRESHOLD
+  return state.type === 'failed'
+    && (state.needsAction || (failureCount ?? 0) >= CHECK_IN_FAILURE_PROMPT_THRESHOLD)
 }
 
 /** 生成诊断文本所需的输入。 */
@@ -400,6 +363,18 @@ export function buildCheckInDiagnostic(input: CheckInDiagnosticInput): string {
     if (state.reason) {
       lines.push(`失败原因：${state.reason}`)
     }
+  }
+
+  if (state.type === 'not-attempted' && state.nextActionAt) {
+    lines.push(`下次自动尝试：${formatTimestamp(state.nextActionAt, { format: 'YMDHMS' })}`)
+  }
+
+  if (dailyInfo?.nextActionAt) {
+    lines.push(`计划重试：${formatTimestamp(dailyInfo.nextActionAt, { format: 'YMDHMS' })}`)
+  }
+
+  if (dailyInfo?.retryCause) {
+    lines.push(`重试分类：${dailyInfo.retryCause}`)
   }
 
   if (dailyInfo?.lastHttpStatus !== undefined) {

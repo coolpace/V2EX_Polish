@@ -78,7 +78,8 @@ export async function setV2P_Settings(
  * 该方法会按以下顺序获取数据：
  * 1. 如果启用缓存且存在缓存数据，直接返回缓存
  * 2. 如果不在浏览器扩展环境中，返回默认配置
- * 3. 如果在浏览器扩展环境中，从 chrome.storage.sync 获取数据
+ * 3. 如果在浏览器扩展环境中，从 chrome.storage.sync 获取配置，并从
+ *    chrome.storage.local 获取设备专属数据
  *
  * @param useCache - 是否使用缓存数据，默认为 true
  */
@@ -106,7 +107,7 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
     else {
       Promise.all([
         chrome.storage.sync.get(),
-        chrome.storage.local.get(StorageKey.MemberTag),
+        chrome.storage.local.get([StorageKey.MemberTag, StorageKey.Daily]),
       ])
         .then(([syncItems, localItems]: [StorageItems, Partial<StorageItems>]) => {
           let data: StorageSettings
@@ -118,6 +119,8 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
             ...syncItems,
             [StorageKey.MemberTag]: localItems[StorageKey.MemberTag]
               ?? syncItems[StorageKey.MemberTag],
+            [StorageKey.Daily]: localItems[StorageKey.Daily]
+              ?? syncItems[StorageKey.Daily],
           }
 
           if (options) {
@@ -226,11 +229,14 @@ export async function setStorage<T extends StorageKey>(
 ) {
   switch (storageKey) {
     case StorageKey.MemberTag:
+      // fall through
+
+    case StorageKey.Daily:
       try {
         await chrome.storage.local.set({ [storageKey]: storageItem })
 
         // 当检测到配置更新时，延迟自动备份到远程。
-        if (canAutoBackup()) {
+        if (storageKey !== StorageKey.Daily && canAutoBackup()) {
           scheduleBackup()
         }
       }
@@ -245,9 +251,6 @@ export async function setStorage<T extends StorageKey>(
       // fall through
 
     case StorageKey.API:
-      // fall through
-
-    case StorageKey.Daily:
       // fall through
 
     case StorageKey.SyncInfo:

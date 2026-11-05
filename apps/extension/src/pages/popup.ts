@@ -143,13 +143,13 @@ function ensurePopupCheckIn(): Promise<void> {
 /**
  * 将未签到的原因转换成卡片提示。
  */
-function describeNotAttempted(skipReason?: string): string {
-  if (skipReason === '等待 V2EX 奖励日重置') {
-    return '奖励日刚重置，稍后会自动签到'
+function describeNotAttempted(skipReason?: string, nextActionAt?: number): string {
+  if (nextActionAt && nextActionAt > Date.now()) {
+    return `将于 ${formatTimestamp(nextActionAt, { format: 'YMDHMS' })} 自动签到`
   }
 
-  if (skipReason === '上次签到失败，重试冷却中') {
-    return '上次签到失败，冷却结束后自动重试'
+  if (skipReason === '等待 V2EX 奖励日重置') {
+    return '奖励日刚重置，稍后会自动签到'
   }
 
   if (skipReason === '已有签到任务进行中') {
@@ -200,11 +200,21 @@ function renderCheckInFeature(
     const { title, hint } = describeCheckInErrorCode(state.code)
     const date = formatTimestamp(state.attemptTime, { format: 'YMDHMS' })
     const status = state.httpStatus ? `（HTTP ${state.httpStatus}）` : ''
-    const selfResolvable = state.code === 'unauthenticated' || state.code === 'challenge'
+    const selfResolvable = state.needsAction && (
+      state.code === 'unauthenticated' || state.code === 'challenge' || state.code === 'http'
+    )
+    let retry = ''
+
+    if (state.retryAt && !state.needsAction) {
+      retry = state.retryAt > Date.now()
+        ? `<br>下次自动重试：${formatTimestamp(state.retryAt, { format: 'YMDHMS' })}`
+        : '<br>即将自动重试'
+    }
 
     $title.text(`⚠️ ${title}`)
     $content.html(
-      `${escapeHTML(date)} 尝试${status}：${escapeHTML(hint)}`
+      `${escapeHTML(date)} 尝试${status}：${escapeHTML(state.userMessage ?? hint)}`
+      + retry
       + (selfResolvable ? '' : '<br>点击下方「反馈问题」会带上诊断信息'),
     )
 
@@ -229,7 +239,7 @@ function renderCheckInFeature(
   }
   else {
     $title.text('今日尚未签到')
-    $content.text(describeNotAttempted(state.skipReason))
+    $content.text(describeNotAttempted(state.skipReason, state.nextActionAt))
   }
 
   $checkIn.on('click', () => {

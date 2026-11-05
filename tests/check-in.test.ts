@@ -2,12 +2,9 @@ import { describe, expect, it } from 'vitest'
 
 import {
   buildCheckInDiagnostic,
-  CHALLENGE_RETRY_INTERVAL_MS,
   describeCheckInErrorCode,
   extractRedeemPath,
-  FAILURE_RETRY_INTERVAL_MS,
   getCheckInSkipReason,
-  getNextFailureCount,
   getUtcDayKey,
   getUtcDayStart,
   isChallengePage,
@@ -17,8 +14,8 @@ import {
   resolveCheckInDisplayState,
   REWARD_RESET_GRACE_MS,
   shouldPromptCheckInFailure,
-  UNAUTHENTICATED_RETRY_INTERVAL_MS,
 } from '../apps/extension/src/background/check-in-utils'
+import { parseRetryAfter } from '../apps/extension/src/background/daily-check-in'
 
 describe('getUtcDayKey', () => {
   it('按 UTC 日期划分', () => {
@@ -119,7 +116,6 @@ describe('getCheckInSkipReason', () => {
       getCheckInSkipReason({
         now,
         lastCheckInTime: Date.UTC(2026, 9, 22, 8),
-        lastResult: 'success',
       }),
     ).toBe('今日已签到')
   })
@@ -129,7 +125,6 @@ describe('getCheckInSkipReason', () => {
       getCheckInSkipReason({
         now,
         lastCheckInTime: Date.UTC(2026, 9, 21, 23),
-        lastResult: 'success',
       }),
     ).toBeUndefined()
   })
@@ -139,40 +134,26 @@ describe('getCheckInSkipReason', () => {
       getCheckInSkipReason({
         now: Date.UTC(2026, 9, 22) + REWARD_RESET_GRACE_MS - 1,
         lastCheckInTime: Date.UTC(2026, 9, 21, 8),
-        lastResult: 'success',
       }),
     ).toBe('等待 V2EX 奖励日重置')
   })
 
-  it('失败后在冷却期内跳过', () => {
+  it('到达持久化的下次动作时间后允许执行', () => {
     expect(
       getCheckInSkipReason({
         now,
-        lastAttemptTime: now - FAILURE_RETRY_INTERVAL_MS + 1000,
-        lastResult: 'failed',
-      }),
-    ).toBe('上次签到失败，重试冷却中')
-  })
-
-  it('超过冷却期后允许重试', () => {
-    expect(
-      getCheckInSkipReason({
-        now,
-        lastAttemptTime: now - FAILURE_RETRY_INTERVAL_MS,
-        lastResult: 'failed',
+        nextActionAt: now,
       }),
     ).toBeUndefined()
   })
 
-  it('手动触发时忽略失败冷却', () => {
+  it('尚未到达下次动作时间时保持等待', () => {
     expect(
       getCheckInSkipReason({
         now,
-        lastAttemptTime: now - 1000,
-        lastResult: 'failed',
-        bypassRetryCooldown: true,
+        nextActionAt: now + 1,
       }),
-    ).toBeUndefined()
+    ).toBe('尚未到下次签到时间')
   })
 
   it('优先使用奖励日字段判断', () => {
@@ -181,49 +162,8 @@ describe('getCheckInSkipReason', () => {
         now,
         lastCheckInTime: Date.UTC(2026, 9, 21, 8),
         lastCheckInDay: '2026-10-22',
-        lastResult: 'success',
       }),
     ).toBe('今日已签到')
-  })
-
-  it('未登录失败使用更短的重试冷却', () => {
-    expect(
-      getCheckInSkipReason({
-        now,
-        lastAttemptTime: now - UNAUTHENTICATED_RETRY_INTERVAL_MS + 1000,
-        lastResult: 'failed',
-        lastErrorCode: 'unauthenticated',
-      }),
-    ).toBe('上次签到失败，重试冷却中')
-
-    expect(
-      getCheckInSkipReason({
-        now,
-        lastAttemptTime: now - UNAUTHENTICATED_RETRY_INTERVAL_MS,
-        lastResult: 'failed',
-        lastErrorCode: 'unauthenticated',
-      }),
-    ).toBeUndefined()
-  })
-
-  it('人机验证失败使用更长的重试冷却', () => {
-    expect(
-      getCheckInSkipReason({
-        now,
-        lastAttemptTime: now - CHALLENGE_RETRY_INTERVAL_MS + 1000,
-        lastResult: 'failed',
-        lastErrorCode: 'challenge',
-      }),
-    ).toBe('上次签到失败，重试冷却中')
-
-    expect(
-      getCheckInSkipReason({
-        now,
-        lastAttemptTime: now - CHALLENGE_RETRY_INTERVAL_MS,
-        lastResult: 'failed',
-        lastErrorCode: 'challenge',
-      }),
-    ).toBeUndefined()
   })
 })
 
@@ -279,6 +219,45 @@ describe('resolveCheckInDisplayState', () => {
     ).toMatchObject({ type: 'failed', code: 'unauthenticated', httpStatus: 200 })
   })
 
+  it('返回下一次自动重试和用户处理状态', () => {
+    const retryAt = Date.UTC(2026, 9, 22, 11, 1)
+
+    expect(
+      resolveCheckInDisplayState({
+        now,
+        autoCheckInEnabled: true,
+        dailyInfo: {
+          lastAttemptTime: Date.UTC(2026, 9, 22, 11),
+          lastResult: 'failed',
+          lastErrorCode: 'network',
+          nextActionAt: retryAt,
+        },
+      }),
+    ).toMatchObject({
+      type: 'failed',
+      retryAt,
+      needsAction: false,
+    })
+
+    expect(
+      resolveCheckInDisplayState({
+        now,
+        autoCheckInEnabled: true,
+        dailyInfo: {
+          lastAttemptTime: Date.UTC(2026, 9, 22, 11),
+          lastResult: 'failed',
+          lastErrorCode: 'challenge',
+          phase: 'needs-action',
+          userMessage: '需要人机验证',
+        },
+      }),
+    ).toMatchObject({
+      type: 'failed',
+      needsAction: true,
+      userMessage: '需要人机验证',
+    })
+  })
+
   it('前一天的失败不当作今日失败', () => {
     expect(
       resolveCheckInDisplayState({
@@ -300,32 +279,6 @@ describe('resolveCheckInDisplayState', () => {
   })
 })
 
-describe('getNextFailureCount', () => {
-  it('同日连续失败累加', () => {
-    expect(
-      getNextFailureCount({
-        previousCount: 1,
-        lastAttemptTime: Date.UTC(2026, 9, 22, 10),
-        attemptTime: Date.UTC(2026, 9, 22, 11),
-      }),
-    ).toBe(2)
-  })
-
-  it('跨 UTC 奖励日后重新计数', () => {
-    expect(
-      getNextFailureCount({
-        previousCount: 3,
-        lastAttemptTime: Date.UTC(2026, 9, 21, 23),
-        attemptTime: Date.UTC(2026, 9, 22, 0, 10),
-      }),
-    ).toBe(1)
-  })
-
-  it('首次失败记为 1', () => {
-    expect(getNextFailureCount({ attemptTime: Date.UTC(2026, 9, 22, 11) })).toBe(1)
-  })
-})
-
 describe('shouldPromptCheckInFailure', () => {
   const failedState = { type: 'failed' as const, attemptTime: Date.UTC(2026, 9, 22, 11) }
 
@@ -344,6 +297,34 @@ describe('shouldPromptCheckInFailure', () => {
         3,
       ),
     ).toBe(false)
+  })
+
+  it('需要用户处理时立即提示', () => {
+    expect(
+      shouldPromptCheckInFailure(
+        {
+          type: 'failed',
+          attemptTime: Date.UTC(2026, 9, 22, 11),
+          needsAction: true,
+        },
+        1,
+      ),
+    ).toBe(true)
+  })
+})
+
+describe('parseRetryAfter', () => {
+  const now = Date.UTC(2026, 9, 22, 11)
+
+  it('支持秒数和 HTTP 日期', () => {
+    expect(parseRetryAfter('120', now)).toBe(120_000)
+    expect(parseRetryAfter(new Date(now + 5 * 60_000).toUTCString(), now)).toBe(300_000)
+  })
+
+  it('过短、过长或非法值返回 undefined', () => {
+    expect(parseRetryAfter('0', now)).toBeUndefined()
+    expect(parseRetryAfter(String(25 * 60 * 60), now)).toBeUndefined()
+    expect(parseRetryAfter('invalid', now)).toBeUndefined()
   })
 })
 
@@ -378,5 +359,26 @@ describe('buildCheckInDiagnostic', () => {
     expect(text).toContain('触发来源：定时任务')
     expect(text).toContain('UTC+8')
     expect(text).not.toContain('?once=')
+  })
+
+  it('包含计划重试时间与分类', () => {
+    const retryAt = Date.UTC(2026, 9, 22, 11, 5)
+    const text = buildCheckInDiagnostic({
+      now: Date.UTC(2026, 9, 22, 12),
+      autoCheckInEnabled: true,
+      extensionVersion: '1.9.0',
+      browser: 'Chromium（test）',
+      timezoneOffsetMinutes: -480,
+      dailyInfo: {
+        lastAttemptTime: Date.UTC(2026, 9, 22, 11),
+        lastResult: 'failed',
+        lastErrorCode: 'network',
+        nextActionAt: retryAt,
+        retryCause: 'transient',
+      },
+    })
+
+    expect(text).toContain('计划重试：')
+    expect(text).toContain('重试分类：transient')
   })
 })

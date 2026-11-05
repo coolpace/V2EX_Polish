@@ -6,7 +6,8 @@ import {
   V2EX_DOMAINS,
 } from '../constants'
 import type { CheckInResult, CheckInTrigger, LegacyTag, MemberTag } from '../types'
-import { getRunEnv, getStorage } from '../utils'
+import { getRunEnv, getStorage, setStorage } from '../utils'
+import { getCheckInAlarmTime, normalizeCheckInState } from './check-in-scheduler'
 import { checkIn } from './daily-check-in'
 
 /**
@@ -78,6 +79,7 @@ interface Message {
   [MessageKey.colorScheme]?: 'dark' | 'light'
   [MessageKey.showOptions]?: true
   [MessageKey.checkIn]?: { force?: boolean }
+  [MessageKey.checkInNudge]?: true
 }
 
 function generateUrlPatterns(path: string): string[] {
@@ -98,11 +100,43 @@ function isV2EXUrl(url: string): boolean {
   }
 }
 
-chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) => {
+function isExtensionPageSender(sender: chrome.runtime.MessageSender): boolean {
+  return sender.id === chrome.runtime.id
+    && !!sender.url?.startsWith(chrome.runtime.getURL(''))
+}
+
+function isV2EXContentSender(sender: chrome.runtime.MessageSender): boolean {
+  const url = sender.tab?.url ?? sender.url
+
+  return url !== undefined && isV2EXUrl(url)
+}
+
+chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
   if (Object.hasOwn(message, MessageKey.checkIn)) {
+    if (!isExtensionPageSender(sender)) {
+      sendResponse({ status: 'skipped', reason: '无权执行签到' })
+
+      return false
+    }
+
     const force = message[MessageKey.checkIn]?.force === true
 
     void runAutoCheckIn({ force, trigger: force ? 'manual' : 'popup' })
+      .then((result) => {
+        sendResponse(result)
+      })
+
+    return true
+  }
+
+  if (Object.hasOwn(message, MessageKey.checkInNudge)) {
+    if (!isV2EXContentSender(sender)) {
+      sendResponse({ status: 'skipped', reason: '无效的签到触发来源' })
+
+      return false
+    }
+
+    void runAutoCheckIn({ trigger: 'refresh' })
       .then((result) => {
         sendResponse(result)
       })
@@ -253,7 +287,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   })()
 })
 
-const checkInAlarmName = 'dailyCheckIn'
+const checkInAlarmName = 'dailyCheckInV2'
+const legacyCheckInAlarmName = 'dailyCheckIn'
 
 /**
  * 自动签到统一入口。
@@ -265,32 +300,63 @@ async function runAutoCheckIn(
   options: { force?: boolean, trigger?: CheckInTrigger } = {},
 ): Promise<CheckInResult | undefined> {
   try {
-    // 手动触发不受「每日自动签到」开关限制；自动触发使用合并默认值后的配置。
-    if (!options.force) {
-      const storage = await getStorage(false)
-
-      if (!storage[StorageKey.Options].autoCheckIn.enabled) {
-        return undefined
-      }
-    }
-
-    return await checkIn({ bypassRetryCooldown: options.force, trigger: options.trigger })
+    return await checkIn({ force: options.force, trigger: options.trigger })
   }
   catch (error) {
     console.warn('[V2EX Polish] 自动签到出错：', error)
 
     return undefined
   }
+  finally {
+    scheduleCheckInAlarm()
+  }
 }
 
-chrome.alarms.get(checkInAlarmName, (alarm) => {
-  if (typeof alarm === 'undefined') {
-    // background 脚本无法持久运行，在 Chrome 中 5 分钟内会关闭连接，所以需要使用 alarm 来保持定时任务。
-    void chrome.alarms.create(checkInAlarmName, {
-      periodInMinutes: 4.9,
-    })
+/** 根据持久化状态创建唯一的、下一次动作的一次性 alarm。 */
+async function reconcileCheckInAlarm(now = Date.now()): Promise<void> {
+  const storage = await getStorage(false)
+  const state = normalizeCheckInState(storage[StorageKey.Daily], now)
+
+  if (state !== storage[StorageKey.Daily]) {
+    await setStorage(StorageKey.Daily, state)
   }
-})
+
+  await chrome.alarms.clear(legacyCheckInAlarmName)
+
+  const scheduledTime = getCheckInAlarmTime(
+    state,
+    storage[StorageKey.Options].autoCheckIn.enabled,
+  )
+
+  if (scheduledTime === undefined) {
+    await chrome.alarms.clear(checkInAlarmName)
+
+    return
+  }
+
+  const currentAlarm = await chrome.alarms.get(checkInAlarmName)
+
+  if (
+    currentAlarm
+    && Math.abs(currentAlarm.scheduledTime - scheduledTime) < 2000
+    && !currentAlarm.periodInMinutes
+  ) {
+    return
+  }
+
+  const alarmInfo = {
+    when: scheduledTime,
+    persistAcrossSessions: true,
+  } as chrome.alarms.AlarmCreateInfo
+
+  await chrome.alarms.create(checkInAlarmName, alarmInfo)
+}
+
+function scheduleCheckInAlarm() {
+  void reconcileCheckInAlarm().catch((error: unknown) => {
+    console.warn('[V2EX Polish] 同步签到定时器失败：', error)
+  })
+}
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === checkInAlarmName) {
@@ -301,3 +367,20 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.runtime.onStartup.addListener(() => {
   void runAutoCheckIn({ trigger: 'startup' })
 })
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  const optionsChanged = areaName === 'sync'
+    && Object.hasOwn(changes, StorageKey.Options)
+  const stateChanged = areaName === 'local'
+    && Object.hasOwn(changes, StorageKey.Daily)
+
+  if (optionsChanged || stateChanged) {
+    scheduleCheckInAlarm()
+  }
+})
+
+globalThis.addEventListener('online', () => {
+  void runAutoCheckIn({ trigger: 'online' })
+})
+
+scheduleCheckInAlarm()

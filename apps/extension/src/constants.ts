@@ -501,6 +501,7 @@ export const enum MessageKey {
   colorScheme = 'colorSchemes',
   showOptions = 'showOptions',
   checkIn = 'checkIn',
+  checkInNudge = 'checkInNudge',
 }
 
 export const enum MessageFrom {

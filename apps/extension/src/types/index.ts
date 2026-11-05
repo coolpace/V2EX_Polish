@@ -194,6 +194,8 @@ export type CheckInTrigger
   = | 'alarm'
     | 'startup'
     | 'tab'
+    | 'refresh'
+    | 'online'
     | 'popup'
     | 'manual'
 
@@ -212,11 +214,48 @@ export interface CheckInResult {
   finalUrlPath?: string
   /** 本次请求耗时（毫秒）。 */
   durationMs?: number
+  /** 服务端通过 Retry-After 建议的重试等待时间。 */
+  retryAfterMs?: number
   /** 已连续登录天数。 */
   checkInDays?: number
 }
 
+/** 签到任务在持久化状态机中的阶段。 */
+export type CheckInPhase = 'scheduled' | 'succeeded' | 'needs-action'
+
+/** 重试原因分类，用于安排下一次动作和展示状态。 */
+export type CheckInRetryCause
+  = | 'transient'
+    | 'server'
+    | 'rate-limited'
+    | 'forbidden'
+    | 'authentication'
+    | 'challenge'
+    | 'unexpected-page'
+    | 'ambiguous'
+    | 'unknown'
+
 export interface DailyInfo {
+  /** 当前签到状态结构版本。 */
+  schemaVersion?: 2
+  /** 当前状态对应的 UTC 奖励日。 */
+  rewardDay?: string
+  /** 当前奖励日的任务阶段。 */
+  phase?: CheckInPhase
+  /** 当天首次自动签到目标时间。 */
+  targetAt?: number
+  /** 下一次允许自动执行或 nudge 的时间。 */
+  nextActionAt?: number
+  /** 网络类失败后允许刷新或联网事件提前重试的时间。 */
+  nudgeEligibleAt?: number
+  /** 当前奖励日实际网络请求次数。 */
+  attemptCount?: number
+  /** 最近一次真实请求完成时间。 */
+  lastFinishedAt?: number
+  /** 最近一次失败对应的重试分类。 */
+  retryCause?: CheckInRetryCause
+  /** 需要用户处理时展示的说明。 */
+  userMessage?: string
   /** 最近一次确认已领取奖励的时间。 */
   lastCheckInTime?: number
   /** 最近一次已领取奖励的 UTC 日期键（例如 2026-10-22），用于奖励日判断。 */

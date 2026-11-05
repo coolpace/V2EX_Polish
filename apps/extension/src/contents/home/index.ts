@@ -3,6 +3,7 @@ import {
   shouldPromptCheckInFailure,
 } from '../../background/check-in-utils'
 import { StorageKey } from '../../constants'
+import type { DailyInfo } from '../../types'
 import { getStorage } from '../../utils'
 import { $infoCard } from '../globals'
 import { loadIcons } from '../helpers'
@@ -29,8 +30,9 @@ void (async () => {
 
   applyTopicListFilter('home')
 
-  {
-    const dailyInfo = storage[StorageKey.Daily]
+  function renderCheckInInfoRow(dailyInfo: DailyInfo | undefined) {
+    $infoCard.find('.v2p-check-in-status').remove()
+
     const state = resolveCheckInDisplayState({
       now: Date.now(),
       dailyInfo,
@@ -38,7 +40,9 @@ void (async () => {
     })
 
     function appendInfoRow(text: string, muted = false) {
-      const className = muted ? 'cell v2p-info-row v2p-info-row-muted' : 'cell v2p-info-row'
+      const className = muted
+        ? 'cell v2p-info-row v2p-info-row-muted v2p-check-in-status'
+        : 'cell v2p-info-row v2p-check-in-status'
 
       $infoCard.append(`
         <a class="${className}" href="/mission/daily">
@@ -54,6 +58,16 @@ void (async () => {
       // 同日连续失败多次才提醒，过滤偶发的网络抖动。
       appendInfoRow('今日签到未完成，查看详情', true)
     }
+  }
+
+  renderCheckInInfoRow(storage[StorageKey.Daily])
+
+  if (typeof chrome !== 'undefined' && chrome.storage?.onChanged) {
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName === 'local' && changes[StorageKey.Daily]) {
+        renderCheckInInfoRow(changes[StorageKey.Daily].newValue as DailyInfo | undefined)
+      }
+    })
   }
 
   handleHotTopics()
