@@ -48,8 +48,16 @@
           "*://*/notes/*",
           "*://*/settings",
           "*://*/write",
-          "*://*/member/*"
+          "*://*/member/*",
+          "*://*/mission/daily*"
         ]
+      },
+      {
+        "css": [],
+        "js": ["scripts/v2ex-mission.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
       },
       {
         "css": [],
@@ -161,8 +169,16 @@
           "*://*/notes/*",
           "*://*/settings",
           "*://*/write",
-          "*://*/member/*"
+          "*://*/member/*",
+          "*://*/mission/daily*"
         ]
+      },
+      {
+        "css": [],
+        "js": ["scripts/v2ex-mission.min.js"],
+        "runAt": null,
+        "allFrames": true,
+        "excludeMatches": []
       },
       {
         "css": [],

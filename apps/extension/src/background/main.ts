@@ -7,6 +7,7 @@ import {
 } from '../constants'
 import type { CheckInResult, CheckInTrigger, LegacyTag, MemberTag } from '../types'
 import { getRunEnv, getStorage, setStorage } from '../utils'
+import { isMissionCheckInUrl } from './check-in-message'
 import { getCheckInAlarmTime, normalizeCheckInState } from './check-in-scheduler'
 import { checkIn } from './daily-check-in'
 
@@ -80,6 +81,7 @@ interface Message {
   [MessageKey.showOptions]?: true
   [MessageKey.checkIn]?: { force?: boolean }
   [MessageKey.checkInNudge]?: true
+  [MessageKey.checkInRetry]?: true
 }
 
 function generateUrlPatterns(path: string): string[] {
@@ -111,6 +113,19 @@ function isV2EXContentSender(sender: chrome.runtime.MessageSender): boolean {
   return url !== undefined && isV2EXUrl(url)
 }
 
+function isMissionPageSender(sender: chrome.runtime.MessageSender): boolean {
+  return isMissionCheckInUrl(sender.tab?.url ?? sender.url)
+}
+
+function respondToCheckIn(
+  options: { force?: boolean, trigger: CheckInTrigger },
+  sendResponse: (response?: CheckInResult) => void,
+): true {
+  void runAutoCheckIn(options).then(sendResponse)
+
+  return true
+}
+
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
   if (Object.hasOwn(message, MessageKey.checkIn)) {
     if (!isExtensionPageSender(sender)) {
@@ -121,12 +136,10 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
 
     const force = message[MessageKey.checkIn]?.force === true
 
-    void runAutoCheckIn({ force, trigger: force ? 'manual' : 'popup' })
-      .then((result) => {
-        sendResponse(result)
-      })
-
-    return true
+    return respondToCheckIn(
+      { force, trigger: force ? 'manual' : 'popup' },
+      sendResponse,
+    )
   }
 
   if (Object.hasOwn(message, MessageKey.checkInNudge)) {
@@ -136,12 +149,17 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
       return false
     }
 
-    void runAutoCheckIn({ trigger: 'refresh' })
-      .then((result) => {
-        sendResponse(result)
-      })
+    return respondToCheckIn({ trigger: 'refresh' }, sendResponse)
+  }
 
-    return true
+  if (Object.hasOwn(message, MessageKey.checkInRetry)) {
+    if (!isMissionPageSender(sender)) {
+      sendResponse({ status: 'skipped', reason: '无效的签到重试来源' })
+
+      return false
+    }
+
+    return respondToCheckIn({ force: true, trigger: 'manual' }, sendResponse)
   }
 
   if (Object.hasOwn(message, MessageKey.colorScheme)) {

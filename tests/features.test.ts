@@ -31,7 +31,16 @@ describe('extension feature manifest', () => {
     expect(names).toContain('popup')
     expect(names).toContain('options')
     expect(names).toContain('v2ex-topic')
+    expect(names).toContain('v2ex-mission')
     expect(names).toContain('common')
+  })
+
+  it('签到页使用独立内容脚本，首页脚本不重复注入', () => {
+    const mission = contentScriptGroups.find((group) => group.name === 'v2ex-mission')
+    const home = contentScriptGroups.find((group) => group.name === 'v2ex-home')
+
+    expect(mission?.matches).toBe('mission')
+    expect(home?.excludeMatches).toContain('*://*/mission/daily*')
   })
 
   it('独立入口不会与内容脚本分组重名', () => {

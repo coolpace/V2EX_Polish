@@ -290,6 +290,13 @@ const generateManifest = (): Manifest => {
       case 'notifications':
         return getMatches('notifications', true)
 
+      case 'mission':
+        return getMatches('mission/daily').flatMap((pattern) => {
+          const exactPath = pattern.endsWith('/*') ? pattern.slice(0, -2) : pattern
+
+          return [exactPath, pattern]
+        })
+
       case 'go':
         return getMatches('go')
 

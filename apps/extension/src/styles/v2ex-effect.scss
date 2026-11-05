@@ -132,6 +132,125 @@ body {
   }
 }
 
+.v2p-checkin-mission-panel {
+  padding: 12px 16px;
+  border-top: 1px solid var(--v2p-color-divider);
+  font-size: 13px;
+  color: var(--v2p-color-foreground);
+  background-color: var(--v2p-color-bg-content);
+
+  &__content {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  &__mark {
+    display: inline-flex;
+    flex: 0 0 22px;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--v2p-color-accent-700);
+    background-color: var(--v2p-color-accent-100);
+  }
+
+  &__copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__title {
+    line-height: 22px;
+  }
+
+  &__description {
+    margin: 0;
+    line-height: 1.55;
+    color: var(--v2p-color-font-secondary);
+  }
+
+  &__detail {
+    font-size: 12px;
+    color: var(--v2p-color-font-tertiary);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    margin-left: 32px;
+  }
+
+  &__button {
+    cursor: pointer;
+    padding: 3px 9px;
+    border: 1px solid var(--v2p-color-border);
+    border-radius: var(--v2p-button-radius);
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--v2p-color-font-secondary);
+    text-decoration: none;
+    background-color: var(--v2p-color-bg-content);
+
+    &:hover {
+      color: var(--v2p-color-foreground);
+      text-decoration: none;
+      background-color: var(--v2p-color-bg-hover-btn);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--v2p-color-accent-500);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.65;
+    }
+
+    &[data-action='retry']:disabled {
+      cursor: wait;
+    }
+
+    &--primary {
+      border-color: var(--v2p-color-accent-300);
+      color: var(--v2p-color-accent-700);
+      background-color: var(--v2p-color-accent-50);
+    }
+  }
+
+  &--success {
+    background-color: var(--v2p-color-accent-50);
+  }
+
+  &--waiting &__mark {
+    color: var(--v2p-color-orange-400);
+    background-color: var(--v2p-color-orange-100);
+  }
+
+  &--error {
+    background-color: var(--v2p-color-orange-50);
+  }
+
+  &--error &__mark {
+    color: var(--v2p-color-error);
+    background-color: var(--v2p-color-bg-content);
+  }
+
+  &--muted &__mark {
+    color: var(--v2p-color-font-tertiary);
+    background-color: var(--v2p-color-bg-block);
+  }
+}
+
 #Rightbar {
   .v2p-info-row {
     display: block;

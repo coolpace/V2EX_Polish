@@ -19,7 +19,6 @@ import {
 } from 'lucide'
 
 import {
-  buildCheckInDiagnostic,
   describeCheckInErrorCode,
   resolveCheckInDisplayState,
 } from '../background/check-in-utils'
@@ -36,6 +35,7 @@ import {
 } from '../services'
 import type { CheckInResult, DailyInfo, Notification, Topic } from '../types'
 import {
+  copyCheckInDiagnostic as copyDiagnosticText,
   escapeHTML,
   formatTimestamp,
   getStorage,
@@ -265,54 +265,12 @@ function renderCheckInFeature(
   })
 }
 
-/** 复制文本，剪贴板 API 不可用时退回隐藏的 textarea。 */
-async function copyText(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text)
-
-    return true
-  }
-  catch {
-    const textarea = document.createElement('textarea')
-    textarea.value = text
-    textarea.style.position = 'fixed'
-    textarea.style.opacity = '0'
-    document.body.append(textarea)
-    textarea.select()
-
-    try {
-      return document.execCommand('copy')
-    }
-    catch {
-      return false
-    }
-    finally {
-      textarea.remove()
-    }
-  }
-}
-
-/** 生成当前签到诊断文本。 */
-async function createCheckInDiagnostic(): Promise<string> {
-  const storage = await getStorage(false)
-  const browser = navigator.userAgent.includes('Firefox/') ? 'Firefox' : 'Chromium'
-
-  return buildCheckInDiagnostic({
-    now: Date.now(),
-    dailyInfo: storage[StorageKey.Daily],
-    autoCheckInEnabled: storage[StorageKey.Options].autoCheckIn.enabled,
-    extensionVersion: chrome.runtime.getManifest().version,
-    browser: `${browser}（${navigator.userAgent}）`,
-    timezoneOffsetMinutes: new Date().getTimezoneOffset(),
-  })
-}
-
 /** 复制诊断文本，并在按钮上给出短暂反馈。 */
 async function copyCheckInDiagnostic($button: JQuery, idleText: string): Promise<boolean> {
   let copied = false
 
   try {
-    copied = await copyText(await createCheckInDiagnostic())
+    copied = await copyDiagnosticText()
   }
   catch (error) {
     console.warn('[V2EX Polish] 生成签到诊断信息失败：', error)

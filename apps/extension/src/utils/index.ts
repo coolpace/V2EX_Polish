@@ -6,6 +6,7 @@ export {
   wrapApiError,
 } from './api-error'
 export { createSerialQueue, sleep } from './async'
+export { copyCheckInDiagnostic, createCheckInDiagnostic } from './check-in-diagnostic'
 export { extractDays, formatTimestamp, isSameDay, isSameUtcDay, parseDateTime } from './date'
 export {
   isEmojiImage,

@@ -13,6 +13,7 @@ export type ContentScriptTarget
     | 'member'
     | 'settings'
     | 'notifications'
+    | 'mission'
     | 'go'
 
 export type ManifestRunAt = 'document_start' | 'document_end' | 'document_idle'
@@ -100,10 +101,16 @@ export const contentScriptGroups: readonly ContentScriptGroup[] = [
       '*://*/settings', // 排除设置页
       '*://*/write', // 排除发帖页
       '*://*/member/*', // 排除用户页
+      '*://*/mission/daily*', // 排除每日任务页
     ],
   },
 
-  // 6-11. 各页面类型的专用功能脚本
+  // 6-12. 各页面类型的专用功能脚本
+  {
+    name: 'v2ex-mission',
+    entry: 'contents/mission/index.ts',
+    matches: 'mission',
+  },
   {
     name: 'v2ex-topic',
     entry: 'contents/topic/index.ts',
