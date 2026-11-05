@@ -1,6 +1,6 @@
 {
   "name": "v2ex-polish-extension",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "type": "module",
   "private": true,
   "license": "MIT",
@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "1.8.0",
+    "jquery": "3.6.4",
     "lucide": "1.61.0",
     "webext-patterns": "3.0.0"
   },

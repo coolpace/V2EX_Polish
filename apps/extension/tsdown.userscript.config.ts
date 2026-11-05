@@ -2,7 +2,34 @@ import path from 'node:path'
 
 import { defineConfig } from 'tsdown'
 
-import { extensionSourceRoot, extensionUserscriptDistRoot } from './scripts/config'
+import {
+  extensionSourceRoot,
+  extensionUserscriptDistRoot,
+  readExtensionPackageJson,
+} from './scripts/config'
+import { V2EX_DOMAINS } from './shared/v2ex-domains'
+
+const packageInfo = readExtensionPackageJson()
+const matches = V2EX_DOMAINS.map((domain) => `// @match        https://${domain}/*`).join('\n')
+const metadata = `// ==UserScript==
+// @name         V2EX Polish
+// @namespace    https://v2p.leoku.dev
+// @version      ${packageInfo.version}
+// @description  体验更现代化的 V2EX
+// @author       LeoKu
+// @license      MIT
+${matches}
+// @run-at       document-start
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_deleteValue
+// @grant        GM_addValueChangeListener
+// @grant        GM_removeValueChangeListener
+// @grant        GM_registerMenuCommand
+// @grant        GM_addStyle
+// @grant        unsafeWindow
+// ==/UserScript==
+`
 
 export default defineConfig({
   tsconfig: './tsconfig.runtime.json',
@@ -19,6 +46,8 @@ export default defineConfig({
 
   minify: false,
 
+  banner: metadata,
+
   clean: false,
 
   ignoreWatch: ['**/dist/**', '**/node_modules/**'],
@@ -33,7 +62,7 @@ export default defineConfig({
   },
 
   deps: {
-    alwaysBundle: ['@floating-ui/dom', 'webext-patterns', 'lucide'],
+    alwaysBundle: ['@floating-ui/dom', 'jquery', 'webext-patterns', 'lucide'],
     onlyBundle: false,
   },
 })

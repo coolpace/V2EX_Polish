@@ -1,4 +1,4 @@
-import { MessageKey } from '../../constants'
+import { getRuntime } from '../../runtime'
 
 /**
  * 打开 V2EX Polish 的设置页面。
@@ -7,5 +7,5 @@ import { MessageKey } from '../../constants'
  * 一个 `chrome-extension://` URL 被 Chrome 当作不可信导航屏蔽。
  */
 export function openV2PSettings() {
-  void chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
+  getRuntime().ui.openOptions()
 }

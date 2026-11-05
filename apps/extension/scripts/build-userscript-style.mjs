@@ -13,6 +13,9 @@ const cssVar = readFileSync(resolve(cssRoot, 'v2ex-theme-var.css'), 'utf8')
 const cssThemeLightDefault = readFileSync(resolve(cssRoot, 'v2ex-theme-default.css'), 'utf8')
 const cssThemeDarkDefault = readFileSync(resolve(cssRoot, 'v2ex-theme-dark.css'), 'utf8')
 const cssThemeRosePineDawn = readFileSync(resolve(cssRoot, 'v2ex-theme-dawn.css'), 'utf8')
+const cssThemeCompact = readFileSync(resolve(cssRoot, 'v2ex-theme-compact.css'), 'utf8')
+const cssThemeMinimalist = readFileSync(resolve(cssRoot, 'v2ex-theme-minimalist.css'), 'utf8')
+const cssThemeMobile = readFileSync(resolve(cssRoot, 'v2ex-theme-mobile.css'), 'utf8')
 const cssEffect = readFileSync(resolve(cssRoot, 'v2ex-effect.css'), 'utf8')
 
 const style = [
@@ -20,6 +23,9 @@ const style = [
   cssThemeLightDefault,
   cssThemeDarkDefault,
   cssThemeRosePineDawn,
+  cssThemeCompact,
+  cssThemeMinimalist,
+  cssThemeMobile,
   cssEffect,
 ].join('')
 

@@ -4,6 +4,7 @@ import { createToast } from '../components/toast'
 import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import { postTask } from '../post-task'
+import { getRuntime } from '../runtime'
 import { setMode, syncViewportMode, writeThemeBootSnapshotFromOptions } from '../theme-state'
 import type { MessageData, Options, SettingsSyncInfo } from '../types'
 import {
@@ -12,7 +13,6 @@ import {
   getStorage,
   getV2P_Settings,
   injectScript,
-  isBrowserExtension,
   setStorage,
   showRemoteSyncDialog,
 } from '../utils'
@@ -25,7 +25,8 @@ const currentMemberName = getCurrentMemberName()
 syncViewportMode()
 
 void (async () => {
-  const isBrowserExt = isBrowserExtension()
+  const runtime = getRuntime()
+  const isBrowserExt = runtime.isBrowserExtension
 
   const storage = await getStorage()
   const options = storage[StorageKey.Options]
@@ -111,7 +112,7 @@ void (async () => {
   }
 
   // 当发现远程的配置有更新时，自动同步到本地。
-  if (syncInfo) {
+  if (isBrowserExt && syncInfo) {
     const lastCheckTime = syncInfo.lastCheckTime
     const tenMinutes = 10 * 60 * 1000
     const neverChecked = !lastCheckTime
@@ -128,7 +129,7 @@ void (async () => {
         ...syncInfo,
         lastCheckTime: Date.now(),
       }
-      void chrome.storage.sync.set({ [StorageKey.SyncInfo]: updatedSyncInfo })
+      void runtime.storage.set('sync', { [StorageKey.SyncInfo]: updatedSyncInfo })
 
       void getV2P_Settings()
         .then(async (res) => {
@@ -146,7 +147,7 @@ void (async () => {
         })
     }
   }
-  else if (!isAuthPage) {
+  else if (isBrowserExt && !isAuthPage) {
     // 首次安装：静默检查远程是否存在备份，如果有则智能处理
     void getV2P_Settings()
       .then(async (res) => {
@@ -164,7 +165,7 @@ void (async () => {
             lastSyncTime: remoteSyncInfo.lastSyncTime,
             lastCheckTime: Date.now(),
           }
-          void chrome.storage.sync.set({ [StorageKey.SyncInfo]: initialSyncInfo })
+          void runtime.storage.set('sync', { [StorageKey.SyncInfo]: initialSyncInfo })
 
           if (shouldSync) {
             // 用户选择同步，执行同步操作
@@ -315,7 +316,7 @@ void (async () => {
   }
 
   // MARK: 监测 Polish 选项设置的变化。
-  chrome.storage.onChanged.addListener((changes, storageType) => {
+  runtime.storage.subscribe((storageType, changes) => {
     if (storageType === 'sync') {
       const options = changes[StorageKey.Options]
 

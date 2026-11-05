@@ -1,6 +1,7 @@
 import { defaultOptions, EXTENSION_NAME, StorageKey } from '../constants'
+import { getRuntime } from '../runtime'
 import type { SettingsSyncInfo, StorageItems, StorageSettings } from '../types'
-import { isBrowserExtension, V2EX_ORIGIN } from './env'
+import { V2EX_ORIGIN } from './env'
 import { deepMerge } from './object'
 import { getV2P_Settings, prepareBackupData, settingsMark } from './remote-backup'
 
@@ -77,9 +78,8 @@ export async function setV2P_Settings(
  * @description
  * 该方法会按以下顺序获取数据：
  * 1. 如果启用缓存且存在缓存数据，直接返回缓存
- * 2. 如果不在浏览器扩展环境中，返回默认配置
- * 3. 如果在浏览器扩展环境中，从 chrome.storage.sync 获取配置，并从
- *    chrome.storage.local 获取设备专属数据
+ * 2. 通过当前运行时读取同步区和设备本地数据
+ * 3. 缺失字段使用默认配置补齐
  *
  * @param useCache - 是否使用缓存数据，默认为 true
  */
@@ -93,65 +93,55 @@ export function getStorage(useCache = true): Promise<StorageSettings> {
       }
     }
 
-    if (!isBrowserExtension()) {
-      const data: StorageSettings = { [StorageKey.Options]: defaultOptions }
+    const runtime = getRuntime()
 
-      if (typeof window !== 'undefined') {
-        window.__V2P_StorageCache = data
-      }
+    Promise.all([
+      runtime.storage.get('sync'),
+      runtime.storage.get('local'),
+    ])
+      .then(([syncItems, localItems]: [StorageItems, Partial<StorageItems>]) => {
+        let data: StorageSettings
 
-      resolve(data)
+        const options = syncItems[StorageKey.Options]
 
-      return
-    }
-    else {
-      Promise.all([
-        chrome.storage.sync.get(),
-        chrome.storage.local.get([StorageKey.MemberTag, StorageKey.Daily]),
-      ])
-        .then(([syncItems, localItems]: [StorageItems, Partial<StorageItems>]) => {
-          let data: StorageSettings
+        // 合并 sync 和 local 的数据，MemberTag 优先从 local 读取。
+        const mergedItems: StorageItems = {
+          ...syncItems,
+          ...localItems,
+          [StorageKey.MemberTag]: localItems[StorageKey.MemberTag]
+            ?? syncItems[StorageKey.MemberTag],
+          [StorageKey.Daily]: localItems[StorageKey.Daily]
+            ?? syncItems[StorageKey.Daily],
+        }
 
-          const options = syncItems[StorageKey.Options]
+        if (options) {
+          const mergedOptions = deepMerge(defaultOptions, options)
 
-          // 合并 sync 和 local 的数据，MemberTag 优先从 local 读取。
-          const mergedItems: StorageItems = {
-            ...syncItems,
-            [StorageKey.MemberTag]: localItems[StorageKey.MemberTag]
-              ?? syncItems[StorageKey.MemberTag],
-            [StorageKey.Daily]: localItems[StorageKey.Daily]
-              ?? syncItems[StorageKey.Daily],
+          // TODO: 临时迁移逻辑，用于兼容旧版 `openInNewTab` 字段。
+          // 当旧数据中存在 openInNewTab === true 且新字段 topic 尚未写入时，
+          // 自动将 topic.openMode 迁移为 'newTab'，避免用户设置静默丢失。
+          // 待大多数用户升级后（建议下一个大版本发布时）可安全删除此块。
+          const legacyOptions = options as unknown as Record<string, unknown>
+
+          if (legacyOptions['openInNewTab'] === true && !legacyOptions['topic']) {
+            mergedOptions.topic = { openMode: 'newTab' }
           }
 
-          if (options) {
-            const mergedOptions = deepMerge(defaultOptions, options)
+          data = { ...mergedItems, [StorageKey.Options]: mergedOptions }
+        }
+        else {
+          data = { ...mergedItems, [StorageKey.Options]: defaultOptions }
+        }
 
-            // TODO: 临时迁移逻辑，用于兼容旧版 `openInNewTab` 字段。
-            // 当旧数据中存在 openInNewTab === true 且新字段 topic 尚未写入时，
-            // 自动将 topic.openMode 迁移为 'newTab'，避免用户设置静默丢失。
-            // 待大多数用户升级后（建议下一个大版本发布时）可安全删除此块。
-            const legacyOptions = options as unknown as Record<string, unknown>
+        if (typeof window !== 'undefined') {
+          window.__V2P_StorageCache = data
+        }
 
-            if (legacyOptions['openInNewTab'] === true && !legacyOptions['topic']) {
-              mergedOptions.topic = { openMode: 'newTab' }
-            }
-
-            data = { ...mergedItems, [StorageKey.Options]: mergedOptions }
-          }
-          else {
-            data = { ...mergedItems, [StorageKey.Options]: defaultOptions }
-          }
-
-          if (typeof window !== 'undefined') {
-            window.__V2P_StorageCache = data
-          }
-
-          resolve(data)
-        })
-        .catch(() => {
-          reject(new Error('获取扩展配置失败。'))
-        })
-    }
+        resolve(data)
+      })
+      .catch(() => {
+        reject(new Error('获取扩展配置失败。'))
+      })
   })
 }
 
@@ -232,11 +222,19 @@ export async function setStorage<T extends StorageKey>(
       // fall through
 
     case StorageKey.Daily:
+      // fall through
+
+    case StorageKey.API:
       try {
-        await chrome.storage.local.set({ [storageKey]: storageItem })
+        await getRuntime().storage.set('local', { [storageKey]: storageItem })
 
         // 当检测到配置更新时，延迟自动备份到远程。
-        if (storageKey !== StorageKey.Daily && canAutoBackup()) {
+        if (
+          getRuntime().isBrowserExtension
+          && storageKey !== StorageKey.Daily
+          && storageKey !== StorageKey.API
+          && canAutoBackup()
+        ) {
           scheduleBackup()
         }
       }
@@ -250,19 +248,17 @@ export async function setStorage<T extends StorageKey>(
     case StorageKey.Options:
       // fall through
 
-    case StorageKey.API:
-      // fall through
-
     case StorageKey.SyncInfo:
       // fall through
 
     case StorageKey.ReadingList:
       try {
-        await chrome.storage.sync.set({ [storageKey]: storageItem })
+        await getRuntime().storage.set('sync', { [storageKey]: storageItem })
 
         // 当检测到配置更新时，延迟自动备份到远程。
         if (
-          storageKey !== StorageKey.API
+          getRuntime().isBrowserExtension
+          && storageKey !== StorageKey.API
           && storageKey !== StorageKey.SyncInfo
           && canAutoBackup()
         ) {

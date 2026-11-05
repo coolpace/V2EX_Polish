@@ -1,5 +1,6 @@
 import { buildCheckInDiagnostic } from '../background/check-in-utils'
 import { StorageKey } from '../constants'
+import { getRuntime } from '../runtime'
 import { getStorage } from './storage'
 
 /** 生成当前签到诊断文本。 */
@@ -11,7 +12,9 @@ export async function createCheckInDiagnostic(): Promise<string> {
     now: Date.now(),
     dailyInfo: storage[StorageKey.Daily],
     autoCheckInEnabled: storage[StorageKey.Options].autoCheckIn.enabled,
-    extensionVersion: chrome.runtime.getManifest().version,
+    extensionVersion: getRuntime().isBrowserExtension
+      ? chrome.runtime.getManifest().version
+      : 'userscript',
     browser: `${browser}（${navigator.userAgent}）`,
     timezoneOffsetMinutes: new Date().getTimezoneOffset(),
   })

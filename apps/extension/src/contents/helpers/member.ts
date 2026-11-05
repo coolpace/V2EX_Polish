@@ -1,6 +1,6 @@
 import { StorageKey } from '../../constants'
 import type { Member, MemberTag, Tag } from '../../types'
-import { getStorage, isBrowserExtension, setStorage } from '../../utils'
+import { getStorage, setStorage } from '../../utils'
 
 export async function setMemberTags(params: {
   memberName: Member['username']
@@ -11,11 +11,6 @@ export async function setMemberTags(params: {
 
   const storage = await getStorage(false)
   const tagData = storage[StorageKey.MemberTag]
-
-  if (!isBrowserExtension()) {
-    // 非浏览器扩展不能设置用户标签。
-    return
-  }
 
   if (tags && tags.length > 0) {
     const newTagData: MemberTag = {

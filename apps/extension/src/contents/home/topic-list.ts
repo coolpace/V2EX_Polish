@@ -1,15 +1,11 @@
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { ignoreTopic } from '../../services'
-import { getStorageSync, isBrowserExtension } from '../../utils'
+import { getStorageSync } from '../../utils'
 import { $topicList } from '../globals'
 import { createTopicPreview } from '../topic/preview'
 
 export function handleTopicList() {
-  if (!isBrowserExtension()) {
-    return
-  }
-
   const options = getStorageSync()[StorageKey.Options]
   const isPreviewMode = options.topic?.openMode === 'preview'
 

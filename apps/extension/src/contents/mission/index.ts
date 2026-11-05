@@ -1,6 +1,8 @@
 import { resolveCheckInDisplayState } from '../../background/check-in-utils'
 import { Links, MessageKey, StorageKey } from '../../constants'
+import { getRuntime } from '../../runtime'
 import type { CheckInResult, StorageSettings } from '../../types'
+import { runPageCheckIn } from '../../user-scripts/scheduler'
 import { copyCheckInDiagnostic, getStorage } from '../../utils'
 import { getCurrentMemberName } from '../member-name'
 import { renderMissionPanel, syncNativeClaimButton } from './view'
@@ -61,12 +63,22 @@ async function handleRetry(button: HTMLButtonElement): Promise<void> {
   button.textContent = '重试中...'
 
   try {
-    await chrome.runtime.sendMessage<
-      { [MessageKey.checkInRetry]: { memberName?: string } },
-      CheckInResult | undefined
-    >({
-      [MessageKey.checkInRetry]: { memberName: currentMemberName },
-    })
+    if (getRuntime().isBrowserExtension) {
+      await chrome.runtime.sendMessage<
+        { [MessageKey.checkInRetry]: { memberName?: string } },
+        CheckInResult | undefined
+      >({
+        [MessageKey.checkInRetry]: { memberName: currentMemberName },
+      })
+    }
+    else {
+      await runPageCheckIn({
+        force: true,
+        trigger: 'manual',
+        memberName: currentMemberName,
+      })
+    }
+
     renderFromStorage(await getStorage(false))
   }
   catch (error) {
@@ -134,7 +146,7 @@ void (async () => {
 
   panel.addEventListener('click', handlePanelClick)
 
-  chrome.storage.onChanged.addListener((changes, areaName) => {
+  getRuntime().storage.subscribe((areaName, changes) => {
     const dailyChanged = areaName === 'local' && Object.hasOwn(changes, StorageKey.Daily)
     const optionsChanged = areaName === 'sync' && Object.hasOwn(changes, StorageKey.Options)
 

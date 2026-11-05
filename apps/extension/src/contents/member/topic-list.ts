@@ -1,7 +1,7 @@
 import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { ignoreTopic } from '../../services'
-import { getStorageSync, isBrowserExtension } from '../../utils'
+import { getStorageSync } from '../../utils'
 import { $topicList } from '../globals'
 import { createTopicPreview } from '../topic/preview'
 
@@ -11,10 +11,6 @@ interface HandleTopicListParams {
 }
 
 export function handleTopicList(params: HandleTopicListParams) {
-  if (!isBrowserExtension()) {
-    return
-  }
-
   const { isOwner } = params
 
   const options = getStorageSync()[StorageKey.Options]

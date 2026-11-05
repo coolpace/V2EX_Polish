@@ -4,7 +4,7 @@ import { createToast } from '../../components/toast'
 import { StorageKey } from '../../constants'
 import { blockUser, crawlUserPage, fetchUserInfo, parseUserTopics } from '../../services'
 import type { CommentData, Member, UserTopicItem } from '../../types'
-import { escapeHTML, formatTimestamp, getStorageSync, isBrowserExtension } from '../../utils'
+import { escapeHTML, formatTimestamp, getStorageSync } from '../../utils'
 import { getRegisterDays } from '../helpers'
 import { foldBlockedMemberReplies } from './blocked'
 import { openTagsSetter } from './content'
@@ -58,8 +58,7 @@ export function processAvatar(params: ProcessAvatar) {
   const safeMemberLink = escapeHTML(memberLink)
   const safeMemberAvatar = escapeHTML(memberAvatar)
 
-  // 只在浏览器扩展环境中启用主题预览功能，避免在非扩展环境中创建无效的模态框。
-  const topicPreview = isBrowserExtension() ? createTopicPreview() : null
+  const topicPreview = createTopicPreview()
 
   let abortController: AbortController | null = null
 

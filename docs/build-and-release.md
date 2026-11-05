@@ -39,7 +39,7 @@ pnpm package:zip
 - Firefox zip：`apps/extension/dist/v2ex-polish-firefox-<version>.zip`
 - userscript：`apps/extension/dist/userscript/index.min.js`
 
-> `<version>` 会自动读取 `apps/extension/package.json` 中的 `version`。例如当前版本为 `2.5.4` 时，Chrome 包名为 `v2ex-polish-chrome-2.5.4.zip`。
+> `<version>` 会自动读取 `apps/extension/package.json` 中的 `version`。例如当前版本为 `2.5.5` 时，Chrome 包名为 `v2ex-polish-chrome-2.5.5.zip`。
 
 清理命令：
 
@@ -96,6 +96,8 @@ EXTENSION_MINIFY=1 pnpm build
 ### GreasyFork
 
 - 使用 `apps/extension/dist/userscript/index.min.js`
+- 产物应包含完整的 `==UserScript==` 元数据、jQuery 和全部主题样式
+- 发布前运行 `pnpm verify:extension`，其中会校验油猴产物并在无扩展 API 的 DOM 环境中执行 smoke test
 
 ### Cloudflare Worker
 

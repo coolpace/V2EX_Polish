@@ -40,11 +40,23 @@ export function getOS() {
  * 检查运行在哪个扩展中。
  */
 export function getRunEnv(): 'chrome' | 'web-ext' | null {
-  if (typeof chrome === 'object' && typeof chrome.extension !== 'undefined') {
+  if (
+    typeof chrome === 'object'
+    && (
+      typeof chrome.extension !== 'undefined'
+      || typeof chrome.runtime?.id === 'string'
+    )
+  ) {
     return 'chrome'
   }
 
-  if (typeof browser === 'object' && typeof browser.extension !== 'undefined') {
+  if (
+    typeof browser === 'object'
+    && (
+      typeof browser.extension !== 'undefined'
+      || typeof browser.runtime?.id === 'string'
+    )
+  ) {
     return 'web-ext'
   }
 

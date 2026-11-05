@@ -1,5 +1,6 @@
 import { StorageKey } from './constants'
-import type { FontType, Options, StorageItems, ThemeType } from './types'
+import { getRuntime } from './runtime'
+import type { FontType, Options, ThemeType } from './types'
 
 /** 首屏主题缓存键。缓存只保存界面偏好，不保存用户内容。 */
 const THEME_BOOT_STORAGE_KEY = 'v2p:boot:v1'
@@ -130,21 +131,17 @@ export function writeThemeBootSnapshotFromOptions(options: Options | undefined):
 }
 
 /**
- * 从 chrome.storage 读取一次首屏配置，并限制等待时间。
+ * 从当前运行时存储读取一次首屏配置，并限制等待时间。
  *
  * 正常情况下缓存会命中；这里用于首次安装、缓存缺失或缓存过期的校准。
  */
 async function readThemeBootOptions(timeoutMs = 120): Promise<ThemeBootSnapshot | null> {
-  if (typeof chrome === 'undefined' || !chrome.storage?.sync) {
-    return null
-  }
-
   let timer: ReturnType<typeof setTimeout> | undefined
 
   try {
     const options = await Promise.race([
-      chrome.storage.sync.get(StorageKey.Options).then((items) => {
-        return (items as StorageItems)[StorageKey.Options]
+      getRuntime().storage.get('sync').then((items) => {
+        return items[StorageKey.Options]
       }),
       new Promise<null>((resolve) => {
         timer = setTimeout(() => resolve(null), timeoutMs)

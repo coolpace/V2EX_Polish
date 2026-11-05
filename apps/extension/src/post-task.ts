@@ -1,4 +1,5 @@
 import { MessageFrom } from './constants'
+import { getRuntime } from './runtime'
 import type { MessageData } from './types'
 import { isBrowserExtension } from './utils'
 
@@ -14,8 +15,7 @@ import { isBrowserExtension } from './utils'
  */
 export function postTask(expression: string, callback?: (result: unknown) => void) {
   if (!isBrowserExtension()) {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
-    const result = (Function(`"use strict"; ${expression}`) as () => unknown)()
+    const result = getRuntime().executeInPage(expression)
     callback?.(result)
   }
   else {

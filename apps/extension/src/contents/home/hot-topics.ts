@@ -3,7 +3,7 @@ import { StorageKey } from '../../constants'
 import { iconLoading } from '../../icons'
 import { getHotTopics } from '../../services'
 import type { HotTopic, HotTopicRange } from '../../types'
-import { getStorageSync, isBrowserExtension } from '../../utils'
+import { getStorageSync } from '../../utils'
 import { $wrapper } from '../globals'
 import { createTopicPreview } from '../topic/preview'
 import { shouldHideTopic } from '../topic-filter/matcher'
@@ -33,8 +33,7 @@ export function handleHotTopics() {
 
   let $todayCells = $listWrapper.find('> .cell')
 
-  const canPreview = isBrowserExtension()
-  const options = canPreview ? getStorageSync()[StorageKey.Options] : undefined
+  const options = getStorageSync()[StorageKey.Options]
 
   // 对初始「今日」DOM 主题应用主题屏蔽规则
   let showing = false
@@ -95,7 +94,7 @@ export function handleHotTopics() {
   }
 
   const isPreviewMode = options?.topic?.openMode === 'preview'
-  const topicPreview = canPreview ? createTopicPreview() : null
+  const topicPreview = createTopicPreview()
   const $previewBtn = $('<button class="v2p-topic-preview-btn">预览</button>')
 
   const $text = $('<span class="v2p-topics-hot-picker-text">今日</span>')

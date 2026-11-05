@@ -3,6 +3,7 @@ import {
   shouldPromptCheckInFailure,
 } from '../../background/check-in-utils'
 import { StorageKey } from '../../constants'
+import { getRuntime } from '../../runtime'
 import type { DailyInfo } from '../../types'
 import { getStorage } from '../../utils'
 import { $infoCard } from '../globals'
@@ -66,13 +67,11 @@ void (async () => {
 
   renderCheckInInfoRow(storage[StorageKey.Daily])
 
-  if (typeof chrome !== 'undefined' && chrome.storage?.onChanged) {
-    chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === 'local' && changes[StorageKey.Daily]) {
-        renderCheckInInfoRow(changes[StorageKey.Daily].newValue as DailyInfo | undefined)
-      }
-    })
-  }
+  getRuntime().storage.subscribe((areaName, changes) => {
+    if (areaName === 'local' && changes[StorageKey.Daily]) {
+      renderCheckInInfoRow(changes[StorageKey.Daily].newValue as DailyInfo | undefined)
+    }
+  })
 
   handleHotTopics()
 

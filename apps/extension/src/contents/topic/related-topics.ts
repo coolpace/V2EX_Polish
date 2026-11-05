@@ -1,5 +1,5 @@
 import { crawlTagPage } from '../../services'
-import { escapeHTML, isBrowserExtension } from '../../utils'
+import { escapeHTML } from '../../utils'
 import { pathTopicId } from '../globals'
 import { createTopicPreview } from './preview'
 
@@ -105,12 +105,11 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
     return
   }
 
-  const shouldEnablePreview = isBrowserExtension()
-  const topicPreview = shouldEnablePreview ? createTopicPreview() : null
+  const topicPreview = createTopicPreview()
 
   // 批量构建 HTML
   const itemsHtml = topics.map((topic) => {
-    const previewBtnHtml = shouldEnablePreview && topicPreview
+    const previewBtnHtml = topicPreview
       ? `<button class="v2p-topic-preview-btn" data-topic-id="${topic.id}" data-url="${escapeHTML(topic.url)}" data-title="${escapeHTML(topic.title)}">预览</button>`
       : ''
 
@@ -133,7 +132,7 @@ function renderRelatedTopics(topics: RelatedTopic[]): void {
     </div>
   `)
 
-  if (shouldEnablePreview && topicPreview) {
+  if (topicPreview) {
     $relatedBox.on('click', '.v2p-topic-preview-btn', function (this: HTMLElement) {
       const $btn = $(this)
       topicPreview.handlePreview({

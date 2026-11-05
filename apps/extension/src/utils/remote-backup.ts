@@ -1,4 +1,5 @@
 import { EXTENSION_NAME, StorageKey } from '../constants'
+import { getRuntime } from '../runtime'
 import type { ReadingItem, SettingsSyncInfo, StorageItems, StorageSettings } from '../types'
 import { V2EX_ORIGIN } from './env'
 import { deepMerge } from './object'
@@ -68,13 +69,14 @@ export async function applyRemoteSettings(
   const remoteMemberTag = remoteSettings[StorageKey.MemberTag]
 
   if (remoteMemberTag) {
-    const localData = await chrome.storage.local.get(StorageKey.MemberTag)
+    const runtime = getRuntime()
+    const localData = await runtime.storage.get('local')
     const localMemberTag = (localData as Partial<StorageItems>)[StorageKey.MemberTag]
     // 合并 MemberTag：远程数据补充，本地已有的条目优先保留
     const mergedMemberTag = localMemberTag
       ? { ...remoteMemberTag, ...localMemberTag }
       : remoteMemberTag
-    await chrome.storage.local.set({ [StorageKey.MemberTag]: mergedMemberTag })
+    await runtime.storage.set('local', { [StorageKey.MemberTag]: mergedMemberTag })
   }
 
   // 2. 准备写入 sync storage 的数据（排除 MemberTag、API、Daily）
@@ -96,11 +98,12 @@ export async function applyRemoteSettings(
   }
 
   // 4. 与当前 sync storage 的数据合并后写入
-  const currentSyncData = await chrome.storage.sync.get()
+  const runtime = getRuntime()
+  const currentSyncData = await runtime.storage.get('sync')
   const {
     [StorageKey.MemberTag]: _currentMt, // 排除 MemberTag 残留
     ...currentSyncOnly
-  } = currentSyncData as StorageItems
+  } = currentSyncData
 
   // 5. ReadingList 使用去重合并而非简单覆盖
   const remoteReadingList = syncableRemoteSettings[StorageKey.ReadingList]
@@ -112,7 +115,7 @@ export async function applyRemoteSettings(
     }
   }
 
-  await chrome.storage.sync.set(deepMerge(currentSyncOnly, syncableRemoteSettings))
+  await runtime.storage.set('sync', deepMerge(currentSyncOnly, syncableRemoteSettings))
 }
 
 /**

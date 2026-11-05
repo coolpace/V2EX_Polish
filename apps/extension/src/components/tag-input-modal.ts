@@ -1,4 +1,4 @@
-import { MessageKey, PendingOptionsMenuStorageKey } from '../constants'
+import { getRuntime } from '../runtime'
 import { escapeHTML } from '../utils'
 import { createButton } from './button'
 import { createModal } from './modal'
@@ -36,9 +36,6 @@ export function openTagInputModal(props: OpenTagInputModalProps): Promise<string
     let $input: JQuery
     let isComposing = false
     let settled = false
-
-    const optionsUrl = new URL(chrome.runtime.getURL('pages/options.html'))
-    optionsUrl.searchParams.set('menu', 'tags')
 
     const settle = (value: string | null) => {
       if (settled) {
@@ -121,19 +118,10 @@ export function openTagInputModal(props: OpenTagInputModalProps): Promise<string
           modal.close()
         }
 
-        const handleOpenAllTags = async () => {
-          if (window.location.href.startsWith(chrome.runtime.getURL('pages/options.html'))) {
-            settle(null)
-            modal.destroy()
-            window.location.assign(optionsUrl.toString())
+        const handleOpenAllTags = () => {
+          const runtime = getRuntime()
 
-            return
-          }
-
-          await chrome.storage.local.set({
-            [PendingOptionsMenuStorageKey]: 'tags',
-          })
-          await chrome.runtime.sendMessage({ [MessageKey.showOptions]: true })
+          runtime.ui.openOptions('tags')
           modal.close()
         }
 
