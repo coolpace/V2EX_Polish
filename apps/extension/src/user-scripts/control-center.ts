@@ -9,7 +9,7 @@ import {
   fetchNotifications,
   getHotTopics,
 } from '../services'
-import type { Notification, ReadingItem, Topic } from '../types'
+import type { DailyInfo, Notification, ReadingItem, Topic } from '../types'
 import {
   copyCheckInDiagnostic,
   escapeHTML,
@@ -46,9 +46,11 @@ const TAB_LABELS: Record<ControlCenterTab, string> = {
 }
 
 function normalizeTab(tab: string | undefined): ControlCenterTab {
-  return VALID_TABS.has(tab as ControlCenterTab)
-    ? tab as ControlCenterTab
-    : 'reading'
+  if (VALID_TABS.has(tab as ControlCenterTab)) {
+    return tab as ControlCenterTab
+  }
+
+  return 'reading'
 }
 
 function renderTopics(
@@ -105,7 +107,9 @@ function renderReading(items: ReadingItem[]): string {
 
 function renderMessages(items: Notification[], unread: number): string {
   if (items.length === 0) {
-    return `<div class="v2p-empty">暂无新消息${unread > 0 ? `，未读 ${unread} 条` : ''}</div>`
+    const unreadText = unread > 0 ? `，未读 ${unread} 条` : ''
+
+    return `<div class="v2p-empty">暂无新消息${unreadText}</div>`
   }
 
   return `
@@ -128,8 +132,25 @@ function renderMessages(items: Notification[], unread: number): string {
   `
 }
 
+type PendingCheckInState = Extract<
+  ReturnType<typeof resolveCheckInDisplayState>,
+  { type: 'not-attempted' }
+>
+
+function describePendingCheckIn(state: PendingCheckInState): string {
+  if (state.skipReason) {
+    return escapeHTML(state.skipReason)
+  }
+
+  if (state.nextActionAt) {
+    return `计划于 ${formatTimestamp(state.nextActionAt, { format: 'YMDHMS' })} 自动尝试`
+  }
+
+  return '页面存活期间会自动检查签到状态。'
+}
+
 function renderCheckIn(
-  daily: Awaited<ReturnType<typeof getStorage>>[StorageKey.Daily],
+  daily: DailyInfo | undefined,
   autoEnabled: boolean,
 ): string {
   const memberName = getCurrentMemberName()
@@ -174,11 +195,7 @@ function renderCheckIn(
   return `
     <div class="v2p-feature-card">
       <h2>每日签到</h2>
-      <p>${state.skipReason
-        ? escapeHTML(state.skipReason)
-        : state.nextActionAt
-          ? `计划于 ${formatTimestamp(state.nextActionAt, { format: 'YMDHMS' })} 自动尝试`
-          : '页面存活期间会自动检查签到状态。'}</p>
+      <p>${describePendingCheckIn(state)}</p>
       <button type="button" class="v2p-primary" data-action="check-in">立即签到</button>
     </div>
   `
@@ -231,86 +248,91 @@ export function mountControlCenter(params: {
     content.innerHTML = '<div class="v2p-loading">加载中...</div>'
 
     try {
-      if (activeTab === 'reading') {
-        const storage = await getStorage(false)
-        const items = storage[StorageKey.ReadingList]?.data ?? []
-        content.innerHTML = `<section class="v2p-panel-section">${renderReading(items)}</section>`
+      switch (activeTab) {
+        case 'reading': {
+          const storage = await getStorage(false)
+          const items = storage[StorageKey.ReadingList]?.data ?? []
+          content.innerHTML = `<section class="v2p-panel-section">${renderReading(items)}</section>`
 
-        return
-      }
+          break
+        }
 
-      if (activeTab === 'hot') {
-        const { result } = await getHotTopics({ range: '3d', limits: 20 })
-        content.innerHTML = `<section class="v2p-panel-section">${renderTopics(result)}</section>`
+        case 'hot': {
+          const { result } = await getHotTopics({ range: '3d', limits: 20 })
+          content.innerHTML = `<section class="v2p-panel-section">${renderTopics(result)}</section>`
 
-        return
-      }
+          break
+        }
 
-      if (activeTab === 'latest') {
-        const topics = await fetchLatestTopics()
-        content.innerHTML = `<section class="v2p-panel-section">${renderTopics(topics)}</section>`
+        case 'latest': {
+          const topics = await fetchLatestTopics()
+          content.innerHTML = `<section class="v2p-panel-section">${renderTopics(topics)}</section>`
 
-        return
-      }
+          break
+        }
 
-      if (activeTab === 'messages') {
-        const storage = await getStorage(false)
+        case 'messages': {
+          const storage = await getStorage(false)
 
-        if (!storage[StorageKey.API]?.pat) {
+          if (!storage[StorageKey.API]?.pat) {
+            content.innerHTML = `
+              <section class="v2p-panel-section">
+                <div class="v2p-empty">需要先设置个人访问令牌（PAT）</div>
+                <div class="v2p-action-row">
+                  <button type="button" class="v2p-primary" data-action="open-settings-token">去设置</button>
+                </div>
+              </section>
+            `
+
+            break
+          }
+
+          const response = await fetchNotifications()
+          const notifications = response.result ?? []
           content.innerHTML = `
             <section class="v2p-panel-section">
-              <div class="v2p-empty">需要先设置个人访问令牌（PAT）</div>
+              ${renderMessages(notifications, notifications.length)}
+            </section>
+          `
+          content.querySelectorAll<HTMLAnchorElement>('.v2p-message-item a').forEach((link) => {
+            link.target = '_blank'
+            link.rel = 'noopener noreferrer'
+          })
+
+          break
+        }
+
+        case 'features': {
+          const storage = await getStorage(false)
+          content.innerHTML = `
+            <section class="v2p-panel-section">
+              ${renderCheckIn(
+                storage[StorageKey.Daily],
+                storage[StorageKey.Options].autoCheckIn.enabled,
+              )}
               <div class="v2p-action-row">
-                <button type="button" class="v2p-primary" data-action="open-settings-token">去设置</button>
+                <button type="button" data-action="copy-diagnostic">复制签到诊断信息</button>
               </div>
             </section>
           `
 
-          return
+          break
         }
 
-        const response = await fetchNotifications()
-        const notifications = response.result ?? []
-        const unread = notifications.length
-        content.innerHTML = `
-          <section class="v2p-panel-section">
-            ${renderMessages(notifications, unread)}
-          </section>
-        `
-        content.querySelectorAll<HTMLAnchorElement>('.v2p-message-item a').forEach((link) => {
-          link.target = '_blank'
-          link.rel = 'noopener noreferrer'
-        })
+        case 'settings': {
+          content.innerHTML = `
+            <section class="v2p-panel-section">
+              <div class="v2p-feature-card">
+                <h2>V2EX Polish 设置</h2>
+                <p>配置主题、回复、主题屏蔽、用户标签、PAT 与备份。</p>
+                <button type="button" class="v2p-primary" data-action="open-settings">打开设置中心</button>
+              </div>
+            </section>
+          `
 
-        return
+          break
+        }
       }
-
-      if (activeTab === 'features') {
-        const storage = await getStorage(false)
-        content.innerHTML = `
-          <section class="v2p-panel-section">
-            ${renderCheckIn(
-              storage[StorageKey.Daily],
-              storage[StorageKey.Options].autoCheckIn.enabled,
-            )}
-            <div class="v2p-action-row">
-              <button type="button" data-action="copy-diagnostic">复制签到诊断信息</button>
-            </div>
-          </section>
-        `
-
-        return
-      }
-
-      content.innerHTML = `
-        <section class="v2p-panel-section">
-          <div class="v2p-feature-card">
-            <h2>V2EX Polish 设置</h2>
-            <p>配置主题、回复、主题屏蔽、用户标签、PAT 与备份。</p>
-            <button type="button" class="v2p-primary" data-action="open-settings">打开设置中心</button>
-          </div>
-        </section>
-      `
     }
     catch (error) {
       content.innerHTML = `

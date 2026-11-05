@@ -46,6 +46,12 @@ const notificationsRegex = patternToRegex(...allowedHosts.map((host) => `${host}
 const missionRegex = patternToRegex(...allowedHosts.map((host) => `${host}/mission/daily*`))
 const goRegex = patternToRegex(...allowedHosts.map((host) => `${host}/go/*`))
 
+interface PageModule {
+  name: string
+  matches: (url: string) => boolean
+  load: () => Promise<unknown>
+}
+
 function isHomePage(url: string): boolean {
   const path = new URL(url).pathname
 
@@ -60,6 +66,49 @@ function isHomePage(url: string): boolean {
     || path.startsWith('/go/')
   )
 }
+
+const pageModules: readonly PageModule[] = [
+  {
+    name: 'home',
+    matches: (url) => commonRegex.test(url) && isHomePage(url),
+    load: () => import('../contents/home/index'),
+  },
+  {
+    name: 'topic',
+    matches: (url) => topicRegex.test(url),
+    load: () => import('../contents/topic/index'),
+  },
+  {
+    name: 'write',
+    matches: (url) => writeRegex.test(url),
+    load: () => import('../contents/write/index'),
+  },
+  {
+    name: 'member',
+    matches: (url) => memberRegex.test(url),
+    load: () => import('../contents/member/index'),
+  },
+  {
+    name: 'settings',
+    matches: (url) => settingsRegex.test(url),
+    load: () => import('../contents/settings/index'),
+  },
+  {
+    name: 'notifications',
+    matches: (url) => notificationsRegex.test(url),
+    load: () => import('../contents/notifications/index'),
+  },
+  {
+    name: 'mission',
+    matches: (url) => missionRegex.test(url),
+    load: () => import('../contents/mission/index'),
+  },
+  {
+    name: 'go',
+    matches: (url) => goRegex.test(url),
+    load: () => import('../contents/go/index'),
+  },
+]
 
 async function loadModule(
   name: string,
@@ -94,36 +143,10 @@ runAfterLoaded(() => {
       startUserscriptScheduler()
     }
 
-    if (commonRegex.test(url) && isHomePage(url)) {
-      await loadModule('home', () => import('../contents/home/index'))
-    }
-
-    if (topicRegex.test(url)) {
-      await loadModule('topic', () => import('../contents/topic/index'))
-    }
-
-    if (writeRegex.test(url)) {
-      await loadModule('write', () => import('../contents/write/index'))
-    }
-
-    if (memberRegex.test(url)) {
-      await loadModule('member', () => import('../contents/member/index'))
-    }
-
-    if (settingsRegex.test(url)) {
-      await loadModule('settings', () => import('../contents/settings/index'))
-    }
-
-    if (notificationsRegex.test(url)) {
-      await loadModule('notifications', () => import('../contents/notifications/index'))
-    }
-
-    if (missionRegex.test(url)) {
-      await loadModule('mission', () => import('../contents/mission/index'))
-    }
-
-    if (goRegex.test(url)) {
-      await loadModule('go', () => import('../contents/go/index'))
+    for (const pageModule of pageModules) {
+      if (pageModule.matches(url)) {
+        await loadModule(pageModule.name, pageModule.load)
+      }
     }
   })()
 })

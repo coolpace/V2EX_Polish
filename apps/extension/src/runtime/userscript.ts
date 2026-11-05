@@ -17,9 +17,13 @@ const STORAGE_AREA_KEYS: Record<StorageArea, Array<keyof StorageItems>> = {
   ],
 }
 
+const STORAGE_AREA_ENTRIES = Object.entries(STORAGE_AREA_KEYS) as Array<
+  [StorageArea, Array<keyof StorageItems>]
+>
+
 const AREA_BY_KEY = new Map<keyof StorageItems, StorageArea>(
-  (Object.entries(STORAGE_AREA_KEYS) as Array<[StorageArea, Array<keyof StorageItems>]>).flatMap(
-    ([area, keys]) => keys.map((key) => [key, area] as const),
+  STORAGE_AREA_ENTRIES.flatMap(([area, keys]) =>
+    keys.map((key) => [key, area] as const),
   ),
 )
 
@@ -87,9 +91,7 @@ function ensureGMSubscription(): void {
 
   const listenerIds: number[] = []
 
-  for (const [area, keys] of Object.entries(STORAGE_AREA_KEYS) as Array<
-    [StorageArea, Array<keyof StorageItems>]
-  >) {
+  for (const [area, keys] of STORAGE_AREA_ENTRIES) {
     for (const key of keys) {
       const prefixedKey = storageKey(area, key)
       const listenerId = GM_addValueChangeListener<unknown>(

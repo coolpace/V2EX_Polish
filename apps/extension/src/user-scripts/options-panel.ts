@@ -28,9 +28,11 @@ const VALID_SECTIONS = new Set<SettingsSection>([
 ])
 
 function normalizeSection(section: string | undefined): SettingsSection {
-  return VALID_SECTIONS.has(section as SettingsSection)
-    ? section as SettingsSection
-    : 'settings'
+  if (VALID_SECTIONS.has(section as SettingsSection)) {
+    return section as SettingsSection
+  }
+
+  return 'settings'
 }
 
 function formValue(root: HTMLElement, name: string): string {

@@ -13,58 +13,71 @@ const LEASE_MS = 2 * 60 * 1000
 let intervalId: ReturnType<typeof setInterval> | undefined
 let running = false
 
+interface CheckInLease {
+  owner?: string
+  expiresAt?: number
+}
+
 function isAuthPage(): boolean {
   return ['/signin', '/signup', '/forgot', '/2fa'].some((path) =>
     window.location.pathname.startsWith(path),
   )
 }
 
+function readLease(): CheckInLease | undefined {
+  try {
+    const lease = JSON.parse(localStorage.getItem(LEASE_KEY) ?? 'null') as
+      | CheckInLease
+      | null
+
+    return lease ?? undefined
+  }
+  catch {
+    return undefined
+  }
+}
+
+function acquireLease(owner: string, now: number): boolean {
+  const current = readLease()
+
+  if (current?.expiresAt && current.expiresAt > now) {
+    return false
+  }
+
+  localStorage.setItem(LEASE_KEY, JSON.stringify({
+    owner,
+    expiresAt: now + LEASE_MS,
+  }))
+
+  return true
+}
+
+function releaseLease(owner: string): void {
+  if (readLease()?.owner === owner) {
+    localStorage.removeItem(LEASE_KEY)
+  }
+}
+
+async function withLeaseLock<T>(callback: () => Promise<T>): Promise<T | undefined> {
+  const owner = crypto.randomUUID()
+
+  if (!acquireLease(owner, Date.now())) {
+    return undefined
+  }
+
+  try {
+    return await callback()
+  }
+  finally {
+    releaseLease(owner)
+  }
+}
+
 async function withCrossTabLock<T>(callback: () => Promise<T>): Promise<T | undefined> {
   const locks = navigator.locks
 
   if (!locks?.request) {
-    const owner = crypto.randomUUID()
-    const now = Date.now()
-    const current = (() => {
-      try {
-        return JSON.parse(localStorage.getItem(LEASE_KEY) ?? 'null') as {
-          owner?: string
-          expiresAt?: number
-        } | null
-      }
-      catch {
-        return null
-      }
-    })()
-
-    if (current?.expiresAt && current.expiresAt > now) {
-      return undefined
-    }
-
-    localStorage.setItem(LEASE_KEY, JSON.stringify({
-      owner,
-      expiresAt: now + LEASE_MS,
-    }))
-
-    try {
-      return await callback()
-    }
-    finally {
-      const latest = (() => {
-        try {
-          return JSON.parse(localStorage.getItem(LEASE_KEY) ?? 'null') as {
-            owner?: string
-          } | null
-        }
-        catch {
-          return null
-        }
-      })()
-
-      if (latest?.owner === owner) {
-        localStorage.removeItem(LEASE_KEY)
-      }
-    }
+    return withLeaseLock(callback)
   }
 
   let result: T | undefined
@@ -110,6 +123,30 @@ export async function runPageCheckIn(options: {
   }
 }
 
+function handleOnline(): void {
+  void runPageCheckIn({
+    trigger: 'online',
+    memberName: getCurrentMemberName(),
+  })
+}
+
+async function runScheduledCheckIn(trigger: 'tab' | 'refresh'): Promise<void> {
+  if (isAuthPage()) {
+    return
+  }
+
+  const storage = await getStorage(false)
+
+  if (!storage[StorageKey.Options].autoCheckIn.enabled) {
+    return
+  }
+
+  await runPageCheckIn({
+    trigger,
+    memberName: getCurrentMemberName(),
+  })
+}
+
 export function startUserscriptScheduler(): void {
   if (
     getRuntime().kind !== 'userscript'
@@ -121,35 +158,14 @@ export function startUserscriptScheduler(): void {
   }
 
   const tick = (trigger: 'tab' | 'refresh' = 'refresh') => {
-    void (async () => {
-      if (isAuthPage()) {
-        return
-      }
-
-      const storage = await getStorage(false)
-
-      if (!storage[StorageKey.Options].autoCheckIn.enabled) {
-        return
-      }
-
-      await runPageCheckIn({
-        trigger,
-        memberName: getCurrentMemberName(),
-      })
-    })().catch((error: unknown) => {
+    void runScheduledCheckIn(trigger).catch((error: unknown) => {
       console.warn('[V2EX Polish] 油猴签到调度失败：', error)
     })
   }
 
   tick('tab')
   intervalId = setInterval(tick, CHECK_INTERVAL_MS)
-
-  window.addEventListener('online', () => {
-    void runPageCheckIn({
-      trigger: 'online',
-      memberName: getCurrentMemberName(),
-    })
-  })
+  window.addEventListener('online', handleOnline)
 }
 
 export function stopUserscriptScheduler(): void {
@@ -157,4 +173,6 @@ export function stopUserscriptScheduler(): void {
     clearInterval(intervalId)
     intervalId = undefined
   }
+
+  window.removeEventListener('online', handleOnline)
 }

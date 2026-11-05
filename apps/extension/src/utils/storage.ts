@@ -83,66 +83,52 @@ export async function setV2P_Settings(
  *
  * @param useCache - 是否使用缓存数据，默认为 true
  */
-export function getStorage(useCache = true): Promise<StorageSettings> {
-  return new Promise((resolve, reject) => {
-    if (useCache) {
-      if (window.__V2P_StorageCache) {
-        resolve(window.__V2P_StorageCache)
+export async function getStorage(useCache = true): Promise<StorageSettings> {
+  if (useCache && typeof window !== 'undefined' && window.__V2P_StorageCache) {
+    return window.__V2P_StorageCache
+  }
 
-        return
-      }
-    }
-
+  try {
     const runtime = getRuntime()
-
-    Promise.all([
+    const [syncItems, localItems] = await Promise.all([
       runtime.storage.get('sync'),
       runtime.storage.get('local'),
     ])
-      .then(([syncItems, localItems]: [StorageItems, Partial<StorageItems>]) => {
-        let data: StorageSettings
 
-        const options = syncItems[StorageKey.Options]
+    const options = syncItems[StorageKey.Options]
+    const mergedItems: StorageItems = {
+      ...syncItems,
+      ...localItems,
+      [StorageKey.MemberTag]: localItems[StorageKey.MemberTag]
+        ?? syncItems[StorageKey.MemberTag],
+      [StorageKey.Daily]: localItems[StorageKey.Daily]
+        ?? syncItems[StorageKey.Daily],
+    }
+    const mergedOptions = options
+      ? deepMerge(defaultOptions, options)
+      : defaultOptions
 
-        // 合并 sync 和 local 的数据，MemberTag 优先从 local 读取。
-        const mergedItems: StorageItems = {
-          ...syncItems,
-          ...localItems,
-          [StorageKey.MemberTag]: localItems[StorageKey.MemberTag]
-            ?? syncItems[StorageKey.MemberTag],
-          [StorageKey.Daily]: localItems[StorageKey.Daily]
-            ?? syncItems[StorageKey.Daily],
-        }
+    // 兼容旧版 openInNewTab 字段，待大版本升级后可移除。
+    const legacyOptions = options as unknown as Record<string, unknown> | undefined
 
-        if (options) {
-          const mergedOptions = deepMerge(defaultOptions, options)
+    if (legacyOptions?.['openInNewTab'] === true && !legacyOptions['topic']) {
+      mergedOptions.topic = { openMode: 'newTab' }
+    }
 
-          // TODO: 临时迁移逻辑，用于兼容旧版 `openInNewTab` 字段。
-          // 当旧数据中存在 openInNewTab === true 且新字段 topic 尚未写入时，
-          // 自动将 topic.openMode 迁移为 'newTab'，避免用户设置静默丢失。
-          // 待大多数用户升级后（建议下一个大版本发布时）可安全删除此块。
-          const legacyOptions = options as unknown as Record<string, unknown>
+    const data: StorageSettings = {
+      ...mergedItems,
+      [StorageKey.Options]: mergedOptions,
+    }
 
-          if (legacyOptions['openInNewTab'] === true && !legacyOptions['topic']) {
-            mergedOptions.topic = { openMode: 'newTab' }
-          }
+    if (typeof window !== 'undefined') {
+      window.__V2P_StorageCache = data
+    }
 
-          data = { ...mergedItems, [StorageKey.Options]: mergedOptions }
-        }
-        else {
-          data = { ...mergedItems, [StorageKey.Options]: defaultOptions }
-        }
-
-        if (typeof window !== 'undefined') {
-          window.__V2P_StorageCache = data
-        }
-
-        resolve(data)
-      })
-      .catch(() => {
-        reject(new Error('获取扩展配置失败。'))
-      })
-  })
+    return data
+  }
+  catch (error) {
+    throw new Error('获取扩展配置失败。', { cause: error })
+  }
 }
 
 /**
@@ -216,7 +202,9 @@ function scheduleBackup() {
 export async function setStorage<T extends StorageKey>(
   storageKey: T,
   storageItem: StorageItems[T],
-) {
+): Promise<void> {
+  const runtime = getRuntime()
+
   switch (storageKey) {
     case StorageKey.MemberTag:
       // fall through
@@ -226,11 +214,11 @@ export async function setStorage<T extends StorageKey>(
 
     case StorageKey.API:
       try {
-        await getRuntime().storage.set('local', { [storageKey]: storageItem })
+        await runtime.storage.set('local', { [storageKey]: storageItem })
 
         // 当检测到配置更新时，延迟自动备份到远程。
         if (
-          getRuntime().isBrowserExtension
+          runtime.isBrowserExtension
           && storageKey !== StorageKey.Daily
           && storageKey !== StorageKey.API
           && canAutoBackup()
@@ -253,12 +241,11 @@ export async function setStorage<T extends StorageKey>(
 
     case StorageKey.ReadingList:
       try {
-        await getRuntime().storage.set('sync', { [storageKey]: storageItem })
+        await runtime.storage.set('sync', { [storageKey]: storageItem })
 
         // 当检测到配置更新时，延迟自动备份到远程。
         if (
-          getRuntime().isBrowserExtension
-          && storageKey !== StorageKey.API
+          runtime.isBrowserExtension
           && storageKey !== StorageKey.SyncInfo
           && canAutoBackup()
         ) {

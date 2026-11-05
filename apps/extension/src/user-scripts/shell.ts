@@ -1,6 +1,7 @@
 import { StorageKey } from '../constants'
 import { addToReadingList, decodeBase64TopicPage } from '../contents/helpers'
 import { getRuntime } from '../runtime'
+import type { ReadingItem } from '../types'
 import { getStorage } from '../utils'
 import { mountControlCenter } from './control-center'
 import { mountOptionsPanel } from './options-panel'
@@ -13,6 +14,8 @@ interface OpenOptionsDetail {
 interface OpenControlCenterDetail {
   tab?: string
 }
+
+type OverlayKind = 'settings' | 'control'
 
 const HOST_ID = 'v2p-userscript-host'
 
@@ -86,7 +89,7 @@ function ensureShell(): { shadow: ShadowRoot, launcher: HTMLButtonElement } | un
   return { shadow: shadowRoot, launcher }
 }
 
-function createOverlay(className: string): HTMLElement | undefined {
+function createOverlay(kind: OverlayKind): HTMLElement | undefined {
   const shell = ensureShell()
 
   if (!shell) {
@@ -100,19 +103,20 @@ function createOverlay(className: string): HTMLElement | undefined {
   shell.launcher.hidden = true
   shell.shadow.host.className = getThemeClass()
 
+  const isSettings = kind === 'settings'
   const nextOverlay = document.createElement('div')
-  nextOverlay.className = `v2p-overlay ${className}`
+  nextOverlay.className = isSettings
+    ? 'v2p-overlay v2p-settings-overlay'
+    : 'v2p-overlay v2p-control-center-overlay'
   nextOverlay.setAttribute('role', 'dialog')
   nextOverlay.setAttribute('aria-modal', 'true')
   nextOverlay.setAttribute(
     'aria-label',
-    className === 'v2p-settings-overlay' ? 'V2EX Polish 设置' : 'V2EX Polish 用户面板',
+    isSettings ? 'V2EX Polish 设置' : 'V2EX Polish 用户面板',
   )
 
   const panel = document.createElement('div')
-  panel.className = className === 'v2p-settings-overlay'
-    ? 'v2p-settings-panel'
-    : 'v2p-panel'
+  panel.className = isSettings ? 'v2p-settings-panel' : ''
   nextOverlay.append(panel)
 
   nextOverlay.addEventListener('click', (event) => {
@@ -128,7 +132,7 @@ function createOverlay(className: string): HTMLElement | undefined {
 }
 
 export function openOptions(section?: string): void {
-  const panel = createOverlay('v2p-settings-overlay')
+  const panel = createOverlay('settings')
 
   if (!panel) {
     return
@@ -152,14 +156,12 @@ export function openOptions(section?: string): void {
 }
 
 export function openControlCenter(tab?: string): void {
-  const panel = createOverlay('v2p-control-center-overlay')
+  const panel = createOverlay('control')
 
   if (!panel) {
     return
   }
 
-  // mountControlCenter 会重建面板结构，因此把外层容器传给它。
-  panel.className = ''
   disposeActivePanel = mountControlCenter({
     container: panel,
     initialTab: tab,
@@ -198,7 +200,10 @@ export function showUserScriptToast(message: string): void {
   }, 4000)
 }
 
-function getCurrentTopicReadingItem() {
+function getCurrentTopicReadingItem(): Pick<
+  ReadingItem,
+  'url' | 'title' | 'content'
+> | undefined {
   const topicId = window.location.pathname.match(/\/t\/(\d+)/)?.[1]
 
   if (!topicId) {
