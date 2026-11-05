@@ -183,21 +183,10 @@ export type CheckInErrorCode
     | 'unknown'
 
 /** 签到失败发生的阶段，用于定位问题环节。 */
-export type CheckInStage
-  = | 'request-page'
-    | 'parse-page'
-    | 'redeem'
-    | 'parse-redeem'
+export type CheckInStage = 'request-page' | 'parse-page' | 'redeem' | 'parse-redeem'
 
 /** 签到触发来源，用于判断是定时任务还是用户操作导致。 */
-export type CheckInTrigger
-  = | 'alarm'
-    | 'startup'
-    | 'tab'
-    | 'refresh'
-    | 'online'
-    | 'popup'
-    | 'manual'
+export type CheckInTrigger = 'alarm' | 'startup' | 'tab' | 'refresh' | 'online' | 'popup' | 'manual'
 
 /** 签到尝试的返回结果。 */
 export interface CheckInResult {
@@ -237,7 +226,9 @@ export type CheckInRetryCause
 
 export interface DailyInfo {
   /** 当前签到状态结构版本。 */
-  schemaVersion?: 2
+  schemaVersion?: 2 | 3
+  /** 当前签到状态所属的 V2EX 用户名。 */
+  memberName?: string
   /** 当前状态对应的 UTC 奖励日。 */
   rewardDay?: string
   /** 当前奖励日的任务阶段。 */

@@ -4,11 +4,7 @@ import { createToast } from '../components/toast'
 import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import { postTask } from '../post-task'
-import {
-  setMode,
-  syncViewportMode,
-  writeThemeBootSnapshotFromOptions,
-} from '../theme-state'
+import { setMode, syncViewportMode, writeThemeBootSnapshotFromOptions } from '../theme-state'
 import type { MessageData, Options, SettingsSyncInfo } from '../types'
 import {
   applyRemoteSettings,
@@ -22,6 +18,9 @@ import {
 } from '../utils'
 import { $infoCard, $wrapper } from './globals'
 import { openV2PSettings, setFont, toggleTheme } from './helpers'
+import { getCurrentMemberName } from './member-name'
+
+const currentMemberName = getCurrentMemberName()
 
 syncViewportMode()
 
@@ -102,9 +101,13 @@ void (async () => {
 
   // 页面刷新只发出轻量 nudge，是否真正请求签到由 background 的持久化状态决定。
   if (isBrowserExt && window.top === window && !isAuthPage) {
-    void chrome.runtime.sendMessage({ [MessageKey.checkInNudge]: true }).catch(() => {
-      // background 重启或扩展更新期间可能暂时不可用，下一次页面事件会再次触发。
-    })
+    void chrome.runtime
+      .sendMessage({
+        [MessageKey.checkInNudge]: { memberName: currentMemberName },
+      })
+      .catch(() => {
+        // background 重启或扩展更新期间可能暂时不可用，下一次页面事件会再次触发。
+      })
   }
 
   // 当发现远程的配置有更新时，自动同步到本地。

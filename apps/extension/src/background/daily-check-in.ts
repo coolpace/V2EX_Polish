@@ -1,26 +1,24 @@
 import { StorageKey, V2EX } from '../constants'
-import type {
-  CheckInErrorCode,
-  CheckInResult,
-  CheckInStage,
-  CheckInTrigger,
-} from '../types'
+import type { CheckInErrorCode, CheckInResult, CheckInStage, CheckInTrigger } from '../types'
 import { getStorage, setStorage } from '../utils'
 import {
   buildDailyInfoAfterAttempt,
+  createCheckInStateForMember,
   getCheckInScheduleDecision,
+  isCheckInAttemptStillCurrent,
+  isCheckInStateForMember,
   normalizeCheckInState,
+  normalizeMemberName,
 } from './check-in-scheduler'
-import {
-  parseCheckInDays,
-  parseCheckInPage,
-  SUCCESS_TEXT,
-} from './check-in-utils'
+import { parseCheckInDays, parseCheckInPage, SUCCESS_TEXT } from './check-in-utils'
 
 const checkInTimeout = 15 * 1000
 
 /** 同一时间只允许一个签到任务，避免 alarm 与 popup 触发并发请求。 */
 let inFlight = false
+
+/** 账号每次切换都会递增，用于丢弃绑定到旧账号的异步签到结果。 */
+let accountRevision = 0
 
 async function fetchWithTimeout(url: string): Promise<Response> {
   const controller = new AbortController()
@@ -79,10 +77,7 @@ function describeHttpFailure(status: number): string {
 }
 
 /** 失败结果附带的响应元数据。 */
-type CheckInResponseMeta = Pick<
-  CheckInResult,
-  'httpStatus' | 'finalUrlPath' | 'retryAfterMs'
->
+type CheckInResponseMeta = Pick<CheckInResult, 'httpStatus' | 'finalUrlPath' | 'retryAfterMs'>
 
 /** 构造结构一致的失败结果，避免各分支重复拼装字段。 */
 function fail(
@@ -103,9 +98,7 @@ export function parseRetryAfter(value: string | null, now = Date.now()): number 
   }
 
   const seconds = Number(value)
-  const delayMs = Number.isFinite(seconds)
-    ? seconds * 1000
-    : Date.parse(value) - now
+  const delayMs = Number.isFinite(seconds) ? seconds * 1000 : Date.parse(value) - now
 
   if (!Number.isFinite(delayMs) || delayMs < 60 * 1000 || delayMs > 24 * 60 * 60 * 1000) {
     return undefined
@@ -132,9 +125,7 @@ async function requestCheckInInner(): Promise<CheckInResult> {
   const pageMeta: CheckInResponseMeta = {
     httpStatus: res.status,
     finalUrlPath: getUrlPath(res.url),
-    retryAfterMs: res.status === 429
-      ? parseRetryAfter(res.headers.get('retry-after'))
-      : undefined,
+    retryAfterMs: res.status === 429 ? parseRetryAfter(res.headers.get('retry-after')) : undefined,
   }
 
   // Cloudflare 人机验证会在响应头标记，需要先于状态码判断。
@@ -194,9 +185,10 @@ async function requestCheckInInner(): Promise<CheckInResult> {
   const redeemMeta: CheckInResponseMeta = {
     httpStatus: checkInRes.status,
     finalUrlPath: getUrlPath(checkInRes.url),
-    retryAfterMs: checkInRes.status === 429
-      ? parseRetryAfter(checkInRes.headers.get('retry-after'))
-      : undefined,
+    retryAfterMs:
+      checkInRes.status === 429
+        ? parseRetryAfter(checkInRes.headers.get('retry-after'))
+        : undefined,
   }
 
   if (!checkInRes.ok) {
@@ -243,10 +235,39 @@ export interface CheckInOptions {
 }
 
 /**
+ * 记录当前页面确认的 V2EX 用户名。
+ *
+ * 本项目只保留当前账号的签到状态。用户名变化时清除旧账号状态，
+ * 避免把旧账号的成功、失败和重试时间带到新账号。
+ */
+export async function observeCheckInMember(
+  memberName: unknown,
+  now = Date.now(),
+): Promise<boolean> {
+  const normalizedMemberName = normalizeMemberName(memberName)
+
+  if (!normalizedMemberName) {
+    return false
+  }
+
+  const storage = await getStorage(false)
+
+  if (isCheckInStateForMember(storage[StorageKey.Daily], normalizedMemberName)) {
+    return false
+  }
+
+  await setStorage(StorageKey.Daily, createCheckInStateForMember(normalizedMemberName, now))
+  accountRevision += 1
+
+  return true
+}
+
+/**
  * 读取配置后执行签到，并将任何未预期的异常统一转换为失败结果。
  */
 async function runCheckIn(options: CheckInOptions): Promise<CheckInResult> {
   const startedAt = Date.now()
+  const startedAccountRevision = accountRevision
   const storage = await getStorage(false)
   const normalizedState = normalizeCheckInState(storage[StorageKey.Daily], startedAt)
 
@@ -276,6 +297,18 @@ async function runCheckIn(options: CheckInOptions): Promise<CheckInResult> {
   catch (error) {
     const { code, message } = getErrorInfo(error)
     result = fail(code, 'request-page', `签到失败：${message}`)
+  }
+
+  const latestState = (await getStorage(false))[StorageKey.Daily]
+  const accountStillMatches = isCheckInAttemptStillCurrent({
+    startedAccountRevision,
+    currentAccountRevision: accountRevision,
+    startedState: normalizedState,
+    latestState,
+  })
+
+  if (!accountStillMatches) {
+    return { status: 'skipped', reason: '账号已切换，等待重新签到' }
   }
 
   const nextState = buildDailyInfoAfterAttempt({

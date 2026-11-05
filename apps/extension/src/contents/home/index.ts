@@ -7,9 +7,12 @@ import type { DailyInfo } from '../../types'
 import { getStorage } from '../../utils'
 import { $infoCard } from '../globals'
 import { loadIcons } from '../helpers'
+import { getCurrentMemberName } from '../member-name'
 import { applyTopicListFilter } from '../topic-filter/apply-topic-list-filter'
 import { handleHotTopics } from './hot-topics'
 import { handleTopicList } from './topic-list'
+
+const currentMemberName = getCurrentMemberName()
 
 void (async () => {
   const storage = await getStorage()
@@ -37,6 +40,7 @@ void (async () => {
       now: Date.now(),
       dailyInfo,
       autoCheckInEnabled: options.autoCheckIn.enabled,
+      currentMemberName,
     })
 
     function appendInfoRow(text: string, muted = false) {

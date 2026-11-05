@@ -3,16 +3,21 @@ import { describe, expect, it } from 'vitest'
 import {
   buildDailyInfoAfterAttempt,
   CHECK_IN_NUDGE_INTERVAL_MS,
+  CHECK_IN_STATE_SCHEMA_VERSION,
   CHECK_IN_TARGET_GRACE_MS,
   CHECK_IN_TARGET_JITTER_MAX_MS,
+  createCheckInStateForMember,
   getCheckInAlarmTime,
   getCheckInScheduleDecision,
+  isCheckInAttemptStillCurrent,
+  isCheckInStateForMember,
   normalizeCheckInState,
 } from '../apps/extension/src/background/check-in-scheduler'
 import type { CheckInResult } from '../apps/extension/src/types'
 
 const DAY = 24 * 60 * 60 * 1000
 const now = Date.UTC(2026, 10, 5, 0, 10)
+const memberName = 'alice'
 
 function failed(code: CheckInResult['code'], httpStatus?: number): CheckInResult {
   return {
@@ -25,11 +30,12 @@ function failed(code: CheckInResult['code'], httpStatus?: number): CheckInResult
 }
 
 describe('normalizeCheckInState', () => {
-  it('为新奖励日安排带随机抖动的目标时间', () => {
-    const state = normalizeCheckInState(undefined, now, 120_000)
+  it('为新账号安排带随机抖动的目标时间', () => {
+    const state = createCheckInStateForMember(memberName, now, 120_000)
     const dayStart = Math.floor(now / DAY) * DAY
 
-    expect(state.schemaVersion).toBe(2)
+    expect(state.schemaVersion).toBe(CHECK_IN_STATE_SCHEMA_VERSION)
+    expect(state.memberName).toBe(memberName)
     expect(state.rewardDay).toBe('2026-11-5')
     expect(state.phase).toBe('scheduled')
     expect(state.targetAt).toBe(dayStart + CHECK_IN_TARGET_GRACE_MS + 120_000)
@@ -37,7 +43,7 @@ describe('normalizeCheckInState', () => {
   })
 
   it('随机抖动不会超过三分钟', () => {
-    const state = normalizeCheckInState(undefined, now, CHECK_IN_TARGET_JITTER_MAX_MS * 2)
+    const state = createCheckInStateForMember(memberName, now, CHECK_IN_TARGET_JITTER_MAX_MS * 2)
     const dayStart = Math.floor(now / DAY) * DAY
 
     expect(state.targetAt).toBe(dayStart + CHECK_IN_TARGET_GRACE_MS + CHECK_IN_TARGET_JITTER_MAX_MS)
@@ -47,6 +53,8 @@ describe('normalizeCheckInState', () => {
     const lastCheckInTime = Date.UTC(2026, 10, 5, 0, 1)
     const state = normalizeCheckInState(
       {
+        schemaVersion: 3,
+        memberName,
         lastCheckInTime,
         lastCheckInDay: '2026-11-5',
         lastResult: 'success',
@@ -63,7 +71,8 @@ describe('normalizeCheckInState', () => {
   it('跨 UTC 日重新安排签到并保留历史成功信息', () => {
     const state = normalizeCheckInState(
       {
-        schemaVersion: 2,
+        schemaVersion: 3,
+        memberName,
         rewardDay: '2026-11-4',
         phase: 'succeeded',
         lastCheckInTime: Date.UTC(2026, 10, 4, 8),
@@ -81,10 +90,34 @@ describe('normalizeCheckInState', () => {
     expect(state.checkInDays).toBe(11)
   })
 
-  it('迁移同日旧失败记录时按新网络策略重排', () => {
+  it('旧版无账号记录会被清空，不能沿用当天成功或失败', () => {
+    const legacySuccess = normalizeCheckInState(
+      {
+        schemaVersion: 2,
+        lastCheckInTime: Date.UTC(2026, 10, 5, 0, 1),
+        lastCheckInDay: '2026-11-5',
+        checkInDays: 10,
+      },
+      now,
+      0,
+    )
+
+    expect(legacySuccess).toMatchObject({
+      schemaVersion: 3,
+      phase: 'scheduled',
+      rewardDay: '2026-11-5',
+    })
+    expect(legacySuccess.memberName).toBeUndefined()
+    expect(legacySuccess.lastCheckInTime).toBeUndefined()
+    expect(legacySuccess.checkInDays).toBeUndefined()
+  })
+
+  it('已绑定账号的同日旧失败记录按新网络策略重排', () => {
     const lastAttemptTime = Date.UTC(2026, 10, 5, 0, 7)
     const state = normalizeCheckInState(
       {
+        schemaVersion: 3,
+        memberName,
         lastAttemptTime,
         lastResult: 'failed',
         lastErrorCode: 'network',
@@ -94,14 +127,56 @@ describe('normalizeCheckInState', () => {
       0,
     )
 
-    expect(state.schemaVersion).toBe(2)
+    expect(state.schemaVersion).toBe(3)
     expect(state.nextActionAt).toBe(lastAttemptTime + 60_000)
     expect(state.nudgeEligibleAt).toBe(lastAttemptTime + 60_000)
+  })
+
+  it('账号切换会创建不继承旧账号数据的新状态', () => {
+    const bobState = createCheckInStateForMember('bob', now, 0)
+
+    expect(bobState).toMatchObject({
+      schemaVersion: 3,
+      memberName: 'bob',
+      phase: 'scheduled',
+    })
+    expect(isCheckInStateForMember(bobState, 'alice')).toBe(false)
+    expect(isCheckInStateForMember(bobState, 'bob')).toBe(true)
+  })
+
+  it('签到途中账号变化后旧结果不能写回', () => {
+    const aliceState = createCheckInStateForMember('alice', now, 0)
+    const bobState = createCheckInStateForMember('bob', now, 0)
+
+    expect(
+      isCheckInAttemptStillCurrent({
+        startedAccountRevision: 1,
+        currentAccountRevision: 2,
+        startedState: aliceState,
+        latestState: aliceState,
+      }),
+    ).toBe(false)
+    expect(
+      isCheckInAttemptStillCurrent({
+        startedAccountRevision: 1,
+        currentAccountRevision: 1,
+        startedState: aliceState,
+        latestState: bobState,
+      }),
+    ).toBe(false)
+    expect(
+      isCheckInAttemptStillCurrent({
+        startedAccountRevision: 1,
+        currentAccountRevision: 1,
+        startedState: aliceState,
+        latestState: aliceState,
+      }),
+    ).toBe(true)
   })
 })
 
 describe('getCheckInScheduleDecision', () => {
-  const state = normalizeCheckInState(undefined, now, 0)
+  const state = createCheckInStateForMember(memberName, now, 0)
 
   it('到达目标时间后允许自动执行', () => {
     expect(
@@ -151,6 +226,24 @@ describe('getCheckInScheduleDecision', () => {
     ).toMatchObject({ action: 'skip', reason: '今日已签到' })
   })
 
+  it('没有账号归属的成功状态不能阻止手动签到', () => {
+    expect(
+      getCheckInScheduleDecision({
+        now,
+        state: {
+          ...state,
+          schemaVersion: 3,
+          memberName: undefined,
+          phase: 'succeeded',
+          nextActionAt: undefined,
+        },
+        autoCheckInEnabled: true,
+        trigger: 'manual',
+        force: true,
+      }),
+    ).toMatchObject({ action: 'run' })
+  })
+
   it('需要用户处理时允许用户刷新重新核对', () => {
     const nudgeEligibleAt = now + CHECK_IN_NUDGE_INTERVAL_MS
 
@@ -198,7 +291,7 @@ describe('getCheckInScheduleDecision', () => {
 })
 
 describe('getCheckInAlarmTime', () => {
-  const state = normalizeCheckInState(undefined, now, 0)
+  const state = createCheckInStateForMember(memberName, now, 0)
 
   it('按 nextActionAt 创建一次调度', () => {
     expect(getCheckInAlarmTime(state, true)).toBe(state.nextActionAt)
@@ -206,20 +299,14 @@ describe('getCheckInAlarmTime', () => {
 
   it('已完成的当日任务不创建 alarm', () => {
     expect(
-      getCheckInAlarmTime(
-        { ...state, phase: 'succeeded', nextActionAt: undefined },
-        true,
-      ),
+      getCheckInAlarmTime({ ...state, phase: 'succeeded', nextActionAt: undefined }, true),
     ).toBeUndefined()
   })
 
   it('用户关闭自动签到或需要人工处理时不创建 alarm', () => {
     expect(getCheckInAlarmTime(state, false)).toBeUndefined()
     expect(
-      getCheckInAlarmTime(
-        { ...state, phase: 'needs-action', nextActionAt: undefined },
-        true,
-      ),
+      getCheckInAlarmTime({ ...state, phase: 'needs-action', nextActionAt: undefined }, true),
     ).toBeUndefined()
   })
 
@@ -231,7 +318,7 @@ describe('getCheckInAlarmTime', () => {
 })
 
 describe('buildDailyInfoAfterAttempt', () => {
-  const initial = normalizeCheckInState(undefined, Date.UTC(2026, 10, 5, 0, 6), 0)
+  const initial = createCheckInStateForMember(memberName, Date.UTC(2026, 10, 5, 0, 6), 0)
   const attemptTime = Date.UTC(2026, 10, 5, 0, 6, 10)
   const finishedAt = Date.UTC(2026, 10, 5, 0, 6, 20)
 
@@ -392,5 +479,6 @@ describe('buildDailyInfoAfterAttempt', () => {
     expect(state.failureCount).toBe(0)
     expect(state.nextActionAt).toBeUndefined()
     expect(state.checkInDays).toBe(12)
+    expect(state.memberName).toBe(memberName)
   })
 })

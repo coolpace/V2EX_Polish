@@ -2,7 +2,10 @@ import { resolveCheckInDisplayState } from '../../background/check-in-utils'
 import { Links, MessageKey, StorageKey } from '../../constants'
 import type { CheckInResult, StorageSettings } from '../../types'
 import { copyCheckInDiagnostic, getStorage } from '../../utils'
+import { getCurrentMemberName } from '../member-name'
 import { renderMissionPanel, syncNativeClaimButton } from './view'
+
+const currentMemberName = getCurrentMemberName()
 
 function findMissionBox(): HTMLElement | undefined {
   const headings = document.querySelectorAll<HTMLElement>('#Main .box h1')
@@ -36,6 +39,7 @@ function renderFromStorage(storage: StorageSettings): HTMLElement | undefined {
     now: Date.now(),
     dailyInfo: storage[StorageKey.Daily],
     autoCheckInEnabled: storage[StorageKey.Options].autoCheckIn.enabled,
+    currentMemberName,
   })
 
   renderMissionPanel(panel, state)
@@ -58,10 +62,10 @@ async function handleRetry(button: HTMLButtonElement): Promise<void> {
 
   try {
     await chrome.runtime.sendMessage<
-      { [MessageKey.checkInRetry]: true },
+      { [MessageKey.checkInRetry]: { memberName?: string } },
       CheckInResult | undefined
     >({
-      [MessageKey.checkInRetry]: true,
+      [MessageKey.checkInRetry]: { memberName: currentMemberName },
     })
     renderFromStorage(await getStorage(false))
   }
@@ -74,10 +78,7 @@ async function handleRetry(button: HTMLButtonElement): Promise<void> {
   }
 }
 
-async function handleDiagnostic(
-  button: HTMLButtonElement,
-  openIssue: boolean,
-): Promise<void> {
+async function handleDiagnostic(button: HTMLButtonElement, openIssue: boolean): Promise<void> {
   const idleText = button.textContent ?? ''
   let copied = false
   button.disabled = true
@@ -89,9 +90,7 @@ async function handleDiagnostic(
     console.warn('[V2EX Polish] 生成签到诊断信息失败：', error)
   }
 
-  button.textContent = copied
-    ? '已复制诊断信息'
-    : '复制失败，请打开扩展面板'
+  button.textContent = copied ? '已复制诊断信息' : '复制失败，请打开扩展面板'
 
   if (copied && openIssue) {
     window.open(Links.NewIssue, '_blank', 'noopener,noreferrer')
@@ -104,9 +103,7 @@ async function handleDiagnostic(
 }
 
 function handlePanelClick(event: MouseEvent): void {
-  const button = (event.target as Element | null)?.closest<HTMLButtonElement>(
-    'button[data-action]',
-  )
+  const button = (event.target as Element | null)?.closest<HTMLButtonElement>('button[data-action]')
 
   if (!button) {
     return
@@ -138,10 +135,8 @@ void (async () => {
   panel.addEventListener('click', handlePanelClick)
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
-    const dailyChanged = areaName === 'local'
-      && Object.hasOwn(changes, StorageKey.Daily)
-    const optionsChanged = areaName === 'sync'
-      && Object.hasOwn(changes, StorageKey.Options)
+    const dailyChanged = areaName === 'local' && Object.hasOwn(changes, StorageKey.Daily)
+    const optionsChanged = areaName === 'sync' && Object.hasOwn(changes, StorageKey.Options)
 
     if (dailyChanged || optionsChanged) {
       void getStorage(false)

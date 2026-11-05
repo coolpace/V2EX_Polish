@@ -34,10 +34,12 @@ describe('getUtcDayStart', () => {
 
 describe('extractRedeemPath', () => {
   it('兼容单引号与双引号属性', () => {
-    expect(extractRedeemPath('<a href=\'/mission/daily/redeem?once=12345\'>领取</a>'))
-      .toBe('/mission/daily/redeem?once=12345')
-    expect(extractRedeemPath('<a href="/mission/daily/redeem?once=abc-def">领取</a>'))
-      .toBe('/mission/daily/redeem?once=abc-def')
+    expect(extractRedeemPath('<a href=\'/mission/daily/redeem?once=12345\'>领取</a>')).toBe(
+      '/mission/daily/redeem?once=12345',
+    )
+    expect(extractRedeemPath('<a href="/mission/daily/redeem?once=abc-def">领取</a>')).toBe(
+      '/mission/daily/redeem?once=abc-def',
+    )
   })
 
   it('没有领取链接时返回 null', () => {
@@ -58,18 +60,23 @@ describe('parseCheckInDays', () => {
 
 describe('parseCheckInPage', () => {
   it('存在领取链接时返回 redeem', () => {
-    expect(parseCheckInPage('<a href=\'/mission/daily/redeem?once=123\'>领取</a>'))
-      .toEqual({ type: 'redeem', path: '/mission/daily/redeem?once=123' })
+    expect(parseCheckInPage('<a href=\'/mission/daily/redeem?once=123\'>领取</a>')).toEqual({
+      type: 'redeem',
+      path: '/mission/daily/redeem?once=123',
+    })
   })
 
   it('已领取时返回 already 与连续天数', () => {
-    expect(parseCheckInPage('<div>每日登录奖励已领取，已连续登录 42 天</div>'))
-      .toEqual({ type: 'already', checkInDays: 42 })
+    expect(parseCheckInPage('<div>每日登录奖励已领取，已连续登录 42 天</div>')).toEqual({
+      type: 'already',
+      checkInDays: 42,
+    })
   })
 
   it('登录页返回 unauthenticated', () => {
-    expect(parseCheckInPage('<a href="/signin?next=/mission/daily">登录</a>'))
-      .toEqual({ type: 'unauthenticated' })
+    expect(parseCheckInPage('<a href="/signin?next=/mission/daily">登录</a>')).toEqual({
+      type: 'unauthenticated',
+    })
   })
 
   it('无法识别的页面返回 unknown', () => {
@@ -179,13 +186,19 @@ describe('describeCheckInErrorCode', () => {
 
 describe('resolveCheckInDisplayState', () => {
   const now = Date.UTC(2026, 9, 22, 12)
+  const memberName = 'alice'
 
   it('今日已签到时返回 checked-in', () => {
     expect(
       resolveCheckInDisplayState({
         now,
         autoCheckInEnabled: true,
-        dailyInfo: { lastCheckInTime: Date.UTC(2026, 9, 22, 8), checkInDays: 3 },
+        dailyInfo: {
+          schemaVersion: 3,
+          memberName,
+          lastCheckInTime: Date.UTC(2026, 9, 22, 8),
+          checkInDays: 3,
+        },
       }),
     ).toEqual({
       type: 'checked-in',
@@ -199,7 +212,11 @@ describe('resolveCheckInDisplayState', () => {
       resolveCheckInDisplayState({
         now,
         autoCheckInEnabled: false,
-        dailyInfo: { lastCheckInTime: Date.UTC(2026, 9, 22, 8) },
+        dailyInfo: {
+          schemaVersion: 3,
+          memberName,
+          lastCheckInTime: Date.UTC(2026, 9, 22, 8),
+        },
       }).type,
     ).toBe('checked-in')
   })
@@ -210,6 +227,8 @@ describe('resolveCheckInDisplayState', () => {
         now,
         autoCheckInEnabled: true,
         dailyInfo: {
+          schemaVersion: 3,
+          memberName,
           lastAttemptTime: Date.UTC(2026, 9, 22, 11),
           lastResult: 'failed',
           lastErrorCode: 'unauthenticated',
@@ -227,6 +246,8 @@ describe('resolveCheckInDisplayState', () => {
         now,
         autoCheckInEnabled: true,
         dailyInfo: {
+          schemaVersion: 3,
+          memberName,
           lastAttemptTime: Date.UTC(2026, 9, 22, 11),
           lastResult: 'failed',
           lastErrorCode: 'network',
@@ -244,6 +265,8 @@ describe('resolveCheckInDisplayState', () => {
         now,
         autoCheckInEnabled: true,
         dailyInfo: {
+          schemaVersion: 3,
+          memberName,
           lastAttemptTime: Date.UTC(2026, 9, 22, 11),
           lastResult: 'failed',
           lastErrorCode: 'challenge',
@@ -264,6 +287,8 @@ describe('resolveCheckInDisplayState', () => {
         now,
         autoCheckInEnabled: true,
         dailyInfo: {
+          schemaVersion: 3,
+          memberName,
           lastAttemptTime: Date.UTC(2026, 9, 21, 23),
           lastResult: 'failed',
           lastErrorCode: 'network',
@@ -273,9 +298,46 @@ describe('resolveCheckInDisplayState', () => {
   })
 
   it('关闭自动签到且今日未尝试时返回 auto-disabled', () => {
+    expect(resolveCheckInDisplayState({ now, autoCheckInEnabled: false }).type).toBe(
+      'auto-disabled',
+    )
+  })
+
+  it('账号不匹配时不能沿用其他账号的已签到状态', () => {
     expect(
-      resolveCheckInDisplayState({ now, autoCheckInEnabled: false }).type,
-    ).toBe('auto-disabled')
+      resolveCheckInDisplayState({
+        now,
+        autoCheckInEnabled: true,
+        currentMemberName: 'bob',
+        dailyInfo: {
+          schemaVersion: 3,
+          memberName,
+          lastCheckInTime: Date.UTC(2026, 9, 22, 8),
+          checkInDays: 3,
+        },
+      }),
+    ).toMatchObject({
+      type: 'not-attempted',
+      skipReason: '账号签到状态待确认',
+    })
+  })
+
+  it('旧版无账号状态不能显示为已签到', () => {
+    expect(
+      resolveCheckInDisplayState({
+        now,
+        autoCheckInEnabled: true,
+        currentMemberName: memberName,
+        dailyInfo: {
+          schemaVersion: 2,
+          lastCheckInTime: Date.UTC(2026, 9, 22, 8),
+          checkInDays: 3,
+        },
+      }),
+    ).toMatchObject({
+      type: 'not-attempted',
+      skipReason: '账号签到状态待确认',
+    })
   })
 })
 
@@ -292,10 +354,7 @@ describe('shouldPromptCheckInFailure', () => {
 
   it('已签到时不提示', () => {
     expect(
-      shouldPromptCheckInFailure(
-        { type: 'checked-in', checkInTime: Date.UTC(2026, 9, 22, 8) },
-        3,
-      ),
+      shouldPromptCheckInFailure({ type: 'checked-in', checkInTime: Date.UTC(2026, 9, 22, 8) }, 3),
     ).toBe(false)
   })
 
@@ -337,6 +396,8 @@ describe('buildCheckInDiagnostic', () => {
       browser: 'Chromium（test）',
       timezoneOffsetMinutes: -480,
       dailyInfo: {
+        schemaVersion: 3,
+        memberName: 'alice',
         lastAttemptTime: Date.UTC(2026, 9, 22, 11),
         lastResult: 'failed',
         lastErrorCode: 'http',
@@ -350,6 +411,7 @@ describe('buildCheckInDiagnostic', () => {
     })
 
     expect(text).toContain('扩展版本：1.9.0')
+    expect(text).toContain('账号状态：已确认')
     expect(text).toContain('今日状态：签到失败')
     expect(text).toContain('失败分类：http')
     expect(text).toContain('失败阶段：发起领取请求')
@@ -359,6 +421,7 @@ describe('buildCheckInDiagnostic', () => {
     expect(text).toContain('触发来源：定时任务')
     expect(text).toContain('UTC+8')
     expect(text).not.toContain('?once=')
+    expect(text).not.toContain('alice')
   })
 
   it('包含计划重试时间与分类', () => {
@@ -370,6 +433,8 @@ describe('buildCheckInDiagnostic', () => {
       browser: 'Chromium（test）',
       timezoneOffsetMinutes: -480,
       dailyInfo: {
+        schemaVersion: 3,
+        memberName: 'alice',
         lastAttemptTime: Date.UTC(2026, 9, 22, 11),
         lastResult: 'failed',
         lastErrorCode: 'network',

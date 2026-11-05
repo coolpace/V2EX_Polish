@@ -1,9 +1,4 @@
-import type {
-  CheckInErrorCode,
-  CheckInStage,
-  CheckInTrigger,
-  DailyInfo,
-} from '../types'
+import type { CheckInErrorCode, CheckInStage, CheckInTrigger, DailyInfo } from '../types'
 import { formatTimestamp } from '../utils/date'
 
 /** V2EX 领取成功后页面上的提示文案。 */
@@ -139,16 +134,11 @@ interface SkipCheckParams {
  * 判断本次是否需要发起签到请求，返回跳过原因。
  */
 export function getCheckInSkipReason(params: SkipCheckParams): string | undefined {
-  const {
-    now,
-    lastCheckInTime,
-    lastCheckInDay,
-    nextActionAt,
-  } = params
+  const { now, lastCheckInTime, lastCheckInDay, nextActionAt } = params
 
   // 新数据直接使用奖励日字段；旧数据回退到时间戳的 UTC 日期。
-  const checkedInDay = lastCheckInDay
-    ?? (lastCheckInTime ? getUtcDayKey(lastCheckInTime) : undefined)
+  const checkedInDay
+    = lastCheckInDay ?? (lastCheckInTime ? getUtcDayKey(lastCheckInTime) : undefined)
 
   if (checkedInDay && checkedInDay === getUtcDayKey(now)) {
     return '今日已签到'
@@ -224,6 +214,14 @@ export type CheckInDisplayState
     | { type: 'not-attempted', skipReason?: string, nextActionAt?: number }
     | { type: 'auto-disabled' }
 
+function getVerifiedStateMemberName(dailyInfo: DailyInfo | undefined): string | undefined {
+  if (dailyInfo?.schemaVersion !== 3) {
+    return undefined
+  }
+
+  return dailyInfo.memberName?.trim() || undefined
+}
+
 /**
  * 汇总 popup 需要的签到展示状态。
  *
@@ -234,13 +232,21 @@ export function resolveCheckInDisplayState(params: {
   now: number
   dailyInfo?: DailyInfo
   autoCheckInEnabled: boolean
+  currentMemberName?: string
 }): CheckInDisplayState {
-  const { now, dailyInfo, autoCheckInEnabled } = params
+  const { now, dailyInfo, autoCheckInEnabled, currentMemberName } = params
   const today = getUtcDayKey(now)
-  const checkedInDay = dailyInfo?.lastCheckInDay
-    ?? (dailyInfo?.lastCheckInTime ? getUtcDayKey(dailyInfo.lastCheckInTime) : undefined)
+  const checkedInDay
+    = dailyInfo?.lastCheckInDay
+      ?? (dailyInfo?.lastCheckInTime ? getUtcDayKey(dailyInfo.lastCheckInTime) : undefined)
+  const stateMemberName = getVerifiedStateMemberName(dailyInfo)
+  const normalizedCurrentMemberName = currentMemberName?.trim() || undefined
+  const identityMatches
+    = stateMemberName !== undefined
+      && (normalizedCurrentMemberName === undefined
+        || stateMemberName === normalizedCurrentMemberName)
 
-  if (checkedInDay === today) {
+  if (identityMatches && checkedInDay === today) {
     return {
       type: 'checked-in',
       checkInTime: dailyInfo?.lastCheckInTime ?? dailyInfo?.lastAttemptTime ?? now,
@@ -255,7 +261,8 @@ export function resolveCheckInDisplayState(params: {
   const lastAttemptTime = dailyInfo?.lastAttemptTime
 
   if (
-    dailyInfo?.lastResult === 'failed'
+    identityMatches
+    && dailyInfo?.lastResult === 'failed'
     && lastAttemptTime
     && getUtcDayKey(lastAttemptTime) === today
   ) {
@@ -273,13 +280,15 @@ export function resolveCheckInDisplayState(params: {
 
   return {
     type: 'not-attempted',
-    nextActionAt: dailyInfo?.nextActionAt,
-    skipReason: getCheckInSkipReason({
-      now,
-      lastCheckInTime: dailyInfo?.lastCheckInTime,
-      lastCheckInDay: dailyInfo?.lastCheckInDay,
-      nextActionAt: dailyInfo?.nextActionAt,
-    }),
+    nextActionAt: identityMatches ? dailyInfo?.nextActionAt : undefined,
+    skipReason: identityMatches
+      ? getCheckInSkipReason({
+          now,
+          lastCheckInTime: dailyInfo?.lastCheckInTime,
+          lastCheckInDay: dailyInfo?.lastCheckInDay,
+          nextActionAt: dailyInfo?.nextActionAt,
+        })
+      : '账号签到状态待确认',
   }
 }
 
@@ -288,8 +297,10 @@ export function shouldPromptCheckInFailure(
   state: CheckInDisplayState,
   failureCount?: number,
 ): boolean {
-  return state.type === 'failed'
+  return (
+    state.type === 'failed'
     && (state.needsAction || (failureCount ?? 0) >= CHECK_IN_FAILURE_PROMPT_THRESHOLD)
+  )
 }
 
 /** 生成诊断文本所需的输入。 */
@@ -324,16 +335,11 @@ function formatTimezone(offsetMinutes: number): string {
  * 只包含签到状态与技术元数据，不含账号、Cookie 或页面原文。
  */
 export function buildCheckInDiagnostic(input: CheckInDiagnosticInput): string {
-  const {
-    now,
-    dailyInfo,
-    autoCheckInEnabled,
-    extensionVersion,
-    browser,
-    timezoneOffsetMinutes,
-  } = input
+  const { now, dailyInfo, autoCheckInEnabled, extensionVersion, browser, timezoneOffsetMinutes }
+    = input
 
   const state = resolveCheckInDisplayState({ now, dailyInfo, autoCheckInEnabled })
+  const identityVerified = getVerifiedStateMemberName(dailyInfo) !== undefined
   const stateText: Record<CheckInDisplayState['type'], string> = {
     'checked-in': '今日已签到',
     failed: '签到失败',
@@ -347,6 +353,7 @@ export function buildCheckInDiagnostic(input: CheckInDiagnosticInput): string {
     `扩展版本：${extensionVersion}`,
     `浏览器：${browser}`,
     `自动签到：${autoCheckInEnabled ? '已开启' : '已关闭'}`,
+    `账号状态：${identityVerified ? '已确认' : '待确认'}`,
     `今日状态：${stateText[state.type]}`,
   ]
 
@@ -405,7 +412,9 @@ export function buildCheckInDiagnostic(input: CheckInDiagnosticInput): string {
     lines.push(`连续登录：${dailyInfo.checkInDays} 天`)
   }
 
-  lines.push(`原始记录：${JSON.stringify(dailyInfo ?? {})}`)
+  const { memberName: _memberName, ...diagnosticDailyInfo } = dailyInfo ?? {}
+
+  lines.push(`原始记录：${JSON.stringify(diagnosticDailyInfo)}`)
 
   return lines.join('\n')
 }

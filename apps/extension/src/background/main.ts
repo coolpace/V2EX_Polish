@@ -1,15 +1,10 @@
 import { injectedScripts } from '../../shared/features'
-import {
-  Menu,
-  MessageKey,
-  StorageKey,
-  V2EX_DOMAINS,
-} from '../constants'
+import { Menu, MessageKey, StorageKey, V2EX_DOMAINS } from '../constants'
 import type { CheckInResult, CheckInTrigger, LegacyTag, MemberTag } from '../types'
 import { getRunEnv, getStorage, setStorage } from '../utils'
-import { isMissionCheckInUrl } from './check-in-message'
+import { isCheckInAuthUrl, isMissionCheckInUrl } from './check-in-message'
 import { getCheckInAlarmTime, normalizeCheckInState } from './check-in-scheduler'
-import { checkIn } from './daily-check-in'
+import { checkIn, observeCheckInMember } from './daily-check-in'
 
 /**
  * 旧格式的 MemberTag 数据，用于迁移时的类型兼容。
@@ -80,8 +75,8 @@ interface Message {
   [MessageKey.colorScheme]?: 'dark' | 'light'
   [MessageKey.showOptions]?: true
   [MessageKey.checkIn]?: { force?: boolean }
-  [MessageKey.checkInNudge]?: true
-  [MessageKey.checkInRetry]?: true
+  [MessageKey.checkInNudge]?: true | { memberName?: string }
+  [MessageKey.checkInRetry]?: true | { memberName?: string }
 }
 
 function generateUrlPatterns(path: string): string[] {
@@ -103,8 +98,7 @@ function isV2EXUrl(url: string): boolean {
 }
 
 function isExtensionPageSender(sender: chrome.runtime.MessageSender): boolean {
-  return sender.id === chrome.runtime.id
-    && !!sender.url?.startsWith(chrome.runtime.getURL(''))
+  return sender.id === chrome.runtime.id && !!sender.url?.startsWith(chrome.runtime.getURL(''))
 }
 
 function isV2EXContentSender(sender: chrome.runtime.MessageSender): boolean {
@@ -117,8 +111,18 @@ function isMissionPageSender(sender: chrome.runtime.MessageSender): boolean {
   return isMissionCheckInUrl(sender.tab?.url ?? sender.url)
 }
 
+function getMessageMemberName(
+  payload: true | { memberName?: string } | undefined,
+): string | undefined {
+  if (!payload || payload === true) {
+    return undefined
+  }
+
+  return payload.memberName
+}
+
 function respondToCheckIn(
-  options: { force?: boolean, trigger: CheckInTrigger },
+  options: { force?: boolean, trigger: CheckInTrigger, memberName?: string },
   sendResponse: (response?: CheckInResult) => void,
 ): true {
   void runAutoCheckIn(options).then(sendResponse)
@@ -136,10 +140,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
 
     const force = message[MessageKey.checkIn]?.force === true
 
-    return respondToCheckIn(
-      { force, trigger: force ? 'manual' : 'popup' },
-      sendResponse,
-    )
+    return respondToCheckIn({ force, trigger: force ? 'manual' : 'popup' }, sendResponse)
   }
 
   if (Object.hasOwn(message, MessageKey.checkInNudge)) {
@@ -149,7 +150,9 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
       return false
     }
 
-    return respondToCheckIn({ trigger: 'refresh' }, sendResponse)
+    const memberName = getMessageMemberName(message[MessageKey.checkInNudge])
+
+    return respondToCheckIn({ trigger: 'refresh', memberName }, sendResponse)
   }
 
   if (Object.hasOwn(message, MessageKey.checkInRetry)) {
@@ -159,7 +162,9 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
       return false
     }
 
-    return respondToCheckIn({ force: true, trigger: 'manual' }, sendResponse)
+    const memberName = getMessageMemberName(message[MessageKey.checkInRetry])
+
+    return respondToCheckIn({ force: true, trigger: 'manual', memberName }, sendResponse)
   }
 
   if (Object.hasOwn(message, MessageKey.colorScheme)) {
@@ -192,80 +197,83 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
 })
 
 chrome.contextMenus.removeAll(() => {
-  void getStorage(false).then((storage) => {
-    const options = storage[StorageKey.Options]
+  void getStorage(false)
+    .then((storage) => {
+      const options = storage[StorageKey.Options]
 
-    if (options.contextMenu?.enabled) {
-      const runEnv = getRunEnv()
+      if (options.contextMenu?.enabled) {
+        const runEnv = getRunEnv()
 
-      chrome.contextMenus.create({
-        documentUrlPatterns: generateUrlPatterns('/*'),
-        contexts: ['page'],
-        title: 'V2EX Polish',
-        visible: true,
-        id: Menu.Root,
-      })
-
-      const hasSidePanel
-        = runEnv === 'chrome' && 'sidePanel' in chrome && typeof chrome.sidePanel.open === 'function'
-
-      if (hasSidePanel) {
         chrome.contextMenus.create({
           documentUrlPatterns: generateUrlPatterns('/*'),
           contexts: ['page'],
-          title: '选项设置',
-          id: Menu.Options,
+          title: 'V2EX Polish',
+          visible: true,
+          id: Menu.Root,
+        })
+
+        const hasSidePanel
+          = runEnv === 'chrome'
+            && 'sidePanel' in chrome
+            && typeof chrome.sidePanel.open === 'function'
+
+        if (hasSidePanel) {
+          chrome.contextMenus.create({
+            documentUrlPatterns: generateUrlPatterns('/*'),
+            contexts: ['page'],
+            title: '选项设置',
+            id: Menu.Options,
+            parentId: Menu.Root,
+          })
+        }
+
+        chrome.contextMenus.create({
+          documentUrlPatterns: generateUrlPatterns('/t/*'),
+          contexts: ['page'],
+          title: '解析本页 Base64',
+          id: Menu.Decode,
           parentId: Menu.Root,
         })
-      }
 
-      chrome.contextMenus.create({
-        documentUrlPatterns: generateUrlPatterns('/t/*'),
-        contexts: ['page'],
-        title: '解析本页 Base64',
-        id: Menu.Decode,
-        parentId: Menu.Root,
-      })
+        chrome.contextMenus.create({
+          documentUrlPatterns: generateUrlPatterns('/t/*'),
+          contexts: ['page'],
+          title: '添加进稍后阅读',
+          id: Menu.Reading,
+          parentId: Menu.Root,
+        })
 
-      chrome.contextMenus.create({
-        documentUrlPatterns: generateUrlPatterns('/t/*'),
-        contexts: ['page'],
-        title: '添加进稍后阅读',
-        id: Menu.Reading,
-        parentId: Menu.Root,
-      })
+        chrome.contextMenus.onClicked.addListener((info, tab) => {
+          if (tab?.id) {
+            switch (info.menuItemId) {
+              case Menu.Options: {
+                void chrome.sidePanel.open({ tabId: tab.id })
+                break
+              }
 
-      chrome.contextMenus.onClicked.addListener((info, tab) => {
-        if (tab?.id) {
-          switch (info.menuItemId) {
-            case Menu.Options: {
-              void chrome.sidePanel.open({ tabId: tab.id })
-              break
-            }
+              case Menu.Decode: {
+                void chrome.scripting.executeScript({
+                  target: { tabId: tab.id },
+                  files: [injectedScripts.decodeBase64],
+                })
+                break
+              }
 
-            case Menu.Decode: {
-              void chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                files: [injectedScripts.decodeBase64],
-              })
-              break
-            }
-
-            case Menu.Reading: {
-              void chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                files: [injectedScripts.readingList],
-              })
-              break
+              case Menu.Reading: {
+                void chrome.scripting.executeScript({
+                  target: { tabId: tab.id },
+                  files: [injectedScripts.readingList],
+                })
+                break
+              }
             }
           }
-        }
-      })
-    }
-    else {
-      void chrome.contextMenus.remove(Menu.Root)
-    }
-  })
+        })
+      }
+      else {
+        void chrome.contextMenus.remove(Menu.Root)
+      }
+    })
     .catch((error) => {
       console.warn('[V2EX Polish] 创建右键菜单失败：', error)
     })
@@ -273,7 +281,12 @@ chrome.contextMenus.removeAll(() => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // 用户打开 V2EX 页面时补一次签到，降低对 alarm 触发时机的依赖。
-  if (changeInfo.status === 'complete' && tab.url && isV2EXUrl(tab.url)) {
+  if (
+    changeInfo.status === 'complete'
+    && tab.url
+    && isV2EXUrl(tab.url)
+    && !isCheckInAuthUrl(tab.url)
+  ) {
     void runAutoCheckIn({ trigger: 'tab' })
   }
 
@@ -315,9 +328,17 @@ const legacyCheckInAlarmName = 'dailyCheckIn'
  * 都通过这里触发；popup 不再直接执行签到，避免跨上下文并发与请求随页面关闭而中断。
  */
 async function runAutoCheckIn(
-  options: { force?: boolean, trigger?: CheckInTrigger } = {},
+  options: {
+    force?: boolean
+    trigger?: CheckInTrigger
+    memberName?: string
+  } = {},
 ): Promise<CheckInResult | undefined> {
   try {
+    if (options.memberName) {
+      await observeCheckInMember(options.memberName)
+    }
+
     return await checkIn({ force: options.force, trigger: options.trigger })
   }
   catch (error) {
@@ -341,10 +362,7 @@ async function reconcileCheckInAlarm(now = Date.now()): Promise<void> {
 
   await chrome.alarms.clear(legacyCheckInAlarmName)
 
-  const scheduledTime = getCheckInAlarmTime(
-    state,
-    storage[StorageKey.Options].autoCheckIn.enabled,
-  )
+  const scheduledTime = getCheckInAlarmTime(state, storage[StorageKey.Options].autoCheckIn.enabled)
 
   if (scheduledTime === undefined) {
     await chrome.alarms.clear(checkInAlarmName)
@@ -387,10 +405,8 @@ chrome.runtime.onStartup.addListener(() => {
 })
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  const optionsChanged = areaName === 'sync'
-    && Object.hasOwn(changes, StorageKey.Options)
-  const stateChanged = areaName === 'local'
-    && Object.hasOwn(changes, StorageKey.Daily)
+  const optionsChanged = areaName === 'sync' && Object.hasOwn(changes, StorageKey.Options)
+  const stateChanged = areaName === 'local' && Object.hasOwn(changes, StorageKey.Daily)
 
   if (optionsChanged || stateChanged) {
     scheduleCheckInAlarm()

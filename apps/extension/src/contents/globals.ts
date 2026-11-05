@@ -1,3 +1,5 @@
+import { getCurrentMemberName } from './member-name'
+
 export const $body = $(document.body)
 export const $wrapper = $('#Wrapper')
 export const $wrapperContent = $wrapper.find('> .content')
@@ -12,7 +14,9 @@ export const $topicList = $(
 export const $infoCard = $('#Rightbar > .box:has("#member-activity")')
 
 /** 主题内容区。优先匹配有 topic_buttons 的，否则匹配有 topic_content 的 */
-export const $topicContentBox = $('#Main .box:has(.topic_buttons), #Main .box:has(.topic_content)').first()
+export const $topicContentBox = $(
+  '#Main .box:has(.topic_buttons), #Main .box:has(.topic_content)',
+).first()
 
 /** 主题内容区的头部 */
 export const $topicHeader = $topicContentBox.find('.header')
@@ -40,7 +44,7 @@ export const $replyTextArea = $('#reply_content')
 export const replyTextArea = document.querySelector('#reply_content')
 
 /** 登录人的昵称 */
-export const loginName = $('#Top .tools > a[href^="/member"]').text()
+export const loginName = getCurrentMemberName() ?? ''
 
 /** 题主的昵称。 */
 export const topicOwnerName = $topicHeader.find('> small > a[href^="/member"]').text()
