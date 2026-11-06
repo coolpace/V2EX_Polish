@@ -1,4 +1,4 @@
-import { checkIn, observeCheckInMember } from '../background/daily-check-in'
+import { checkIn } from '../background/daily-check-in'
 import { StorageKey } from '../constants'
 import { getCurrentMemberName } from '../contents/member-name'
 import { getRuntime } from '../runtime'
@@ -108,13 +108,10 @@ export async function runPageCheckIn(options: {
     return await withCrossTabLock(async () => {
       const memberName = options.memberName ?? getCurrentMemberName()
 
-      if (memberName) {
-        await observeCheckInMember(memberName)
-      }
-
       return checkIn({
         force: options.force,
         trigger: options.trigger ?? 'manual',
+        memberName,
       })
     })
   }

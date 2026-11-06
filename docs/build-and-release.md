@@ -39,7 +39,7 @@ pnpm package:zip
 - Firefox zip：`apps/extension/dist/v2ex-polish-firefox-<version>.zip`
 - userscript：`apps/extension/dist/userscript/index.min.js`
 
-> `<version>` 会自动读取 `apps/extension/package.json` 中的 `version`。例如当前版本为 `2.5.5` 时，Chrome 包名为 `v2ex-polish-chrome-2.5.5.zip`。
+> `<version>` 会自动读取 `apps/extension/package.json` 中的 `version`。例如当前版本为 `2.5.7` 时，Chrome 包名为 `v2ex-polish-chrome-2.5.7.zip`。
 
 清理命令：
 

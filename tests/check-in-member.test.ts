@@ -92,4 +92,26 @@ describe('observeCheckInMember', () => {
     expect(getStorage).not.toHaveBeenCalled()
     expect(setStorage).not.toHaveBeenCalled()
   })
+
+  it('并发确认同一账号时只迁移一次签到状态', async () => {
+    let dailyInfo: StorageSettings[StorageKey.Daily]
+
+    vi.mocked(getStorage).mockImplementation(async () => ({
+      [StorageKey.Options]: { autoCheckIn: { enabled: true } },
+      [StorageKey.Daily]: dailyInfo,
+    } as StorageSettings))
+    vi.mocked(setStorage).mockImplementation(async (key, value) => {
+      if (key === StorageKey.Daily) {
+        dailyInfo = value as StorageSettings[StorageKey.Daily]
+      }
+    })
+
+    await Promise.all([
+      observeCheckInMember('alice', now),
+      observeCheckInMember('alice', now),
+    ])
+
+    expect(setStorage).toHaveBeenCalledTimes(1)
+    expect(dailyInfo?.memberName).toBe('alice')
+  })
 })

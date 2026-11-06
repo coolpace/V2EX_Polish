@@ -8,6 +8,7 @@ import type {
 import { getUtcDayKey, getUtcDayStart, REWARD_RESET_GRACE_MS } from './check-in-utils'
 
 const DAY_MS = 24 * 60 * 60 * 1000
+const MAX_JAVASCRIPT_TIMESTAMP = 8_640_000_000_000_000
 
 /** V2EX 奖励日重置后，正常情况下开始签到前的固定等待时间。 */
 export const CHECK_IN_TARGET_GRACE_MS = REWARD_RESET_GRACE_MS
@@ -29,6 +30,15 @@ const AMBIGUOUS_RETRY_DELAYS = [2 * 60 * 1000, 10 * 60 * 1000]
 const UNKNOWN_RETRY_DELAYS = [5 * 60 * 1000, 15 * 60 * 1000, 30 * 60 * 1000]
 
 const NUDGE_TRIGGERS = new Set<CheckInTrigger>(['refresh', 'online', 'popup'])
+
+const TIMESTAMP_FIELDS = [
+  'targetAt',
+  'nextActionAt',
+  'nudgeEligibleAt',
+  'lastFinishedAt',
+  'lastCheckInTime',
+  'lastAttemptTime',
+] as const satisfies ReadonlyArray<keyof DailyInfo>
 
 interface FailurePlan {
   cause: CheckInRetryCause
@@ -57,6 +67,47 @@ function createTargetAt(now: number, jitterMs: number): number {
   return getUtcDayStart(now) + CHECK_IN_TARGET_GRACE_MS + normalizedJitter
 }
 
+function isValidTimestamp(value: unknown): value is number {
+  return (
+    typeof value === 'number'
+    && Number.isFinite(value)
+    && value > 0
+    && value <= MAX_JAVASCRIPT_TIMESTAMP
+  )
+}
+
+function normalizeDayKey(value: unknown): string | undefined {
+  return typeof value === 'string' && /^\d{4}-\d{1,2}-\d{1,2}$/.test(value)
+    ? value
+    : undefined
+}
+
+function sanitizeDailyInfo(state: DailyInfo): DailyInfo {
+  let next = state
+
+  for (const field of TIMESTAMP_FIELDS) {
+    const value = state[field]
+
+    if (value !== undefined && !isValidTimestamp(value)) {
+      next = { ...next, [field]: undefined }
+    }
+  }
+
+  const memberName = normalizeMemberName(state.memberName)
+
+  if (state.memberName !== undefined && state.memberName !== memberName) {
+    next = { ...next, memberName }
+  }
+
+  const lastCheckInDay = normalizeDayKey(state.lastCheckInDay)
+
+  if (state.lastCheckInDay !== lastCheckInDay) {
+    next = { ...next, lastCheckInDay }
+  }
+
+  return next
+}
+
 /** 规范化 V2EX 用户名；空值表示当前页面没有可用的账号身份。 */
 export function normalizeMemberName(value: unknown): string | undefined {
   if (typeof value !== 'string') {
@@ -66,6 +117,38 @@ export function normalizeMemberName(value: unknown): string | undefined {
   const memberName = value.trim()
 
   return memberName || undefined
+}
+
+/**
+ * 判断两份签到状态是否语义相同。
+ *
+ * storage 序列化可能省略值为 undefined 的字段，因此这里按字段并集比较，
+ * 不能依赖对象引用、字段数量或序列化后的文本。
+ */
+export function isSameCheckInState(
+  left: DailyInfo | undefined,
+  right: DailyInfo | undefined,
+): boolean {
+  if (left === right) {
+    return true
+  }
+
+  if (!left || !right) {
+    return false
+  }
+
+  const keys = new Set([...Object.keys(left), ...Object.keys(right)])
+
+  for (const key of keys) {
+    if (
+      (left as Record<string, unknown>)[key]
+      !== (right as Record<string, unknown>)[key]
+    ) {
+      return false
+    }
+  }
+
+  return true
 }
 
 /** 判断持久化状态是否明确属于某个 V2EX 用户。 */
@@ -126,6 +209,61 @@ function createScheduledState(
   }
 }
 
+function isReusableCurrentDayState(
+  state: DailyInfo,
+  now: number,
+  rewardDay: string,
+  checkedInDay: string | undefined,
+): boolean {
+  if (state.rewardDay !== rewardDay) {
+    return false
+  }
+
+  const dayStart = getUtcDayStart(now)
+  const dayEnd = dayStart + DAY_MS
+
+  function isWithinDay(value: number): boolean {
+    return value >= dayStart && value <= dayEnd
+  }
+
+  if (state.nudgeEligibleAt !== undefined && !isWithinDay(state.nudgeEligibleAt)) {
+    return false
+  }
+
+  switch (state.phase) {
+    case 'scheduled': {
+      const { targetAt, nextActionAt } = state
+
+      if (targetAt === undefined || nextActionAt === undefined) {
+        return false
+      }
+
+      return (
+        targetAt >= dayStart + CHECK_IN_TARGET_GRACE_MS
+        && isWithinDay(targetAt)
+        && isWithinDay(nextActionAt)
+      )
+    }
+
+    case 'needs-action':
+      return true
+
+    case 'succeeded':
+      return checkedInDay === rewardDay
+
+    default:
+      return false
+  }
+}
+
+function getCheckedInDay(state: DailyInfo): string | undefined {
+  if (state.lastCheckInDay) {
+    return state.lastCheckInDay
+  }
+
+  return state.lastCheckInTime ? getUtcDayKey(state.lastCheckInTime) : undefined
+}
+
 /** 为账号切换创建一个不带旧账号历史的全新状态。 */
 export function createCheckInStateForMember(
   memberName: string,
@@ -150,29 +288,35 @@ export function normalizeCheckInState(
   jitterMs = Math.random() * CHECK_IN_TARGET_JITTER_MAX_MS,
 ): DailyInfo {
   const rewardDay = getUtcDayKey(now)
-  const memberName = normalizeMemberName(previous?.memberName)
 
   // 旧版状态没有账号归属，不能继续用于跳过当前账号的签到。
-  if (previous?.schemaVersion !== CHECK_IN_STATE_SCHEMA_VERSION || !memberName) {
+  if (previous?.schemaVersion !== CHECK_IN_STATE_SCHEMA_VERSION) {
     return createScheduledState(undefined, now, jitterMs)
   }
 
-  const checkedInDay
-    = previous?.lastCheckInDay
-      ?? (previous?.lastCheckInTime ? getUtcDayKey(previous.lastCheckInTime) : undefined)
+  const sanitized = sanitizeDailyInfo(previous)
+  const memberName = normalizeMemberName(sanitized.memberName)
+  const checkedInDay = getCheckedInDay(sanitized)
+  const reusableCurrentState = isReusableCurrentDayState(
+    sanitized,
+    now,
+    rewardDay,
+    checkedInDay,
+  )
 
-  if (
-    previous?.schemaVersion === CHECK_IN_STATE_SCHEMA_VERSION
-    && previous.rewardDay === rewardDay
-    && previous.phase === 'succeeded'
-    && checkedInDay === rewardDay
-  ) {
-    return previous
+  if (!memberName) {
+    return reusableCurrentState
+      ? sanitized
+      : createScheduledState(undefined, now, jitterMs)
   }
 
   if (checkedInDay === rewardDay) {
+    if (sanitized.rewardDay === rewardDay && sanitized.phase === 'succeeded') {
+      return sanitized
+    }
+
     return {
-      ...previous,
+      ...sanitized,
       schemaVersion: CHECK_IN_STATE_SCHEMA_VERSION,
       rewardDay,
       phase: 'succeeded',
@@ -184,16 +328,13 @@ export function normalizeCheckInState(
     }
   }
 
-  if (
-    previous?.schemaVersion === CHECK_IN_STATE_SCHEMA_VERSION
-    && previous.rewardDay === rewardDay
-  ) {
-    return previous
+  if (reusableCurrentState) {
+    return sanitized
   }
 
   const targetAt = createTargetAt(now, jitterMs)
   const state: DailyInfo = {
-    ...previous,
+    ...sanitized,
     schemaVersion: CHECK_IN_STATE_SCHEMA_VERSION,
     rewardDay,
     phase: 'scheduled',
@@ -207,14 +348,14 @@ export function normalizeCheckInState(
   }
 
   if (
-    previous?.lastResult === 'failed'
-    && previous.lastAttemptTime
-    && getUtcDayKey(previous.lastAttemptTime) === rewardDay
+    sanitized.lastResult === 'failed'
+    && sanitized.lastAttemptTime
+    && getUtcDayKey(sanitized.lastAttemptTime) === rewardDay
   ) {
-    const failureCount = Math.max(previous.failureCount ?? 1, 1)
+    const failureCount = Math.max(sanitized.failureCount ?? 1, 1)
     const plan = getFailurePlan(
-      previous.lastErrorCode ?? 'unknown',
-      previous.lastHttpStatus,
+      sanitized.lastErrorCode ?? 'unknown',
+      sanitized.lastHttpStatus,
       failureCount,
       undefined,
     )
@@ -230,14 +371,14 @@ export function normalizeCheckInState(
     }
     else {
       state.nextActionAt = Math.min(
-        previous.lastAttemptTime + (plan.delayMs ?? 5 * 60 * 1000),
+        sanitized.lastAttemptTime + (plan.delayMs ?? 5 * 60 * 1000),
         dayEnd,
       )
     }
 
     if (plan.cause === 'transient' || plan.needsAction) {
       state.nudgeEligibleAt = Math.min(
-        previous.lastAttemptTime + CHECK_IN_NUDGE_INTERVAL_MS,
+        sanitized.lastAttemptTime + CHECK_IN_NUDGE_INTERVAL_MS,
         dayEnd,
       )
     }
@@ -255,7 +396,12 @@ export function getCheckInAlarmTime(
   state: DailyInfo,
   autoCheckInEnabled: boolean,
 ): number | undefined {
-  if (!autoCheckInEnabled || state.phase !== 'scheduled' || state.nextActionAt === undefined) {
+  if (
+    !autoCheckInEnabled
+    || !normalizeMemberName(state.memberName)
+    || state.phase !== 'scheduled'
+    || !isValidTimestamp(state.nextActionAt)
+  ) {
     return undefined
   }
 
@@ -292,6 +438,10 @@ export function getCheckInScheduleDecision(
 
   if (force) {
     return { action: 'run', force: true, state }
+  }
+
+  if (!normalizeMemberName(state.memberName)) {
+    return { action: 'skip', reason: '账号签到状态待确认', state }
   }
 
   if (state.phase === 'needs-action') {

@@ -3,8 +3,12 @@ import { Menu, MessageKey, StorageKey, V2EX_DOMAINS } from '../constants'
 import type { CheckInResult, CheckInTrigger, LegacyTag, MemberTag } from '../types'
 import { getRunEnv, getStorage, setStorage } from '../utils'
 import { isCheckInAuthUrl, isMissionCheckInUrl } from './check-in-message'
-import { getCheckInAlarmTime, normalizeCheckInState } from './check-in-scheduler'
-import { checkIn, observeCheckInMember } from './daily-check-in'
+import {
+  getCheckInAlarmTime,
+  isSameCheckInState,
+  normalizeCheckInState,
+} from './check-in-scheduler'
+import { checkIn } from './daily-check-in'
 
 /**
  * 旧格式的 MemberTag 数据，用于迁移时的类型兼容。
@@ -335,11 +339,11 @@ async function runAutoCheckIn(
   } = {},
 ): Promise<CheckInResult | undefined> {
   try {
-    if (options.memberName) {
-      await observeCheckInMember(options.memberName)
-    }
-
-    return await checkIn({ force: options.force, trigger: options.trigger })
+    return await checkIn({
+      force: options.force,
+      trigger: options.trigger,
+      memberName: options.memberName,
+    })
   }
   catch (error) {
     console.warn('[V2EX Polish] 自动签到出错：', error)
@@ -356,7 +360,7 @@ async function reconcileCheckInAlarm(now = Date.now()): Promise<void> {
   const storage = await getStorage(false)
   const state = normalizeCheckInState(storage[StorageKey.Daily], now)
 
-  if (state !== storage[StorageKey.Daily]) {
+  if (!isSameCheckInState(state, storage[StorageKey.Daily])) {
     await setStorage(StorageKey.Daily, state)
   }
 
@@ -388,9 +392,42 @@ async function reconcileCheckInAlarm(now = Date.now()): Promise<void> {
   await chrome.alarms.create(checkInAlarmName, alarmInfo)
 }
 
+let alarmReconcileInFlight = false
+let alarmReconcilePending = false
+
+async function drainAlarmReconcileQueue(): Promise<void> {
+  while (alarmReconcilePending) {
+    alarmReconcilePending = false
+
+    try {
+      await reconcileCheckInAlarm()
+    }
+    catch (error) {
+      console.warn('[V2EX Polish] 同步签到定时器失败：', error)
+    }
+  }
+}
+
+/**
+ * 合并短时间内重复的调度请求，避免启动、storage 事件和签到完成同时触发时
+ * 并发读取旧状态并各自创建 alarm。
+ */
 function scheduleCheckInAlarm() {
-  void reconcileCheckInAlarm().catch((error: unknown) => {
-    console.warn('[V2EX Polish] 同步签到定时器失败：', error)
+  alarmReconcilePending = true
+
+  if (alarmReconcileInFlight) {
+    return
+  }
+
+  alarmReconcileInFlight = true
+
+  void drainAlarmReconcileQueue().finally(() => {
+    alarmReconcileInFlight = false
+
+    // 最后一个 reconcile 结束到 finally 执行之间仍可能收到 storage 事件。
+    if (alarmReconcilePending) {
+      scheduleCheckInAlarm()
+    }
   })
 }
 

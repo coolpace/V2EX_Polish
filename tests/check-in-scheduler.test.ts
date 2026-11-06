@@ -11,6 +11,7 @@ import {
   getCheckInScheduleDecision,
   isCheckInAttemptStillCurrent,
   isCheckInStateForMember,
+  isSameCheckInState,
   normalizeCheckInState,
 } from '../apps/extension/src/background/check-in-scheduler'
 import type { CheckInResult } from '../apps/extension/src/types'
@@ -110,6 +111,179 @@ describe('normalizeCheckInState', () => {
     expect(legacySuccess.memberName).toBeUndefined()
     expect(legacySuccess.lastCheckInTime).toBeUndefined()
     expect(legacySuccess.checkInDays).toBeUndefined()
+  })
+
+  it('旧版无账号状态迁移一次后再次归一化保持同一对象', () => {
+    const migrated = normalizeCheckInState(
+      {
+        schemaVersion: 2,
+        lastCheckInTime: Date.UTC(2026, 10, 5, 0, 1),
+        lastCheckInDay: '2026-11-5',
+      },
+      now,
+      0,
+    )
+
+    const normalizedAgain = normalizeCheckInState(
+      migrated,
+      now + 1000,
+      CHECK_IN_TARGET_JITTER_MAX_MS,
+    )
+
+    expect(normalizedAgain).toBe(migrated)
+  })
+
+  it('当前奖励日的匿名调度状态不会被随机重建', () => {
+    const anonymous = normalizeCheckInState(undefined, now, 0)
+    const normalizedAgain = normalizeCheckInState(
+      anonymous,
+      now + 1000,
+      CHECK_IN_TARGET_JITTER_MAX_MS,
+    )
+
+    expect(anonymous.memberName).toBeUndefined()
+    expect(normalizedAgain).toBe(anonymous)
+  })
+
+  it('语义相同且由 storage 省略 undefined 字段的状态不变', () => {
+    expect(
+      isSameCheckInState(
+        {
+          schemaVersion: 3,
+          rewardDay: '2026-11-5',
+          phase: 'scheduled',
+          nextActionAt: undefined,
+        },
+        {
+          schemaVersion: 3,
+          rewardDay: '2026-11-5',
+          phase: 'scheduled',
+        },
+      ),
+    ).toBe(true)
+  })
+
+  it('非法调度时间会重置为有限且位于当前奖励日的计划', () => {
+    const corrupted = {
+      schemaVersion: 3,
+      memberName,
+      rewardDay: '2026-11-5',
+      phase: 'scheduled',
+      targetAt: Number.NaN,
+      nextActionAt: Number.POSITIVE_INFINITY,
+    } as const
+
+    const repaired = normalizeCheckInState(corrupted, now, 0)
+    const normalizedAgain = normalizeCheckInState(
+      repaired,
+      now + 1000,
+      CHECK_IN_TARGET_JITTER_MAX_MS,
+    )
+
+    expect(repaired.targetAt).toBe(
+      Date.UTC(2026, 10, 5) + CHECK_IN_TARGET_GRACE_MS,
+    )
+    expect(repaired.nextActionAt).toBe(repaired.targetAt)
+    expect(normalizedAgain).toBe(repaired)
+  })
+
+  it('非法历史时间不会残留在归一化状态中', () => {
+    const targetAt = now + 60_000
+    const repaired = normalizeCheckInState(
+      {
+        schemaVersion: 3,
+        memberName,
+        rewardDay: '2026-11-5',
+        phase: 'scheduled',
+        targetAt,
+        nextActionAt: targetAt,
+        lastCheckInTime: Number.NaN,
+        lastAttemptTime: Number.POSITIVE_INFINITY,
+        lastFinishedAt: Number.MAX_SAFE_INTEGER,
+      },
+      now,
+      0,
+    )
+
+    expect(repaired.targetAt).toBe(targetAt)
+    expect(repaired.lastCheckInTime).toBeUndefined()
+    expect(repaired.lastAttemptTime).toBeUndefined()
+    expect(repaired.lastFinishedAt).toBeUndefined()
+  })
+
+  it('当前奖励日但签到日期已过期的成功状态会重新安排', () => {
+    const repaired = normalizeCheckInState(
+      {
+        schemaVersion: 3,
+        memberName,
+        rewardDay: '2026-11-5',
+        phase: 'succeeded',
+        lastCheckInTime: Date.UTC(2026, 10, 4, 8),
+        lastCheckInDay: '2026-11-4',
+      },
+      now,
+      0,
+    )
+
+    expect(repaired.phase).toBe('scheduled')
+    expect(repaired.nextActionAt).toBe(
+      Date.UTC(2026, 10, 5) + CHECK_IN_TARGET_GRACE_MS,
+    )
+  })
+
+  it('无账号身份的待处理状态会稳定保留且不进入自动调度', () => {
+    const anonymous = {
+      schemaVersion: CHECK_IN_STATE_SCHEMA_VERSION,
+      rewardDay: '2026-11-5',
+      phase: 'needs-action',
+      userMessage: '请先登录',
+    } as const
+
+    expect(normalizeCheckInState(anonymous, now, 0)).toBe(anonymous)
+    expect(getCheckInAlarmTime(anonymous, true)).toBeUndefined()
+  })
+
+  it('非法签到日期和跨日 nudge 时间会被清理', () => {
+    const targetAt = now + 60_000
+    const repaired = normalizeCheckInState(
+      {
+        schemaVersion: 3,
+        memberName,
+        rewardDay: '2026-11-5',
+        phase: 'scheduled',
+        targetAt,
+        nextActionAt: targetAt,
+        nudgeEligibleAt: Date.UTC(2026, 10, 6) + 1,
+        lastCheckInDay: 123,
+      } as unknown as Parameters<typeof normalizeCheckInState>[0],
+      now,
+      0,
+    )
+
+    expect(repaired.memberName).toBe(memberName)
+    expect(repaired.targetAt).toBe(
+      Date.UTC(2026, 10, 5) + CHECK_IN_TARGET_GRACE_MS,
+    )
+    expect(repaired.nudgeEligibleAt).toBeUndefined()
+    expect(repaired.lastCheckInDay).toBeUndefined()
+  })
+
+  it('非法账号身份不会残留在持久化状态中', () => {
+    const targetAt = now + 60_000
+    const repaired = normalizeCheckInState(
+      {
+        schemaVersion: 3,
+        memberName: 123,
+        rewardDay: '2026-11-5',
+        phase: 'scheduled',
+        targetAt,
+        nextActionAt: targetAt,
+      } as unknown as Parameters<typeof normalizeCheckInState>[0],
+      now,
+      0,
+    )
+
+    expect(repaired.memberName).toBeUndefined()
   })
 
   it('已绑定账号的同日旧失败记录按新网络策略重排', () => {
@@ -288,6 +462,33 @@ describe('getCheckInScheduleDecision', () => {
       }),
     ).toMatchObject({ action: 'skip', reason: '自动签到已关闭' })
   })
+
+  it('账号身份未确认时不执行自动签到，但允许用户手动触发', () => {
+    const anonymousState = {
+      ...state,
+      memberName: undefined,
+      nextActionAt: state.nextActionAt,
+    }
+
+    expect(
+      getCheckInScheduleDecision({
+        now: state.targetAt!,
+        state: anonymousState,
+        autoCheckInEnabled: true,
+        trigger: 'alarm',
+      }),
+    ).toMatchObject({ action: 'skip', reason: '账号签到状态待确认' })
+
+    expect(
+      getCheckInScheduleDecision({
+        now: state.targetAt!,
+        state: anonymousState,
+        autoCheckInEnabled: true,
+        trigger: 'manual',
+        force: true,
+      }),
+    ).toMatchObject({ action: 'run', force: true })
+  })
 })
 
 describe('getCheckInAlarmTime', () => {
@@ -314,6 +515,85 @@ describe('getCheckInAlarmTime', () => {
     const past = now - 60_000
 
     expect(getCheckInAlarmTime({ ...state, nextActionAt: past }, true)).toBe(past)
+  })
+
+  it('账号身份未确认时不创建自动签到 alarm', () => {
+    expect(getCheckInAlarmTime({ ...state, memberName: undefined }, true)).toBeUndefined()
+  })
+})
+
+describe('签到状态性质', () => {
+  it('任意旧版或损坏状态的归一化保持幂等与时间不变量', () => {
+    let seed = 0x159
+
+    const random = () => {
+      seed = seed * 1664525 + 1013904223 >>> 0
+
+      return seed / 0x1_0000_0000
+    }
+
+    const pick = <T>(values: readonly T[]): T => values[Math.floor(random() * values.length)]!
+    const dayStart = Date.UTC(2026, 10, 5)
+    const timestamps = [
+      undefined,
+      Number.NaN,
+      Number.POSITIVE_INFINITY,
+      Number.NEGATIVE_INFINITY,
+      0,
+      -1,
+      dayStart,
+      dayStart + CHECK_IN_TARGET_GRACE_MS,
+      now,
+      dayStart + DAY,
+      dayStart + DAY + 1,
+    ] as const
+
+    for (let index = 0; index < 500; index += 1) {
+      const previous = {
+        schemaVersion: pick([2, 3, 3, 3, undefined] as const),
+        memberName: pick([memberName, undefined, '   ', 123] as const),
+        rewardDay: pick(['2026-11-5', '2026-11-4', 'invalid', undefined] as const),
+        phase: pick(['scheduled', 'needs-action', 'succeeded', undefined] as const),
+        targetAt: pick(timestamps),
+        nextActionAt: pick(timestamps),
+        nudgeEligibleAt: pick(timestamps),
+        lastCheckInTime: pick(timestamps),
+        lastAttemptTime: pick(timestamps),
+        lastFinishedAt: pick(timestamps),
+        lastCheckInDay: pick(['2026-11-5', '2026-11-4', 'invalid', 123, undefined] as const),
+      }
+
+      const normalized = normalizeCheckInState(
+        previous as unknown as Parameters<typeof normalizeCheckInState>[0],
+        now,
+        random() * DAY,
+      )
+      const normalizedAgain = normalizeCheckInState(
+        normalized,
+        now + 1000,
+        random() * DAY,
+      )
+
+      expect(normalized.schemaVersion).toBe(3)
+      expect(normalizedAgain).toBe(normalized)
+
+      for (const field of ['targetAt', 'nextActionAt', 'nudgeEligibleAt'] as const) {
+        if (normalized[field] !== undefined) {
+          expect(Number.isFinite(normalized[field])).toBe(true)
+        }
+      }
+
+      const alarmTime = getCheckInAlarmTime(normalized, true)
+
+      if (alarmTime !== undefined) {
+        expect(Number.isFinite(alarmTime)).toBe(true)
+        expect(normalized.memberName).toBe(memberName)
+      }
+
+      if (!normalized.memberName) {
+        expect(alarmTime).toBeUndefined()
+      }
+    }
   })
 })
 
