@@ -12,10 +12,10 @@ import { V2EX_DOMAINS } from './shared/v2ex-domains'
 const packageInfo = readExtensionPackageJson()
 const matches = V2EX_DOMAINS.map((domain) => `// @match        https://${domain}/*`).join('\n')
 const metadata = `// ==UserScript==
-// @name         V2EX Polish
+// @name         V2EX Polish - 体验更现代化的 V2EX
 // @namespace    https://v2p.leoku.dev
 // @version      ${packageInfo.version}
-// @description  体验更现代化的 V2EX
+// @description  为 V2EX 带来现代化界面、楼中楼回复、主题预览、用户标签与每日签到，让浏览更清爽、交流更高效。
 // @author       LeoKu
 // @license      MIT
 ${matches}
