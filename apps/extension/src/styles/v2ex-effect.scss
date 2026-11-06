@@ -1536,6 +1536,7 @@ a:link.v2p-topic-preview-retry {
     @at-root {
       .v2p-left-side {
         flex: 1;
+        min-width: 0;
 
         > .v2p-left-group {
           position: sticky;
@@ -1573,6 +1574,7 @@ a:link.v2p-topic-preview-retry {
 
       .v2p-right-side {
         flex: 1;
+        min-width: 0;
       }
     }
   }

@@ -7,6 +7,7 @@ import {
 } from '../../constants'
 import { getStorageSync } from '../../utils'
 import { $commentBox, $main, $replyBox, $topicContentBox, $wrapperContent } from '../globals'
+import { getHorizontalLayoutGroups } from './layout-split'
 
 const $layoutToggle = $('<span class="v2p-layout-toggle v2p-hover-btn">')
 
@@ -32,6 +33,15 @@ const iconChevronRight = createElement(ChevronRight)
 iconChevronRight.setAttribute('width', '100%')
 iconChevronRight.setAttribute('height', '100%')
 
+/** 按当前实际布局状态刷新切换按钮。 */
+const updateLayoutToggle = () => {
+  const isHorizontal = $wrapperContent.hasClass('v2p-content-layout')
+
+  $layoutToggle.html(isHorizontal ? iconLayoutV : iconLayoutH)
+  $layoutToggle.attr('title', isHorizontal ? '切换为垂直布局' : '切换为水平布局')
+  $('.v2p-reply-tool-layout').text(isHorizontal ? '切换为垂直布局' : '切换为水平布局')
+}
+
 /** 将主题页切换为水平布局。 */
 const switchToHorizontalLayout = () => {
   if (!$wrapperContent.hasClass('v2p-content-layout')) {
@@ -40,28 +50,32 @@ const switchToHorizontalLayout = () => {
       : $('#no-comments-yet').get().length > 0
         ? $('#no-comments-yet')
         : $replyBox
-    const $divider = $target.prev('.sep20')
-    const $rightGroup = $divider.add($divider.nextAll())
-    const $rightSide = $('<div class="v2p-right-side">')
-    $rightGroup.wrapAll($rightSide)
 
-    const $leftGroup = $($('.v2p-right-side').prevAll().get().reverse())
-    const $leftSide = $('<div class="v2p-left-side">')
-    const $leftGroupWrapper = $('<div class="v2p-left-group">')
-    $leftGroup.wrapAll($leftGroupWrapper)
-    $('.v2p-left-group').wrapAll($leftSide)
+    // V2EX 新版用 #topic-replies 包住回复区，分栏边界必须落在 #Main 的直接子元素上。
+    // 无法安全分栏时保持垂直布局，且不加布局类名，避免类名守卫锁死后续切换。
+    const groups = getHorizontalLayoutGroups($main[0], $target[0])
 
-    const $leftSideContent = $('<div class="v2p-left-side-content">')
-    const $topicContent = $leftGroup.find('> .cell')
-    $topicContent.add($topicContent.nextAll('.subtle')).wrapAll($leftSideContent)
+    if (groups) {
+      const $leftGroup = $(groups.left)
+      const $rightGroup = $(groups.right)
+      const $rightSide = $('<div class="v2p-right-side">')
+      $rightGroup.wrapAll($rightSide)
 
-    $wrapperContent.addClass('v2p-content-layout')
-    $main.addClass('v2p-horizontal-layout')
+      const $leftSide = $('<div class="v2p-left-side">')
+      const $leftGroupWrapper = $('<div class="v2p-left-group">')
+      $leftGroup.wrapAll($leftGroupWrapper)
+      $('.v2p-left-group').wrapAll($leftSide)
+
+      const $leftSideContent = $('<div class="v2p-left-side-content">')
+      const $topicContent = $leftGroup.find('> .cell')
+      $topicContent.add($topicContent.nextAll('.subtle')).wrapAll($leftSideContent)
+
+      $wrapperContent.addClass('v2p-content-layout')
+      $main.addClass('v2p-horizontal-layout')
+    }
   }
 
-  $layoutToggle.html(iconLayoutV)
-  $layoutToggle.attr('title', '切换为垂直布局')
-  $('.v2p-reply-tool-layout').text('切换为垂直布局')
+  updateLayoutToggle()
 }
 
 /** 将主题页切换为垂直布局。 */
@@ -71,14 +85,12 @@ const switchToVerticalLayout = () => {
     $main.removeClass('v2p-horizontal-layout')
 
     $('.v2p-left-side-content').children().unwrap()
-
+    $('.v2p-left-side > .v2p-left-group').children().unwrap()
     $('.v2p-left-side').children().unwrap()
     $('.v2p-right-side').children().unwrap()
   }
 
-  $layoutToggle.html(iconLayoutH)
-  $layoutToggle.attr('title', '切换为水平布局')
-  $('.v2p-reply-tool-layout').text('切换为水平布局')
+  updateLayoutToggle()
 }
 
 export function toggleTopicLayout() {
