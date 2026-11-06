@@ -11,6 +11,9 @@ node_modules
 # 本地 AI / agent 配置
 /.claude/
 
+# WorkBuddy 本地工作记忆（无需入库）
+/.workbuddy/memory/
+
 # extension monorepo 重构前的 legacy 产物目录
 /extension/
 /build-chrome/
