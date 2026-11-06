@@ -27,6 +27,7 @@ import { dataExpiryTime, Links, MessageKey, RequestMessage, StorageKey, V2EX } f
 import type { IconRoot } from '../contents/helpers'
 import { initTheme, renderIcons, replaceEmojiWithHD, setFont } from '../contents/helpers'
 import { iconLoading } from '../icons'
+import { getRuntime } from '../runtime'
 import {
   fetchHotTopics,
   fetchLatestTopics,
@@ -43,6 +44,7 @@ import {
   setStorage,
 } from '../utils'
 import { initBackupForm } from './backup-form'
+import { watchCheckInStatus } from './popup.check-in'
 import {
   calculateLocalStorageSize,
   formatSizeUnits,
@@ -138,6 +140,25 @@ function ensurePopupCheckIn(): Promise<void> {
   }
 
   return popupCheckInPromise
+}
+
+/**
+ * 读取后台最新持久化状态并重绘签到卡片。
+ */
+async function renderCheckInFeatureTab() {
+  const latestStorage = await getStorage(false)
+
+  renderCheckInFeature(
+    latestStorage[StorageKey.Daily],
+    latestStorage[StorageKey.Options].autoCheckIn.enabled,
+    refreshCheckInFeatureTab,
+  )
+}
+
+function refreshCheckInFeatureTab() {
+  void renderCheckInFeatureTab().catch((error: unknown) => {
+    console.warn('[V2EX Polish] 刷新签到卡片失败：', error)
+  })
 }
 
 /**
@@ -540,24 +561,12 @@ function initTabs() {
     }
 
     if (tabId === TabId.Feature) {
-      const renderCheckIn = async () => {
-        const latestStorage = await getStorage(false)
-
-        renderCheckInFeature(
-          latestStorage[StorageKey.Daily],
-          latestStorage[StorageKey.Options].autoCheckIn.enabled,
-          () => {
-            void renderCheckIn()
-          },
-        )
-      }
-
-      await renderCheckIn()
+      await renderCheckInFeatureTab()
 
       // 首次渲染后补一次签到，完成后刷新当前卡片。
       void ensurePopupCheckIn().then(() => {
         if ($('#tab-feature').hasClass('active')) {
-          void renderCheckIn()
+          refreshCheckInFeatureTab()
         }
       })
     }
@@ -727,6 +736,14 @@ function initTabs() {
   $('.tabs > li').on('click', (ev) => {
     activeTab({ tabEle: $(ev.currentTarget) })
   })
+
+  const stopWatchingCheckIn = watchCheckInStatus({
+    subscribe: getRuntime().storage.subscribe,
+    isVisible: () => $('#tab-feature').hasClass('active'),
+    refresh: refreshCheckInFeatureTab,
+  })
+
+  window.addEventListener('unload', stopWatchingCheckIn)
 
   loadSettings()
 
