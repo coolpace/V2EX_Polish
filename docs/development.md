@@ -78,7 +78,7 @@ pnpm build:dist
 
 以下场景需要手动重新执行命令或重启开发进程：
 
-- 修改 `apps/extension/package.json` 中的版本号
+- 执行 `pnpm build` 升级版本号后（`dev` / `watch` 不会自动更新版本，需重新构建才会写入新版本）
 - 修改 `apps/extension/shared/v2ex-domains.ts`
 - 新增或删除内容脚本 / 构建入口（`apps/extension/shared/features.ts`）
 - 修改 `apps/extension/tsdown.config.ts`

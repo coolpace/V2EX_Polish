@@ -25,6 +25,7 @@
     "verify:userscript:artifact": "node scripts/verify-userscript.mjs",
     "verify:userscript:smoke": "node scripts/smoke-userscript.mjs",
     "build": "pnpm --dir apps/extension run build",
+    "version:check": "pnpm --dir apps/extension run check:version",
     "build:dist": "pnpm --dir apps/extension run build:dist",
     "build:all": "pnpm run build:dist",
     "build:ext": "pnpm --dir apps/extension run build:ext",
