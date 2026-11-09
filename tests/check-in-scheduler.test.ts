@@ -751,7 +751,7 @@ describe('buildDailyInfoAfterAttempt', () => {
       }),
     ).toMatchObject({
       action: 'skip',
-      reason: 'V2EX 需要人机验证，请打开签到页手动完成',
+      reason: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
     })
     expect(
       getCheckInScheduleDecision({

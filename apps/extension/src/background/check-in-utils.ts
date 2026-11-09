@@ -4,6 +4,14 @@ import { formatTimestamp } from '../utils/date'
 /** V2EX 领取成功后页面上的提示文案。 */
 export const SUCCESS_TEXT = '每日登录奖励已领取'
 
+/** V2EX 人机验证场景的用户提示。 */
+export const CHECK_IN_CHALLENGE_COPY = {
+  title: 'V2EX 要求完成人机验证',
+  message: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+  advice: '请打开签到页完成人机验证后领取每日奖励；自动签到已暂停，不会持续重试。',
+  failureReason: 'V2EX 要求完成人机验证，自动签到已暂停',
+} as const
+
 /** V2EX 每日登录奖励重置点（UTC 00:00）后，等待一段时间再尝试，避免拿到重置前的页面状态。 */
 export const REWARD_RESET_GRACE_MS = 5 * 60 * 1000
 
@@ -160,7 +168,10 @@ const errorCodeTextMap: Record<CheckInErrorCode, { title: string, hint: string }
   network: { title: '网络异常', hint: '无法连接 V2EX，点击重试' },
   http: { title: '请求被 V2EX 拒绝', hint: '服务器返回异常状态，点击重试' },
   unauthenticated: { title: '登录状态已失效', hint: '请先登录 V2EX，再点击重试' },
-  challenge: { title: '需要人机验证', hint: 'V2EX 正在验证浏览器，请打开签到页手动完成' },
+  challenge: {
+    title: CHECK_IN_CHALLENGE_COPY.title,
+    hint: CHECK_IN_CHALLENGE_COPY.message,
+  },
   'unexpected-page': { title: '无法确认签到结果', hint: 'V2EX 返回了异常页面，点击重新核对' },
   'redeem-failed': { title: '无法确认领取结果', hint: '领取后未看到成功提示，点击重新核对' },
   unknown: { title: '签到失败', hint: '点击重试' },
@@ -346,6 +357,7 @@ export function buildCheckInDiagnostic(input: CheckInDiagnosticInput): string {
     'not-attempted': '今日尚未签到',
     'auto-disabled': '自动签到已关闭',
   }
+  const isChallenge = state.type === 'failed' && state.code === 'challenge'
 
   const lines = [
     'V2EX Polish 签到诊断',
@@ -354,7 +366,7 @@ export function buildCheckInDiagnostic(input: CheckInDiagnosticInput): string {
     `浏览器：${browser}`,
     `自动签到：${autoCheckInEnabled ? '已开启' : '已关闭'}`,
     `账号状态：${identityVerified ? '已确认' : '待确认'}`,
-    `今日状态：${stateText[state.type]}`,
+    `今日状态：${isChallenge ? '等待完成 V2EX 人机验证' : stateText[state.type]}`,
   ]
 
   if (state.type === 'not-attempted' && state.skipReason) {
@@ -369,6 +381,13 @@ export function buildCheckInDiagnostic(input: CheckInDiagnosticInput): string {
 
     if (state.reason) {
       lines.push(`失败原因：${state.reason}`)
+    }
+
+    if (state.code === 'challenge') {
+      lines.push(
+        '插件状态：运行正常',
+        `处理建议：${CHECK_IN_CHALLENGE_COPY.advice}`,
+      )
     }
   }
 

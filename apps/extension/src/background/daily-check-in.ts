@@ -12,7 +12,12 @@ import {
   normalizeCheckInState,
   normalizeMemberName,
 } from './check-in-scheduler'
-import { parseCheckInDays, parseCheckInPage, SUCCESS_TEXT } from './check-in-utils'
+import {
+  CHECK_IN_CHALLENGE_COPY,
+  parseCheckInDays,
+  parseCheckInPage,
+  SUCCESS_TEXT,
+} from './check-in-utils'
 
 const checkInTimeout = 15 * 1000
 
@@ -141,7 +146,7 @@ async function requestCheckInInner(): Promise<CheckInResult> {
 
   // Cloudflare 人机验证会在响应头标记，需要先于状态码判断。
   if (res.headers.get('cf-mitigated')?.toLowerCase() === 'challenge') {
-    return fail('challenge', 'request-page', 'V2EX 触发了人机验证，无法自动签到', pageMeta)
+    return fail('challenge', 'request-page', CHECK_IN_CHALLENGE_COPY.failureReason, pageMeta)
   }
 
   if (!res.ok) {
@@ -175,7 +180,7 @@ async function requestCheckInInner(): Promise<CheckInResult> {
   }
 
   if (page.type === 'challenge') {
-    return fail('challenge', 'parse-page', 'V2EX 触发了人机验证，无法自动签到', pageMeta)
+    return fail('challenge', 'parse-page', CHECK_IN_CHALLENGE_COPY.failureReason, pageMeta)
   }
 
   if (page.type === 'unknown') {

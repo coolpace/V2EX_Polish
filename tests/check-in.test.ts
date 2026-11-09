@@ -177,7 +177,10 @@ describe('getCheckInSkipReason', () => {
 describe('describeCheckInErrorCode', () => {
   it('区分登录失效、人机验证、无法确认与普通失败', () => {
     expect(describeCheckInErrorCode('unauthenticated').title).toContain('登录')
-    expect(describeCheckInErrorCode('challenge').title).toContain('人机验证')
+    expect(describeCheckInErrorCode('challenge')).toEqual({
+      title: 'V2EX 要求完成人机验证',
+      hint: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+    })
     expect(describeCheckInErrorCode('unexpected-page').title).toContain('无法确认')
     expect(describeCheckInErrorCode('redeem-failed').title).toContain('无法确认')
     expect(describeCheckInErrorCode(undefined).title).toBe('签到失败')
@@ -445,5 +448,32 @@ describe('buildCheckInDiagnostic', () => {
 
     expect(text).toContain('计划重试：')
     expect(text).toContain('重试分类：transient')
+  })
+
+  it('人机验证诊断明确说明插件正常及人工处理建议', () => {
+    const text = buildCheckInDiagnostic({
+      now: Date.UTC(2026, 9, 22, 12),
+      autoCheckInEnabled: true,
+      extensionVersion: '2.5.8',
+      browser: 'Chromium（test）',
+      timezoneOffsetMinutes: -480,
+      dailyInfo: {
+        schemaVersion: 3,
+        memberName: 'alice',
+        lastAttemptTime: Date.UTC(2026, 9, 22, 11),
+        lastResult: 'failed',
+        lastErrorCode: 'challenge',
+        lastErrorStage: 'request-page',
+        lastHttpStatus: 403,
+        phase: 'needs-action',
+        retryCause: 'challenge',
+        userMessage: '这是 V2EX 的安全验证，不是插件故障。',
+      },
+    })
+
+    expect(text).toContain('今日状态：等待完成 V2EX 人机验证')
+    expect(text).toContain('失败分类：challenge（V2EX 要求完成人机验证）')
+    expect(text).toContain('插件状态：运行正常')
+    expect(text).toContain('处理建议：请打开签到页完成人机验证后领取每日奖励')
   })
 })

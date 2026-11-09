@@ -63,6 +63,27 @@ describe('mission check-in view', () => {
     expect(view.showDiagnostics).toBe(true)
   })
 
+  it('人机验证时明确归因为 V2EX 安全验证且不展示重试按钮', () => {
+    const view = getMissionPanelView(
+      {
+        type: 'failed',
+        attemptTime: now,
+        code: 'challenge',
+        httpStatus: 403,
+        userMessage: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+        needsAction: true,
+      },
+      now,
+    )
+
+    expect(view).toMatchObject({
+      title: 'V2EX 要求完成人机验证',
+      description: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+      showDiagnostics: true,
+    })
+    expect(view.retryLabel).toBeUndefined()
+  })
+
   it('渲染失败状态及三个操作', () => {
     const panel = document.createElement('section')
 

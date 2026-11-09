@@ -5,7 +5,12 @@ import type {
   CheckInTrigger,
   DailyInfo,
 } from '../types'
-import { getUtcDayKey, getUtcDayStart, REWARD_RESET_GRACE_MS } from './check-in-utils'
+import {
+  CHECK_IN_CHALLENGE_COPY,
+  getUtcDayKey,
+  getUtcDayStart,
+  REWARD_RESET_GRACE_MS,
+} from './check-in-utils'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 const MAX_JAVASCRIPT_TIMESTAMP = 8_640_000_000_000_000
@@ -509,7 +514,7 @@ function getFailurePlan(
     return {
       cause: 'challenge',
       needsAction: true,
-      userMessage: 'V2EX 需要人机验证，请打开签到页手动完成',
+      userMessage: CHECK_IN_CHALLENGE_COPY.message,
     }
   }
 
