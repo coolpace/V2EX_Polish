@@ -105,6 +105,11 @@ function sanitizeDailyInfo(state: DailyInfo): DailyInfo {
     next = { ...next, lastCheckInDay }
   }
 
+  // 人机验证只能由用户在当前页面完成，刷新或联网事件不能自动重试。
+  if (next.retryCause === 'challenge') {
+    next = { ...next, nudgeEligibleAt: undefined }
+  }
+
   return next
 }
 
@@ -376,7 +381,10 @@ export function normalizeCheckInState(
       )
     }
 
-    if (plan.cause === 'transient' || plan.needsAction) {
+    if (
+      plan.cause !== 'challenge'
+      && (plan.cause === 'transient' || plan.needsAction)
+    ) {
       state.nudgeEligibleAt = Math.min(
         sanitized.lastAttemptTime + CHECK_IN_NUDGE_INTERVAL_MS,
         dayEnd,
@@ -647,7 +655,7 @@ export function buildDailyInfoAfterAttempt({
   }
 
   state.nudgeEligibleAt
-    = plan.cause === 'transient' || plan.needsAction
+    = plan.cause !== 'challenge' && (plan.cause === 'transient' || plan.needsAction)
       ? Math.min(finishedAt + CHECK_IN_NUDGE_INTERVAL_MS, dayEnd)
       : undefined
 

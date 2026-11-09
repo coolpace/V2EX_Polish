@@ -14,7 +14,7 @@ import {
   isSameCheckInState,
   normalizeCheckInState,
 } from '../apps/extension/src/background/check-in-scheduler'
-import type { CheckInResult } from '../apps/extension/src/types'
+import type { CheckInResult, DailyInfo } from '../apps/extension/src/types'
 
 const DAY = 24 * 60 * 60 * 1000
 const now = Date.UTC(2026, 10, 5, 0, 10)
@@ -729,6 +729,70 @@ describe('buildDailyInfoAfterAttempt', () => {
 
     expect(auth).toMatchObject({ phase: 'needs-action', retryCause: 'authentication' })
     expect(challenge).toMatchObject({ phase: 'needs-action', retryCause: 'challenge' })
+  })
+
+  it('人机验证失败后页面刷新不会自动重复请求，但仍允许手动重试', () => {
+    const state = buildDailyInfoAfterAttempt({
+      previous: initial,
+      result: failed('challenge', 403),
+      attemptTime,
+      finishedAt,
+      trigger: 'refresh',
+    })
+
+    expect(state.phase).toBe('needs-action')
+    expect(state.nudgeEligibleAt).toBeUndefined()
+    expect(
+      getCheckInScheduleDecision({
+        now: finishedAt + CHECK_IN_NUDGE_INTERVAL_MS,
+        state,
+        autoCheckInEnabled: true,
+        trigger: 'refresh',
+      }),
+    ).toMatchObject({
+      action: 'skip',
+      reason: 'V2EX 需要人机验证，请打开签到页手动完成',
+    })
+    expect(
+      getCheckInScheduleDecision({
+        now: finishedAt + CHECK_IN_NUDGE_INTERVAL_MS,
+        state,
+        autoCheckInEnabled: true,
+        trigger: 'manual',
+        force: true,
+      }),
+    ).toMatchObject({ action: 'run', force: true })
+  })
+
+  it('旧版本写入的人机验证 nudge 状态归一化后停止自动重试', () => {
+    const lastErrorCode = 'challenge'
+    const previous = {
+      ...initial,
+      phase: 'needs-action',
+      failureCount: 3,
+      lastResult: 'failed',
+      lastAttemptTime: attemptTime,
+      lastFinishedAt: finishedAt,
+      lastErrorCode,
+      lastHttpStatus: 403,
+      retryCause: 'challenge',
+      userMessage: 'V2EX 需要人机验证，请打开签到页手动完成',
+      nudgeEligibleAt: finishedAt + CHECK_IN_NUDGE_INTERVAL_MS,
+    } satisfies DailyInfo
+    const normalized = normalizeCheckInState(
+      previous,
+      finishedAt + CHECK_IN_NUDGE_INTERVAL_MS,
+    )
+
+    expect(normalized.nudgeEligibleAt).toBeUndefined()
+    expect(
+      getCheckInScheduleDecision({
+        now: finishedAt + CHECK_IN_NUDGE_INTERVAL_MS,
+        state: normalized,
+        autoCheckInEnabled: true,
+        trigger: 'refresh',
+      }),
+    ).toMatchObject({ action: 'skip' })
   })
 
   it('领取结果不确定时先重新核对，不直接认为成功', () => {
