@@ -1547,7 +1547,8 @@ a:link.v2p-topic-preview-retry {
           max-height: calc(100vh - var(--v2p-nav-height) - var(--v2p-layout-row-gap));
 
           .sep,
-          .sep20 {
+          .sep20,
+          > #topic-tip-box {
             flex-shrink: 0;
           }
 
