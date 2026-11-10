@@ -108,6 +108,30 @@ const controlCenterText = host?.shadowRoot?.textContent ?? ''
 const controlCenterOpened = controlCenterText.includes('稍后阅读')
   && controlCenterText.includes('签到')
 
+// 模拟预览弹窗「打开设置」按钮的调用路径：直达 token 区块并保存 PAT。
+window.dispatchEvent(new window.CustomEvent('v2p:open-options', { detail: { section: 'token' } }))
+await new Promise((resolve) => setTimeout(resolve, 400))
+const tokenSectionActive = host?.shadowRoot
+  ?.querySelector('[data-section="token"]')
+  ?.classList.contains('active') === true
+const patInput = host?.shadowRoot?.querySelector('[name="api.pat"]')
+let patPersisted = false
+
+if (patInput instanceof window.HTMLInputElement) {
+  patInput.value = 'smoke-test-pat'
+  host?.shadowRoot?.querySelector('[data-action="save-token"]')?.dispatchEvent(
+    new window.MouseEvent('click', { bubbles: true }),
+  )
+  await new Promise((resolve) => setTimeout(resolve, 250))
+
+  try {
+    patPersisted = JSON.parse(values.get('v2p:v1:local:api') ?? '{}').pat === 'smoke-test-pat'
+  }
+  catch {
+    patPersisted = false
+  }
+}
+
 const chromeReferenceError = errors.some((entry) =>
   String(entry[1] ?? entry[0]).includes('chrome'),
 )
@@ -115,6 +139,8 @@ const passed = Boolean(host)
   && settingsOpened
   && settingsPersisted
   && controlCenterOpened
+  && tokenSectionActive
+  && patPersisted
   && menuCommands.includes('V2EX Polish 设置')
   && !chromeReferenceError
   && errors.length === 0
@@ -124,6 +150,8 @@ console.log(JSON.stringify({
   settingsOpened,
   settingsPersisted,
   controlCenterOpened,
+  tokenSectionActive,
+  patPersisted,
   menuCommands,
   chromeReferenceError,
   errorCount: errors.length,

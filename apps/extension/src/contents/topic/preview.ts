@@ -4,8 +4,9 @@ import { createButton } from '../../components/button'
 import { createModal } from '../../components/modal'
 import { RequestMessage, StorageKey } from '../../constants'
 import { iconLogo } from '../../icons'
+import { getRuntime } from '../../runtime'
 import { crawlTopicPage, fetchTopic } from '../../services'
-import type { Topic } from '../../types'
+import type { API_Info, Topic } from '../../types'
 import { escapeHTML, formatTimestamp, getStorageSync } from '../../utils'
 import { getCommentDataList, handleNestedComment } from '../dom'
 import { $body, loginName } from '../globals'
@@ -20,7 +21,9 @@ const tokenErrorMessages: readonly string[] = [
   RequestMessage.TokenExpired,
 ]
 
-const invalidTemplate = (tip: string) => `
+const invalidTemplate = (tip: string) => {
+  if (getRuntime().isBrowserExtension) {
+    return `
 <div class="v2p-no-pat">
   <div class="v2p-no-pat-title">${tip}</div>
   <div class="v2p-no-pat-desc">
@@ -39,6 +42,24 @@ const invalidTemplate = (tip: string) => `
   </div>
 </div>
 `
+  }
+
+  return `
+<div class="v2p-no-pat">
+  <div class="v2p-no-pat-title">${tip}</div>
+  <div class="v2p-no-pat-desc">
+    请打开设置，在「API Token」中填写 PAT。
+  </div>
+
+  <div class="v2p-no-pat-steps">
+    <div class="v2p-no-pat-step">
+      <a class="super normal button v2p-no-pat-settings" href="javascript:void(0)">打开设置</a>
+      <div style="margin-top:12px;font-size:13px;">也可以在脚本管理器（如 Tampermonkey）菜单中选择「V2EX Polish 设置」。</div>
+    </div>
+  </div>
+</div>
+`
+}
 
 interface TopicData {
   topic: Topic
@@ -69,7 +90,14 @@ export function createTopicPreview() {
   const storage = getStorageSync()
 
   const options = storage[StorageKey.Options]
-  const PAT = storage[StorageKey.API]?.pat
+  let PAT = storage[StorageKey.API]?.pat
+
+  // PAT 可能在预览单例创建后才设置（如通过预览弹窗内的「打开设置」），订阅变更使其即时生效。
+  getRuntime().storage.subscribe((area, changes) => {
+    if (area === 'local' && changes[StorageKey.API]) {
+      PAT = (changes[StorageKey.API]?.newValue as API_Info | undefined)?.pat
+    }
+  })
 
   let abortController: AbortController | null = null
 
@@ -97,6 +125,10 @@ export function createTopicPreview() {
           $content.empty()
           abortController?.abort()
         },
+      })
+
+      modal.$content.on('click', '.v2p-no-pat-settings', () => {
+        getRuntime().ui.openOptions('token')
       })
     }
 
