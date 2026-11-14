@@ -640,13 +640,19 @@ function processActions($cellDom: JQuery, data: CommentData) {
 
   const replyLink = getReplyLinkFromActions(actionContainer)
   const $reply = replyLink ? $(replyLink) : $()
+  const $replyIcons = $reply.find('> img[alt="Reply"]')
 
-  $reply
-    .attr('aria-label', '回复')
-    .find('> img[alt="Reply"]')
-    .replaceWith(
+  $reply.attr('aria-label', '回复')
+
+  // V2EX 新版回复按钮同时放置了浅色与深色两张原生图标
+  // （.theme-light-only / .theme-dark-only），只替换其中一张并移除其余图标，
+  // 否则会生成两个重复的「回复」图标。
+  if ($replyIcons.length > 0) {
+    $replyIcons.slice(1).remove()
+    $replyIcons.first().replaceWith(
       '<span class="v2p-control v2p-hover-btn v2p-control-reply"><i data-v2p-icon="message-square"></i></span>',
     )
+  }
 
   $controls.append($reply)
 
