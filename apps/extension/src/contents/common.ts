@@ -5,7 +5,12 @@ import { Links, MessageFrom, MessageKey, StorageKey } from '../constants'
 import { iconGitHub, iconLogo } from '../icons'
 import { postTask } from '../post-task'
 import { getRuntime } from '../runtime'
-import { setMode, syncViewportMode, writeThemeBootSnapshotFromOptions } from '../theme-state'
+import {
+  calibrateNestedDisplay,
+  setMode,
+  syncViewportMode,
+  writeThemeBootSnapshotFromOptions,
+} from '../theme-state'
 import type { MessageData, Options, SettingsSyncInfo } from '../types'
 import {
   applyRemoteSettings,
@@ -33,6 +38,7 @@ void (async () => {
 
   // theme-boot 已在 document_start 应用首屏状态；这里用权威配置校准并刷新缓存。
   writeThemeBootSnapshotFromOptions(options)
+  calibrateNestedDisplay(options.nestedReply.display)
   setMode(options.theme.mode ?? 'default')
 
   // 应用用户选择的界面字体。

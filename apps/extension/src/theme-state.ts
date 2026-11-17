@@ -2,7 +2,7 @@ import { StorageKey } from './constants'
 import { getRuntime } from './runtime'
 import type { FontType, Options, ThemeType } from './types'
 
-type NestedDisplay = Options['nestedReply']['display']
+export type NestedDisplay = Options['nestedReply']['display']
 
 /** 首屏主题缓存键。缓存只保存界面偏好，不保存用户内容。 */
 const THEME_BOOT_STORAGE_KEY = 'v2p:boot:v1'
@@ -143,17 +143,22 @@ function writeThemeBootSnapshot(snapshot: ThemeBootSnapshot): void {
 }
 
 export function writeThemeBootSnapshotFromOptions(options: Options | undefined): void {
-  const snapshot = getThemeBootSnapshot(options)
+  writeThemeBootSnapshot(getThemeBootSnapshot(options))
+}
 
-  writeThemeBootSnapshot(snapshot)
-
-  // 第一次调用来自页面加载时读取的权威配置，与楼中楼脚本使用的是同一份配置。
-  // 楼中楼的 DOM 结构只在加载时生成一次，之后的设置变更需刷新页面才会生效，
-  // 因此这里只校准一次，避免样式与已生成的 DOM 结构不一致。
-  if (!nestedDisplayCalibrated) {
-    nestedDisplayCalibrated = true
-    setNestedDisplay(snapshot.nestedDisplay)
+/**
+ * 用页面加载时读取的权威配置校准楼中楼显示方式。
+ *
+ * 楼中楼的 DOM 结构只在加载时生成一次，之后的设置变更需刷新页面才会生效，
+ * 因此只校准一次，避免样式与已生成的 DOM 结构不一致。
+ */
+export function calibrateNestedDisplay(display: NestedDisplay): void {
+  if (nestedDisplayCalibrated) {
+    return
   }
+
+  nestedDisplayCalibrated = true
+  setNestedDisplay(display)
 }
 
 /**
@@ -219,7 +224,7 @@ export function setMode(mode: ThemeMode): void {
  * 将楼中楼显示方式暴露到 html 上（`data-v2p-nested="indent|align|off"`），
  * 样式据此只在插件接管楼中楼时生效；关闭时交给 V2EX 原生布局（包括站内树形缩进）。
  */
-export function setNestedDisplay(display: NestedDisplay): void {
+function setNestedDisplay(display: NestedDisplay): void {
   document.documentElement.dataset[NESTED_ATTRIBUTE] = display
 }
 

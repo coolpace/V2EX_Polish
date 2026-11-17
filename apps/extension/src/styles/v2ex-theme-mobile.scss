@@ -36,7 +36,10 @@ body.v2p-mobile,
     border-radius: 0;
 
     .cell {
-      padding: var(--v2p-spacing-cell);
+      /** 站内树形缩进的回复保留 V2EX 原生内边距。 */
+      &:not(#{share.$native-tree-reply}) {
+        padding: var(--v2p-spacing-cell);
+      }
 
       .item {
         padding-right: 8px;

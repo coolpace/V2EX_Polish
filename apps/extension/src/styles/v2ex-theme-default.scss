@@ -900,12 +900,6 @@ body {
 
 /** ================================================================ */
 
-/**
- * 关闭插件楼中楼（`data-v2p-nested='off'`）时，V2EX 站内树形缩进的回复行。
- * 这些回复的缩进、头像尺寸和连线都由 V2EX 原生样式计算，插件不应覆盖。
- */
-$native-tree-reply: ":where(:root[data-v2p-nested='off'] .reply-threads-d > .cell[data-depth])";
-
 /** 插件接管楼中楼（缩进或对齐）时才生效的根选择器，属性缺失时保持原有行为。 */
 $plugin-nested: ":where(:root:not([data-v2p-nested='off']))";
 
@@ -923,7 +917,7 @@ $plugin-nested: ":where(:root:not([data-v2p-nested='off']))";
     .cell {
       background-image: none !important;
 
-      &:not(#{$native-tree-reply}) {
+      &:not(#{share.$native-tree-reply}) {
         padding: var(--v2p-tp-item-x) var(--v2p-tp-item-y);
       }
     }
@@ -1097,7 +1091,7 @@ $plugin-nested: ":where(:root:not([data-v2p-nested='off']))";
 
   .box,
   .v2p-modal-content {
-    > .cell[id^='r']:not(:has(.cell[id^='r'])) .reply_content {
+    > .cell[id^='r']:not(:has(.cell[id^='r'])):not(#{share.$native-tree-reply}) .reply_content {
       padding-bottom: 0;
     }
   }
@@ -1130,12 +1124,15 @@ $plugin-nested: ":where(:root:not([data-v2p-nested='off']))";
     }
 
     .reply_content {
-      padding-bottom: 10px;
       line-height: 1.5; /** 回复内容行距可以紧凑一点。 */
+
+      &:not(#{share.$native-tree-reply-content}) {
+        padding-bottom: 10px;
+      }
     }
 
     /** 头像尺寸；站内树形缩进的回复保留 V2EX 原生尺寸。 */
-    &:not(#{$native-tree-reply}) > table {
+    &:not(#{share.$native-tree-reply}) > table {
       &:first-of-type td {
         &:first-of-type {
           width: 40px;
