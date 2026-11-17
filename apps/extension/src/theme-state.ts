@@ -2,6 +2,8 @@ import { StorageKey } from './constants'
 import { getRuntime } from './runtime'
 import type { FontType, Options, ThemeType } from './types'
 
+type NestedDisplay = Options['nestedReply']['display']
+
 /** 首屏主题缓存键。缓存只保存界面偏好，不保存用户内容。 */
 const THEME_BOOT_STORAGE_KEY = 'v2p:boot:v1'
 
@@ -9,12 +11,14 @@ const THEME_ATTRIBUTE = 'v2pTheme'
 const MODE_ATTRIBUTE = 'v2pMode'
 const FONT_ATTRIBUTE = 'v2pFont'
 const MOBILE_ATTRIBUTE = 'v2pMobile'
+const NESTED_ATTRIBUTE = 'v2pNested'
 const THEME_CLASS_PREFIX = 'v2p-theme-'
 const COMPACT_CLASS = 'v2p-mode-compact'
 const MOBILE_CLASS = 'v2p-mobile'
 
 const THEME_TYPES = ['light-default', 'dark-default', 'dawn', 'minimalist'] as const
 const FONT_TYPES = ['system', 'vivoSans', 'notoSans', 'lxgwWenKai'] as const
+const NESTED_DISPLAYS = ['indent', 'align', 'off'] as const
 
 const FONT_STYLESHEETS: Partial<Record<FontType, { id: string, href: string }>> = {
   notoSans: {
@@ -36,6 +40,7 @@ interface ThemeBootSnapshot {
   autoSwitch: boolean
   mode: ThemeMode
   fontType: FontType
+  nestedDisplay: NestedDisplay
 }
 
 const DEFAULT_THEME_BOOT_SNAPSHOT: ThemeBootSnapshot = {
@@ -43,12 +48,14 @@ const DEFAULT_THEME_BOOT_SNAPSHOT: ThemeBootSnapshot = {
   autoSwitch: false,
   mode: 'default',
   fontType: 'system',
+  nestedDisplay: 'indent',
 }
 
 let currentSnapshot: ThemeBootSnapshot | null = null
 let documentObserver: MutationObserver | null = null
 let bodyStateApplied = false
 let colorMediaListening = false
+let nestedDisplayCalibrated = false
 
 function isThemeType(value: unknown): value is ThemeType {
   return typeof value === 'string' && THEME_TYPES.includes(value as ThemeType)
@@ -56,6 +63,10 @@ function isThemeType(value: unknown): value is ThemeType {
 
 function isFontType(value: unknown): value is FontType {
   return typeof value === 'string' && FONT_TYPES.includes(value as FontType)
+}
+
+function isNestedDisplay(value: unknown): value is NestedDisplay {
+  return typeof value === 'string' && NESTED_DISPLAYS.includes(value as NestedDisplay)
 }
 
 function normalizeSnapshot(value: unknown): ThemeBootSnapshot | null {
@@ -74,6 +85,8 @@ function normalizeSnapshot(value: unknown): ThemeBootSnapshot | null {
     autoSwitch: record.autoSwitch === true,
     mode: record.mode === 'compact' ? 'compact' : 'default',
     fontType: record.fontType,
+    // 旧版缓存没有该字段，按默认的缩进模式处理，随后由 storage 校准。
+    nestedDisplay: isNestedDisplay(record.nestedDisplay) ? record.nestedDisplay : 'indent',
   }
 }
 
@@ -88,6 +101,9 @@ function getThemeBootSnapshot(options: Options | undefined): ThemeBootSnapshot {
     autoSwitch: theme?.autoSwitch === true,
     mode: theme?.mode === 'compact' ? 'compact' : 'default',
     fontType: isFontType(options?.font?.type) ? options.font.type : 'system',
+    nestedDisplay: isNestedDisplay(options?.nestedReply?.display)
+      ? options.nestedReply.display
+      : 'indent',
   }
 }
 
@@ -127,7 +143,17 @@ function writeThemeBootSnapshot(snapshot: ThemeBootSnapshot): void {
 }
 
 export function writeThemeBootSnapshotFromOptions(options: Options | undefined): void {
-  writeThemeBootSnapshot(getThemeBootSnapshot(options))
+  const snapshot = getThemeBootSnapshot(options)
+
+  writeThemeBootSnapshot(snapshot)
+
+  // 第一次调用来自页面加载时读取的权威配置，与楼中楼脚本使用的是同一份配置。
+  // 楼中楼的 DOM 结构只在加载时生成一次，之后的设置变更需刷新页面才会生效，
+  // 因此这里只校准一次，避免样式与已生成的 DOM 结构不一致。
+  if (!nestedDisplayCalibrated) {
+    nestedDisplayCalibrated = true
+    setNestedDisplay(snapshot.nestedDisplay)
+  }
 }
 
 /**
@@ -187,6 +213,14 @@ export function setThemeType(type: ThemeType): void {
 export function setMode(mode: ThemeMode): void {
   document.documentElement.dataset[MODE_ATTRIBUTE] = mode
   document.body?.classList.toggle(COMPACT_CLASS, mode === 'compact')
+}
+
+/**
+ * 将楼中楼显示方式暴露到 html 上（`data-v2p-nested="indent|align|off"`），
+ * 样式据此只在插件接管楼中楼时生效；关闭时交给 V2EX 原生布局（包括站内树形缩进）。
+ */
+export function setNestedDisplay(display: NestedDisplay): void {
+  document.documentElement.dataset[NESTED_ATTRIBUTE] = display
 }
 
 function ensureFontStylesheet(id: string, href: string): void {
@@ -282,6 +316,10 @@ function applyThemeSnapshot(snapshot: ThemeBootSnapshot): void {
   setFontType(snapshot.fontType)
   setThemeType(getEffectiveThemeType(snapshot))
   setMode(snapshot.mode)
+
+  if (!nestedDisplayCalibrated) {
+    setNestedDisplay(snapshot.nestedDisplay)
+  }
 
   try {
     performance.mark('v2p-theme-ready')
