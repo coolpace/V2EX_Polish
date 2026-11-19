@@ -102,22 +102,42 @@ pnpm build:manifest:firefox
 
 ## 发布流程
 
-推送 `v*` 标签会触发 `.github/workflows/release.yml`：自动安装依赖、运行测试与校验、构建 Chrome/Firefox zip，并创建 GitHub Release。发布构建会设置 `EXTENSION_MINIFY=1`，本地需要压缩产物时可使用：
+推送 `v*` 标签会触发 `.github/workflows/release.yml`：自动安装依赖、运行测试与校验、构建 Chrome/Firefox zip、创建 GitHub Release，随后自动上传 Chrome Web Store 并提交 Firefox Add-ons (AMO) 审核。发布构建会设置 `EXTENSION_MINIFY=1`，本地需要压缩产物时可使用：
 
 ```bash
 EXTENSION_MINIFY=1 pnpm build
 ```
 
+商店上传依赖 GitHub Secrets（见下文「商店自动发布凭据」）。未配置对应凭据时，workflow 会跳过该商店的上传并输出警告，GitHub Release 不受影响。
+
 ### Chrome Web Store
 
-- 上传 `apps/extension/dist/v2ex-polish-chrome-<version>.zip`
-- 确认版本号高于当前商店版本
-- 如果权限有变化，同步更新商店说明
+由 workflow 通过 Chrome Web Store API 自动上传 zip 并提交发布（进入官方审核）。无需再手动登录开发者后台上传。如果权限有变化，仍需手动同步更新商店说明。
 
 ### Firefox Add-ons (AMO)
 
-- 上传 `apps/extension/dist/v2ex-polish-firefox-<version>.zip`
-- Firefox 版 manifest 已在生成阶段自动处理差异
+由 workflow 通过 `web-ext sign --channel listed` 自动提交审核，审核通过后自动上架。Firefox 版 manifest 已在生成阶段自动处理差异。发布构建是压缩产物，workflow 会用 `git archive` 生成源码包并随版本一起上传（`--upload-source-code`），供 AMO 审核人员核对。
+
+### 商店自动发布凭据
+
+在仓库 Settings → Secrets and variables → Actions 中配置以下 secrets：
+
+| Secret                 | 用途                                                   |
+| ---------------------- | ------------------------------------------------------ |
+| `CHROME_EXTENSION_ID`  | Chrome 扩展 ID（开发者后台条目 URL 中的 32 位字符串）  |
+| `CHROME_PUBLISHER_ID`  | Chrome Web Store 发布者 ID（开发者后台账号设置中可见） |
+| `CHROME_CLIENT_ID`     | Google OAuth2 Client ID                                |
+| `CHROME_CLIENT_SECRET` | Google OAuth2 Client Secret                            |
+| `CHROME_REFRESH_TOKEN` | Google OAuth2 Refresh Token                            |
+| `AMO_JWT_ISSUER`       | AMO API key（JWT issuer）                              |
+| `AMO_JWT_SECRET`       | AMO API secret（JWT secret）                           |
+
+获取方式：
+
+- Chrome 三个 OAuth 凭据：按 [chrome-webstore-upload-keys 指引](https://github.com/fregante/chrome-webstore-upload-keys) 在 Google Cloud Console 启用 Chrome Web Store API、创建 OAuth 客户端并换取 refresh token（一次性操作）。
+- AMO 两个凭据：在 <https://addons.mozilla.org/developers/addon/api/key/> 生成 API key。
+
+凭据只存在于 GitHub Secrets，不要提交到仓库或写入本地配置文件。
 
 ### Microsoft Edge Add-ons
 

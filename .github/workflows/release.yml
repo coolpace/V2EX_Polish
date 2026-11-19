@@ -12,6 +12,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+      AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
 
     steps:
       - name: Checkout
@@ -62,3 +65,36 @@ jobs:
         with:
           generate_release_notes: true
           files: apps/extension/dist/*.zip
+
+      - name: Upload to Chrome Web Store
+        if: ${{ env.CHROME_CLIENT_ID != '' }}
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+        run: |
+          npx -y chrome-webstore-upload-cli@4.0.2 \
+            --source "apps/extension/dist/v2ex-polish-chrome-${GITHUB_REF_NAME#v}.zip"
+
+      - name: Package source code for AMO review
+        run: git archive --format=zip --output=source-code.zip HEAD
+
+      - name: Submit to Firefox Add-ons (AMO)
+        if: ${{ env.AMO_JWT_ISSUER != '' }}
+        working-directory: apps/extension
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          pnpm exec web-ext sign \
+            --source-dir dist/firefox \
+            --channel listed \
+            --approval-timeout 0 \
+            --upload-source-code ../../source-code.zip
+
+      - name: Notice missing store credentials
+        if: ${{ env.CHROME_CLIENT_ID == '' || env.AMO_JWT_ISSUER == '' }}
+        run: |
+          echo "::warning::部分商店凭据未配置，已跳过对应上传。需要配置的 secrets：CHROME_EXTENSION_ID / CHROME_PUBLISHER_ID / CHROME_CLIENT_ID / CHROME_CLIENT_SECRET / CHROME_REFRESH_TOKEN / AMO_JWT_ISSUER / AMO_JWT_SECRET，见 docs/build-and-release.md"
