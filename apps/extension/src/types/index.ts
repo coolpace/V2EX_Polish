@@ -386,7 +386,10 @@ export interface Topic {
   }
 }
 
-export type HotTopic = Pick<Topic, 'id' | 'title' | 'url' | 'member'>
+export type HotTopic = Pick<Topic, 'id' | 'title' | 'url' | 'member'> & {
+  /** 回复数（最后一次快照时的累计值）。 */
+  replies: number
+}
 
 export type HotTopicRange = '3d' | '7d' | '30d'
 
@@ -433,6 +436,8 @@ export interface DataWrapper<T = unknown> {
   success: boolean
   message?: string
   result: T
+  /** 热议主题接口：当前时间桶内是否还有未返回的主题。 */
+  hasMore?: boolean
 }
 
 export interface V2EX_RequestErrorResponce {

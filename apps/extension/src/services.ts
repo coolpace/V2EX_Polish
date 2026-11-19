@@ -632,15 +632,20 @@ function resolveHotTopicsApi(): URL {
 async function fetchHotTopicsDirect(params: {
   range: HotTopicRange
   limits?: number
+  expand?: 0 | 1
   signal?: AbortSignal
 }): Promise<DataWrapper<HotTopic[]>> {
-  const { range, limits = 8, signal } = params
+  const { range, limits, expand, signal } = params
 
   try {
     const url = resolveHotTopicsApi()
     url.searchParams.set('range', String(range))
 
-    if (limits) {
+    if (expand !== undefined) {
+      url.searchParams.set('expand', String(expand))
+    }
+
+    if (limits !== undefined) {
       url.searchParams.set('limits', String(limits))
     }
 
@@ -688,11 +693,13 @@ async function fetchHotTopicsDirect(params: {
 export async function getHotTopics(params: {
   /** 时间范围。 */
   range: HotTopicRange
-  /** 限制返回数据条数。 */
+  /** 限制返回数据条数（可选，覆盖 Worker 档位默认值）。 */
   limits?: number
+  /** 展开状态：0 默认条数，1 展开条数。 */
+  expand?: 0 | 1
   signal?: AbortSignal
 }): Promise<DataWrapper<HotTopic[]>> {
-  const { range, limits = 8, signal } = params
+  const { range, limits, expand, signal } = params
 
-  return fetchHotTopicsDirect({ range, limits, signal })
+  return fetchHotTopicsDirect({ range, limits, expand, signal })
 }

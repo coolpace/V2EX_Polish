@@ -8,12 +8,12 @@ import { $wrapper } from '../globals'
 import { createTopicPreview } from '../topic/preview'
 import { shouldHideTopic } from '../topic-filter/matcher'
 
-type RangeAlias = '近三日' | '近七日' | '近一月'
+type RangeAlias = '近三日' | '3~7 天前' | '7~30 天前'
 
 const rangeByAlias: Record<RangeAlias, HotTopicRange> = {
   近三日: '3d',
-  近七日: '7d',
-  近一月: '30d',
+  '3~7 天前': '7d',
+  '7~30 天前': '30d',
 }
 
 function isRangeAlias(value: string): value is RangeAlias {
@@ -108,8 +108,8 @@ export function handleHotTopics() {
     <div class="v2p-select-dropdown">
       <div class="v2p-select-item v2p-select-item-active" data-alias="今日">今日</div>
       <div class="v2p-select-item" data-alias="近三日">近三日</div>
-      <div class="v2p-select-item" data-alias="近七日">近七日</div>
-      <div class="v2p-select-item" data-alias="近一月">近一月</div>
+      <div class="v2p-select-item" data-alias="3~7 天前">3~7 天前</div>
+      <div class="v2p-select-item" data-alias="7~30 天前">7~30 天前</div>
     </div>
   `)
 
@@ -124,22 +124,52 @@ export function handleHotTopics() {
 
   /** 缓存 TTL（毫秒），与 cron 最小触发间隔（15 分钟）对齐，避免在数据更新前重复请求。 */
   const CACHE_TTL = 15 * 60 * 1000
-  const cache = new Map<RangeAlias, { data: HotTopic[], timestamp: number }>()
+  const cache = new Map<string, { data: HotTopic[], hasMore: boolean, timestamp: number }>()
 
-  const getCachedData = (key: RangeAlias): HotTopic[] | null => {
+  const getCacheKey = (alias: RangeAlias, expand: 0 | 1): string => `${alias}-${expand}`
+
+  const getCachedData = (key: string): { data: HotTopic[], hasMore: boolean } | null => {
     const entry = cache.get(key)
 
     if (entry && Date.now() - entry.timestamp < CACHE_TTL) {
-      return entry.data
+      return { data: entry.data, hasMore: entry.hasMore }
     }
 
-    // 过期则清除
     cache.delete(key)
 
     return null
   }
 
-  const renderNewTopicList = (result: HotTopic[]) => {
+  /** 当前远程档位及其展开状态。展开状态不跨档位记忆。 */
+  let currentAlias: RangeAlias | null = null
+  let expanded = false
+  let hasMore = false
+
+  const renderExpandToggle = () => {
+    $('.v2p-hot-expand-toggle').remove()
+
+    if (!currentAlias) {
+      return
+    }
+
+    // 未展开且没有更多时，不显示展开按钮
+    if (!expanded && !hasMore) {
+      return
+    }
+
+    const $toggle = $('<div class="v2p-hot-expand-toggle">').text(expanded ? '收起' : '展开更多')
+
+    $toggle.on('click', () => {
+      expanded = !expanded
+      fetchAndRender(currentAlias!, expanded ? 1 : 0)
+    })
+
+    $listWrapper.after($toggle)
+  }
+
+  const renderNewTopicList = (result: HotTopic[], nextHasMore: boolean) => {
+    hasMore = nextHasMore
+
     $filterCounter?.remove()
     $filterCounter = null
     showing = false
@@ -172,9 +202,14 @@ export function handleHotTopics() {
       const $titleLink = $clonedCell.find('.item_hot_topic_title > a')
       $titleLink.text(it.title).attr('href', linkHref)
 
-      if (topicPreview) {
-        const $titleContainer = $clonedCell.find('.item_hot_topic_title')
+      const $titleContainer = $clonedCell.find('.item_hot_topic_title')
 
+      // 回复数徽章：让「按回复排序」可见且可信
+      $('<span class="v2p-hot-replies">')
+        .text(String(it.replies))
+        .appendTo($titleContainer)
+
+      if (topicPreview) {
         // 预览模式：点击主题链接时弹出预览窗口。
         if (isPreviewMode) {
           $titleLink.on('click', (ev) => {
@@ -198,10 +233,13 @@ export function handleHotTopics() {
       $filterCounter = createFilterCounter(hiddenCount)
       $listWrapper.before($filterCounter)
     }
+
+    renderExpandToggle()
   }
 
   const renderError = () => {
     $listWrapper.empty().append('<div class="v2p-topics-hot-empty">加载失败，请稍后再试</div>')
+    $('.v2p-hot-expand-toggle').remove()
   }
 
   const showLoading = () => {
@@ -210,12 +248,19 @@ export function handleHotTopics() {
       <div class="v2p-icon-loading">${iconLoading}</div>
     </div>
     `)
+    $('.v2p-hot-expand-toggle').remove()
   }
 
   /** 恢复「今日」列表。 */
   const restoreToday = () => {
+    currentAlias = null
+    expanded = false
+    hasMore = false
+
     $filterCounter?.remove()
     $filterCounter = null
+
+    $('.v2p-hot-expand-toggle').remove()
 
     $listWrapper.empty().append($todayCells)
 
@@ -232,24 +277,29 @@ export function handleHotTopics() {
     }
   }
 
-  const fetchAndRender = (alias: RangeAlias) => {
-    const cachedData = getCachedData(alias)
+  const fetchAndRender = (alias: RangeAlias, expand: 0 | 1) => {
+    const cacheKey = getCacheKey(alias, expand)
+    const cachedData = getCachedData(cacheKey)
 
     if (cachedData) {
-      renderNewTopicList(cachedData)
+      renderNewTopicList(cachedData.data, cachedData.hasMore)
 
       return
     }
+
+    showLoading()
 
     abortController = new AbortController()
 
     void getHotTopics({
       range: rangeByAlias[alias],
+      expand,
       signal: abortController.signal,
     })
-      .then(({ result }) => {
-        cache.set(alias, { data: result, timestamp: Date.now() })
-        renderNewTopicList(result)
+      .then(({ result, hasMore: nextHasMore }) => {
+        const resolvedHasMore = nextHasMore ?? false
+        cache.set(cacheKey, { data: result, hasMore: resolvedHasMore, timestamp: Date.now() })
+        renderNewTopicList(result, resolvedHasMore)
       })
       .catch((err) => {
         // AbortError 是用户主动取消，不需要显示错误
@@ -290,10 +340,11 @@ export function handleHotTopics() {
     }
 
     if (isRangeAlias(alias)) {
-      // 切换到远程数据时，先保存今日 cells 以便后续恢复。
+      // 切换到远程数据时，先保存今日 cells 以便后续恢复，并重置展开状态。
       $todayCells = $todayCells.detach()
-      showLoading()
-      fetchAndRender(alias)
+      currentAlias = alias
+      expanded = false
+      fetchAndRender(alias, 0)
 
       return
     }

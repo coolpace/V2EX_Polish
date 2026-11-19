@@ -15,7 +15,8 @@ describe('validateQueryParams', () => {
     const result = expectSuccess(validateQueryParams({ range: '3d' }))
 
     expect(result.range).toBe('3d')
-    expect(result.limits).toBe(8)
+    expect(result.limits).toBe(10)
+    expect(result.expand).toBe(0)
     expect(result.endTime - result.startTime).toBe(3 * 86400)
   })
 
@@ -55,5 +56,25 @@ describe('validateQueryParams', () => {
 
     expect(expectSuccess(validateQueryParams({ range: '3d', limits: 1 })).limits).toBe(1)
     expect(expectSuccess(validateQueryParams({ range: '3d', limits: 50 })).limits).toBe(50)
+  })
+
+  it('各档位有独立默认条数', () => {
+    expect(expectSuccess(validateQueryParams({ range: '3d' })).limits).toBe(10)
+    expect(expectSuccess(validateQueryParams({ range: '7d' })).limits).toBe(12)
+    expect(expectSuccess(validateQueryParams({ range: '30d' })).limits).toBe(16)
+  })
+
+  it('expand=1 返回展开条数', () => {
+    expect(expectSuccess(validateQueryParams({ range: '3d', expand: '1' })).limits).toBe(18)
+    expect(expectSuccess(validateQueryParams({ range: '7d', expand: '1' })).limits).toBe(20)
+    expect(expectSuccess(validateQueryParams({ range: '30d', expand: '1' })).limits).toBe(24)
+  })
+
+  it('显式 limits 覆盖档位默认条数', () => {
+    expect(expectSuccess(validateQueryParams({ range: '3d', limits: 5, expand: '1' })).limits).toBe(5)
+  })
+
+  it('拒绝非法的 expand', () => {
+    expect(validateQueryParams({ range: '3d', expand: '2' })).toBe('expand 必须为 0 或 1')
   })
 })

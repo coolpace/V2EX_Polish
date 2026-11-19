@@ -39,6 +39,8 @@ function deriveAvatarNormal(avatarMini: string): string {
 /** limits 参数的合法范围。 */
 const MIN_LIMITS = 1
 const MAX_LIMITS = 50
+
+/** 各时间档对应的时间窗口长度（秒）。 */
 const RANGE_TO_SECONDS = {
   '3d': 3 * 86400,
   '7d': 7 * 86400,
@@ -46,6 +48,13 @@ const RANGE_TO_SECONDS = {
 } as const
 
 export type HotTopicsRange = keyof typeof RANGE_TO_SECONDS
+
+/** 各时间档的展示条数：默认条数 / 展开后条数。 */
+const RANGE_LIMITS = {
+  '3d': { default: 10, expand: 18 },
+  '7d': { default: 12, expand: 20 },
+  '30d': { default: 16, expand: 24 },
+} as const
 
 function isHotTopicsRange(value: string): value is HotTopicsRange {
   return value in RANGE_TO_SECONDS
@@ -55,6 +64,13 @@ function getAlignedCurrentTime(): number {
   const now = Math.floor(Date.now() / 1000)
 
   return now - now % 300
+}
+
+/** 根据 range 与 expand 计算该档的条数。 */
+function resolveRangeLimits(range: HotTopicsRange, expand: 0 | 1): number {
+  const config = RANGE_LIMITS[range]
+
+  return expand === 1 ? config.expand : config.default
 }
 
 /**
@@ -67,7 +83,14 @@ export function validateQueryParams(params: {
   startTime?: string | null
   endTime?: string | null
   limits?: number
-}): { startTime: number, endTime: number, limits: number, range: HotTopicsRange | null } | string {
+  expand?: string | null
+}): {
+  startTime: number
+  endTime: number
+  limits: number
+  range: HotTopicsRange | null
+  expand: 0 | 1
+} | string {
   let start: number
   let end: number
 
@@ -96,7 +119,14 @@ export function validateQueryParams(params: {
     }
   }
 
-  const limits = params.limits ?? 8
+  const expand = Number(params.expand ?? 0)
+
+  if (expand !== 0 && expand !== 1) {
+    return 'expand 必须为 0 或 1'
+  }
+
+  const range = params.range && isHotTopicsRange(params.range) ? params.range : null
+  const limits = params.limits ?? (range ? resolveRangeLimits(range, expand) : 8)
 
   if (!Number.isInteger(limits) || limits < MIN_LIMITS || limits > MAX_LIMITS) {
     return `limits 必须为 ${MIN_LIMITS}-${MAX_LIMITS} 之间的整数`
@@ -106,39 +136,88 @@ export function validateQueryParams(params: {
     startTime: start,
     endTime: end,
     limits,
-    range: params.range && isHotTopicsRange(params.range) ? params.range : null,
+    range,
+    expand,
   }
 }
 
-/** 短窗口阈值：3 天（秒）。窗口 ≤ 此值时按活跃时间排序，> 此值时按回复数排序并排除短窗口结果。 */
-const SHORT_WINDOW_SECONDS = 3 * 86400
+/**
+ * 根据 range 划分时间桶。
+ *
+ * 三桶彼此不重叠，去重不依赖展示条数：
+ * - 近三日：`[end - 3d, end]`
+ * - 3~7 天前：`[end - 7d, end - 3d)`
+ * - 7~30 天前：`[end - 30d, end - 7d)`
+ */
+function resolveBucket(
+  range: HotTopicsRange,
+  endTime: number,
+): { start: number, end: number, orderBy: string } {
+  if (range === '3d') {
+    return {
+      start: endTime - RANGE_TO_SECONDS['3d'],
+      end: endTime,
+      orderBy: 'last_touched DESC, replies DESC',
+    }
+  }
+
+  if (range === '7d') {
+    return {
+      start: endTime - RANGE_TO_SECONDS['7d'],
+      end: endTime - RANGE_TO_SECONDS['3d'],
+      orderBy: 'replies DESC, last_touched DESC',
+    }
+  }
+
+  return {
+    start: endTime - RANGE_TO_SECONDS['30d'],
+    end: endTime - RANGE_TO_SECONDS['7d'],
+    orderBy: 'replies DESC, last_touched DESC',
+  }
+}
 
 /**
- * HTTP 接口：根据活跃时间范围查询热门主题。
+ * HTTP 接口：根据时间档查询热门主题。
  *
- * 排序策略（分层）：
- * - 短窗口（≤ 3 天）：按活跃时间排序，展示"正在讨论"的主题
- * - 长窗口（> 3 天）：排除近三日的 top 结果，按回复数排序，
- *   展示该时段内讨论热度最高但不在短窗口榜单中的主题，
- *   确保用户切换时间段时看到差异化的内容
+ * 分桶策略：
+ * - 近三日：按活跃时间排序，展示"正在讨论"的主题
+ * - 3~7 天前 / 7~30 天前：按回复数排序，展示该时段内补看错过的高热主题
  *
  * Query 参数：
- * - startTime: 活跃开始时间（秒）
- * - endTime: 活跃结束时间（秒）
- * - limits: 返回条数，默认 8，范围 1-50
+ * - range: 时间档（3d / 7d / 30d）
+ * - limits: 返回条数（可选，覆盖档位默认值）
+ * - expand: 展开状态（0/1），决定档位默认条数
  */
 export async function queryHotTopics(
   db: D1Database,
-  params: { startTime: number, endTime: number, limits: number },
-): Promise<{ success: boolean, result: HotTopicResult[] }> {
-  const { startTime, endTime, limits } = params
-  const windowSize = endTime - startTime
+  params: { range: HotTopicsRange | null, startTime: number, endTime: number, limits: number },
+): Promise<{ success: boolean, result: HotTopicResult[], hasMore: boolean }> {
+  const { range, startTime, endTime, limits } = params
 
-  let results: HotTopicRow[]
+  let rows: HotTopicRow[]
+  let hasMore: boolean
 
-  if (windowSize <= SHORT_WINDOW_SECONDS) {
-    // 短窗口：按活跃时间排序，优先展示最近仍有讨论活动的主题
-    const { results: rows } = await db
+  if (range) {
+    const bucket = resolveBucket(range, endTime)
+
+    // 多取一条用于判断 hasMore，再截断到 limits
+    const { results } = await db
+      .prepare(
+        `SELECT id, title, replies, created, last_touched, member_username, member_avatar_mini
+         FROM hot_topics
+         WHERE last_touched >= ? AND last_touched < ?
+         ORDER BY ${bucket.orderBy}
+         LIMIT ?`,
+      )
+      .bind(bucket.start, bucket.end, limits + 1)
+      .all<HotTopicRow>()
+
+    hasMore = results.length > limits
+    rows = results.slice(0, limits)
+  }
+  else {
+    // 自定义时间窗口（无 range 语义）：按活跃时间排序，不做分桶去重
+    const { results } = await db
       .prepare(
         `SELECT id, title, replies, created, last_touched, member_username, member_avatar_mini
          FROM hot_topics
@@ -146,40 +225,16 @@ export async function queryHotTopics(
          ORDER BY last_touched DESC, replies DESC
          LIMIT ?`,
       )
-      .bind(startTime, endTime, limits)
+      .bind(startTime, endTime, limits + 1)
       .all<HotTopicRow>()
 
-    results = rows
-  }
-  else {
-    // 长窗口：排除近三日的 top 结果，按回复数排序
-    // 子查询找出近三日内按活跃时间排名前 N 的主题 ID，外层查询将其排除
-    // 这样近七日/近一月的结果与近三日保证零重复
-    const recentStart = endTime - SHORT_WINDOW_SECONDS
-
-    const { results: rows } = await db
-      .prepare(
-        `SELECT id, title, replies, created, last_touched, member_username, member_avatar_mini
-         FROM hot_topics
-         WHERE last_touched >= ? AND last_touched <= ?
-           AND id NOT IN (
-             SELECT id FROM hot_topics
-             WHERE last_touched >= ? AND last_touched <= ?
-             ORDER BY last_touched DESC, replies DESC
-             LIMIT ?
-           )
-         ORDER BY replies DESC, last_touched DESC
-         LIMIT ?`,
-      )
-      .bind(startTime, endTime, recentStart, endTime, limits, limits)
-      .all<HotTopicRow>()
-
-    results = rows
+    hasMore = results.length > limits
+    rows = results.slice(0, limits)
   }
 
   // 将数据库行转换为前端期望的格式
   // url 和 avatar_normal 在此处从存储字段动态推导
-  const formattedResults: HotTopicResult[] = results.map((row) => ({
+  const formattedResults: HotTopicResult[] = rows.map((row) => ({
     id: row.id,
     title: row.title,
     url: `https://www.v2ex.com/t/${row.id}`,
@@ -195,5 +250,6 @@ export async function queryHotTopics(
   return {
     success: true,
     result: formattedResults,
+    hasMore,
   }
 }

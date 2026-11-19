@@ -124,10 +124,11 @@ export default {
       const startTime = url.searchParams.get('startTime')
       const endTime = url.searchParams.get('endTime')
       const limitsParam = url.searchParams.get('limits')
+      const expand = url.searchParams.get('expand')
 
       // 参数校验
       const limits = limitsParam ? Number(limitsParam) : undefined
-      const validated = validateQueryParams({ range, startTime, endTime, limits })
+      const validated = validateQueryParams({ range, startTime, endTime, limits, expand })
 
       if (typeof validated === 'string') {
         return jsonResponse(request, { success: false, message: validated }, 400)
