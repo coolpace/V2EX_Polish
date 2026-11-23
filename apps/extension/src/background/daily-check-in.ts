@@ -1,7 +1,19 @@
 import { StorageKey, V2EX } from '../constants'
-import type { CheckInErrorCode, CheckInResult, CheckInStage, CheckInTrigger } from '../types'
+import { getRuntime } from '../runtime'
+import type {
+  CheckInErrorCode,
+  CheckInHttpResponse,
+  CheckInResult,
+  CheckInStage,
+  CheckInTrigger,
+} from '../types'
 import { getStorage, setStorage } from '../utils'
 import { createSerialQueue } from '../utils/async'
+import {
+  type CheckInPageSession,
+  openCheckInPageSession,
+  openCheckInTemporaryTabSession,
+} from './check-in-page-fetch'
 import {
   buildDailyInfoAfterAttempt,
   createCheckInStateForMember,
@@ -14,11 +26,13 @@ import {
 } from './check-in-scheduler'
 import {
   CHECK_IN_CHALLENGE_COPY,
+  hasClaimedReward,
   parseCheckInDays,
   parseCheckInPage,
-  SUCCESS_TEXT,
+  RECLICK_TEXT,
 } from './check-in-utils'
 
+/** 直接请求的最长等待时间。 */
 const checkInTimeout = 15 * 1000
 
 /** 同一时间只允许一个签到任务，避免 alarm 与 popup 触发并发请求。 */
@@ -30,12 +44,18 @@ let accountRevision = 0
 /** 串行执行账号观察和签到状态写入，避免并发请求读取到同一份旧状态。 */
 const enqueueStateTransition = createSerialQueue()
 
-async function fetchWithTimeout(url: string): Promise<Response> {
+/** 是否有签到任务正在执行。 */
+export function isCheckInInFlight(): boolean {
+  return inFlight
+}
+
+/** 后台直接请求签到接口，没有可用的页面上下文时使用。 */
+async function fetchCheckInDirect(path: string): Promise<CheckInHttpResponse> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), checkInTimeout)
 
   try {
-    return await fetch(url, {
+    const res = await fetch(`${V2EX.Origin}${path}`, {
       headers: {
         Referer: `${V2EX.Origin}/mission/daily`,
       },
@@ -43,9 +63,50 @@ async function fetchWithTimeout(url: string): Promise<Response> {
       cache: 'no-store',
       signal: controller.signal,
     })
+
+    return {
+      status: res.status,
+      finalUrl: res.url,
+      text: await res.text(),
+      retryAfter: res.headers.get('retry-after'),
+      challenge: res.headers.get('cf-mitigated')?.toLowerCase() === 'challenge',
+    }
   }
   finally {
     clearTimeout(timeoutId)
+  }
+}
+
+/** 一次签到请求的结果：成功时带回响应，失败时给出可直接落库的错误。 */
+type CheckInResourceResult
+  = | { ok: true, response: CheckInHttpResponse }
+    | { ok: false, code: 'timeout' | 'network', message: string }
+
+/**
+ * 请求签到接口。
+ *
+ * 浏览器扩展优先通过页面会话通道发送请求，让领取凭证与页面会话保持一致；
+ * 页面通道不可用时回退到后台请求。
+ */
+async function requestCheckInResource(
+  path: string,
+  session: CheckInPageSession | undefined,
+): Promise<CheckInResourceResult> {
+  if (session) {
+    const pageResult = await session.fetch(path)
+
+    if (pageResult) {
+      return pageResult
+    }
+  }
+
+  try {
+    return { ok: true, response: await fetchCheckInDirect(path) }
+  }
+  catch (error) {
+    const { code, message } = getErrorInfo(error)
+
+    return { ok: false, code: code === 'timeout' ? 'timeout' : 'network', message }
   }
 }
 
@@ -95,6 +156,21 @@ function describeHttpFailure(status: number): string {
 /** 失败结果附带的响应元数据。 */
 type CheckInResponseMeta = Pick<CheckInResult, 'httpStatus' | 'finalUrlPath' | 'retryAfterMs'>
 
+/** 从响应中提取可写入状态机的元数据。 */
+function createResponseMeta(response: CheckInHttpResponse): CheckInResponseMeta {
+  return {
+    httpStatus: response.status,
+    finalUrlPath: getUrlPath(response.finalUrl),
+    retryAfterMs:
+      response.status === 429 ? parseRetryAfter(response.retryAfter) : undefined,
+  }
+}
+
+/** 判断响应是否成功。 */
+function isSuccessfulStatus(status: number): boolean {
+  return status >= 200 && status < 300
+}
+
 /** 构造结构一致的失败结果，避免各分支重复拼装字段。 */
 function fail(
   code: CheckInErrorCode,
@@ -123,121 +199,213 @@ export function parseRetryAfter(value: string | null, now = Date.now()): number 
   return delayMs
 }
 
+/** 签到页请求结果：成功时返回可解析的 HTML，失败时直接给出结果。 */
+type DailyPageOutcome
+  = | { ok: true, text: string, meta: CheckInResponseMeta }
+    | { ok: false, result: CheckInResult }
+
+/** 请求签到页并读取 HTML。 */
+async function fetchDailyPage(session: CheckInPageSession | undefined): Promise<DailyPageOutcome> {
+  const fetched = await requestCheckInResource('/mission/daily', session)
+
+  if (!fetched.ok) {
+    return {
+      ok: false,
+      result: fail(fetched.code, 'request-page', `无法访问 V2EX：${fetched.message}`),
+    }
+  }
+
+  const { response } = fetched
+  const meta = createResponseMeta(response)
+
+  // Cloudflare 人机验证会在响应头标记，需要先于状态码判断。
+  if (response.challenge) {
+    return {
+      ok: false,
+      result: fail('challenge', 'request-page', CHECK_IN_CHALLENGE_COPY.failureReason, meta),
+    }
+  }
+
+  if (!isSuccessfulStatus(response.status)) {
+    return {
+      ok: false,
+      result: fail(
+        'http',
+        'request-page',
+        `获取签到页面失败：${describeHttpFailure(response.status)}（HTTP ${response.status}）`,
+        meta,
+      ),
+    }
+  }
+
+  return { ok: true, text: response.text, meta }
+}
+
+/** 领取结果，附带 V2EX 是否要求再点一次。 */
+type RedeemOutcome = {
+  result: CheckInResult
+  needsReclick: boolean
+}
+
+/** 发起一次领取请求，并根据结果页判断是否真正到账。 */
+async function redeemReward(
+  path: string,
+  session: CheckInPageSession | undefined,
+): Promise<RedeemOutcome> {
+  const fetched = await requestCheckInResource(path, session)
+
+  if (!fetched.ok) {
+    return {
+      result: fail(fetched.code, 'redeem', `领取请求失败：${fetched.message}`),
+      needsReclick: false,
+    }
+  }
+
+  const { response } = fetched
+  const meta = createResponseMeta(response)
+
+  if (!isSuccessfulStatus(response.status)) {
+    return {
+      result: fail(
+        'http',
+        'redeem',
+        `领取请求失败：${describeHttpFailure(response.status)}（HTTP ${response.status}）`,
+        meta,
+      ),
+      needsReclick: false,
+    }
+  }
+
+  if (hasClaimedReward(response.text)) {
+    return {
+      result: { status: 'success', checkInDays: parseCheckInDays(response.text), ...meta },
+      needsReclick: false,
+    }
+  }
+
+  return {
+    result: fail('redeem-failed', 'parse-redeem', '领取接口未返回成功提示', meta),
+    needsReclick: response.text.includes(RECLICK_TEXT),
+  }
+}
+
 /**
  * 请求签到页面并完成领取。
  */
-async function requestCheckInInner(): Promise<CheckInResult> {
-  let res: Response
+async function requestCheckInInner(
+  session: CheckInPageSession | undefined,
+): Promise<CheckInResult> {
+  const page = await fetchDailyPage(session)
 
+  if (!page.ok) {
+    return page.result
+  }
+
+  const parsed = parseCheckInPage(page.text, page.meta.finalUrlPath)
+
+  if (parsed.type === 'already') {
+    return { status: 'already', checkInDays: parsed.checkInDays, ...page.meta }
+  }
+
+  if (parsed.type === 'unauthenticated') {
+    return fail('unauthenticated', 'parse-page', '未登录或登录状态已失效', page.meta)
+  }
+
+  if (parsed.type === 'challenge') {
+    return fail('challenge', 'parse-page', CHECK_IN_CHALLENGE_COPY.failureReason, page.meta)
+  }
+
+  if (parsed.type === 'unknown') {
+    return fail('unexpected-page', 'parse-page', '签到页面无法识别，V2EX 可能已改版', page.meta)
+  }
+
+  let outcome = await redeemReward(parsed.path, session)
+
+  // V2EX 偶发要求「再点一次」才真正入账：重新打开签到页拿到新的入口后再领一次。
+  if (outcome.needsReclick) {
+    const refreshed = await fetchDailyPage(session)
+
+    if (refreshed.ok) {
+      const next = parseCheckInPage(refreshed.text, refreshed.meta.finalUrlPath)
+
+      if (next.type === 'redeem') {
+        outcome = await redeemReward(next.path, session)
+      }
+    }
+  }
+
+  if (outcome.result.status === 'success') {
+    return outcome.result
+  }
+
+  const unconfirmed
+    = outcome.result.code === 'redeem-failed'
+      || outcome.result.code === 'network'
+      || outcome.result.code === 'timeout'
+
+  if (!unconfirmed) {
+    return outcome.result
+  }
+
+  // 领取结果不明确时以签到页实际状态为准，避免站点省略提示文案导致误报失败。
+  const verify = await fetchDailyPage(session)
+
+  if (verify.ok) {
+    const verified = parseCheckInPage(verify.text, verify.meta.finalUrlPath)
+
+    if (verified.type === 'already') {
+      return {
+        status: 'success',
+        checkInDays: verified.checkInDays,
+        httpStatus: outcome.result.httpStatus,
+        finalUrlPath: outcome.result.finalUrlPath,
+      }
+    }
+  }
+
+  return outcome.result
+}
+
+/**
+ * 后台请求无法确认领取结果时，才值得再用临时标签页重试一次。
+ *
+ * 网络类错误、限流、人机验证换到页面上下文也不会改善，反而会多开一个标签页。
+ */
+export function shouldRetryInTemporaryTab(result: CheckInResult): boolean {
+  return (
+    result.status === 'failed'
+    && (result.code === 'redeem-failed' || result.code === 'unexpected-page')
+  )
+}
+
+/** 在页面通道上执行一次完整签到，并确保释放标签页资源。 */
+async function runWithPageSession(
+  session: CheckInPageSession | undefined,
+): Promise<CheckInResult> {
   try {
-    res = await fetchWithTimeout(`${V2EX.Origin}/mission/daily`)
+    return await requestCheckInInner(session)
   }
-  catch (error) {
-    const { code, message } = getErrorInfo(error)
-
-    return fail(code, 'request-page', `无法访问 V2EX：${message}`)
+  finally {
+    await session?.close()
   }
-
-  const pageMeta: CheckInResponseMeta = {
-    httpStatus: res.status,
-    finalUrlPath: getUrlPath(res.url),
-    retryAfterMs: res.status === 429 ? parseRetryAfter(res.headers.get('retry-after')) : undefined,
-  }
-
-  // Cloudflare 人机验证会在响应头标记，需要先于状态码判断。
-  if (res.headers.get('cf-mitigated')?.toLowerCase() === 'challenge') {
-    return fail('challenge', 'request-page', CHECK_IN_CHALLENGE_COPY.failureReason, pageMeta)
-  }
-
-  if (!res.ok) {
-    return fail(
-      'http',
-      'request-page',
-      `获取签到页面失败：${describeHttpFailure(res.status)}（HTTP ${res.status}）`,
-      pageMeta,
-    )
-  }
-
-  let htmlText: string
-
-  try {
-    htmlText = await res.text()
-  }
-  catch (error) {
-    const { code, message } = getErrorInfo(error)
-
-    return fail(code, 'request-page', `读取签到页面失败：${message}`, pageMeta)
-  }
-
-  const page = parseCheckInPage(htmlText, pageMeta.finalUrlPath)
-
-  if (page.type === 'already') {
-    return { status: 'already', checkInDays: page.checkInDays, ...pageMeta }
-  }
-
-  if (page.type === 'unauthenticated') {
-    return fail('unauthenticated', 'parse-page', '未登录或登录状态已失效', pageMeta)
-  }
-
-  if (page.type === 'challenge') {
-    return fail('challenge', 'parse-page', CHECK_IN_CHALLENGE_COPY.failureReason, pageMeta)
-  }
-
-  if (page.type === 'unknown') {
-    return fail('unexpected-page', 'parse-page', '签到页面无法识别，V2EX 可能已改版', pageMeta)
-  }
-
-  let checkInRes: Response
-
-  try {
-    checkInRes = await fetchWithTimeout(`${V2EX.Origin}${page.path}`)
-  }
-  catch (error) {
-    const { code, message } = getErrorInfo(error)
-
-    return fail(code, 'redeem', `领取请求失败：${message}`)
-  }
-
-  const redeemMeta: CheckInResponseMeta = {
-    httpStatus: checkInRes.status,
-    finalUrlPath: getUrlPath(checkInRes.url),
-    retryAfterMs:
-      checkInRes.status === 429
-        ? parseRetryAfter(checkInRes.headers.get('retry-after'))
-        : undefined,
-  }
-
-  if (!checkInRes.ok) {
-    return fail(
-      'http',
-      'redeem',
-      `领取请求失败：${describeHttpFailure(checkInRes.status)}（HTTP ${checkInRes.status}）`,
-      redeemMeta,
-    )
-  }
-
-  let text: string
-
-  try {
-    text = await checkInRes.text()
-  }
-  catch (error) {
-    const { code, message } = getErrorInfo(error)
-
-    return fail(code, 'redeem', `读取领取结果失败：${message}`, redeemMeta)
-  }
-
-  if (text.includes(SUCCESS_TEXT)) {
-    return { status: 'success', checkInDays: parseCheckInDays(text), ...redeemMeta }
-  }
-
-  return fail('redeem-failed', 'parse-redeem', '领取接口未返回成功提示', redeemMeta)
 }
 
 /** 在失败结果上补充本次请求耗时，便于区分超时与快速失败。 */
 async function requestCheckIn(): Promise<CheckInResult> {
   const startedAt = Date.now()
-  const result = await requestCheckInInner()
+  const isExtension = getRuntime().isBrowserExtension
+  const pageSession = isExtension ? await openCheckInPageSession() : undefined
+
+  let result = await runWithPageSession(pageSession)
+
+  // 没有可用标签页且后台请求无法确认结果时，临时开一个后台标签页重试一次。
+  if (isExtension && !pageSession && shouldRetryInTemporaryTab(result)) {
+    const temporarySession = await openCheckInTemporaryTabSession()
+
+    if (temporarySession) {
+      result = await runWithPageSession(temporarySession)
+    }
+  }
 
   return { ...result, durationMs: Date.now() - startedAt }
 }

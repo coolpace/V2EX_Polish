@@ -503,6 +503,7 @@ export const enum MessageKey {
   checkIn = 'checkIn',
   checkInNudge = 'checkInNudge',
   checkInRetry = 'checkInRetry',
+  checkInPageFetch = 'checkInPageFetch',
 }
 
 export const enum MessageFrom {

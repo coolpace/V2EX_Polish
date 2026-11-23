@@ -21,6 +21,7 @@ import {
   setStorage,
   showRemoteSyncDialog,
 } from '../utils'
+import { registerCheckInPageFetch } from './check-in-page-fetch'
 import { $infoCard, $wrapper } from './globals'
 import { openV2PSettings, setFont, toggleTheme } from './helpers'
 import { getCurrentMemberName } from './member-name'
@@ -28,6 +29,10 @@ import { getCurrentMemberName } from './member-name'
 const currentMemberName = getCurrentMemberName()
 
 syncViewportMode()
+
+if (getRuntime().isBrowserExtension && window.top === window) {
+  registerCheckInPageFetch()
+}
 
 void (async () => {
   const runtime = getRuntime()

@@ -64,6 +64,7 @@ async function handleRetry(button: HTMLButtonElement): Promise<void> {
 
   try {
     if (getRuntime().isBrowserExtension) {
+      // 由 background 调度，并借用当前签到页上下文发送领取请求。
       await chrome.runtime.sendMessage<
         { [MessageKey.checkInRetry]: { memberName?: string } },
         CheckInResult | undefined

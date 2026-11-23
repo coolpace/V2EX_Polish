@@ -36,6 +36,100 @@ function createSignInResponse(): Response {
   )
 }
 
+describe('签到领取结果确认', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  function setupDailyInfo(): void {
+    let dailyInfo: StorageSettings[StorageKey.Daily] = {
+      schemaVersion: 3,
+      memberName: 'alice',
+      rewardDay: '2026-11-23',
+      phase: 'scheduled',
+      targetAt: now - 1000,
+      nextActionAt: now - 1000,
+    }
+
+    mockDailyStorage(
+      () => dailyInfo,
+      (value) => {
+        dailyInfo = value
+      },
+    )
+  }
+
+  function queueFetch(responses: Array<() => Response>): void {
+    const queue = [...responses]
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        const next = queue.shift()
+
+        if (!next) {
+          throw new Error('unexpected fetch')
+        }
+
+        return next()
+      }),
+    )
+  }
+
+  const redeemPage
+    = '<a href="/mission/daily/redeem?once=111">领取每日登录奖励</a><div>已连续登录 2915 天</div>'
+
+  it('站点要求重新点击时会刷新入口再领取一次', async () => {
+    setupDailyInfo()
+    queueFetch([
+      () => new Response(redeemPage, { status: 200 }),
+      () => new Response('<div>请重新点击一次以领取每日登录奖励</div>', { status: 200 }),
+      () =>
+        new Response('<a href="/mission/daily/redeem?once=222">领取每日登录奖励</a>', {
+          status: 200,
+        }),
+      () => new Response('<div>已成功领取每日登录奖励 8 铜币</div>', { status: 200 }),
+    ])
+
+    await expect(checkIn({ force: true, trigger: 'manual' })).resolves.toMatchObject({
+      status: 'success',
+      checkInDays: undefined,
+    })
+  })
+
+  it('结果页缺少提示时回读签到页确认到账', async () => {
+    setupDailyInfo()
+    queueFetch([
+      () => new Response(redeemPage, { status: 200 }),
+      () => new Response('<div>系统繁忙</div>', { status: 200 }),
+      () => new Response('<div>今日登录奖励已领取，已连续登录 2916 天</div>', { status: 200 }),
+    ])
+
+    await expect(checkIn({ force: true, trigger: 'manual' })).resolves.toMatchObject({
+      status: 'success',
+      checkInDays: 2916,
+    })
+  })
+
+  it('回读仍显示可领取时保持失败', async () => {
+    setupDailyInfo()
+    queueFetch([
+      () => new Response(redeemPage, { status: 200 }),
+      () => new Response('<div>系统繁忙</div>', { status: 200 }),
+      () => new Response(redeemPage, { status: 200 }),
+    ])
+
+    await expect(checkIn({ force: true, trigger: 'manual' })).resolves.toMatchObject({
+      status: 'failed',
+      code: 'redeem-failed',
+    })
+  })
+})
+
 describe('签到状态并发', () => {
   beforeEach(() => {
     vi.clearAllMocks()

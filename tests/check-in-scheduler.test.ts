@@ -8,6 +8,7 @@ import {
   CHECK_IN_TARGET_JITTER_MAX_MS,
   createCheckInStateForMember,
   getCheckInAlarmTime,
+  getCheckInAlarmTriggerTime,
   getCheckInScheduleDecision,
   isCheckInAttemptStillCurrent,
   isCheckInStateForMember,
@@ -519,6 +520,18 @@ describe('getCheckInAlarmTime', () => {
 
   it('账号身份未确认时不创建自动签到 alarm', () => {
     expect(getCheckInAlarmTime({ ...state, memberName: undefined }, true)).toBeUndefined()
+  })
+})
+
+describe('getCheckInAlarmTriggerTime', () => {
+  it('未来的触发时间保持不变', () => {
+    expect(getCheckInAlarmTriggerTime(now + 60_000, now)).toBe(now + 60_000)
+  })
+
+  it('过去的触发时间顺延最小间隔，避免立即触发的循环', () => {
+    expect(getCheckInAlarmTriggerTime(now - 60_000, now)).toBe(
+      now + CHECK_IN_NUDGE_INTERVAL_MS,
+    )
   })
 })
 

@@ -209,6 +209,22 @@ export interface CheckInResult {
   checkInDays?: number
 }
 
+/** 签到请求的原始响应，可能来自页面上下文或后台。 */
+export interface CheckInHttpResponse {
+  status: number
+  /** 响应最终地址（含查询串，仅在内存中流转，不写入存储）。 */
+  finalUrl: string
+  text: string
+  retryAfter: string | null
+  /** 响应头是否标记了 Cloudflare 人机验证。 */
+  challenge: boolean
+}
+
+/** 页面上下文代发签到请求的结果。 */
+export type CheckInPageFetchResponse
+  = | { ok: true, response: CheckInHttpResponse }
+    | { ok: false, code: 'timeout' | 'network', message: string }
+
 /** 签到任务在持久化状态机中的阶段。 */
 export type CheckInPhase = 'scheduled' | 'succeeded' | 'needs-action'
 

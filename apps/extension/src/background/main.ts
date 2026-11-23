@@ -5,10 +5,11 @@ import { getRunEnv, getStorage, setStorage } from '../utils'
 import { isCheckInAuthUrl, isMissionCheckInUrl } from './check-in-message'
 import {
   getCheckInAlarmTime,
+  getCheckInAlarmTriggerTime,
   isSameCheckInState,
   normalizeCheckInState,
 } from './check-in-scheduler'
-import { checkIn } from './daily-check-in'
+import { checkIn, isCheckInInFlight } from './daily-check-in'
 
 /**
  * 旧格式的 MemberTag 数据，用于迁移时的类型兼容。
@@ -328,8 +329,9 @@ const legacyCheckInAlarmName = 'dailyCheckIn'
 /**
  * 自动签到统一入口。
  *
- * background 是唯一的签到执行者，alarm、浏览器启动、V2EX 页面加载和 popup 消息
- * 都通过这里触发；popup 不再直接执行签到，避免跨上下文并发与请求随页面关闭而中断。
+ * background 是唯一的调度与状态写入者；alarm、浏览器启动、V2EX 页面加载和
+ * popup 消息都通过这里触发。实际请求优先借用已打开的 V2EX 标签页发送；
+ * 没有可用标签页且后台请求确认不了结果时，才临时打开一个后台标签页重试一次。
  */
 async function runAutoCheckIn(
   options: {
@@ -357,6 +359,13 @@ async function runAutoCheckIn(
 
 /** 根据持久化状态创建唯一的、下一次动作的一次性 alarm。 */
 async function reconcileCheckInAlarm(now = Date.now()): Promise<void> {
+  // 签到进行中时状态即将被结果覆盖，这里基于旧状态创建 alarm 会得到过去的
+  // 触发时间，形成「立即触发 → 跳过 → 再次立即触发」的循环。等这次签到结束时
+  // 的 finally 再统一对账。
+  if (isCheckInInFlight()) {
+    return
+  }
+
   const storage = await getStorage(false)
   const state = normalizeCheckInState(storage[StorageKey.Daily], now)
 
@@ -374,18 +383,21 @@ async function reconcileCheckInAlarm(now = Date.now()): Promise<void> {
     return
   }
 
+  // 过去的时间会被 Chrome 立即执行，顺延一个最小间隔避免高频循环。
+  const targetTime = getCheckInAlarmTriggerTime(scheduledTime, now)
+
   const currentAlarm = await chrome.alarms.get(checkInAlarmName)
 
   if (
     currentAlarm
-    && Math.abs(currentAlarm.scheduledTime - scheduledTime) < 2000
+    && Math.abs(currentAlarm.scheduledTime - targetTime) < 2000
     && !currentAlarm.periodInMinutes
   ) {
     return
   }
 
   const alarmInfo = {
-    when: scheduledTime,
+    when: targetTime,
     persistAcrossSessions: true,
   } as chrome.alarms.AlarmCreateInfo
 

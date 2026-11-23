@@ -1,8 +1,21 @@
 import type { CheckInErrorCode, CheckInStage, CheckInTrigger, DailyInfo } from '../types'
 import { formatTimestamp } from '../utils/date'
 
-/** V2EX 领取成功后页面上的提示文案。 */
-export const SUCCESS_TEXT = '每日登录奖励已领取'
+/**
+ * V2EX 领取成功后页面上的提示文案。
+ *
+ * 站点改版后结果页会出现「已成功领取每日登录奖励 N 铜币」，
+ * 已领取页也可能是「今日登录奖励已领取」，因此按关键词匹配而非固定整句。
+ */
+const CLAIMED_MARKERS = ['已成功领取每日登录奖励', '登录奖励已领取'] as const
+
+/** V2EX 偶发要求再点一次才真正入账。 */
+export const RECLICK_TEXT = '请重新点击一次以领取每日登录奖励'
+
+/** 判断页面是否已展示领取成功或已领取的提示。 */
+export function hasClaimedReward(text: string): boolean {
+  return CLAIMED_MARKERS.some((marker) => text.includes(marker))
+}
 
 /** V2EX 人机验证场景的用户提示。 */
 export const CHECK_IN_CHALLENGE_COPY = {
@@ -20,7 +33,11 @@ export const CHECK_IN_FAILURE_PROMPT_THRESHOLD = 2
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
-const redeemPathPattern = /\/mission\/daily\/redeem\?once=[\w-]+/
+const redeemPathPattern = /\/mission\/daily\/redeem\?once=[A-Za-z0-9_%.-]+/
+/** 新版可能把领取入口做成表单：<form action="/mission/daily/redeem"> + hidden once。 */
+const redeemFormPattern = /<form\b[^>]*\baction=["']?[^"'\s>]*\/mission\/daily\/redeem[^>]*>[\s\S]*?<\/form>/i
+const redeemOnceInputPattern = /<input\b[^>]*\bname=["']?once["']?[^>]*>/i
+const onceValuePattern = /\bvalue=["']?([A-Za-z0-9_%.-]+)["']?/i
 const checkInDaysPattern = /已连续登录\s*(\d+)\s*天/
 
 /**
@@ -58,12 +75,28 @@ export function getUtcDayStart(timestamp: number): number {
 }
 
 /**
- * 从签到页面 HTML 中提取领取链接。
+ * 从签到页面 HTML 中提取领取入口。
  *
- * 同时兼容单引号和双引号属性写法，避免依赖页面的具体格式。
+ * 同时兼容三种写法：单/双引号属性、内联脚本，以及新版表单入口，
+ * 避免依赖页面的具体格式。
  */
 export function extractRedeemPath(html: string): string | null {
-  return html.match(redeemPathPattern)?.[0] ?? null
+  const matched = html.match(redeemPathPattern)?.[0]
+
+  if (matched) {
+    return matched.replaceAll('&amp;', '&')
+  }
+
+  const formHtml = html.match(redeemFormPattern)?.[0]
+
+  if (!formHtml) {
+    return null
+  }
+
+  const input = formHtml.match(redeemOnceInputPattern)?.[0]
+  const value = input?.match(onceValuePattern)?.[1]
+
+  return value ? `/mission/daily/redeem?once=${value}` : null
 }
 
 /** 从签到页面文本中解析已连续登录天数。 */
@@ -116,7 +149,7 @@ export function parseCheckInPage(html: string, finalUrlPath?: string): CheckInPa
     return { type: 'redeem', path: redeemPath }
   }
 
-  if (html.includes(SUCCESS_TEXT)) {
+  if (hasClaimedReward(html)) {
     return { type: 'already', checkInDays: parseCheckInDays(html) }
   }
 

@@ -421,6 +421,18 @@ export function getCheckInAlarmTime(
   return state.nextActionAt
 }
 
+/**
+ * 将已经过去的触发时间顺延一个最小重试间隔。
+ *
+ * 浏览器会用过去的 `when` 立即触发 alarm；如果签到失败后状态没能写回，
+ * 会形成「立即触发 → 失败 → 再次立即触发」的高频循环。
+ */
+export function getCheckInAlarmTriggerTime(scheduledTime: number, now: number): number {
+  return scheduledTime <= now
+    ? now + CHECK_IN_NUDGE_INTERVAL_MS
+    : scheduledTime
+}
+
 interface ScheduleDecisionParams {
   now: number
   state: DailyInfo

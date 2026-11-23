@@ -15,7 +15,7 @@ import {
   REWARD_RESET_GRACE_MS,
   shouldPromptCheckInFailure,
 } from '../apps/extension/src/background/check-in-utils'
-import { parseRetryAfter } from '../apps/extension/src/background/daily-check-in'
+import { parseRetryAfter, shouldRetryInTemporaryTab } from '../apps/extension/src/background/daily-check-in'
 
 describe('getUtcDayKey', () => {
   it('按 UTC 日期划分', () => {
@@ -40,6 +40,23 @@ describe('extractRedeemPath', () => {
     expect(extractRedeemPath('<a href="/mission/daily/redeem?once=abc-def">领取</a>')).toBe(
       '/mission/daily/redeem?once=abc-def',
     )
+  })
+
+  it('保留 URL 编码与点号字符', () => {
+    expect(extractRedeemPath('<a href="/mission/daily/redeem?once=a%2Bb.c">领取</a>')).toBe(
+      '/mission/daily/redeem?once=a%2Bb.c',
+    )
+  })
+
+  it('兼容表单式领取入口', () => {
+    const html = [
+      '<form action="/mission/daily/redeem" method="post">',
+      '<input type="hidden" name="once" value="54321" />',
+      '<button>领取</button>',
+      '</form>',
+    ].join('')
+
+    expect(extractRedeemPath(html)).toBe('/mission/daily/redeem?once=54321')
   })
 
   it('没有领取链接时返回 null', () => {
@@ -70,6 +87,17 @@ describe('parseCheckInPage', () => {
     expect(parseCheckInPage('<div>每日登录奖励已领取，已连续登录 42 天</div>')).toEqual({
       type: 'already',
       checkInDays: 42,
+    })
+  })
+
+  it('兼容新版已领取与领取成功文案', () => {
+    expect(parseCheckInPage('<div>今日登录奖励已领取，已连续登录 42 天</div>')).toEqual({
+      type: 'already',
+      checkInDays: 42,
+    })
+    expect(parseCheckInPage('<div>已成功领取每日登录奖励 8 铜币</div>')).toEqual({
+      type: 'already',
+      checkInDays: undefined,
     })
   })
 
@@ -387,6 +415,24 @@ describe('parseRetryAfter', () => {
     expect(parseRetryAfter('0', now)).toBeUndefined()
     expect(parseRetryAfter(String(25 * 60 * 60), now)).toBeUndefined()
     expect(parseRetryAfter('invalid', now)).toBeUndefined()
+  })
+})
+
+describe('shouldRetryInTemporaryTab', () => {
+  it('只在无法确认领取结果时用临时标签页重试', () => {
+    expect(shouldRetryInTemporaryTab({ status: 'failed', code: 'redeem-failed' })).toBe(true)
+    expect(shouldRetryInTemporaryTab({ status: 'failed', code: 'unexpected-page' })).toBe(true)
+  })
+
+  it('网络、限流、验证和成功结果都不重试', () => {
+    expect(shouldRetryInTemporaryTab({ status: 'failed', code: 'network' })).toBe(false)
+    expect(shouldRetryInTemporaryTab({ status: 'failed', code: 'timeout' })).toBe(false)
+    expect(
+      shouldRetryInTemporaryTab({ status: 'failed', code: 'http', httpStatus: 429 }),
+    ).toBe(false)
+    expect(shouldRetryInTemporaryTab({ status: 'failed', code: 'challenge' })).toBe(false)
+    expect(shouldRetryInTemporaryTab({ status: 'success' })).toBe(false)
+    expect(shouldRetryInTemporaryTab({ status: 'already' })).toBe(false)
   })
 })
 
