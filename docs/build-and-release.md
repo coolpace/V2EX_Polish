@@ -145,9 +145,20 @@ EXTENSION_MINIFY=1 pnpm build
 
 ### GreasyFork
 
-- 使用 `apps/extension/dist/userscript/index.min.js`
-- 产物应包含完整的 `==UserScript==` 元数据、jQuery 和全部主题样式
-- 发布前运行 `pnpm verify:extension`，其中会校验油猴产物并在无扩展 API 的 DOM 环境中执行 smoke test
+油猴脚本通过 GitHub 代码同步自动发布，推送 `v*` tag 后不需要再手动上传。
+
+- 固定同步源：`https://raw.githubusercontent.com/coolpace/V2EX_Polish/userscript/v2ex-polish.user.js`
+- release workflow 在构建完成后，会把 `apps/extension/dist/userscript/index.min.js` 提交到 `userscript` 分支的 `v2ex-polish.user.js`
+- 本地产物位置不变：`apps/extension/dist/userscript/index.min.js`
+
+GreasyFork 侧一次性配置（需要脚本作者账号）：
+
+1. 打开脚本的「管理 / 编辑」页
+2. 找到「代码同步 / Sync from URL」，填入上面的固定同步源
+3. 同步方式选择「自动」；如需更及时，可选择「Webhook」，并按 GreasyFork 提供的说明在 GitHub 仓库 Settings → Webhooks 添加地址（push 事件）
+4. 首次绑定时可点一次「更新并同步」，确认脚本版本变为当前 tag
+
+产物要求：完整的 `==UserScript==` 元数据、jQuery 和全部主题样式；发布前 `pnpm verify:extension` 会校验油猴产物并在无扩展 API 的 DOM 环境中执行 smoke test。
 
 ### Cloudflare Worker
 

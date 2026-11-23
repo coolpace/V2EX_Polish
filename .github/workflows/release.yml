@@ -60,6 +60,31 @@ jobs:
         env:
           EXTENSION_MINIFY: '1'
 
+      - name: Publish userscript to sync branch
+        run: |
+          worktree="$RUNNER_TEMP/userscript"
+
+          if git fetch --depth=1 origin userscript; then
+            git worktree add "$worktree" FETCH_HEAD
+          else
+            git worktree add -b userscript "$worktree" "$GITHUB_SHA"
+          fi
+
+          cp apps/extension/dist/userscript/index.min.js "$worktree/v2ex-polish.user.js"
+          git -C "$worktree" add v2ex-polish.user.js
+
+          if git -C "$worktree" diff --cached --quiet; then
+            echo "userscript 未变化，跳过提交"
+            exit 0
+          fi
+
+          git -C "$worktree" \
+            -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "chore(userscript): 发布 ${GITHUB_REF_NAME}"
+
+          git -C "$worktree" push origin HEAD:userscript
+
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
