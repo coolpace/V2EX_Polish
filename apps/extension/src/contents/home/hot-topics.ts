@@ -5,6 +5,7 @@ import { getHotTopics } from '../../services'
 import type { HotTopic, HotTopicRange } from '../../types'
 import { getStorageSync } from '../../utils'
 import { $wrapper } from '../globals'
+import { loadIcons } from '../helpers'
 import { createTopicPreview } from '../topic/preview'
 import { shouldHideTopic } from '../topic-filter/matcher'
 
@@ -157,7 +158,14 @@ export function handleHotTopics() {
       return
     }
 
-    const $toggle = $('<div class="v2p-hot-expand-toggle">').text(expanded ? '收起' : '展开更多')
+    const $toggle = $(
+      `<div class="v2p-hot-expand-toggle${expanded ? ' v2p-hot-expand-toggle-expanded' : ''}">
+        <span>${expanded ? '收起' : '展开更多'}</span>
+        <span class="v2p-hot-expand-icon"><i data-v2p-icon="chevron-down"></i></span>
+      </div>
+    `)
+
+    loadIcons($toggle[0])
 
     $toggle.on('click', () => {
       expanded = !expanded
@@ -203,11 +211,6 @@ export function handleHotTopics() {
       $titleLink.text(it.title).attr('href', linkHref)
 
       const $titleContainer = $clonedCell.find('.item_hot_topic_title')
-
-      // 回复数徽章：让「按回复排序」可见且可信
-      $('<span class="v2p-hot-replies">')
-        .text(String(it.replies))
-        .appendTo($titleContainer)
 
       if (topicPreview) {
         // 预览模式：点击主题链接时弹出预览窗口。

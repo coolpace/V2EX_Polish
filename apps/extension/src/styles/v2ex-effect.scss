@@ -1658,6 +1658,33 @@ a:link.v2p-topic-preview-retry {
   }
 }
 
+.v2p-hot-expand-toggle {
+  cursor: pointer;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  width: fit-content;
+  margin: 8px auto 10px;
+  padding: 1px 6px;
+  border-radius: var(--v2p-button-radius);
+  font-size: 13px;
+  background-color: var(--v2p-color-button-background);
+
+  &:hover {
+    background-color: var(--v2p-color-button-background-hover);
+  }
+
+  .v2p-hot-expand-icon {
+    width: 1em;
+    height: 1em;
+    transition: transform 0.2s;
+  }
+
+  &.v2p-hot-expand-toggle-expanded .v2p-hot-expand-icon {
+    transform: rotate(180deg);
+  }
+}
+
 /* MARK: 用户标签。 */
 .v2p-tag-block {
   margin-bottom: 10px;
