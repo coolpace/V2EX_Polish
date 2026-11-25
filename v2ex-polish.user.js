@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         V2EX Polish - 体验更现代化的 V2EX
 // @namespace    https://v2p.leoku.dev
-// @version      2.5.16
+// @version      2.5.17
 // @description  为 V2EX 带来现代化界面、楼中楼回复、主题预览、用户标签与每日签到，让浏览更清爽、交流更高效。
 // @author       LeoKu
 // @license      MIT
@@ -12727,8 +12727,18 @@ init_theme_state();
 	function handleReply() {
 		$replyTextArea.attr("placeholder", "留下对他人有帮助的回复").wrap("<div class=\"v2p-reply-wrap\">");
 		const $replyWrap = $(".v2p-reply-wrap");
-		const $replyPreview = $("<div class=\"v2p-reply-preview\">");
-		$replyPreview.hide().insertAfter($replyWrap);
+		const $nativePreviewTab = $replyBox.find("#reply-tab-preview, .reply-tabs");
+		const replyContent = $replyTextArea.get(0);
+		if (replyContent && $nativePreviewTab.length > 0) {
+			const syncReplyWrapVisibility = () => {
+				$replyWrap.toggle($replyTextArea.css("display") !== "none");
+			};
+			new MutationObserver(syncReplyWrapVisibility).observe(replyContent, {
+				attributes: true,
+				attributeFilter: ["style"]
+			});
+			syncReplyWrapVisibility();
+		}
 		bindImageUpload({
 			$wrapper: $replyWrap,
 			$input: $replyTextArea,
@@ -12743,7 +12753,9 @@ init_theme_state();
 				}
 			}
 		});
-		{
+		if ($nativePreviewTab.length === 0) {
+			const $replyPreview = $("<div class=\"v2p-reply-preview\">");
+			$replyPreview.hide().insertAfter($replyWrap);
 			const $replyTabs = $("<div class=\"v2p-reply-tabs\">");
 			const $replyTabEdit = $("<div class=\"v2p-reply-tab active\">编辑</div>");
 			const $replyTabPreview = $("<div class=\"v2p-reply-tab\">预览</div>");
