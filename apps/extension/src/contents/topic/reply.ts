@@ -135,8 +135,25 @@ export function handleReply() {
   $replyTextArea.attr('placeholder', '留下对他人有帮助的回复').wrap('<div class="v2p-reply-wrap">')
 
   const $replyWrap = $('.v2p-reply-wrap')
-  const $replyPreview = $('<div class="v2p-reply-preview">')
-  $replyPreview.hide().insertAfter($replyWrap)
+
+  // V2EX 新版回复框自带「写 / 预览」标签（#reply-tab-preview）和服务端渲染的
+  // Markdown 预览，存在时直接沿用官方预览，避免出现两套预览界面。
+  const $nativePreviewTab = $replyBox.find('#reply-tab-preview, .reply-tabs')
+  const replyContent = $replyTextArea.get(0)
+
+  // 官方预览通过内联 style 隐藏文本域，跟随其显隐同步隐藏扩展的输入框容器，
+  // 否则预览模式下会残留一个空的输入框和上传提示。
+  if (replyContent && $nativePreviewTab.length > 0) {
+    const syncReplyWrapVisibility = () => {
+      $replyWrap.toggle($replyTextArea.css('display') !== 'none')
+    }
+
+    new MutationObserver(syncReplyWrapVisibility).observe(replyContent, {
+      attributes: true,
+      attributeFilter: ['style'],
+    })
+    syncReplyWrapVisibility()
+  }
 
   bindImageUpload({
     $wrapper: $replyWrap,
@@ -154,8 +171,11 @@ export function handleReply() {
     },
   })
 
-  // 主题回复的「编辑」和「预览」功能。
-  {
+  // 旧版回复框没有官方预览时，由扩展提供「编辑 / 预览」标签。
+  if ($nativePreviewTab.length === 0) {
+    const $replyPreview = $('<div class="v2p-reply-preview">')
+    $replyPreview.hide().insertAfter($replyWrap)
+
     const $replyTabs = $('<div class="v2p-reply-tabs">')
     const $replyTabEdit = $('<div class="v2p-reply-tab active">编辑</div>')
     const $replyTabPreview = $('<div class="v2p-reply-tab">预览</div>')
