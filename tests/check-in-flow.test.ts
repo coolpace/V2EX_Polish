@@ -83,6 +83,20 @@ describe('签到领取结果确认', () => {
   const redeemPage
     = '<a href="/mission/daily/redeem?once=111">领取每日登录奖励</a><div>已连续登录 2915 天</div>'
 
+  it('识别英文的已领取签到页面', async () => {
+    setupDailyInfo()
+    queueFetch([
+      () =>
+        new Response('<div>Daily login reward already redeemed</div>', {
+          status: 200,
+        }),
+    ])
+
+    await expect(checkIn({ force: true, trigger: 'manual' })).resolves.toMatchObject({
+      status: 'already',
+    })
+  })
+
   it('站点要求重新点击时会刷新入口再领取一次', async () => {
     setupDailyInfo()
     queueFetch([
