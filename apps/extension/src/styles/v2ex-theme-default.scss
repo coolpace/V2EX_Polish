@@ -1231,10 +1231,6 @@ $plugin-nested: ":where(:root:not([data-v2p-nested='off']))";
       }
     }
 
-    &:last-of-type {
-      border: none;
-    }
-
     .no {
       user-select: none;
       position: relative;
