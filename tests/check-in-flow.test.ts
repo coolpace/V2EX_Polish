@@ -95,6 +95,14 @@ describe('签到领取结果确认', () => {
     await expect(checkIn({ force: true, trigger: 'manual' })).resolves.toMatchObject({
       status: 'already',
     })
+    await expect(getStorage()).resolves.toMatchObject({
+      [StorageKey.Daily]: {
+        phase: 'succeeded',
+        lastResult: 'already',
+        failureCount: 0,
+        lastError: undefined,
+      },
+    })
   })
 
   it('站点要求重新点击时会刷新入口再领取一次', async () => {
