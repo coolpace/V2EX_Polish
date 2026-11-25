@@ -1,12 +1,6 @@
 import type { CheckInErrorCode, CheckInStage, CheckInTrigger, DailyInfo } from '../types'
 import { formatTimestamp } from '../utils/date'
 
-/**
- * V2EX 领取成功后页面上的提示文案。
- *
- * 站点改版后结果页会出现「已成功领取每日登录奖励 N 铜币」，
- * 已领取页也可能是「今日登录奖励已领取」，因此按关键词匹配而非固定整句。
- */
 const CLAIMED_MARKERS = ['已成功领取每日登录奖励', '登录奖励已领取', 'Daily login reward already redeemed'] as const
 
 /** V2EX 偶发要求再点一次才真正入账。 */
