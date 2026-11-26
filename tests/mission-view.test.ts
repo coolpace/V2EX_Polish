@@ -63,14 +63,14 @@ describe('mission check-in view', () => {
     expect(view.showDiagnostics).toBe(true)
   })
 
-  it('人机验证时明确归因为 V2EX 安全验证且不展示重试按钮', () => {
+  it('人机验证时明确归因为 V2EX 安全验证并提供重新签到入口', () => {
     const view = getMissionPanelView(
       {
         type: 'failed',
         attemptTime: now,
         code: 'challenge',
         httpStatus: 403,
-        userMessage: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+        userMessage: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请在签到页完成验证后点击「重新签到」。',
         needsAction: true,
       },
       now,
@@ -78,10 +78,30 @@ describe('mission check-in view', () => {
 
     expect(view).toMatchObject({
       title: 'V2EX 要求完成人机验证',
-      description: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+      description: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请在签到页完成验证后点击「重新签到」。',
+      retryLabel: '重新签到',
       showDiagnostics: true,
     })
-    expect(view.retryLabel).toBeUndefined()
+    expect(view.primaryLink).toBeUndefined()
+  })
+
+  it('人机验证状态渲染重新签到按钮', () => {
+    const panel = document.createElement('section')
+
+    renderMissionPanel(
+      panel,
+      {
+        type: 'failed',
+        attemptTime: now,
+        code: 'challenge',
+        needsAction: true,
+      },
+      now,
+    )
+
+    const button = panel.querySelector<HTMLButtonElement>('button[data-action="retry"]')
+
+    expect(button?.textContent).toBe('重新签到')
   })
 
   it('渲染失败状态及三个操作', () => {

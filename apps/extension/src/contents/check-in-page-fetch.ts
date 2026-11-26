@@ -62,6 +62,10 @@ async function fetchCheckInResponse(path: string): Promise<CheckInPageFetchRespo
       credentials: 'include',
       cache: 'no-store',
       signal: controller.signal,
+      // 补齐页面导航的 Accept，避免 Cloudflare 把代发请求当成可疑 XHR 而要求验证。
+      headers: {
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+      },
     })
 
     return {

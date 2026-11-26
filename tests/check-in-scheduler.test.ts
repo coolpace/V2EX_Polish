@@ -764,7 +764,7 @@ describe('buildDailyInfoAfterAttempt', () => {
       }),
     ).toMatchObject({
       action: 'skip',
-      reason: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+      reason: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请在签到页完成验证后点击「重新签到」。',
     })
     expect(
       getCheckInScheduleDecision({

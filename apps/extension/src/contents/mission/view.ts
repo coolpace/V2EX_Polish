@@ -93,12 +93,22 @@ export function getMissionPanelView(
     }
   }
 
+  // 人机验证只能在页面里完成，用户处理完后需要一个手动重新签到的入口。
+  let retryLabel: string | undefined
+
+  if (state.code === 'challenge') {
+    retryLabel = '重新签到'
+  }
+  else if (!state.needsAction) {
+    retryLabel = '立即重试'
+  }
+
   return {
     tone: 'error',
     title,
     description: state.userMessage ?? hint,
     detail,
-    ...state.needsAction ? {} : { retryLabel: '立即重试' },
+    ...retryLabel ? { retryLabel } : {},
     showDiagnostics: true,
   }
 }

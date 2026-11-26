@@ -207,7 +207,7 @@ describe('describeCheckInErrorCode', () => {
     expect(describeCheckInErrorCode('unauthenticated').title).toContain('登录')
     expect(describeCheckInErrorCode('challenge')).toEqual({
       title: 'V2EX 要求完成人机验证',
-      hint: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
+      hint: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请在签到页完成验证后点击「重新签到」。',
     })
     expect(describeCheckInErrorCode('unexpected-page').title).toContain('无法确认')
     expect(describeCheckInErrorCode('redeem-failed').title).toContain('无法确认')
@@ -520,6 +520,6 @@ describe('buildCheckInDiagnostic', () => {
     expect(text).toContain('今日状态：等待完成 V2EX 人机验证')
     expect(text).toContain('失败分类：challenge（V2EX 要求完成人机验证）')
     expect(text).toContain('插件状态：运行正常')
-    expect(text).toContain('处理建议：请打开签到页完成人机验证后领取每日奖励')
+    expect(text).toContain('处理建议：请打开签到页完成验证，然后点击「重新签到」')
   })
 })

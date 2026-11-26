@@ -14,8 +14,8 @@ export function hasClaimedReward(text: string): boolean {
 /** V2EX 人机验证场景的用户提示。 */
 export const CHECK_IN_CHALLENGE_COPY = {
   title: 'V2EX 要求完成人机验证',
-  message: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请打开签到页完成验证后领取每日奖励。',
-  advice: '请打开签到页完成人机验证后领取每日奖励；自动签到已暂停，不会持续重试。',
+  message: '这是 V2EX 的安全验证，不是插件故障。自动签到已暂停，请在签到页完成验证后点击「重新签到」。',
+  advice: '请打开签到页完成验证，然后点击「重新签到」；自动签到已暂停，不会持续重试。',
   failureReason: 'V2EX 要求完成人机验证，自动签到已暂停',
 } as const
 

@@ -60,7 +60,7 @@ void (async () => {
       appendInfoRow('今日已自动签到')
     }
     else if (state.type === 'failed' && state.code === 'challenge') {
-      appendInfoRow('V2EX 要求人机验证，点击处理', true)
+      appendInfoRow('V2EX 要求人机验证，前往签到页处理', true)
     }
     else if (shouldPromptCheckInFailure(state, dailyInfo?.failureCount)) {
       // 同日连续失败多次才提醒，过滤偶发的网络抖动。

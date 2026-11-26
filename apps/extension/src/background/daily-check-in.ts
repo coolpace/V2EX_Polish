@@ -58,6 +58,8 @@ async function fetchCheckInDirect(path: string): Promise<CheckInHttpResponse> {
     const res = await fetch(`${V2EX.Origin}${path}`, {
       headers: {
         Referer: `${V2EX.Origin}/mission/daily`,
+        // 与页面导航保持一致，降低被 Cloudflare 判定为可疑请求的概率。
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
       },
       credentials: 'include',
       cache: 'no-store',
